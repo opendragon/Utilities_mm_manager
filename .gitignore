@@ -20,9 +20,7 @@ install_manifest.txt
 *.cache
 *.exe
 *.opensdf
-*.res
 *.idb
-*.rc
 
 #XCode related
 MPlusM/MPlusM.xcodeproj/xcuserdata/njaffe.xcuserdatad/xcschemes/MPlusM.xcscheme
@@ -31,6 +29,8 @@ MPlusM/MPlusM.xcodeproj/project.xcworkspace/xcuserdata/njaffe.xcuserdatad/UserIn
 UserInterfaceState.xcuserstate
 Breakpoints_v2.xcbkptlist
 
+#JUCE specific: expect user to copy modules locally!
+JuceLibraryCode/modules
 
 Testing
 Doxygen_output
