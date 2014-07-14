@@ -1,0 +1,19 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{3258D1A1-EC97-D689-7B91-AA496E1E4CD2}") = "ChannelManager", "ChannelManager.vcxproj", "{184CDBF3-87CF-BE8B-8E45-AAA72F365BD1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{184CDBF3-87CF-BE8B-8E45-AAA72F365BD1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{184CDBF3-87CF-BE8B-8E45-AAA72F365BD1}.Debug|Win32.Build.0 = Debug|Win32
+		{184CDBF3-87CF-BE8B-8E45-AAA72F365BD1}.Release|Win32.ActiveCfg = Release|Win32
+		{184CDBF3-87CF-BE8B-8E45-AAA72F365BD1}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
