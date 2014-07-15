@@ -33,6 +33,13 @@
 		DEEF248165B3103CD7681805 /* juce_gui_extra.mm in Sources */ = {isa = PBXBuildFile; fileRef = 01BE58DF625AAE46E21A507C /* juce_gui_extra.mm */; };
 		DF74B65919747BE800A6ECD3 /* ChannelManagerApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF74B65719747BE800A6ECD3 /* ChannelManagerApp.cpp */; };
 		DF74B65C19747E3D00A6ECD3 /* MainWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF74B65A19747E3D00A6ECD3 /* MainWindow.cpp */; };
+		DF74B661197583CD00A6ECD3 /* libOGDF.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF74B660197583CD00A6ECD3 /* libOGDF.a */; };
+		DF74B663197583D800A6ECD3 /* libmpmCommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF74B662197583D800A6ECD3 /* libmpmCommon.a */; };
+		DF74B665197583DD00A6ECD3 /* libodLogging.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF74B664197583DD00A6ECD3 /* libodLogging.a */; };
+		DF74B667197583E700A6ECD3 /* libYARP_init.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF74B666197583E700A6ECD3 /* libYARP_init.a */; };
+		DF74B669197583EE00A6ECD3 /* libYARP_OS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF74B668197583EE00A6ECD3 /* libYARP_OS.a */; };
+		DF74B66B197583F900A6ECD3 /* libACE.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF74B66A197583F900A6ECD3 /* libACE.dylib */; };
+		DF74B66E19759B8100A6ECD3 /* ChannelContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF74B66C19759B8100A6ECD3 /* ChannelContainer.cpp */; };
 		E2FED85FB76A3966795E8416 /* juce_core.mm in Sources */ = {isa = PBXBuildFile; fileRef = ADC373CE4DEDF850BDE3A738 /* juce_core.mm */; };
 		F33B431E9BA660F6B5034872 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA72840EFF14AF9F39FB65E /* Carbon.framework */; };
 		FC05A001CFB727F29DBDA646 /* juce_video.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8B6D44520CD8F84BD2C3B964 /* juce_video.mm */; };
@@ -800,6 +807,14 @@
 		DF74B65819747BE800A6ECD3 /* ChannelManagerApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChannelManagerApp.h; path = ../../Source/ChannelManagerApp.h; sourceTree = SOURCE_ROOT; };
 		DF74B65A19747E3D00A6ECD3 /* MainWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MainWindow.cpp; path = ../../Source/MainWindow.cpp; sourceTree = SOURCE_ROOT; };
 		DF74B65B19747E3D00A6ECD3 /* MainWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainWindow.h; path = ../../Source/MainWindow.h; sourceTree = SOURCE_ROOT; };
+		DF74B660197583CD00A6ECD3 /* libOGDF.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOGDF.a; path = ../../../../../../../usr/local/lib/libOGDF.a; sourceTree = "<group>"; };
+		DF74B662197583D800A6ECD3 /* libmpmCommon.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmpmCommon.a; path = ../../../../../../../usr/local/lib/libmpmCommon.a; sourceTree = "<group>"; };
+		DF74B664197583DD00A6ECD3 /* libodLogging.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libodLogging.a; path = ../../../../../../../usr/local/lib/libodLogging.a; sourceTree = "<group>"; };
+		DF74B666197583E700A6ECD3 /* libYARP_init.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libYARP_init.a; path = ../../../../../../../usr/local/lib/libYARP_init.a; sourceTree = "<group>"; };
+		DF74B668197583EE00A6ECD3 /* libYARP_OS.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libYARP_OS.a; path = ../../../../../../../usr/local/lib/libYARP_OS.a; sourceTree = "<group>"; };
+		DF74B66A197583F900A6ECD3 /* libACE.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libACE.dylib; path = ../../../../../../../usr/local/lib/libACE.dylib; sourceTree = "<group>"; };
+		DF74B66C19759B8100A6ECD3 /* ChannelContainer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ChannelContainer.cpp; path = ../../Source/ChannelContainer.cpp; sourceTree = "<group>"; };
+		DF74B66D19759B8100A6ECD3 /* ChannelContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChannelContainer.h; path = ../../Source/ChannelContainer.h; sourceTree = "<group>"; };
 		DF91B3E932852EBD0347C905 /* juce_android_Messaging.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_android_Messaging.cpp; path = ../../JuceLibraryCode/modules/juce_events/native/juce_android_Messaging.cpp; sourceTree = SOURCE_ROOT; };
 		DF9FF6D4DE18B3DF54A65B7D /* juce_Toolbar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_Toolbar.h; path = ../../JuceLibraryCode/modules/juce_gui_basics/widgets/juce_Toolbar.h; sourceTree = SOURCE_ROOT; };
 		E059C6388A6E99841B353887 /* juce_ZipFile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_ZipFile.cpp; path = ../../JuceLibraryCode/modules/juce_core/zip/juce_ZipFile.cpp; sourceTree = SOURCE_ROOT; };
@@ -921,6 +936,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DF74B661197583CD00A6ECD3 /* libOGDF.a in Frameworks */,
+				DF74B663197583D800A6ECD3 /* libmpmCommon.a in Frameworks */,
+				DF74B665197583DD00A6ECD3 /* libodLogging.a in Frameworks */,
+				DF74B667197583E700A6ECD3 /* libYARP_init.a in Frameworks */,
+				DF74B669197583EE00A6ECD3 /* libYARP_OS.a in Frameworks */,
+				DF74B66B197583F900A6ECD3 /* libACE.dylib in Frameworks */,
 				6E425384782FBC454FEED53B /* Accelerate.framework in Frameworks */,
 				FFD5D4B5504E586A42099C7B /* AudioToolbox.framework in Frameworks */,
 				F33B431E9BA660F6B5034872 /* Carbon.framework in Frameworks */,
@@ -1184,6 +1205,8 @@
 		295631B272BFFCD49E8CF0DB /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				DF74B66C19759B8100A6ECD3 /* ChannelContainer.cpp */,
+				DF74B66D19759B8100A6ECD3 /* ChannelContainer.h */,
 				DF74B65719747BE800A6ECD3 /* ChannelManagerApp.cpp */,
 				DF74B65819747BE800A6ECD3 /* ChannelManagerApp.h */,
 				C787E5217B7752421DB83C5A /* ChannelManagerMain.cpp */,
@@ -1265,6 +1288,12 @@
 		42D582D969583F8E9D16F645 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DF74B66A197583F900A6ECD3 /* libACE.dylib */,
+				DF74B668197583EE00A6ECD3 /* libYARP_OS.a */,
+				DF74B666197583E700A6ECD3 /* libYARP_init.a */,
+				DF74B664197583DD00A6ECD3 /* libodLogging.a */,
+				DF74B662197583D800A6ECD3 /* libmpmCommon.a */,
+				DF74B660197583CD00A6ECD3 /* libOGDF.a */,
 				31B4B92FD24E30A5486B1178 /* Accelerate.framework */,
 				657CE153E5F14918F42F08F0 /* AudioToolbox.framework */,
 				8BA72840EFF14AF9F39FB65E /* Carbon.framework */,
@@ -2690,6 +2719,7 @@
 				E2FED85FB76A3966795E8416 /* juce_core.mm in Sources */,
 				DF74B65919747BE800A6ECD3 /* ChannelManagerApp.cpp in Sources */,
 				3AFA49CB7058B71E8867F68C /* juce_cryptography.mm in Sources */,
+				DF74B66E19759B8100A6ECD3 /* ChannelContainer.cpp in Sources */,
 				8293E78EF60A5024CA9EB2B7 /* juce_data_structures.mm in Sources */,
 				50F1CB5B2A0C22454AF41833 /* juce_events.mm in Sources */,
 				81E02713982BA5A1CFDA27C2 /* juce_graphics.mm in Sources */,
@@ -2707,13 +2737,8 @@
 		83047DF2773F8F8C0DC653C2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
-				CLANG_LINK_OBJC_RUNTIME = NO;
 				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/build/$(CONFIGURATION)";
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"_DEBUG=1",
 					"DEBUG=1",
@@ -2721,34 +2746,37 @@
 					"JUCE_APP_VERSION=1.0.0",
 					"JUCE_APP_VERSION_HEX=0x10000",
 				);
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				HEADER_SEARCH_PATHS = (
-					../../JuceLibraryCode,
-					../../JuceLibraryCode/modules,
-					"$(inherited)",
-				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
-				SDKROOT_ppc = macosx10.5;
+				ONLY_ACTIVE_ARCH = NO;
 			};
 			name = Debug;
 		};
 		91E4E02374D5638B7AE55B6D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				GCC_C_LANGUAGE_STANDARD = c99;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
 				GCC_WARN_MISSING_PARENTHESES = YES;
 				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				ONLY_ACTIVE_ARCH = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/usr/local/include,
+				);
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "Channel Manager";
 				WARNING_CFLAGS = "-Wreorder";
 				ZERO_LINK = NO;
@@ -2758,13 +2786,8 @@
 		B6F284AC52D9E9009DC2F2DE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
-				CLANG_LINK_OBJC_RUNTIME = NO;
 				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/build/$(CONFIGURATION)";
-				DEAD_CODE_STRIPPING = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"_NDEBUG=1",
 					"NDEBUG=1",
@@ -2772,27 +2795,20 @@
 					"JUCE_APP_VERSION=1.0.0",
 					"JUCE_APP_VERSION_HEX=0x10000",
 				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				HEADER_SEARCH_PATHS = (
-					../../JuceLibraryCode,
-					../../JuceLibraryCode/modules,
-					"$(inherited)",
-				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
-				SDKROOT_ppc = macosx10.5;
+				ONLY_ACTIVE_ARCH = NO;
 			};
 			name = Release;
 		};
 		ED2BA3CBD0F8C73DF5348FA6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				GCC_C_LANGUAGE_STANDARD = c99;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				DEAD_CODE_STRIPPING = YES;
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
@@ -2800,6 +2816,14 @@
 				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/usr/local/include,
+				);
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "Channel Manager";
 				WARNING_CFLAGS = "-Wreorder";
 				ZERO_LINK = NO;

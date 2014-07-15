@@ -4,8 +4,7 @@
 //
 //  Project:    M+M
 //
-//  Contains:   The function and variable declarations for common entities for M+M clients and
-//              services.
+//  Contains:   The class declaration for the application object of the channel manager application.
 //
 //  Written by: Norman Jaffe
 //
@@ -39,13 +38,16 @@
 
 #include "ChannelManagerApp.h"
 
+//#include "ODEnableLogging.h"
+#include "ODLogging.h"
+
 #if defined(__APPLE__)
 # pragma clang diagnostic push
 # pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
 #endif // defined(__APPLE__)
 /*! @file
  
- @brief The class declaration for objects thrown by exceptions within M+M. */
+ @brief The class declaration for the application object of the channel manager application. */
 #if defined(__APPLE__)
 # pragma clang diagnostic pop
 #endif // defined(__APPLE__)
@@ -69,10 +71,14 @@
 ChannelManagerApplication::ChannelManagerApplication(void) :
     inherited()
 {
+    OD_LOG_ENTER(); //####
+    OD_LOG_EXIT(); //####
 } // ChannelManagerApplication::ChannelManagerApplication
 
 ChannelManagerApplication::~ChannelManagerApplication(void)
 {
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_OBJEXIT(); //####
 } // ChannelManagerApplication::~ChannelManagerApplication
 
 #if defined(__APPLE__)
@@ -81,45 +87,58 @@ ChannelManagerApplication::~ChannelManagerApplication(void)
 
 void ChannelManagerApplication::anotherInstanceStarted(const String & commandLine)
 {
+    OD_LOG_OBJENTER(); //####
     // When another instance of the app is launched while this one is running,
     // this method is invoked, and the commandLine parameter tells you what
     // the other instance's command-line arguments were.
+    OD_LOG_OBJEXIT(); //####
 } // ChannelManagerApplication::anotherInstanceStarted
 
 const String ChannelManagerApplication::getApplicationName(void)
 {
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_OBJEXIT_S(ProjectInfo::projectName.c_str()); //####
     return ProjectInfo::projectName;
 } // ChannelManagerApplication::getApplicationName
 
 const String ChannelManagerApplication::getApplicationVersion(void)
 {
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_OBJEXIT_S(ProjectInfo::versionString.c_str()); //####
     return ProjectInfo::versionString;
 } // ChannelManagerApplication::getApplicationVersion
 
 void ChannelManagerApplication::initialise(const String & commandLine)
 {
+    OD_LOG_OBJENTER(); //####
     // This method is where you should put your application's initialisation code..
-    
-    mainWindow = new MainWindow();
+    mainWindow = new MainWindow;
+    OD_LOG_OBJEXIT(); //####
 } // ChannelManagerApplication::initialise
 
 bool ChannelManagerApplication::moreThanOneInstanceAllowed(void)
 {
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_OBJEXIT_B(true); //####
     return true;
 } // ChannelManagerApplication::moreThanOneInstanceAllowed
 
 void ChannelManagerApplication::shutdown(void)
 {
+    OD_LOG_OBJENTER(); //####
     // Add your application's shutdown code here..
 
     mainWindow = nullptr; // (deletes our window)
+    OD_LOG_OBJEXIT(); //####
 } // ChannelManagerApplication::shutdown
 
 void ChannelManagerApplication::systemRequestedQuit(void)
 {
+    OD_LOG_OBJENTER(); //####
     // This is called when the app is being asked to quit: you can ignore this
     // request and let the app carry on running, or call quit() to allow the app to close.
     quit();
+    OD_LOG_OBJEXIT(); //####
 } // ChannelManagerApplication::systemRequestedQuit
 
 #if defined(__APPLE__)

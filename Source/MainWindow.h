@@ -4,8 +4,7 @@
 //
 //  Project:    M+M
 //
-//  Contains:   The function and variable declarations for common entities for M+M clients and
-//              services.
+//  Contains:   The class declaration for the primary window of the channel manager application.
 //
 //  Written by: Norman Jaffe
 //
@@ -39,7 +38,6 @@
 
 #if (! defined(MainWindow_H_))
 
-# include "../JuceLibraryCode/JuceHeader.h"
 # include "MainContentComponent.h"
 
 # if defined(__APPLE__)
@@ -48,26 +46,27 @@
 # endif // defined(__APPLE__)
 /*! @file
  
- @brief The class declaration for objects thrown by exceptions within M+M. */
+ @brief The class declaration for the primary window of the channel manager application. */
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
 
-/*! @brief BLORT */
+/*! @brief The main window of the application. */
 class MainWindow : public DocumentWindow
 {
 public:
     
-    /*! @brief BLORT */
+    /*! @brief The constructor. */
     MainWindow(void);
 
-    /*! @brief BLORT */
-    ~MainWindow(void);
+    /*! @brief The destructor. */
+    virtual ~MainWindow(void);
     
-    /*! @brief BLORT */
+    /*! @brief This method is called when the user tries to close the window. */
     void closeButtonPressed(void);
 
-    /*! @brief BLORT */
+    /*! @brief Return the window style flags.
+     @returns The window style flags. */
     int getDesktopWindowStyleFlags(void)
     const;
 

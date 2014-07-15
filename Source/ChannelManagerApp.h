@@ -4,8 +4,7 @@
 //
 //  Project:    M+M
 //
-//  Contains:   The function and variable declarations for common entities for M+M clients and
-//              services.
+//  Contains:   The class definition for the application object of the channel manager application.
 //
 //  Written by: Norman Jaffe
 //
@@ -39,7 +38,6 @@
 
 #if (! defined(ChannelManagerApp_H_))
 
-# include "../JuceLibraryCode/JuceHeader.h"
 # include "MainWindow.h"
 
 # if defined(__APPLE__)
@@ -48,41 +46,51 @@
 # endif // defined(__APPLE__)
 /*! @file
  
- @brief The class declaration for objects thrown by exceptions within M+M. */
+ @brief The class definition for the application object of the channel manager application. */
+
+/*! @dir Source
+ @brief The set of files that support managing channels. */
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
 
-/*! @brief BLORT */
+/*! @brief The application object of the application. */
 class ChannelManagerApplication  : public JUCEApplication
 {
 public:
     
-    /*! @brief BLORT */
+    /*! @brief The constructor. */
     ChannelManagerApplication(void);
     
-    /*! @brief BLORT */
-    ~ChannelManagerApplication(void);
+    /*! @brief The destructor. */
+    virtual ~ChannelManagerApplication(void);
     
-    /*! @brief BLORT */
+    /*! @brief Called when an attempt was made to launch another instance of the application.
+     @param commandLine The arguments passed to the new instance. */
     void anotherInstanceStarted(const String & commandLine) override;
     
-    /*! @brief BLORT */
+    /*! @brief Return the application name.
+     @returns The application's name. */
     const String getApplicationName(void) override;
     
-    /*! @brief BLORT */
+    /*! @brief Return the application version number.
+     @returns The application's version number. */
     const String getApplicationVersion(void) override;
     
-    /*! @brief BLORT */
+    /*! @brief Called when the application starts.
+     @param commandLine The parameters passed to the application. */
     void initialise(const String & commandLine) override;
     
-    /*! @brief BLORT */
+    /*! @brief Return @c true if multiple instances of the application are allowed and @c false
+     otherwise.
+     @returns @c true if multiple instanaces of the application are allowed and @c false
+     otherwise. */
     bool moreThanOneInstanceAllowed(void) override;
     
-    /*! @brief BLORT */
+    /*! @brief Called to allow the application to clear up before exiting. */
     void shutdown(void) override;
     
-    /*! @brief BLORT */
+    /*! @brief Called when the operating system is trying to close the application. */
     void systemRequestedQuit(void) override;
     
 private:
@@ -90,7 +98,7 @@ private:
     /*! @brief The class that this class is derived from. */
     typedef JUCEApplication inherited;
     
-    /*! @brief BLORT */
+    /*! @brief The primary window of the application. */
     ScopedPointer<MainWindow> mainWindow;
 
 }; // ChannelManagerApplication

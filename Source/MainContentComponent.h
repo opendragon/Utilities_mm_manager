@@ -4,8 +4,8 @@
 //
 //  Project:    M+M
 //
-//  Contains:   The function and variable declarations for common entities for M+M clients and
-//              services.
+//  Contains:   The class definition for the contents of the primary window of the channel manager
+//              application.
 //
 //  Written by: Norman Jaffe
 //
@@ -39,7 +39,9 @@
 
 #if (! defined(MainContentComponent_H_))
 
-# include "../JuceLibraryCode/JuceHeader.h"
+# if (! defined(DOXYGEN))
+#  include "../JuceLibraryCode/JuceHeader.h"
+# endif // ! defined(DOXYGEN)
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -47,29 +49,48 @@
 # endif // defined(__APPLE__)
 /*! @file
  
- @brief The class declaration for objects thrown by exceptions within M+M. */
+ @brief The class definition for the contents of the primary window of the channel manager
+ application. */
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
 
-/*! @brief BLORT */
+/*! @brief The content area of the main window of the application. */
 class MainContentComponent : public Component
 {
 public:
     
-    /*! @brief BLORT */
+    /*! @brief The constructor. */
     MainContentComponent(void);
     
-    /*! @brief BLORT */
-    ~MainContentComponent(void);
+    /*! @brief The destructor. */
+    virtual ~MainContentComponent(void);
 
-    /*! @brief BLORT */
+    Font & getBoldFont(void)
+    {
+        return *_defaultBoldFont;
+    } // getBoldFont
+    
+    Font & getNormalFont(void)
+    {
+        return *_defaultNormalFont;
+    } // getNormalFont
+    
+    /*! @brief Returns the scrollbar thickness.
+     @returns The scrollbar thickness. */
+    inline int getScrollbarThickness(void)
+    const noexcept
+    {
+        return _scrollbarThickness;
+    } // getScrollbarThickness
+    
+    /*! @brief Draw the content of the component. */
     void paint(Graphics & gg);
 
-    /*! @brief BLORT */
+    /*! @brief Called when the component size has been changed. */
     void resized(void);
 
-    /*! @brief BLORT */
+    /*! @brief Adjust the horizontal and vertial scrollbars. */
     void updateScrollBars(void);
     
 private:
@@ -77,15 +98,28 @@ private:
     /*! @brief The class that this class is derived from. */
     typedef Component inherited;
     
-    /*! @brief BLORT */
+    /*! @brief The collection of displayed entities. */
+    OwnedArray<Component> _entities;
+    
+    /*! @brief The area in which to draw the displayed entities. */
+    ScopedPointer<Component> _innerPanel;
+    
+    /*! @brief The horizontal scrollbar. */
     ScrollBar _horizontalScrollBar;
     
-    /*! @brief BLORT */
+    /*! @brief The vertical scrollbar. */
     ScrollBar _verticalScrollBar;
-
-    /*! @brief BLORT */
+    
+    /*! @brief The bold font to be used. */
+    ScopedPointer<Font> _defaultBoldFont;
+    
+    /*! @brief The normal font to be used. */
+    ScopedPointer<Font> _defaultNormalFont;
+    
+    /*! @brief The desired width (for a vertical scrollbar) or height (for a horizontal
+     scrollbar). */
     int _scrollbarThickness;
-
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainContentComponent)
 
 }; // MainContentComponent

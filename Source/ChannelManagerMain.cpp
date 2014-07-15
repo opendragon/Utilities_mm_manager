@@ -4,8 +4,7 @@
 //
 //  Project:    M+M
 //
-//  Contains:   The function and variable declarations for common entities for M+M clients and
-//              services.
+//  Contains:   A utility application to YARP ports and M+M channels.
 //
 //  Written by: Norman Jaffe
 //
@@ -39,13 +38,16 @@
 
 #include "ChannelManagerApp.h"
 
+//#include "ODEnableLogging.h"
+#include "ODLogging.h"
+
 #if defined(__APPLE__)
 # pragma clang diagnostic push
 # pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
 #endif // defined(__APPLE__)
 /*! @file
  
- @brief The class declaration for objects thrown by exceptions within M+M. */
+ @brief A utility application to YARP ports and M+M channels. */
 #if defined(__APPLE__)
 # pragma clang diagnostic pop
 #endif // defined(__APPLE__)

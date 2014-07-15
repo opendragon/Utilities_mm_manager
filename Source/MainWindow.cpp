@@ -4,8 +4,7 @@
 //
 //  Project:    M+M
 //
-//  Contains:   The function and variable declarations for common entities for M+M clients and
-//              services.
+//  Contains:   The class definition for the primary window of the channel manager application.
 //
 //  Written by: Norman Jaffe
 //
@@ -39,13 +38,16 @@
 
 #include "MainWindow.h"
 
+//#include "ODEnableLogging.h"
+#include "ODLogging.h"
+
 #if defined(__APPLE__)
 # pragma clang diagnostic push
 # pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
 #endif // defined(__APPLE__)
 /*! @file
  
- @brief The class declaration for objects thrown by exceptions within M+M. */
+ @brief The class definition for the primary window of the channel manager application. */
 #if defined(__APPLE__)
 # pragma clang diagnostic pop
 #endif // defined(__APPLE__)
@@ -69,15 +71,19 @@
 MainWindow::MainWindow(void)  :
     inherited("Channel Manager", Colours::lightgrey, inherited::allButtons)
 {
+    OD_LOG_ENTER(); //####
+    setOpaque(true);
     setContentOwned(new MainContentComponent(), true);
     centreWithSize(getWidth(), getHeight());
     setVisible(true);
     setDropShadowEnabled(true);
+    OD_LOG_EXIT(); //####
 } // MainWindow::MainWindow
 
 MainWindow::~MainWindow(void)
 {
-    
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_OBJEXIT(); //####
 } // MainWindow::~MainWindow
 
 #if defined(__APPLE__)
@@ -86,18 +92,23 @@ MainWindow::~MainWindow(void)
 
 void MainWindow::closeButtonPressed(void)
 {
+    OD_LOG_OBJENTER(); //####
     // This is called when the user tries to close this window. Here, we'll just
     // ask the app to quit when this happens, but you can change this to do
     // whatever you need.
     JUCEApplication::getInstance()->systemRequestedQuit();
+    OD_LOG_OBJEXIT(); //####
 } // MainWindow::closeButtonPressed
 
 int MainWindow::getDesktopWindowStyleFlags(void)
 const
 {
+    OD_LOG_OBJENTER(); //####
     int styleFlags = inherited::getDesktopWindowStyleFlags();
     
+    // Make sure that the window has the 'resize' areas, so that the user can perform a resize.
     styleFlags |= ComponentPeer::windowIsResizable;
+    OD_LOG_OBJEXIT_L(styleFlags); //####
     return styleFlags;
 } // MainWindow::getDesktopWindowStyleFlags
 
