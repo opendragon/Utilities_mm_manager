@@ -1425,6 +1425,9 @@
     <ClCompile Include="..\..\Source\MainWindow.cpp">
       <Filter>ChannelManager\Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\ChannelContainer.cpp">
+      <Filter>ChannelManager\Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_audio_basics\buffers\juce_AudioDataConverters.h">
@@ -2751,6 +2754,9 @@
       <Filter>ChannelManager\Source</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\MainWindow.h">
+      <Filter>ChannelManager\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\ChannelContainer.h">
       <Filter>ChannelManager\Source</Filter>
     </ClInclude>
   </ItemGroup>

@@ -51,7 +51,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <AdditionalIncludeDirectories>..\..\JuceLibraryCode;..\..\JuceLibraryCode\modules;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\JuceLibraryCode;..\..\JuceLibraryCode\modules;$(ACE_ROOT);$(YARP_DIR)/generated_include;$(YARP_DIR)/src/libYARP_OS/include;$(YARP_DIR)/src/libYARP_sig/include;$(YARP_DIR)/src/libYARP_dev/include;$(YARP_DIR)/src/libYARP_name/include;$(YARP_DIR)/src/yarpserver/include;D:\dev\MPlusM\Common;D:\dev\MPlusM\Logging;D:\dev\MPlusM\RegistryService;D:\dev\OGDF;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;DEBUG;_DEBUG;JUCER_VS2010_78A501D=1;JUCE_APP_VERSION=1.0.0;JUCE_APP_VERSION_HEX=0x10000;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -92,7 +92,7 @@
     </Midl>
     <ClCompile>
       <Optimization>MinSpace</Optimization>
-      <AdditionalIncludeDirectories>..\..\JuceLibraryCode;..\..\JuceLibraryCode\modules;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\JuceLibraryCode;..\..\JuceLibraryCode\modules;$(ACE_ROOT);$(YARP_DIR)/generated_include;$(YARP_DIR)/src/libYARP_OS/include;$(YARP_DIR)/src/libYARP_sig/include;$(YARP_DIR)/src/libYARP_dev/include;$(YARP_DIR)/src/libYARP_name/include;$(YARP_DIR)/src/yarpserver/include;D:\dev\MPlusM\Common;D:\dev\MPlusM\Logging;D:\dev\MPlusM\RegistryService;D:\dev\OGDF;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;JUCER_VS2010_78A501D=1;JUCE_APP_VERSION=1.0.0;JUCE_APP_VERSION_HEX=0x10000;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -1218,6 +1218,7 @@
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_gui_extra\juce_gui_extra.cpp" />
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_opengl\juce_opengl.cpp" />
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_video\juce_video.cpp" />
+    <ClCompile Include="..\..\Source\ChannelContainer.cpp" />
     <ClCompile Include="..\..\Source\ChannelManagerApp.cpp" />
     <ClCompile Include="..\..\Source\ChannelManagerMain.cpp" />
     <ClCompile Include="..\..\Source\MainContentComponent.cpp" />
@@ -1663,6 +1664,7 @@
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_video\juce_video.h" />
     <ClInclude Include="..\..\JuceLibraryCode\AppConfig.h" />
     <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h" />
+    <ClInclude Include="..\..\Source\ChannelContainer.h" />
     <ClInclude Include="..\..\Source\ChannelManagerApp.h" />
     <ClInclude Include="..\..\Source\MainContentComponent.h" />
     <ClInclude Include="..\..\Source\MainWindow.h" />
