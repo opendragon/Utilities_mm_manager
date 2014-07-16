@@ -52,6 +52,9 @@
 # pragma clang diagnostic pop
 #endif // defined(__APPLE__)
 
+using namespace ChannelManager;
+using namespace std;
+
 #if defined(__APPLE__)
 # pragma mark Private structures, constants and variables
 #endif // defined(__APPLE__)
@@ -73,7 +76,7 @@ MainWindow::MainWindow(void)  :
 {
     OD_LOG_ENTER(); //####
     setOpaque(true);
-    setContentOwned(new MainContentComponent(), true);
+    setContentOwned(new MainContentComponent, true);
     centreWithSize(getWidth(), getHeight());
     setVisible(true);
     setDropShadowEnabled(true);

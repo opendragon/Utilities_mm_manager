@@ -4,7 +4,7 @@
 //
 //  Project:    M+M
 //
-//  Contains:   The class declaration for the application object of the channel manager application.
+//  Contains:   The class definition for the application object of the channel manager application.
 //
 //  Written by: Norman Jaffe
 //
@@ -37,6 +37,7 @@
 //--------------------------------------------------------------------------------------------------
 
 #include "ChannelManagerApp.h"
+#include "ChannelEntry.h"
 
 //#include "ODEnableLogging.h"
 #include "ODLogging.h"
@@ -47,10 +48,13 @@
 #endif // defined(__APPLE__)
 /*! @file
  
- @brief The class declaration for the application object of the channel manager application. */
+ @brief The class definition for the application object of the channel manager application. */
 #if defined(__APPLE__)
 # pragma clang diagnostic pop
 #endif // defined(__APPLE__)
+
+using namespace ChannelManager;
+using namespace std;
 
 #if defined(__APPLE__)
 # pragma mark Private structures, constants and variables

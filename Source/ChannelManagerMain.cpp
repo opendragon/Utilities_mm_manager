@@ -52,6 +52,9 @@
 # pragma clang diagnostic pop
 #endif // defined(__APPLE__)
 
+using namespace ChannelManager;
+using namespace std;
+
 #if defined(__APPLE__)
 # pragma mark Private structures, constants and variables
 #endif // defined(__APPLE__)

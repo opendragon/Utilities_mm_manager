@@ -37,6 +37,7 @@
 //--------------------------------------------------------------------------------------------------
 
 #if (! defined(MainWindow_H_))
+# define MainWindow_H_ /* Header guard */
 
 # include "MainContentComponent.h"
 
@@ -51,32 +52,37 @@
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
 
-/*! @brief The main window of the application. */
-class MainWindow : public DocumentWindow
+namespace ChannelManager
 {
-public:
     
-    /*! @brief The constructor. */
-    MainWindow(void);
-
-    /*! @brief The destructor. */
-    virtual ~MainWindow(void);
+    /*! @brief The main window of the application. */
+    class MainWindow : public DocumentWindow
+    {
+    public:
+        
+        /*! @brief The constructor. */
+        MainWindow(void);
+        
+        /*! @brief The destructor. */
+        virtual ~MainWindow(void);
+        
+        /*! @brief This method is called when the user tries to close the window. */
+        void closeButtonPressed(void);
+        
+        /*! @brief Return the window style flags.
+         @returns The window style flags. */
+        int getDesktopWindowStyleFlags(void)
+        const;
+        
+    private:
+        
+        /*! @brief The class that this class is derived from. */
+        typedef DocumentWindow inherited;
+        
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainWindow)
+        
+    }; // MainWindow
     
-    /*! @brief This method is called when the user tries to close the window. */
-    void closeButtonPressed(void);
-
-    /*! @brief Return the window style flags.
-     @returns The window style flags. */
-    int getDesktopWindowStyleFlags(void)
-    const;
-
-private:
-
-    /*! @brief The class that this class is derived from. */
-    typedef DocumentWindow inherited;
-    
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainWindow)
-
-}; // MainWindow
+} // ChannelManager
 
 #endif // ! defined(MainWindow_H_)

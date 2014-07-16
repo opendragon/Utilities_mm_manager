@@ -1,10 +1,10 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       MainContentComponent.h
+//  File:       ChannelContainer.h
 //
 //  Project:    M+M
 //
-//  Contains:   The class definition for a visible entity that has one or more channels or ports.
+//  Contains:   The class declaration for a visible entity that has one or more channels or ports.
 //
 //  Written by: Norman Jaffe
 //
@@ -37,10 +37,15 @@
 //--------------------------------------------------------------------------------------------------
 
 #if (! defined(ChannelContainer_H_))
+# define ChannelContainer_H_ /* Header guard */
 
 # if (! defined(DOXYGEN))
 #  include "../JuceLibraryCode/JuceHeader.h"
 # endif // ! defined(DOXYGEN)
+
+# include "ChannelEntry.h"
+
+# include <ogdf/basic/Graph.h>
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -48,60 +53,192 @@
 # endif // defined(__APPLE__)
 /*! @file
  
- @brief The class definition for a visible entity that has one or more channels or ports. */
+ @brief The class declaration for a visible entity that has one or more channels or ports. */
+
+/*! @namespace ChannelManager
+ @brief The classes that implement the Channel Manager application. */
+
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
 
-class MainContentComponent;
-
-/*! @brief A container for one or more ports or channels. */
-class ChannelContainer : public Component
+namespace ChannelManager
 {
-public:
+    class ChannelEntry;
+    class MainContentComponent;
     
-    /*! @brief The constructor.
-     @param owner The owner of the entity.
-     @param title The title of the entity. */
-    ChannelContainer(MainContentComponent & owner,
-                     const String &         title);
-    
-    /*! @brief The destructor. */
-    virtual ~ChannelContainer(void);
-    
-    /*! @brief Called when a mouse button is pressed.
-     @param ee Details about the position and status of the mouse event. */
-    void mouseDown(const MouseEvent & ee) override;
-    
-    /*! @brief Called when the mouse is moved while a button is held down.
-     @param ee Details about the position and status of the mouse event. */
-    void mouseDrag(const MouseEvent & ee) override;
-    
-    /*! @brief Draw the content of the component. */
-    void paint(Graphics & gg) override;
-    
-    /*! @brief Called when the component size has been changed. */
-    void resized(void) override;
-    
-private:
-    
-    /*! @brief The class that this class is derived from. */
-    typedef Component inherited;
-    
-    /*! @brief Restrictions on the components size or position. */
-    ComponentBoundsConstrainer _constrainer;
+    /*! @brief A container for one or more ports or channels. */
+    class ChannelContainer : public Component
+    {
+    public:
+        
+        /*! @brief What kind of container. */
+        enum ContainerKind
+        {
+            /*! @brief The container is a client or adapter. */
+            kContainerKindClientOrAdapter,
+            
+            /*! @brief The container is a service. */
+            kContainerKindService,
+            
+            /*! @brief The container is neither a serice nor a client nor an adapter. */
+            kContainerKindOther
+            
+        }; // ContainerKind
+        
+        /*! @brief The constructor.
+         @param kind The kind of entity.
+         @param title The title of the entity.
+         @param behaviour The behavioural model if a service.
+         @param description The description, if this is a service.
+         @param owner The owner of the entity. */
+        ChannelContainer(const ContainerKind    kind,
+                         const String &         title,
+                         const String &         behaviour,
+                         const String &         description,
+                         MainContentComponent & owner);
+        
+        /*! @brief The destructor. */
+        virtual ~ChannelContainer(void);
+        
+        /*! @brief Add a port to the panel.
+         @param portName The name of the port.
+         @param portProtocol The protocol of the port.
+         @param portKind What the port will be used for.
+         @param direction The primary direction of the port.
+         @returns The newly-created port. */
+        ChannelEntry * addPort(const String &                    portName,
+                               const String &                    portProtocol = "",
+                               const ChannelEntry::PortUsage     portKind =
+                                                                    ChannelEntry::kPortUsageOther,
+                               const ChannelEntry::PortDirection direction =
+                                                        ChannelEntry::kPortDirectionInputOutput);
 
-    /*! @brief Used to take care of the logic for dragging the component. */
-    ComponentDragger _dragger;
-
-    /*! @brief The title of the entity. */
-    String _title;
+        /*! @brief Deselect the entity. */
+        inline void deselect(void)
+        {
+            _selected = false;
+        } // deselect
+        
+        /*! @brief Return the node corresponding to the entity.
+         @returns The node corresponding to the entity. */
+        inline ogdf::node getNode(void)
+        const
+        {
+            return _node;
+        } // getNode
+        
+        /*! @brief Returns the number of ports in this panel.
+         @returns The number of ports in this panel. */
+        inline int getNumPorts(void)
+        const
+        {
+            return getNumChildComponents();
+        } // getNumPorts
+        
+        inline MainContentComponent & getOwner(void)
+        const
+        {
+            return _owner;
+        } // getOwner
+        
+        /*! @brief Returns a port by index.
+         @param num The zero-origin index of the port.
+         @returns A port or @c NULL if the index is out of range. */
+        ChannelEntry * getPort(const int num)
+        const;
+        
+        /*! @brief Return the amount of space to the left of the text being displayed.
+         @returns The amount of space to the left of the text being displayed. */
+        float getTextInset(void)
+        const;
+        
+        /*! @brief Check if a port is part of the entity.
+         @param aPort The port to be checked for.
+         @returns @c true if the port is contained within the entity and @c false otherwise. */
+        bool hasPort(const ChannelEntry * aPort);
+        
+        /*! @brief Return @c true is the entity is selected.
+         @returns @c true if the entity is selected and @c false otherwise. */
+        inline bool isSelected(void)
+        const
+        {
+            return _selected;
+        } // isSelected
+        
+        /*! @brief Called when a mouse button is pressed.
+         @param ee Details about the position and status of the mouse event. */
+        void mouseDown(const MouseEvent & ee) override;
+        
+        /*! @brief Called when the mouse is moved while a button is held down.
+         @param ee Details about the position and status of the mouse event. */
+        void mouseDrag(const MouseEvent & ee) override;
+        
+        /*! @brief Draw the content of the component. */
+        void paint(Graphics & gg) override;
+        
+        /*! @brief Called when the component size has been changed. */
+        void resized(void) override;
+        
+        /*! @brief Select the entity. */
+        inline void select(void)
+        {
+            _selected = true;
+        } // select
+        
+        /*! @brief Sets the node corresponding to the entity.
+         @param newNode The new value for the node corresponding to the entity. */
+        inline void setNode(ogdf::node newNode)
+        {
+            _node = newNode;
+        } // setNode
+        
+    private:
+        
+        /*! @brief The class that this class is derived from. */
+        typedef Component inherited;
+        
+        /*! @brief Restrictions on the components size or position. */
+        ComponentBoundsConstrainer _constrainer;
+        
+        /*! @brief Used to take care of the logic for dragging the component. */
+        ComponentDragger _dragger;
+        
+        /*! @brief The behavioural model if a service. */
+        String _behaviour;
+        
+        /*! @brief The description of the container, if it is a service. */
+        String _description;
+        
+        /*! @brief The node corresponding to the container. */
+        ogdf::node _node;
+        
+        /*! @brief The owner of the container. */
+        MainContentComponent & _owner;
+        
+        /*! @brief The height of the title of the container. */
+        float _titleHeight;
+        
+        /*! @brief The kind of container. */
+        ContainerKind _kind;
+        
+        /*! @brief @c true if the container is selected and @c false otherwise. */
+        bool _selected;
+        
+# if defined(__APPLE__)
+#  pragma clang diagnostic push
+#  pragma clang diagnostic ignored "-Wunused-private-field"
+# endif // defined(__APPLE__)
+        /*! @brief Filler to pad to alignment boundary */
+        char _filler[7];
+# if defined(__APPLE__)
+#  pragma clang diagnostic pop
+# endif // defined(__APPLE__)
+        
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ChannelContainer)
+        
+    }; // ChannelContainer
     
-    /*! @brief The owner of the entity. */
-    MainContentComponent & _owner;
-    
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ChannelContainer)
-    
-}; // MainContentComponent
+} // ChannelManager
 
 #endif // ! defined(ChannelContainer_H_)

@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       MainContentComponent.h
+//  File:       ChannelContainer.cpp
 //
 //  Project:    M+M
 //
@@ -37,6 +37,7 @@
 //--------------------------------------------------------------------------------------------------
 
 #include "ChannelContainer.h"
+#include "ChannelEntry.h"
 #include "MainContentComponent.h"
 
 //#include "ODEnableLogging.h"
@@ -53,9 +54,15 @@
 # pragma clang diagnostic pop
 #endif // defined(__APPLE__)
 
+using namespace ChannelManager;
+using namespace std;
+
 #if defined(__APPLE__)
 # pragma mark Private structures, constants and variables
 #endif // defined(__APPLE__)
+
+/*! @brief The amount of space between each row of the entries in the container. */
+static const float lEntryGap = 1;
 
 /*! @brief The amount of space to the left of the text being displayed. */
 static const float lTextInset = 2;
@@ -72,29 +79,130 @@ static const float lTextInset = 2;
 # pragma mark Constructors and destructors
 #endif // defined(__APPLE__)
 
-ChannelContainer::ChannelContainer(MainContentComponent & owner,
-                                   const String &         title) :
-    inherited(), _title(title), _owner(owner)
+ChannelContainer::ChannelContainer(const ContainerKind    kind,
+                                   const String &         title,
+                                   const String &         behaviour,
+                                   const String &         description,
+                                   MainContentComponent & owner) :
+    inherited(title), _behaviour(behaviour), _description(description), _node(NULL), _owner(owner),
+    _kind(kind), _selected(false)
 {
     OD_LOG_ENTER(); //####
+    OD_LOG_S3s("title = ", _title, "behaviour = ", behaviour, "description = ", description); //####
     Font & headerFont = _owner.getNormalFont();
-    float  headerHeight = headerFont.getHeight();
-    float  headerWidth = headerFont.getStringWidthFloat(_title + " ") + lTextInset;
     
-    setSize(headerWidth, headerHeight);
-//    setName("blorg");
+    _titleHeight = headerFont.getHeight();
+    setSize(headerFont.getStringWidthFloat(getName() + " ") + getTextInset(), _titleHeight);
     OD_LOG_EXIT(); //####
 } // ChannelContainer::ChannelContainer
 
 ChannelContainer::~ChannelContainer(void)
 {
     OD_LOG_OBJENTER(); //####
+    for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
+    {
+        ChannelEntry * aPort = getPort(ii);
+        
+        if (aPort)
+        {
+            _owner.forgetPort(aPort);
+        }
+    }
+    deleteAllChildren();
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::~ChannelContainer
 
 #if defined(__APPLE__)
 # pragma mark Actions
 #endif // defined(__APPLE__)
+
+ChannelEntry * ChannelContainer::addPort(const String &                    portName,
+                                         const String &                    portProtocol,
+                                         const ChannelEntry::PortUsage     portKind,
+                                         const ChannelEntry::PortDirection direction)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_S2s("portName = ", portName, "portProtocol = ", portProtocol); //####
+    int            countBefore = getNumPorts();
+    ChannelEntry * aPort = new ChannelEntry(this, portName, portProtocol, portKind, direction);
+    float          newWidth = max(aPort->getWidth(), getWidth());
+    float          newHeight = aPort->getHeight() + getHeight() + lEntryGap;
+    
+    aPort->setTopLeftPosition(0, getHeight() + lEntryGap);
+    setSize(newWidth, newHeight);
+    addAndMakeVisible(aPort);
+    for (int ii = 0; countBefore >= ii; ++ii)
+    {
+        ChannelEntry * bPort = getPort(ii);
+        
+        if (bPort)
+        {
+            bPort->setSize(newWidth, bPort->getHeight());
+        }
+    }
+    if (0 < countBefore)
+    {
+        ChannelEntry * bPort = getPort(countBefore - 1);
+        
+        if (bPort)
+        {
+            bPort->unsetAsLastPort();
+        }
+    }
+    OD_LOG_OBJEXIT_P(aPort); //####
+    return aPort;
+} // ChannelContainer::addPort
+
+ChannelEntry * ChannelContainer::getPort(const int num)
+const
+{
+#if 0
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_L1("num = ", num); //####
+#endif // 0
+    ChannelEntry * result;
+    
+    if (0 <= num)
+    {
+        result = reinterpret_cast<ChannelEntry *> (getChildComponent(num));
+    }
+    else
+    {
+        result = NULL;
+    }
+#if 0
+    OD_LOG_OBJEXIT_P(result); //####
+#endif // 0
+    return result;
+} // ChannelContainer::getPort
+
+float ChannelContainer::getTextInset(void)
+const
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_OBJEXIT_D(lTextInset); //####
+    return lTextInset;
+} // ChannelContainer::getTextInset
+
+bool ChannelContainer::hasPort(const ChannelEntry * aPort)
+{
+    OD_LOG_OBJENTER(); //####
+    bool result = false;
+    
+    for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
+    {
+        ChannelEntry * anEntry = getPort(ii);
+        
+        if (aPort == anEntry)
+        {
+            result = true;
+            break;
+        }
+        
+    }
+    OD_LOG_OBJEXIT_B(result); //####
+    return result;
+} // ChannelContainer::hasPort
 
 void ChannelContainer::mouseDown(const MouseEvent & ee)
 {
@@ -116,39 +224,15 @@ void ChannelContainer::paint(Graphics & gg)
 {
     OD_LOG_OBJENTER(); //####
     AttributedString as;
-    Font             fo;
     
-    as.setJustification(Justification::topLeft);
-    as.append(_title, _owner.getNormalFont(), Colours::white);
-    
-    
-
-    
-    
-    Rectangle<float> area(getLocalBounds().toFloat());
+    as.setJustification(Justification::left);
+    as.append(getName(), _owner.getNormalFont(), Colours::white);
+    Rectangle<float> area(0, 0, getLocalBounds().getWidth(), _titleHeight);
     
     gg.setColour(Colours::darkgrey);
     gg.fillRect(area);
-    area.setLeft(area.getX() + lTextInset);
+    area.setLeft(area.getX() + getTextInset());
     as.draw(gg, area);
-#if 0
-    Rectangle<float> area(getLocalBounds().toFloat().reduced(2.0f));
-    
-    gg.setColour(Colours::orange.withAlpha(0.6f));
-    gg.fillRoundedRectangle(area, 10.0f);
-    
-    gg.setColour(Colours::darkgrey);
-    gg.drawRoundedRectangle(area, 10.0f, 2.0f);
-    
-    AttributedString as;
-    
-    as.setJustification(Justification::centred);
-    as.setWordWrap(AttributedString::none);
-    as.append("Balls!\n"
-              "(Drag Me)");
-    as.setColour(Colours::black);
-    as.draw(gg, area);
-#endif // 0
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::paint
 
@@ -156,8 +240,6 @@ void ChannelContainer::resized(void)
 {
     OD_LOG_OBJENTER(); //####
     // Just set the limits of our constrainer so that we don't drag ourselves off the screen
-//    int scrollbarThickness = 16;
-    
     _constrainer.setMinimumOnscreenAmounts(getHeight(), getWidth(), getHeight(), getWidth());
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::resized
