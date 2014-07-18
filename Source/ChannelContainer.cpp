@@ -38,9 +38,9 @@
 
 #include "ChannelContainer.h"
 #include "ChannelEntry.h"
-#include "MainContentComponent.h"
+#include "ChannelsPanel.h"
 
-//#include "ODEnableLogging.h"
+#include "ODEnableLogging.h"
 #include "ODLogging.h"
 
 #if defined(__APPLE__)
@@ -79,20 +79,22 @@ static const float lTextInset = 2;
 # pragma mark Constructors and destructors
 #endif // defined(__APPLE__)
 
-ChannelContainer::ChannelContainer(const ContainerKind    kind,
-                                   const String &         title,
-                                   const String &         behaviour,
-                                   const String &         description,
-                                   MainContentComponent & owner) :
+ChannelContainer::ChannelContainer(const ContainerKind kind,
+                                   const String &      title,
+                                   const String &      behaviour,
+                                   const String &      description,
+                                   ChannelsPanel &       owner) :
     inherited(title), _behaviour(behaviour), _description(description), _node(NULL), _owner(owner),
-    _kind(kind), _selected(false)
+    _kind(kind), _selected(false), _visited(false)
 {
     OD_LOG_ENTER(); //####
-    OD_LOG_S3s("title = ", _title, "behaviour = ", behaviour, "description = ", description); //####
+    OD_LOG_S3s("title = ", title.toStdString(), "behaviour = ", behaviour.toStdString(), //####
+               "description = ", description.toStdString()); //####
     Font & headerFont = _owner.getNormalFont();
     
     _titleHeight = headerFont.getHeight();
     setSize(headerFont.getStringWidthFloat(getName() + " ") + getTextInset(), _titleHeight);
+    setVisible(true);
     OD_LOG_EXIT(); //####
 } // ChannelContainer::ChannelContainer
 
@@ -116,13 +118,14 @@ ChannelContainer::~ChannelContainer(void)
 # pragma mark Actions
 #endif // defined(__APPLE__)
 
-ChannelEntry * ChannelContainer::addPort(const String &                    portName,
-                                         const String &                    portProtocol,
-                                         const ChannelEntry::PortUsage     portKind,
-                                         const ChannelEntry::PortDirection direction)
+ChannelEntry * ChannelContainer::addPort(const String &      portName,
+                                         const String &      portProtocol,
+                                         const PortUsage     portKind,
+                                         const PortDirection direction)
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_S2s("portName = ", portName, "portProtocol = ", portProtocol); //####
+    OD_LOG_S2s("portName = ", portName.toStdString(), "portProtocol = ", //####
+               portProtocol.toStdString()); //####
     int            countBefore = getNumPorts();
     ChannelEntry * aPort = new ChannelEntry(this, portName, portProtocol, portKind, direction);
     float          newWidth = max(aPort->getWidth(), getWidth());
@@ -176,14 +179,6 @@ const
     return result;
 } // ChannelContainer::getPort
 
-float ChannelContainer::getTextInset(void)
-const
-{
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_OBJEXIT_D(lTextInset); //####
-    return lTextInset;
-} // ChannelContainer::getTextInset
-
 bool ChannelContainer::hasPort(const ChannelEntry * aPort)
 {
     OD_LOG_OBJENTER(); //####
@@ -222,18 +217,28 @@ void ChannelContainer::mouseDrag(const MouseEvent & ee)
 
 void ChannelContainer::paint(Graphics & gg)
 {
+#if 0
     OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("gg = ", &gg); //####
+#endif // 0
     AttributedString as;
     
     as.setJustification(Justification::left);
     as.append(getName(), _owner.getNormalFont(), Colours::white);
-    Rectangle<float> area(0, 0, getLocalBounds().getWidth(), _titleHeight);
+    Rectangle<int>   bounds(getLocalBounds());
+    Rectangle<float> area(bounds.getX(), bounds.getY(), bounds.getWidth(), _titleHeight);
     
+#if 0
+    OD_LOG_D4("x <- ", area.getX(), "y <- ", area.getY(), "w <- ",area.getWidth(), "h <- ", //####
+              area.getHeight()); //####
+#endif // 0
     gg.setColour(Colours::darkgrey);
     gg.fillRect(area);
     area.setLeft(area.getX() + getTextInset());
     as.draw(gg, area);
+#if 0
     OD_LOG_OBJEXIT(); //####
+#endif // 0
 } // ChannelContainer::paint
 
 void ChannelContainer::resized(void)
@@ -247,6 +252,16 @@ void ChannelContainer::resized(void)
 #if defined(__APPLE__)
 # pragma mark Accessors
 #endif // defined(__APPLE__)
+
+float ChannelContainer::getTextInset(void)
+const
+{
+#if 0
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_OBJEXIT_D(lTextInset); //####
+#endif // 0
+    return lTextInset;
+} // ChannelContainer::getTextInset
 
 #if defined(__APPLE__)
 # pragma mark Global functions

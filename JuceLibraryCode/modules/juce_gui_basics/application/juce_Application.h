@@ -55,14 +55,14 @@
 
             void initialise (const String& commandLine)
             {
-                myMainWindow = new MyApplicationWindow();
-                myMainWindow->setBounds (100, 100, 400, 500);
-                myMainWindow->setVisible (true);
+                myChannelsWindow = new MyApplicationWindow();
+                myChannelsWindow->setBounds (100, 100, 400, 500);
+                myChannelsWindow->setVisible (true);
             }
 
             void shutdown()
             {
-                myMainWindow = nullptr;
+                myChannelsWindow = nullptr;
             }
 
             const String getApplicationName()
@@ -76,7 +76,7 @@
             }
 
         private:
-            ScopedPointer<MyApplicationWindow> myMainWindow;
+            ScopedPointer<MyApplicationWindow> myChannelsWindow;
         };
 
         // this generates boilerplate code to launch our app class:

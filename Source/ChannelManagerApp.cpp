@@ -37,9 +37,10 @@
 //--------------------------------------------------------------------------------------------------
 
 #include "ChannelManagerApp.h"
-#include "ChannelEntry.h"
+#include "ChannelContainer.h"
+#include "ScannerThread.h"
 
-//#include "ODEnableLogging.h"
+#include "ODEnableLogging.h"
 #include "ODLogging.h"
 
 #if defined(__APPLE__)
@@ -73,8 +74,16 @@ using namespace std;
 #endif // defined(__APPLE__)
 
 ChannelManagerApplication::ChannelManagerApplication(void) :
-    inherited()
+    inherited(), _mainWindow(NULL), _yarp(NULL), _scanner(NULL)
 {
+#if defined(MpM_ServicesLogToStandardError)
+    OD_LOG_INIT(ProjectInfo::projectName, kODLoggingOptionIncludeProcessID | //####
+                kODLoggingOptionIncludeThreadID | kODLoggingOptionWriteToStderr | //####
+                kODLoggingOptionEnableThreadSupport); //####
+#else // ! defined(MpM_ServicesLogToStandardError)
+    OD_LOG_INIT(ProjectInfo::projectName, kODLoggingOptionIncludeProcessID | //####
+                kODLoggingOptionIncludeThreadID | kODLoggingOptionEnableThreadSupport); //####
+#endif // ! defined(MpM_ServicesLogToStandardError)
     OD_LOG_ENTER(); //####
     OD_LOG_EXIT(); //####
 } // ChannelManagerApplication::ChannelManagerApplication
@@ -100,23 +109,49 @@ void ChannelManagerApplication::anotherInstanceStarted(const String & commandLin
 
 const String ChannelManagerApplication::getApplicationName(void)
 {
+#if 0
     OD_LOG_OBJENTER(); //####
-    OD_LOG_OBJEXIT_S(ProjectInfo::projectName.c_str()); //####
+    OD_LOG_OBJEXIT_S(ProjectInfo::projectName); //####
+#endif // 0
     return ProjectInfo::projectName;
 } // ChannelManagerApplication::getApplicationName
 
 const String ChannelManagerApplication::getApplicationVersion(void)
 {
+#if 0
     OD_LOG_OBJENTER(); //####
-    OD_LOG_OBJEXIT_S(ProjectInfo::versionString.c_str()); //####
+    OD_LOG_OBJEXIT_S(ProjectInfo::versionString); //####
+#endif // 0
     return ProjectInfo::versionString;
 } // ChannelManagerApplication::getApplicationVersion
 
 void ChannelManagerApplication::initialise(const String & commandLine)
 {
     OD_LOG_OBJENTER(); //####
-    // This method is where you should put your application's initialisation code..
-    mainWindow = new MainWindow;
+    MplusM::Common::SetUpLogger(ProjectInfo::projectName);
+    MplusM::Common::Initialize(ProjectInfo::projectName);
+#if CheckNetworkWorks_
+    if (yarp::os::Network::checkNetwork())
+#endif // CheckNetworkWorks_
+    {
+        _yarp = new yarp::os::Network; // This is necessary to establish any connection to the YARP
+                                       // infrastructure
+    }
+#if CheckNetworkWorks_
+    else
+    {
+        OD_LOG("! (yarp::os::Network::checkNetwork())"); //####
+        yarp::os::impl::Logger & theLogger = MplusM::Common::GetLogger();
+        
+        theLogger.fail("YARP network not running.");
+    }
+#endif // CheckNetworkWorks_
+    _mainWindow = new ChannelsWindow(ProjectInfo::projectName);
+    if (_yarp)
+    {
+        _scanner = new ScannerThread(ProjectInfo::projectName, _mainWindow);
+        _scanner->startThread();
+    }
     OD_LOG_OBJEXIT(); //####
 } // ChannelManagerApplication::initialise
 
@@ -130,9 +165,10 @@ bool ChannelManagerApplication::moreThanOneInstanceAllowed(void)
 void ChannelManagerApplication::shutdown(void)
 {
     OD_LOG_OBJENTER(); //####
-    // Add your application's shutdown code here..
-
-    mainWindow = nullptr; // (deletes our window)
+    _scanner = nullptr; // shuts down thread
+    _mainWindow = nullptr; // (deletes our window)
+    yarp::os::Network::fini();
+    _yarp = nullptr;
     OD_LOG_OBJEXIT(); //####
 } // ChannelManagerApplication::shutdown
 

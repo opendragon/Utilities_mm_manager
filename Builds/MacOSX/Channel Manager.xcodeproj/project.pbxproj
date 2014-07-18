@@ -31,21 +31,23 @@
 		BC56C45521A083DFABDFB7B2 /* juce_gui_basics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 157BEB9CE1D161D7972470B8 /* juce_gui_basics.mm */; };
 		CE92E43C53FC0C70850250AD /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA8B245630FFD64DF900345D /* QuickTime.framework */; };
 		DEEF248165B3103CD7681805 /* juce_gui_extra.mm in Sources */ = {isa = PBXBuildFile; fileRef = 01BE58DF625AAE46E21A507C /* juce_gui_extra.mm */; };
+		DF1470A61979833900E182D6 /* libOGDFDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF1470A51979833900E182D6 /* libOGDFDebug.a */; };
+		DF1470AB1979848700E182D6 /* libOGDF.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF74B6781979747800A6ECD3 /* libOGDF.a */; };
+		DF4C6E1C19797ABD006CFB14 /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF74B66F1976D2BF00A6ECD3 /* libc++.dylib */; };
 		DF74B65919747BE800A6ECD3 /* ChannelManagerApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF74B65719747BE800A6ECD3 /* ChannelManagerApp.cpp */; };
-		DF74B65C19747E3D00A6ECD3 /* MainWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF74B65A19747E3D00A6ECD3 /* MainWindow.cpp */; };
-		DF74B661197583CD00A6ECD3 /* libOGDF.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF74B660197583CD00A6ECD3 /* libOGDF.a */; };
+		DF74B65C19747E3D00A6ECD3 /* ChannelsWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF74B65A19747E3D00A6ECD3 /* ChannelsWindow.cpp */; };
 		DF74B663197583D800A6ECD3 /* libmpmCommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF74B662197583D800A6ECD3 /* libmpmCommon.a */; };
 		DF74B665197583DD00A6ECD3 /* libodLogging.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF74B664197583DD00A6ECD3 /* libodLogging.a */; };
 		DF74B667197583E700A6ECD3 /* libYARP_init.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF74B666197583E700A6ECD3 /* libYARP_init.a */; };
 		DF74B669197583EE00A6ECD3 /* libYARP_OS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF74B668197583EE00A6ECD3 /* libYARP_OS.a */; };
 		DF74B66B197583F900A6ECD3 /* libACE.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF74B66A197583F900A6ECD3 /* libACE.dylib */; };
 		DF74B66E19759B8100A6ECD3 /* ChannelContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF74B66C19759B8100A6ECD3 /* ChannelContainer.cpp */; };
-		DF74B6701976D2BF00A6ECD3 /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF74B66F1976D2BF00A6ECD3 /* libc++.dylib */; };
 		DF74B6731976D8F000A6ECD3 /* ChannelEntry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF74B6711976D8F000A6ECD3 /* ChannelEntry.cpp */; };
+		DF74B676197851F600A6ECD3 /* ScannerThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF74B674197851F600A6ECD3 /* ScannerThread.cpp */; };
 		E2FED85FB76A3966795E8416 /* juce_core.mm in Sources */ = {isa = PBXBuildFile; fileRef = ADC373CE4DEDF850BDE3A738 /* juce_core.mm */; };
 		F33B431E9BA660F6B5034872 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA72840EFF14AF9F39FB65E /* Carbon.framework */; };
 		FC05A001CFB727F29DBDA646 /* juce_video.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8B6D44520CD8F84BD2C3B964 /* juce_video.mm */; };
-		FF5EF427CF5E20F735155CA3 /* MainContentComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A4E0A1FA4F1B777404A2FD46 /* MainContentComponent.cpp */; };
+		FF5EF427CF5E20F735155CA3 /* ChannelsPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A4E0A1FA4F1B777404A2FD46 /* ChannelsPanel.cpp */; };
 		FFD5D4B5504E586A42099C7B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 657CE153E5F14918F42F08F0 /* AudioToolbox.framework */; };
 /* End PBXBuildFile section */
 
@@ -112,7 +114,7 @@
 		0F61CC4C7C3858D1F794E93D /* juce_Value.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_Value.h; path = ../../JuceLibraryCode/modules/juce_data_structures/values/juce_Value.h; sourceTree = SOURCE_ROOT; };
 		0F8415BF3DDC0AAD6F58A6FB /* juce_MidiOutput.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_MidiOutput.cpp; path = ../../JuceLibraryCode/modules/juce_audio_devices/midi_io/juce_MidiOutput.cpp; sourceTree = SOURCE_ROOT; };
 		103ACAFFFE333BC559D018ED /* juce_ChannelRemappingAudioSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_ChannelRemappingAudioSource.h; path = ../../JuceLibraryCode/modules/juce_audio_basics/sources/juce_ChannelRemappingAudioSource.h; sourceTree = SOURCE_ROOT; };
-		104056EDDDED644648A5375F /* Channel Manager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Channel Manager.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		104056EDDDED644648A5375F /* Channel Manager Debug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Channel Manager Debug.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		105623850D9D4EE9609BFB8C /* juce_PropertyPanel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_PropertyPanel.h; path = ../../JuceLibraryCode/modules/juce_gui_basics/properties/juce_PropertyPanel.h; sourceTree = SOURCE_ROOT; };
 		10AC03924B56A4448CA80E09 /* juce_FileListComponent.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_FileListComponent.cpp; path = ../../JuceLibraryCode/modules/juce_gui_basics/filebrowser/juce_FileListComponent.cpp; sourceTree = SOURCE_ROOT; };
 		115C607B879977CAC4D0598C /* juce_mac_QuickTimeMovieComponent.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = juce_mac_QuickTimeMovieComponent.mm; path = ../../JuceLibraryCode/modules/juce_video/native/juce_mac_QuickTimeMovieComponent.mm; sourceTree = SOURCE_ROOT; };
@@ -609,7 +611,7 @@
 		A4489385F13E3800646BF1ED /* juce_TextButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_TextButton.h; path = ../../JuceLibraryCode/modules/juce_gui_basics/buttons/juce_TextButton.h; sourceTree = SOURCE_ROOT; };
 		A485961F5AA9BD26C2D0E2BF /* juce_ChangeBroadcaster.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_ChangeBroadcaster.h; path = ../../JuceLibraryCode/modules/juce_events/broadcasters/juce_ChangeBroadcaster.h; sourceTree = SOURCE_ROOT; };
 		A4891572C138825296BF3558 /* juce_PropertySet.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_PropertySet.cpp; path = ../../JuceLibraryCode/modules/juce_core/containers/juce_PropertySet.cpp; sourceTree = SOURCE_ROOT; };
-		A4E0A1FA4F1B777404A2FD46 /* MainContentComponent.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = MainContentComponent.cpp; path = ../../Source/MainContentComponent.cpp; sourceTree = SOURCE_ROOT; };
+		A4E0A1FA4F1B777404A2FD46 /* ChannelsPanel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ChannelsPanel.cpp; path = ../../Source/ChannelsPanel.cpp; sourceTree = SOURCE_ROOT; };
 		A5872FD9797B34E9D4B711CC /* juce_ImageComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_ImageComponent.h; path = ../../JuceLibraryCode/modules/juce_gui_basics/widgets/juce_ImageComponent.h; sourceTree = SOURCE_ROOT; };
 		A5DA610F9DEE14E8EA4A634C /* juce_ComponentAnimator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_ComponentAnimator.h; path = ../../JuceLibraryCode/modules/juce_gui_basics/layout/juce_ComponentAnimator.h; sourceTree = SOURCE_ROOT; };
 		A635E7980E2B848F47E606B2 /* juce_RelativeTime.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_RelativeTime.cpp; path = ../../JuceLibraryCode/modules/juce_core/time/juce_RelativeTime.cpp; sourceTree = SOURCE_ROOT; };
@@ -757,7 +759,7 @@
 		D2204B76C46235260E9096D9 /* juce_LowLevelGraphicsContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_LowLevelGraphicsContext.h; path = ../../JuceLibraryCode/modules/juce_graphics/contexts/juce_LowLevelGraphicsContext.h; sourceTree = SOURCE_ROOT; };
 		D2698C031A12FE872AFE6162 /* juce_mac_Network.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = juce_mac_Network.mm; path = ../../JuceLibraryCode/modules/juce_core/native/juce_mac_Network.mm; sourceTree = SOURCE_ROOT; };
 		D2F1C95A45819F5682120E09 /* juce_ModifierKeys.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_ModifierKeys.cpp; path = ../../JuceLibraryCode/modules/juce_gui_basics/keyboard/juce_ModifierKeys.cpp; sourceTree = SOURCE_ROOT; };
-		D303D4486320B7F24B35C5C7 /* MainContentComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MainContentComponent.h; path = ../../Source/MainContentComponent.h; sourceTree = SOURCE_ROOT; };
+		D303D4486320B7F24B35C5C7 /* ChannelsPanel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ChannelsPanel.h; path = ../../Source/ChannelsPanel.h; sourceTree = SOURCE_ROOT; };
 		D3194A2DE65058DC8A0176FE /* juce_Line.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_Line.h; path = ../../JuceLibraryCode/modules/juce_graphics/geometry/juce_Line.h; sourceTree = SOURCE_ROOT; };
 		D35F523D767E45D799EF819E /* juce_OpenGLPixelFormat.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_OpenGLPixelFormat.cpp; path = ../../JuceLibraryCode/modules/juce_opengl/opengl/juce_OpenGLPixelFormat.cpp; sourceTree = SOURCE_ROOT; };
 		D3696A670087731E985097DE /* juce_RenderingHelpers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_RenderingHelpers.h; path = ../../JuceLibraryCode/modules/juce_graphics/native/juce_RenderingHelpers.h; sourceTree = SOURCE_ROOT; };
@@ -804,11 +806,16 @@
 		DE997DC94637DAF87BA4A4FE /* juce_ios_Audio.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_ios_Audio.cpp; path = ../../JuceLibraryCode/modules/juce_audio_devices/native/juce_ios_Audio.cpp; sourceTree = SOURCE_ROOT; };
 		DED798D95F292C6200817C4B /* juce_TreeView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_TreeView.h; path = ../../JuceLibraryCode/modules/juce_gui_basics/widgets/juce_TreeView.h; sourceTree = SOURCE_ROOT; };
 		DEE123C22DE88328C8D6C046 /* juce_AsyncUpdater.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_AsyncUpdater.h; path = ../../JuceLibraryCode/modules/juce_events/broadcasters/juce_AsyncUpdater.h; sourceTree = SOURCE_ROOT; };
+		DF1470A51979833900E182D6 /* libOGDFDebug.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOGDFDebug.a; path = ../../../../../../../usr/local/lib/libOGDFDebug.a; sourceTree = "<group>"; };
+		DF1470A91979840200E182D6 /* libOGDFDebug.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOGDFDebug.a; path = "/Users/M_M/Documents/git.repositories/Channel Manager/Builds/MacOSX/../../../../../../../usr/local/lib/libOGDFDebug.a"; sourceTree = "<absolute>"; };
+		DF1470AC19798BC000E182D6 /* ChannelsDataTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ChannelsDataTypes.h; path = ../../Source/ChannelsDataTypes.h; sourceTree = "<group>"; };
 		DF2EFBEA7BAA9E19E83C151C /* juce_CharacterFunctions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_CharacterFunctions.cpp; path = ../../JuceLibraryCode/modules/juce_core/text/juce_CharacterFunctions.cpp; sourceTree = SOURCE_ROOT; };
+		DF4C6E1A19797AA2006CFB14 /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
+		DF4C6E1D19797AC9006CFB14 /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
 		DF74B65719747BE800A6ECD3 /* ChannelManagerApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ChannelManagerApp.cpp; path = ../../Source/ChannelManagerApp.cpp; sourceTree = SOURCE_ROOT; };
 		DF74B65819747BE800A6ECD3 /* ChannelManagerApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChannelManagerApp.h; path = ../../Source/ChannelManagerApp.h; sourceTree = SOURCE_ROOT; };
-		DF74B65A19747E3D00A6ECD3 /* MainWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MainWindow.cpp; path = ../../Source/MainWindow.cpp; sourceTree = SOURCE_ROOT; };
-		DF74B65B19747E3D00A6ECD3 /* MainWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainWindow.h; path = ../../Source/MainWindow.h; sourceTree = SOURCE_ROOT; };
+		DF74B65A19747E3D00A6ECD3 /* ChannelsWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ChannelsWindow.cpp; path = ../../Source/ChannelsWindow.cpp; sourceTree = SOURCE_ROOT; };
+		DF74B65B19747E3D00A6ECD3 /* ChannelsWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChannelsWindow.h; path = ../../Source/ChannelsWindow.h; sourceTree = SOURCE_ROOT; };
 		DF74B660197583CD00A6ECD3 /* libOGDF.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOGDF.a; path = ../../../../../../../usr/local/lib/libOGDF.a; sourceTree = "<group>"; };
 		DF74B662197583D800A6ECD3 /* libmpmCommon.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmpmCommon.a; path = ../../../../../../../usr/local/lib/libmpmCommon.a; sourceTree = "<group>"; };
 		DF74B664197583DD00A6ECD3 /* libodLogging.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libodLogging.a; path = ../../../../../../../usr/local/lib/libodLogging.a; sourceTree = "<group>"; };
@@ -820,6 +827,14 @@
 		DF74B66F1976D2BF00A6ECD3 /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
 		DF74B6711976D8F000A6ECD3 /* ChannelEntry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ChannelEntry.cpp; path = ../../Source/ChannelEntry.cpp; sourceTree = SOURCE_ROOT; };
 		DF74B6721976D8F000A6ECD3 /* ChannelEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChannelEntry.h; path = ../../Source/ChannelEntry.h; sourceTree = SOURCE_ROOT; };
+		DF74B674197851F600A6ECD3 /* ScannerThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ScannerThread.cpp; path = ../../Source/ScannerThread.cpp; sourceTree = SOURCE_ROOT; };
+		DF74B675197851F600A6ECD3 /* ScannerThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ScannerThread.h; path = ../../Source/ScannerThread.h; sourceTree = SOURCE_ROOT; };
+		DF74B6781979747800A6ECD3 /* libOGDF.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOGDF.a; path = "/Users/M_M/Documents/git.repositories/Channel Manager/Builds/MacOSX/../../../../../../../usr/local/lib/libOGDF.a"; sourceTree = "<absolute>"; };
+		DF74B67A1979748400A6ECD3 /* libmpmCommon.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmpmCommon.a; path = "/Users/M_M/Documents/git.repositories/Channel Manager/Builds/MacOSX/../../../../../../../usr/local/lib/libmpmCommon.a"; sourceTree = "<absolute>"; };
+		DF74B67C1979749300A6ECD3 /* libodLogging.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libodLogging.a; path = "/Users/M_M/Documents/git.repositories/Channel Manager/Builds/MacOSX/../../../../../../../usr/local/lib/libodLogging.a"; sourceTree = "<absolute>"; };
+		DF74B67E197974A400A6ECD3 /* libYARP_init.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libYARP_init.a; path = "/Users/M_M/Documents/git.repositories/Channel Manager/Builds/MacOSX/../../../../../../../usr/local/lib/libYARP_init.a"; sourceTree = "<absolute>"; };
+		DF74B680197974B300A6ECD3 /* libYARP_OS.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libYARP_OS.a; path = "/Users/M_M/Documents/git.repositories/Channel Manager/Builds/MacOSX/../../../../../../../usr/local/lib/libYARP_OS.a"; sourceTree = "<absolute>"; };
+		DF74B682197974BB00A6ECD3 /* libACE.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libACE.dylib; path = "/Users/M_M/Documents/git.repositories/Channel Manager/Builds/MacOSX/../../../../../../../usr/local/lib/libACE.dylib"; sourceTree = "<absolute>"; };
 		DF91B3E932852EBD0347C905 /* juce_android_Messaging.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_android_Messaging.cpp; path = ../../JuceLibraryCode/modules/juce_events/native/juce_android_Messaging.cpp; sourceTree = SOURCE_ROOT; };
 		DF9FF6D4DE18B3DF54A65B7D /* juce_Toolbar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_Toolbar.h; path = ../../JuceLibraryCode/modules/juce_gui_basics/widgets/juce_Toolbar.h; sourceTree = SOURCE_ROOT; };
 		E059C6388A6E99841B353887 /* juce_ZipFile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_ZipFile.cpp; path = ../../JuceLibraryCode/modules/juce_core/zip/juce_ZipFile.cpp; sourceTree = SOURCE_ROOT; };
@@ -941,13 +956,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DF74B661197583CD00A6ECD3 /* libOGDF.a in Frameworks */,
+				DF1470A61979833900E182D6 /* libOGDFDebug.a in Frameworks */,
 				DF74B663197583D800A6ECD3 /* libmpmCommon.a in Frameworks */,
 				DF74B665197583DD00A6ECD3 /* libodLogging.a in Frameworks */,
 				DF74B667197583E700A6ECD3 /* libYARP_init.a in Frameworks */,
 				DF74B669197583EE00A6ECD3 /* libYARP_OS.a in Frameworks */,
 				DF74B66B197583F900A6ECD3 /* libACE.dylib in Frameworks */,
-				DF74B6701976D2BF00A6ECD3 /* libc++.dylib in Frameworks */,
+				DF4C6E1C19797ABD006CFB14 /* libc++.dylib in Frameworks */,
+				DF1470AB1979848700E182D6 /* libOGDF.a in Frameworks */,
 				6E425384782FBC454FEED53B /* Accelerate.framework in Frameworks */,
 				FFD5D4B5504E586A42099C7B /* AudioToolbox.framework in Frameworks */,
 				F33B431E9BA660F6B5034872 /* Carbon.framework in Frameworks */,
@@ -1218,10 +1234,13 @@
 				DF74B65719747BE800A6ECD3 /* ChannelManagerApp.cpp */,
 				DF74B65819747BE800A6ECD3 /* ChannelManagerApp.h */,
 				C787E5217B7752421DB83C5A /* ChannelManagerMain.cpp */,
-				A4E0A1FA4F1B777404A2FD46 /* MainContentComponent.cpp */,
-				D303D4486320B7F24B35C5C7 /* MainContentComponent.h */,
-				DF74B65A19747E3D00A6ECD3 /* MainWindow.cpp */,
-				DF74B65B19747E3D00A6ECD3 /* MainWindow.h */,
+				DF1470AC19798BC000E182D6 /* ChannelsDataTypes.h */,
+				A4E0A1FA4F1B777404A2FD46 /* ChannelsPanel.cpp */,
+				D303D4486320B7F24B35C5C7 /* ChannelsPanel.h */,
+				DF74B65A19747E3D00A6ECD3 /* ChannelsWindow.cpp */,
+				DF74B65B19747E3D00A6ECD3 /* ChannelsWindow.h */,
+				DF74B674197851F600A6ECD3 /* ScannerThread.cpp */,
+				DF74B675197851F600A6ECD3 /* ScannerThread.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -1296,6 +1315,8 @@
 		42D582D969583F8E9D16F645 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DF1470A51979833900E182D6 /* libOGDFDebug.a */,
+				DF4C6E1A19797AA2006CFB14 /* libstdc++.dylib */,
 				DF74B66F1976D2BF00A6ECD3 /* libc++.dylib */,
 				DF74B66A197583F900A6ECD3 /* libACE.dylib */,
 				DF74B668197583EE00A6ECD3 /* libYARP_OS.a */,
@@ -2329,7 +2350,7 @@
 		C17A766EFAB371B7FC5DF163 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				104056EDDDED644648A5375F /* Channel Manager.app */,
+				104056EDDDED644648A5375F /* Channel Manager Debug.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2443,6 +2464,21 @@
 				A8B19F24B80AF5341723DDFD /* juce_VSTPluginFormat.h */,
 			);
 			name = format_types;
+			sourceTree = "<group>";
+		};
+		DF74B6771979744500A6ECD3 /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				DF74B6781979747800A6ECD3 /* libOGDF.a */,
+				DF1470A91979840200E182D6 /* libOGDFDebug.a */,
+				DF74B67A1979748400A6ECD3 /* libmpmCommon.a */,
+				DF74B67C1979749300A6ECD3 /* libodLogging.a */,
+				DF74B67E197974A400A6ECD3 /* libYARP_init.a */,
+				DF74B680197974B300A6ECD3 /* libYARP_OS.a */,
+				DF74B682197974BB00A6ECD3 /* libACE.dylib */,
+				DF4C6E1D19797AC9006CFB14 /* libc++.dylib */,
+			);
+			name = Libraries;
 			sourceTree = "<group>";
 		};
 		E4FBC8D74325C75A4FE88A74 /* code_editor */ = {
@@ -2622,6 +2658,7 @@
 				406F9C4D3322628042D7E62E /* Channel Manager */,
 				713F555E085CBE8ED59D1C37 /* Juce Modules */,
 				536B075B14E556A946247838 /* Juce Library Code */,
+				DF74B6771979744500A6ECD3 /* Libraries */,
 				DF2E69812EB2611C4D5FC447 /* Resources */,
 				42D582D969583F8E9D16F645 /* Frameworks */,
 				C17A766EFAB371B7FC5DF163 /* Products */,
@@ -2676,7 +2713,7 @@
 			name = "Channel Manager";
 			productInstallPath = "$(HOME)/Applications";
 			productName = "Channel Manager";
-			productReference = 104056EDDDED644648A5375F /* Channel Manager.app */;
+			productReference = 104056EDDDED644648A5375F /* Channel Manager Debug.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -2719,7 +2756,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FF5EF427CF5E20F735155CA3 /* MainContentComponent.cpp in Sources */,
+				FF5EF427CF5E20F735155CA3 /* ChannelsPanel.cpp in Sources */,
 				1F0F7AF7D80A40552960A220 /* ChannelManagerMain.cpp in Sources */,
 				555B9DF1752E6003D8753292 /* juce_audio_basics.mm in Sources */,
 				95BF45868C951D1794103889 /* juce_audio_devices.mm in Sources */,
@@ -2731,11 +2768,12 @@
 				DF74B6731976D8F000A6ECD3 /* ChannelEntry.cpp in Sources */,
 				DF74B66E19759B8100A6ECD3 /* ChannelContainer.cpp in Sources */,
 				8293E78EF60A5024CA9EB2B7 /* juce_data_structures.mm in Sources */,
+				DF74B676197851F600A6ECD3 /* ScannerThread.cpp in Sources */,
 				50F1CB5B2A0C22454AF41833 /* juce_events.mm in Sources */,
 				81E02713982BA5A1CFDA27C2 /* juce_graphics.mm in Sources */,
 				BC56C45521A083DFABDFB7B2 /* juce_gui_basics.mm in Sources */,
 				DEEF248165B3103CD7681805 /* juce_gui_extra.mm in Sources */,
-				DF74B65C19747E3D00A6ECD3 /* MainWindow.cpp in Sources */,
+				DF74B65C19747E3D00A6ECD3 /* ChannelsWindow.cpp in Sources */,
 				472D029701BE23C4F109BE04 /* juce_opengl.mm in Sources */,
 				FC05A001CFB727F29DBDA646 /* juce_video.mm in Sources */,
 			);
@@ -2747,8 +2785,13 @@
 		83047DF2773F8F8C0DC653C2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LIBRARY = "compiler-default";
 				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/build/$(CONFIGURATION)";
+				GCC_AUTO_VECTORIZATION = YES;
+				GCC_ENABLE_SS3_EXTENSIONS = YES;
+				GCC_ENABLE_SUPPLEMENTAL_SSE3_INSTRUCTIONS = YES;
+				GCC_MODEL_TUNING = NONE;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"_DEBUG=1",
 					"DEBUG=1",
@@ -2756,9 +2799,28 @@
 					"JUCE_APP_VERSION=1.0.0",
 					"JUCE_APP_VERSION_HEX=0x10000",
 				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/include,
+				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/../../../../../../../usr/local/lib",
+				);
 				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CFLAGS = "";
+				OTHER_CPLUSPLUSFLAGS = (
+					"-D__MACOSX_CORE__",
+					"-lpthread",
+					"-DOGDF_DEBUG",
+					"-DOGDF_MEMORY_MALLOC_TS",
+					"-DOGDF_USE_SSE2",
+					"-mtune=native",
+				);
+				PRODUCT_NAME = "Channel Manager Debug";
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -2767,6 +2829,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_X86_VECTOR_INSTRUCTIONS = ssse3;
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
@@ -2779,11 +2842,7 @@
 				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					/usr/local/include,
-				);
+				HEADER_SEARCH_PATHS = /usr/local/include;
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = NO;
@@ -2796,8 +2855,13 @@
 		B6F284AC52D9E9009DC2F2DE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LIBRARY = "compiler-default";
 				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/build/$(CONFIGURATION)";
+				GCC_AUTO_VECTORIZATION = YES;
+				GCC_ENABLE_SS3_EXTENSIONS = YES;
+				GCC_ENABLE_SUPPLEMENTAL_SSE3_INSTRUCTIONS = YES;
+				GCC_MODEL_TUNING = NONE;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"_NDEBUG=1",
 					"NDEBUG=1",
@@ -2805,9 +2869,27 @@
 					"JUCE_APP_VERSION=1.0.0",
 					"JUCE_APP_VERSION_HEX=0x10000",
 				);
+				GCC_UNROLL_LOOPS = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/include,
+				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/../../../../../../../usr/local/lib",
+				);
 				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CFLAGS = "";
+				OTHER_CPLUSPLUSFLAGS = (
+					"-D__MACOSX_CORE__",
+					"-lpthread",
+					"-mtune=native",
+					"-DOGDF_MEMORY_MALLOC_TS",
+					"-DOGDF_USE_SSE2",
+				);
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};
@@ -2816,6 +2898,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_X86_VECTOR_INSTRUCTIONS = ssse3;
 				DEAD_CODE_STRIPPING = YES;
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
@@ -2826,11 +2909,7 @@
 				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					/usr/local/include,
-				);
+				HEADER_SEARCH_PATHS = /usr/local/include;
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = NO;

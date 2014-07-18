@@ -39,7 +39,23 @@
 #if (! defined(ChannelManagerApp_H_))
 # define ChannelManagerApp_H_ /* Header guard */
 
-# include "MainWindow.h"
+# include "ChannelsWindow.h"
+
+# if defined(__APPLE__)
+#  pragma clang diagnostic push
+#  pragma clang diagnostic ignored "-Wc++11-extensions"
+#  pragma clang diagnostic ignored "-Wdocumentation"
+#  pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
+#  pragma clang diagnostic ignored "-Wpadded"
+#  pragma clang diagnostic ignored "-Wshadow"
+#  pragma clang diagnostic ignored "-Wunused-parameter"
+#  pragma clang diagnostic ignored "-Wweak-vtables"
+# endif // defined(__APPLE__)
+# include <yarp/os/Network.h>
+
+# if defined(__APPLE__)
+#  pragma clang diagnostic pop
+# endif // defined(__APPLE__)
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -57,6 +73,7 @@
 
 namespace ChannelManager
 {
+    class ScannerThread;
     
     /*! @brief The application object of the application. */
     class ChannelManagerApplication  : public JUCEApplication
@@ -97,13 +114,21 @@ namespace ChannelManager
         /*! @brief Called when the operating system is trying to close the application. */
         void systemRequestedQuit(void) override;
         
+    protected:
+        
     private:
         
         /*! @brief The class that this class is derived from. */
         typedef JUCEApplication inherited;
         
         /*! @brief The primary window of the application. */
-        ScopedPointer<MainWindow> mainWindow;
+        ScopedPointer<ChannelsWindow> _mainWindow;
+        
+        /*! @brief Used to establish connections to the YARP infrastructure. */
+        ScopedPointer<yarp::os::Network> _yarp;
+        
+        /*! @brief The background scanner thread. */
+        ScopedPointer<ScannerThread> _scanner;
         
     }; // ChannelManagerApplication
     
