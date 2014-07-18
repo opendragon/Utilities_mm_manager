@@ -41,12 +41,12 @@
     to the top-level component for which you want to handle keystrokes. So for example:
 
     @code
-    class MyChannelsWindow  : public Component
+    class MyMainWindow  : public Component
     {
         ApplicationCommandManager* myCommandManager;
 
     public:
-        MyChannelsWindow()
+        MyMainWindow()
         {
             myCommandManager = new ApplicationCommandManager();
 
