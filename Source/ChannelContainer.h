@@ -167,6 +167,9 @@ namespace ChannelManager
          @returns @c true if the port is contained within the entity and @c false otherwise. */
         bool hasPort(const ChannelEntry * aPort);
         
+        /*! @brief Mark all the connections as invalid. */
+        void invalidateConnections(void);
+        
         /*! @brief Return @c true is the entity is selected.
          @returns @c true if the entity is selected and @c false otherwise. */
         inline bool isSelected(void)
@@ -183,8 +186,12 @@ namespace ChannelManager
          @param ee Details about the position and status of the mouse event. */
         void mouseDrag(const MouseEvent & ee) override;
         
-        /*! @brief Draw the content of the component. */
+        /*! @brief Draw the content of the component.
+         @param gg The graphics context in which to draw. */
         void paint(Graphics & gg) override;
+        
+        /*! @brief Remove connections that are invalid. */
+        void removeInvalidConnections(void);
         
         /*! @brief Called when the component size has been changed. */
         void resized(void) override;

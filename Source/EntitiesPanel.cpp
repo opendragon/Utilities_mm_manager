@@ -87,12 +87,6 @@ static const char * kFontName = "Courier New";
 /*! @brief The size of the font to be used for text. */
 static const float kFontSize = 15.0;
 
-/*! @brief The line width for a normal connection. */
-static const float kNormalConnectionWidth = 2;
-
-/*! @brief The line width for a normal connection. */
-static const float kServiceConnectionWidth = (2 * kNormalConnectionWidth);
-
 /*! @brief The initial thickness of the horizontal and vertical scrollbars. */
 static const int kDefaultScrollbarThickness = 16;
 
@@ -199,6 +193,7 @@ void EntitiesPanel::clearAllVisitedFlags(void)
         if (anEntity)
         {
             anEntity->clearVisited();
+            anEntity->invalidateConnections();
         }
     }
     OD_LOG_OBJEXIT(); //####
@@ -385,6 +380,21 @@ void EntitiesPanel::rememberPort(ChannelEntry * aPort)
     }
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::rememberPort
+
+void EntitiesPanel::removeInvalidConnections(void)
+{
+    OD_LOG_OBJENTER(); //####
+    for (ContainerList::iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
+    {
+        ChannelContainer * anEntity = *it;
+        
+        if (anEntity)
+        {
+            anEntity->removeInvalidConnections();
+        }
+    }
+    OD_LOG_OBJEXIT(); //####
+} // EntitiesPanel::removeInvalidConnections
 
 void EntitiesPanel::removeUnvisitedEntities(void)
 {
@@ -627,28 +637,3 @@ Colour EntitiesPanel::getNewConnectionColor(void)
 {
     return Colours::gold;
 } // EntitiesPanel::getNewConnectionColor
-
-float EntitiesPanel::getNormalConnectionWidth(void)
-{
-    return kNormalConnectionWidth;
-} // EntitiesPanel::getNormalConnectionWidth
-
-Colour EntitiesPanel::getOtherConnectionColor(void)
-{
-    return Colours::orange;
-} // EntitiesPanel::getOtherConnectionColor
-
-float EntitiesPanel::getServiceConnectionWidth(void)
-{
-    return kServiceConnectionWidth;
-} // EntitiesPanel::getServiceConnectionWidth
-
-Colour EntitiesPanel::getTcpConnectionColor(void)
-{
-    return Colours::teal;
-} // EntitiesPanel::getTcpConnectionColor
-
-Colour EntitiesPanel::getUdpConnectionColor(void)
-{
-    return Colours::purple;
-} // EntitiesPanel::getUdpConnectionColor

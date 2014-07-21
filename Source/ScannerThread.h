@@ -39,8 +39,7 @@
 #if (! defined(ScannerThread_H_))
 # define ScannerThread_H_ /* Header guard */
 
-# include "ChannelEntry.h"
-# include "EntitiesPanel.h"
+# include "ChannelsDataTypes.h"
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -55,6 +54,7 @@
 
 namespace ChannelManager
 {
+    class ConnectionsPanel;
     class EntitiesPanel;
     class ChannelManagerWindow;
     
@@ -82,9 +82,11 @@ namespace ChannelManager
         /*! @brief The class that this class is derived from. */
         typedef Thread inherited;
         
-        /*! @brief Add the detected entities to a panel.
-         @param newPanel The panel to be updated. */
-        void addEntitiesToPanel(EntitiesPanel * newPanel);
+        /*! @brief Add the detected entities and connections to panels.
+         @param newEntitiesPanel The entities panel to be updated.
+         @param newConnections The panel containing the scanned connections. */
+        void addEntitiesToPanels(EntitiesPanel *    newEntitiesPanel,
+                                 ConnectionsPanel * newConnectionsPanel);
         
         /*! @brief Add connections between detected ports in the to-be-displayed list.
          @param detectedPorts The set of detected YARP ports. */
@@ -108,10 +110,12 @@ namespace ChannelManager
         /*! @brief Set the entity positions. */
         void setEntityPositions(void);
         
-        /*! @brief Refresh the displayed entities, based on the scanned entities.
+        /*! @brief Refresh the displayed entities and connections, based on the scanned entities.
          @param newPanel The panel containing the scanned entities.
+         @param newConnections The panel containing the scanned connections.
          @returns @c true if the thread should leave and @c false otherwise. */
-        bool updateActivePanel(EntitiesPanel * newPanel);
+        bool updatePanels(EntitiesPanel *    newPanel,
+                          ConnectionsPanel * newConnections);
         
         /*! @brief The window to be updated. */
         ChannelManagerWindow * _window;

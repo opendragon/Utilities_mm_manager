@@ -199,6 +199,21 @@ bool ChannelContainer::hasPort(const ChannelEntry * aPort)
     return result;
 } // ChannelContainer::hasPort
 
+void ChannelContainer::invalidateConnections(void)
+{
+    OD_LOG_OBJENTER(); //####
+    for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
+    {
+        ChannelEntry * aPort = getPort(ii);
+        
+        if (aPort)
+        {
+            aPort->invalidateConnections();
+        }
+    }
+    OD_LOG_OBJEXIT(); //####
+} // ChannelContainer::invalidateConnections
+
 void ChannelContainer::mouseDown(const MouseEvent & ee)
 {
     OD_LOG_OBJENTER(); //####
@@ -240,6 +255,21 @@ void ChannelContainer::paint(Graphics & gg)
     OD_LOG_OBJEXIT(); //####
 #endif // 0
 } // ChannelContainer::paint
+
+void ChannelContainer::removeInvalidConnections(void)
+{
+    OD_LOG_OBJENTER(); //####
+    for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
+    {
+        ChannelEntry * aPort = getPort(ii);
+        
+        if (aPort)
+        {
+            aPort->removeInvalidConnections();
+        }
+    }
+    OD_LOG_OBJEXIT(); //####
+} // ChannelContainer::invalidateConnections
 
 void ChannelContainer::resized(void)
 {

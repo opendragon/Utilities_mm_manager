@@ -176,6 +176,9 @@ namespace ChannelManager
             return _usage;
         } // getUsage
         
+        /*! @brief Mark all the connections as invalid. */
+        void invalidateConnections(void);
+        
         /*! @brief Returns @c true if the port entry is the bottom-most (last) port entry in a
          panel and @c false otherwise.
          @returns @c true if the port is the last port entry in a panel and @c false
@@ -195,12 +198,16 @@ namespace ChannelManager
             return (kPortUsageService == _usage);
         } // isService
         
-        /*! @brief Draw the content of the component. */
+        /*! @brief Draw the content of the component.
+         @param gg The graphics context in which to draw. */
         void paint(Graphics & gg) override;
         
         /*! @brief Remove an input connection from a port.
          @param other The port that is to be disconnected. */
         void removeInputConnection(ChannelEntry * other);
+        
+        /*! @brief Remove connections that are invalid. */
+        void removeInvalidConnections(void);
         
         /*! @brief Remove an output connection from a port.
          @param other The port that is to be disconnected. */
@@ -225,6 +232,44 @@ namespace ChannelManager
         /*! @brief The class that this class is derived from. */
         typedef Component inherited;
         
+        /*! @brief Displays an anchor leaving the given location.
+         @param anchor The side to which the anchor is attached.
+         @param anchorPos The coordinates of the anchor point.
+         @param thickness The line thickness to be used. */
+        static void drawSourceAnchor(Graphics &           gg,
+                                     const AnchorSide     anchor,
+                                     const Point<float> & anchorPos,
+                                     const float          thickness);
+        
+        /*! @brief Displays an anchor arriving at the given location.
+         @param anchor The side to which the anchor is attached.
+         @param anchorPos The coordinates of the anchor point.
+         @param thickness The line thickness to be used. */
+        static void drawTargetAnchor(Graphics &           gg,
+                                     const AnchorSide     anchor,
+                                     const Point<float> & anchorPos,
+                                     const float          thickness);
+        
+        /*! @brief Return the line width for a normal connection.
+         @returns The line width for a normal connection. */
+        static float getNormalConnectionWidth(void);
+
+        /*! @brief Return the color to be used for non-TCP/non-UDP connections.
+         @returns The color to be used for non-TCP/non-UDP connection. */
+        static Colour getOtherConnectionColor(void);
+        
+        /*! @brief Return the line width for a service connection.
+         @returns The line width for a service connection. */
+        static float getServiceConnectionWidth(void);
+        
+        /*! @brief Return the color to be used for TCP connections.
+         @returns The color to be used for TCP connections. */
+        static Colour getTcpConnectionColor(void);
+        
+        /*! @brief Return the color to be used for UDP connections.
+         @returns The color to be used for UDP connections. */
+        static Colour getUdpConnectionColor(void);
+
         /*! @brief The connections to the port. */
         Connections _inputConnections;
         

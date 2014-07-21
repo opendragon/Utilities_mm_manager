@@ -77,6 +77,7 @@ ConnectionsPanel::ConnectionsPanel(void) :
     inherited()
 {
     OD_LOG_ENTER(); //####
+    setInterceptsMouseClicks(false, false);
     OD_LOG_EXIT(); //####
 } // ConnectionsPanel::ConnectionsPanel
 

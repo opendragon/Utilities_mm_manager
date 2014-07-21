@@ -122,10 +122,6 @@ namespace ChannelManager
          @returns The color to be used for connections being made by dragging. */
         static Colour getNewConnectionColor(void);
         
-        /*! @brief Return the line width for a normal connection.
-         @returns The line width for a normal connection. */
-        static float getNormalConnectionWidth(void);
-        
         /*! @brief Return the font to be used for normal text.
          @returns The font to be used for normal text. */
         Font & getNormalFont(void)
@@ -137,10 +133,6 @@ namespace ChannelManager
          @returns The number of entities. */
         size_t getNumberOfEntities(void)
         const;
-        
-        /*! @brief Return the color to be used for non-TCP/non-UDP connections.
-         @returns The color to be used for non-TCP/non-UDP connection. */
-        static Colour getOtherConnectionColor(void);
         
         /*! @brief Returns the scrollbar thickness.
          @returns The scrollbar thickness. */
@@ -158,6 +150,9 @@ namespace ChannelManager
          @param aPort The port to be recorded. */
         void rememberPort(ChannelEntry * aPort);
         
+        /*! @brief Remove connections that are invalid. */
+        void removeInvalidConnections(void);
+        
         /*! @brief Remove any entities that were not visited. */
         void removeUnvisitedEntities(void);
         
@@ -166,18 +161,6 @@ namespace ChannelManager
         
         /*! @brief Adjust the horizontal and vertial scrollbars. */
         void updateScrollBars(void);
-        
-        /*! @brief Return the line width for a service connection.
-         @returns The line width for a service connection. */
-        static float getServiceConnectionWidth(void);
-        
-        /*! @brief Return the color to be used for TCP connections.
-         @returns The color to be used for TCP connections. */
-        static Colour getTcpConnectionColor(void);
-        
-        /*! @brief Return the color to be used for UDP connections.
-         @returns The color to be used for UDP connections. */
-        static Colour getUdpConnectionColor(void);
         
     protected:
         

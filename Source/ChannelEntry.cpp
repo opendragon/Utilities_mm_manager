@@ -64,6 +64,12 @@ using namespace std;
 /*! @brief The horizontal and vertical length of the arrow 'arm'. */
 static const float kArrowSize = 7;
 
+/*! @brief The line width for a normal connection. */
+static const float kNormalConnectionWidth = 2;
+
+/*! @brief The line width for a normal connection. */
+static const float kServiceConnectionWidth = (2 * kNormalConnectionWidth);
+
 /*! @brief The scale factor to apply to get the size of the target box. */
 static const float kTargetBoxScale = 0.25;
 
@@ -240,11 +246,14 @@ void ChannelEntry::addInputConnection(ChannelEntry *              other,
     {
         bool canAdd = true;
         
-        for (Connections::const_iterator walker(_inputConnections.begin());
+        for (Connections::iterator walker(_inputConnections.begin());
              _inputConnections.end() != walker; ++walker)
         {
-            if (walker->_otherPort == other)
+            if ((walker->_otherPort == other) ||
+                (walker->_otherPort->getPortName() == other->getPortName()))
             {
+                OD_LOG("already present"); //####
+                walker->_valid = true;
                 canAdd = false;
                 break;
             }
@@ -256,6 +265,7 @@ void ChannelEntry::addInputConnection(ChannelEntry *              other,
             
             newConnection._otherPort = other;
             newConnection._connectionMode = mode;
+            newConnection._valid = true;
             _inputConnections.push_back(newConnection);
         }
     }
@@ -273,11 +283,14 @@ void ChannelEntry::addOutputConnection(ChannelEntry *              other,
     {
         bool canAdd = true;
         
-        for (Connections::const_iterator walker(_outputConnections.begin());
+        for (Connections::iterator walker(_outputConnections.begin());
              _outputConnections.end() != walker; ++walker)
         {
-            if (walker->_otherPort == other)
+            if ((walker->_otherPort == other) ||
+                (walker->_otherPort->getPortName() == other->getPortName()))
             {
+                OD_LOG("already present"); //####
+                walker->_valid = true;
                 canAdd = false;
                 break;
             }
@@ -289,6 +302,7 @@ void ChannelEntry::addOutputConnection(ChannelEntry *              other,
             
             newConnection._otherPort = other;
             newConnection._connectionMode = mode;
+            newConnection._valid = true;
             _outputConnections.push_back(newConnection);
         }
     }
@@ -406,15 +420,17 @@ void ChannelEntry::drawDragLine(const float xPos,
 } // ChannelEntry::drawDragLine
 #endif // 0
 
-#if 0
-void ChannelEntry::drawSourceAnchor(const AnchorSide     anchor,
-                                    const Point<float> & anchorPos)
+void ChannelEntry::drawSourceAnchor(Graphics &           gg,
+                                    const AnchorSide     anchor,
+                                    const Point<float> & anchorPos,
+                                    const float          thickness)
 {
-#if 0
+    //#if 0
     OD_LOG_ENTER(); //####
+    OD_LOG_P2("gg = ", &gg, "anchorPos = ", &anchorPos); //####
     OD_LOG_L1("anchor = ", static_cast<int>(anchor)); //####
-    OD_LOG_P1("anchorPos = ", &anchorPos); //####
-#endif // 0
+    OD_LOG_D1("thickness = ", thickness); //####
+                                           //#endif // 0
     Point<float> first;
     Point<float> second;
     
@@ -446,24 +462,28 @@ void ChannelEntry::drawSourceAnchor(const AnchorSide     anchor,
     }
     if (kAnchorUnknown != anchor)
     {
-        ofLine(anchorPos, first);
-        ofLine(anchorPos, second);
+        OD_LOG_D4("anchor.x = ", anchorPos.getX(), "anchor.y = ", anchorPos.getY(), //####
+                  "first.x = ", first.getX(), "first.y = ", first.getY()); //####
+        OD_LOG_D2("second.x = ", second.getX(), "second.y = ", second.getY()); //####
+        gg.drawLine(anchorPos.getX(), anchorPos.getY(), first.getX(), first.getY(), thickness);
+        gg.drawLine(anchorPos.getX(), anchorPos.getY(), second.getX(), second.getY(), thickness);
     }
-#if 0
+    //#if 0
     OD_LOG_EXIT(); //####
-#endif // 0
+                   //#endif // 0
 } // ChannelEntry::drawSourceAnchor
-#endif // 0
 
-#if 0
-void ChannelEntry::drawTargetAnchor(const AnchorSide     anchor,
-                                    const Point<float> & anchorPos)
+void ChannelEntry::drawTargetAnchor(Graphics &           gg,
+                                    const AnchorSide     anchor,
+                                    const Point<float> & anchorPos,
+                                    const float          thickness)
 {
-#if 0
+    //#if 0
     OD_LOG_ENTER(); //####
+    OD_LOG_P2("gg = ", &gg, "anchorPos = ", &anchorPos); //####
     OD_LOG_L1("anchor = ", static_cast<int>(anchor)); //####
-    OD_LOG_P1("anchorPos = ", &anchorPos); //####
-#endif // 0
+    OD_LOG_D1("thickness = ", thickness); //####
+                                           //#endif // 0
     Point<float> first;
     Point<float> second;
     
@@ -495,14 +515,32 @@ void ChannelEntry::drawTargetAnchor(const AnchorSide     anchor,
     }
     if (kAnchorUnknown != anchor)
     {
-        ofLine(anchorPos, first);
-        ofLine(anchorPos, second);
+        OD_LOG_D4("anchor.x = ", anchorPos.getX(), "anchor.y = ", anchorPos.getY(), //####
+                  "first.x = ", first.getX(), "first.y = ", first.getY()); //####
+        OD_LOG_D2("second.x = ", second.getX(), "second.y = ", second.getY()); //####
+        gg.drawLine(anchorPos.getX(), anchorPos.getY(), first.getX(), first.getY(), thickness);
+        gg.drawLine(anchorPos.getX(), anchorPos.getY(), second.getX(), second.getY(), thickness);
     }
-#if 0
+    //#if 0
     OD_LOG_EXIT(); //####
-#endif // 0
+                   //#endif // 0
 } // ChannelEntry::drawTargetAnchor
-#endif // 0
+
+void ChannelEntry::invalidateConnections(void)
+{
+    OD_LOG_OBJENTER(); //####
+    for (Connections::iterator walker(_inputConnections.begin()); _inputConnections.end() != walker;
+         ++walker)
+    {
+        walker->_valid = false;
+    }
+    for (Connections::iterator walker(_outputConnections.begin());
+         _outputConnections.end() != walker; ++walker)
+    {
+        walker->_valid = false;
+    }
+    OD_LOG_EXIT(); //####
+} // ChannelEntry::invalidateConnections
 
 #if 0
 bool ChannelEntry::isPointInside(const Point<float> & aPoint)
@@ -720,19 +758,80 @@ void ChannelEntry::paint(Graphics & gg)
     OD_LOG_P1("gg = ", &gg); //####
 #endif // 0
     AttributedString as;
+    Point<float>     aCentre(getCentre());
     
     as.setJustification(Justification::left);
     as.append(_title, _parent->getOwner().getNormalFont(), Colours::white);
     Rectangle<float> area(getLocalBounds().toFloat());
     
-#if 0
+    //#if 0
     OD_LOG_D4("x <- ", area.getX(), "y <- ", area.getY(), "w <- ",area.getWidth(), "h <- ", //####
               area.getHeight()); //####
-#endif // 0
+                                 //#endif // 0
     gg.setColour(Colours::black);
     gg.fillRect(area);
     area.setLeft(area.getX() + _parent->getTextInset());
     as.draw(gg, area);
+    for (Connections::const_iterator walker(_outputConnections.begin());
+         _outputConnections.end() != walker; ++walker)
+    {
+        AnchorSide                  anchorHere;
+        AnchorSide                  anchorThere;
+        ChannelEntry *              other = walker->_otherPort;
+        MplusM::Common::ChannelMode mode = walker->_connectionMode;
+        Point<float>                otherCentre(other->getCentre());
+        Point<float>                fromHere;
+        Point<float>                toThere;
+        float                       thickness;
+    
+        // Check if the destination is above the source, in which case we determine the anchors in
+        // the reverse order.
+        if (aCentre.getY() < otherCentre.getY())
+        {
+            anchorHere = calculateClosestAnchor(fromHere, true, false, otherCentre);
+            anchorThere = other->calculateClosestAnchor(toThere, false,
+                                                        kAnchorBottomCentre == anchorHere,
+                                                        aCentre);
+        }
+        else
+        {
+            anchorThere = other->calculateClosestAnchor(toThere, false, false, aCentre);
+            anchorHere = calculateClosestAnchor(fromHere, true, kAnchorBottomCentre == anchorThere,
+                                                otherCentre);
+        }
+        //#if 0
+        OD_LOG_D4("fromHere.x <- ", fromHere.getX(), "fromHere.y <- ", fromHere.getY(), //####
+                  "toThere.x <- ", toThere.getX(), "toThere.y <- ", toThere.getY()); //####
+                                                                                     //#endif // 0
+        if (other->isService())
+        {
+            thickness = getServiceConnectionWidth();
+        }
+        else
+        {
+            thickness = getNormalConnectionWidth();
+        }
+        switch (mode)
+        {
+            case MplusM::Common::kChannelModeTCP :
+                gg.setColour(getTcpConnectionColor());
+                break;
+                
+            case MplusM::Common::kChannelModeUDP :
+                gg.setColour(getUdpConnectionColor());
+                break;
+                
+            default :
+                gg.setColour(getOtherConnectionColor());
+                break;
+                
+        }
+        // use thickness with Bezier, not anchors!
+//        DrawBezier(fromHere, toThere, aCentre, otherCentre);
+//        ofSetLineWidth(1);
+        drawSourceAnchor(gg, anchorHere, fromHere, 1);
+        drawTargetAnchor(gg, anchorThere, toThere, 1);
+    }
 #if 0
     OD_LOG_OBJEXIT(); //####
 #endif // 0
@@ -761,6 +860,28 @@ void ChannelEntry::removeInputConnection(ChannelEntry * other)
     }
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::removeInputConnection
+
+void ChannelEntry::removeInvalidConnections(void)
+{
+    OD_LOG_OBJENTER(); //####
+    for (Connections::iterator walker(_inputConnections.begin()); _inputConnections.end() != walker;
+         ++walker)
+    {
+        if (! walker->_valid)
+        {
+            _inputConnections.erase(walker);
+        }
+    }
+    for (Connections::iterator walker(_outputConnections.begin());
+         _outputConnections.end() != walker; ++walker)
+    {
+        if (! walker->_valid)
+        {
+            _inputConnections.erase(walker);
+        }
+    }
+    OD_LOG_EXIT(); //####
+} // ChannelEntry::removeInvalidConnections
 
 void ChannelEntry::removeOutputConnection(ChannelEntry * other)
 {
@@ -806,3 +927,28 @@ const
 #if defined(__APPLE__)
 # pragma mark Global functions
 #endif // defined(__APPLE__)
+
+float ChannelEntry::getNormalConnectionWidth(void)
+{
+    return kNormalConnectionWidth;
+} // ChannelEntry::getNormalConnectionWidth
+
+Colour ChannelEntry::getOtherConnectionColor(void)
+{
+    return Colours::orange;
+} // ChannelEntry::getOtherConnectionColor
+
+float ChannelEntry::getServiceConnectionWidth(void)
+{
+    return kServiceConnectionWidth;
+} // ChannelEntry::getServiceConnectionWidth
+
+Colour ChannelEntry::getTcpConnectionColor(void)
+{
+    return Colours::teal;
+} // ChannelEntry::getTcpConnectionColor
+
+Colour ChannelEntry::getUdpConnectionColor(void)
+{
+    return Colours::purple;
+} // ChannelEntry::getUdpConnectionColor

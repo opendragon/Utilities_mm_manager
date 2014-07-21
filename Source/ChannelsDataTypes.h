@@ -176,6 +176,9 @@ namespace ChannelManager
         /*! @brief The kind of connection. */
         MplusM::Common::ChannelMode _connectionMode;
         
+        /*! @brief @c true if the connection is valid and @c false otherwise. */
+        bool _valid;
+        
     }; // PortConnection
     
     /*! @brief A mapping from port names to associates. */
