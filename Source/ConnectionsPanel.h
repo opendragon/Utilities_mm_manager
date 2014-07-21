@@ -1,10 +1,11 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       ChannelsWindow.h
+//  File:       ConnectionsPanel.h
 //
 //  Project:    M+M
 //
-//  Contains:   The class declaration for the primary window of the channel manager application.
+//  Contains:   The class declaration for the content area of the primary window of the channel
+//              manager application.
 //
 //  Written by: Norman Jaffe
 //
@@ -32,12 +33,12 @@
 //              ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 //              DAMAGE.
 //
-//  Created:    2014-07-14
+//  Created:    2014-07-21
 //
 //--------------------------------------------------------------------------------------------------
 
-#if (! defined(ChannelsWindow_H_))
-# define ChannelsWindow_H_ /* Header guard */
+#if (! defined(ConnectionsPanel_H_))
+# define ConnectionsPanel_H_ /* Header guard */
 
 # include "ChannelsDataTypes.h"
 
@@ -47,40 +48,39 @@
 # endif // defined(__APPLE__)
 /*! @file
  
- @brief The class declaration for the primary window of the channel manager application. */
+ @brief The class declaration for the content area of the primary window of the channel manager
+ application. */
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
 
 namespace ChannelManager
 {
-    
-    /*! @brief The main window of the application. */
-    class ChannelsWindow : public DocumentWindow
+    /*! @brief The content area of the main window of the application. */
+    class ConnectionsPanel : public Component
     {
     public:
         
-        /*! @brief The constructor.
-         @param title The window title. */
-        ChannelsWindow(const String & title);
+        /*! @brief The constructor. */
+        ConnectionsPanel(void);
         
         /*! @brief The destructor. */
-        virtual ~ChannelsWindow(void);
+        virtual ~ConnectionsPanel(void);
         
-        /*! @brief This method is called when the user tries to close the window. */
-        void closeButtonPressed(void);
+        /*! @brief Called when the component size has been changed. */
+        void resized(void);
         
     protected:
         
     private:
         
         /*! @brief The class that this class is derived from. */
-        typedef DocumentWindow inherited;
+        typedef Component inherited;
         
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ChannelsWindow)
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ConnectionsPanel)
         
-    }; // ChannelsWindow
+    }; // ConnectionsPanel
     
 } // ChannelManager
 
-#endif // ! defined(ChannelsWindow_H_)
+#endif // ! defined(ConnectionsPanel_H_)

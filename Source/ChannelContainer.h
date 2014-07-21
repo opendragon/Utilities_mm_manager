@@ -60,7 +60,7 @@
 namespace ChannelManager
 {
     class ChannelEntry;
-    class ChannelsPanel;
+    class EntitiesPanel;
     
     /*! @brief A container for one or more ports or channels. */
     class ChannelContainer : public Component
@@ -77,7 +77,7 @@ namespace ChannelManager
                          const String &      title,
                          const String &      behaviour,
                          const String &      description,
-                         ChannelsPanel &     owner);
+                         EntitiesPanel &     owner);
         
         /*! @brief The destructor. */
         virtual ~ChannelContainer(void);
@@ -145,7 +145,7 @@ namespace ChannelManager
             return getNumChildComponents();
         } // getNumPorts
         
-        inline ChannelsPanel & getOwner(void)
+        inline EntitiesPanel & getOwner(void)
         const
         {
             return _owner;
@@ -239,7 +239,7 @@ namespace ChannelManager
         ogdf::node _node;
         
         /*! @brief The owner of the container. */
-        ChannelsPanel & _owner;
+        EntitiesPanel & _owner;
         
         /*! @brief The height of the title of the container. */
         float _titleHeight;

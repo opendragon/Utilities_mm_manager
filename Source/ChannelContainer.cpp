@@ -38,7 +38,7 @@
 
 #include "ChannelContainer.h"
 #include "ChannelEntry.h"
-#include "ChannelsPanel.h"
+#include "EntitiesPanel.h"
 
 #include "ODEnableLogging.h"
 #include "ODLogging.h"
@@ -83,7 +83,7 @@ ChannelContainer::ChannelContainer(const ContainerKind kind,
                                    const String &      title,
                                    const String &      behaviour,
                                    const String &      description,
-                                   ChannelsPanel &       owner) :
+                                   EntitiesPanel &     owner) :
     inherited(title), _behaviour(behaviour), _description(description), _node(NULL), _owner(owner),
     _kind(kind), _selected(false), _visited(false)
 {

@@ -1,11 +1,11 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       ChannelsPanel.cpp
+//  File:       EntitiesPanel.cpp
 //
 //  Project:    M+M
 //
-//  Contains:   The class definition for the contents of the primary window of the channel manager
-//              application.
+//  Contains:   The class definition for the entities layer of the primary window of the channel
+//              manager application.
 //
 //  Written by: Norman Jaffe
 //
@@ -37,7 +37,7 @@
 //
 //--------------------------------------------------------------------------------------------------
 
-#include "ChannelsPanel.h"
+#include "EntitiesPanel.h"
 #include "ChannelContainer.h"
 #include "ChannelEntry.h"
 
@@ -68,7 +68,7 @@
 #endif // defined(__APPLE__)
 /*! @file
  
- @brief The class definition for the contents of the primary window of the channel manager
+ @brief The class definition for the entities layer of the primary window of the channel manager
  application. */
 #if defined(__APPLE__)
 # pragma clang diagnostic pop
@@ -139,7 +139,7 @@ static bool protocolsMatch(const String & sourceProtocol,
 # pragma mark Constructors and destructors
 #endif // defined(__APPLE__)
 
-ChannelsPanel::ChannelsPanel(void) :
+EntitiesPanel::EntitiesPanel(void) :
     inherited(), _knownPorts(), _knownEntities(), _defaultBoldFont(), _defaultNormalFont(),
     _horizontalScrollBar(NULL), _verticalScrollBar(NULL), _innerPanel(new Component),
     _scrollbarThickness(kDefaultScrollbarThickness)
@@ -157,15 +157,15 @@ _backgroundPorts(&_ports1), _randomizer(Time::currentTimeMillis()), _movementAct
     _verticalScrollBar = new ScrollBar(true);
     _innerPanel->setSize(kInitialPanelWidth, kInitialPanelHeight);
     addAndMakeVisible(_innerPanel);
-    setSize(kInitialPanelWidth, kInitialPanelHeight);
     addAndMakeVisible(_verticalScrollBar);
     _verticalScrollBar->setSingleStepSize(1.0);
     addAndMakeVisible(_horizontalScrollBar);
     _horizontalScrollBar->setSingleStepSize(1.0);
+    setSize(kInitialPanelWidth, kInitialPanelHeight);
     OD_LOG_EXIT(); //####
-} // ChannelsPanel::ChannelsPanel
+} // EntitiesPanel::EntitiesPanel
 
-ChannelsPanel::~ChannelsPanel(void)
+EntitiesPanel::~EntitiesPanel(void)
 {
     OD_LOG_OBJENTER(); //####
     clearOutData();
@@ -174,22 +174,22 @@ ChannelsPanel::~ChannelsPanel(void)
     _horizontalScrollBar = nullptr;
     _verticalScrollBar = nullptr;
     OD_LOG_OBJEXIT(); //####
-} // ChannelsPanel::~ChannelsPanel
+} // EntitiesPanel::~EntitiesPanel
 
 #if defined(__APPLE__)
 # pragma mark Actions
 #endif // defined(__APPLE__)
 
-void ChannelsPanel::addEntity(ChannelContainer * anEntity)
+void EntitiesPanel::addEntity(ChannelContainer * anEntity)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("anEntity = ", anEntity); //####
     _knownEntities.push_back(anEntity);
     _innerPanel->addChildComponent(anEntity);
     OD_LOG_OBJEXIT(); //####
-} // ChannelsPanel::addEntity
+} // EntitiesPanel::addEntity
 
-void ChannelsPanel::clearAllVisitedFlags(void)
+void EntitiesPanel::clearAllVisitedFlags(void)
 {
     OD_LOG_OBJENTER(); //####
     for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
@@ -202,9 +202,9 @@ void ChannelsPanel::clearAllVisitedFlags(void)
         }
     }
     OD_LOG_OBJEXIT(); //####
-} // ChannelsPanel::clearAllVisitedFlags
+} // EntitiesPanel::clearAllVisitedFlags
 
-void ChannelsPanel::clearOutData(void)
+void EntitiesPanel::clearOutData(void)
 {
     OD_LOG_OBJENTER(); //####
     for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
@@ -220,9 +220,9 @@ void ChannelsPanel::clearOutData(void)
     _knownPorts.clear();
     _knownEntities.clear();
     OD_LOG_OBJEXIT(); //####
-} // ChannelsPanel::clearOutData
+} // EntitiesPanel::clearOutData
 
-ChannelContainer * ChannelsPanel::findKnownEntity(const String & name)
+ChannelContainer * EntitiesPanel::findKnownEntity(const String & name)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("name = ", name.toStdString()); //####
@@ -241,9 +241,9 @@ ChannelContainer * ChannelsPanel::findKnownEntity(const String & name)
     }
     OD_LOG_OBJEXIT_P(result); //####
     return result;
-} // ChannelsPanel::findKnownEntity
+} // EntitiesPanel::findKnownEntity
 
-ChannelContainer * ChannelsPanel::findKnownEntityForPort(const String & name)
+ChannelContainer * EntitiesPanel::findKnownEntityForPort(const String & name)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("name = ", name.toStdString()); //####
@@ -267,9 +267,9 @@ ChannelContainer * ChannelsPanel::findKnownEntityForPort(const String & name)
     }
     OD_LOG_OBJEXIT_P(result); //####
     return result;
-} // ChannelsPanel::findKnownEntityForPort
+} // EntitiesPanel::findKnownEntityForPort
 
-ChannelContainer * ChannelsPanel::findKnownEntityForPort(const ChannelEntry * aPort)
+ChannelContainer * EntitiesPanel::findKnownEntityForPort(const ChannelEntry * aPort)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("aPort = ", aPort); //####
@@ -289,9 +289,9 @@ ChannelContainer * ChannelsPanel::findKnownEntityForPort(const ChannelEntry * aP
     }
     OD_LOG_OBJEXIT_P(result); //####
     return result;
-} // ChannelsPanel::findKnownEntityForPort
+} // EntitiesPanel::findKnownEntityForPort
 
-ChannelEntry * ChannelsPanel::findKnownPort(const String & name)
+ChannelEntry * EntitiesPanel::findKnownPort(const String & name)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("name = ", name.toStdString()); //####
@@ -308,9 +308,9 @@ ChannelEntry * ChannelsPanel::findKnownPort(const String & name)
     }
     OD_LOG_OBJEXIT_P(result); //####
     return result;
-} // ChannelsPanel::findKnownPort
+} // EntitiesPanel::findKnownPort
 
-void ChannelsPanel::forgetPort(ChannelEntry * aPort)
+void EntitiesPanel::forgetPort(ChannelEntry * aPort)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("aPort = ", aPort); //####
@@ -324,9 +324,9 @@ void ChannelsPanel::forgetPort(ChannelEntry * aPort)
         }
     }
     OD_LOG_OBJEXIT(); //####
-} // ChannelsPanel::forgetPort
+} // EntitiesPanel::forgetPort
 
-ChannelContainer * ChannelsPanel::getEntity(const size_t index)
+ChannelContainer * EntitiesPanel::getEntity(const size_t index)
 const
 {
     OD_LOG_OBJENTER(); //####
@@ -342,9 +342,9 @@ const
     }
     OD_LOG_OBJEXIT_P(result); //####
     return result;
-} // ChannelsPanel::getEntity
+} // EntitiesPanel::getEntity
 
-size_t ChannelsPanel::getNumberOfEntities(void)
+size_t EntitiesPanel::getNumberOfEntities(void)
 const
 {
     OD_LOG_OBJENTER(); //####
@@ -352,9 +352,9 @@ const
     
     OD_LOG_OBJEXIT_L(result); //####
     return result;
-} // ChannelsPanel::getNumberOfEntities
+} // EntitiesPanel::getNumberOfEntities
 
-void ChannelsPanel::paint(Graphics & gg)
+void EntitiesPanel::paint(Graphics & gg)
 {
 #if 0
     OD_LOG_OBJENTER(); //####
@@ -373,9 +373,9 @@ void ChannelsPanel::paint(Graphics & gg)
 #if 0
     OD_LOG_OBJEXIT(); //####
 #endif // 0
-} // ChannelsPanel::paint
+} // EntitiesPanel::paint
 
-void ChannelsPanel::rememberPort(ChannelEntry * aPort)
+void EntitiesPanel::rememberPort(ChannelEntry * aPort)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("aPort = ", aPort); //####
@@ -384,9 +384,9 @@ void ChannelsPanel::rememberPort(ChannelEntry * aPort)
         _knownPorts.insert(PortEntryMap::value_type(aPort->getPortName(), aPort));
     }
     OD_LOG_OBJEXIT(); //####
-} // ChannelsPanel::rememberPort
+} // EntitiesPanel::rememberPort
 
-void ChannelsPanel::removeUnvisitedEntities(void)
+void EntitiesPanel::removeUnvisitedEntities(void)
 {
     OD_LOG_OBJENTER(); //####
     for (ContainerList::iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
@@ -401,12 +401,12 @@ void ChannelsPanel::removeUnvisitedEntities(void)
         }
     }
     OD_LOG_OBJEXIT(); //####
-} // ChannelsPanel::removeUnvisitedEntities
+} // EntitiesPanel::removeUnvisitedEntities
 
-void ChannelsPanel::resized(void)
+void EntitiesPanel::resized(void)
 {
     OD_LOG_OBJENTER(); //####
-    // This is called when the ChannelsPanel is resized.
+    // This is called when the EntitiesPanel is resized.
     // If you add any child components, this is where you should update their positions.
     const int visibleHeight = getHeight() - _scrollbarThickness;
     const int visibleWidth = getWidth() - _scrollbarThickness;
@@ -416,9 +416,9 @@ void ChannelsPanel::resized(void)
     _horizontalScrollBar->setBounds(0, visibleHeight, visibleWidth, _scrollbarThickness);
     updateScrollBars();
     OD_LOG_OBJEXIT(); //####
-} // ChannelsPanel::resized
+} // EntitiesPanel::resized
 
-void ChannelsPanel::updateScrollBars(void)
+void EntitiesPanel::updateScrollBars(void)
 {
     OD_LOG_OBJENTER(); //####
     /*
@@ -428,13 +428,13 @@ void ChannelsPanel::updateScrollBars(void)
      _horizontalScrollBar->setRangeLimits(0, jmax ((double) document.getMaximumLineLength(), xOffset + columnsOnScreen));
      _horizontalScrollBar->setCurrentRange(xOffset, columnsOnScreen);*/
     OD_LOG_OBJEXIT(); //####
-} // ChannelsPanel::updateScrollBars
+} // EntitiesPanel::updateScrollBars
 
 
 
 
 #if 0
-void ChannelsPanel::clearOutBackgroundData(void)
+void EntitiesPanel::clearOutBackgroundData(void)
 {
     OD_LOG_OBJENTER(); //####
     for (ContainerList::const_iterator it(_backgroundEntities->begin());
@@ -451,11 +451,11 @@ void ChannelsPanel::clearOutBackgroundData(void)
     // Note that the ports will have been deleted by the deletion of the entities.
     _backgroundPorts->clear();
     OD_LOG_OBJEXIT(); //####
-} // ChannelsPanel::clearOutBackgroundData
+} // EntitiesPanel::clearOutBackgroundData
 #endif // 0
 
 #if 0
-void ChannelsPanel::clearOutForegroundData(void)
+void EntitiesPanel::clearOutForegroundData(void)
 {
     OD_LOG_OBJENTER(); //####
     for (ContainerList::const_iterator it(_foregroundEntities->begin());
@@ -471,11 +471,11 @@ void ChannelsPanel::clearOutForegroundData(void)
     _backgroundEntities->clear();
     _foregroundPorts->clear();
     OD_LOG_OBJEXIT(); //####
-} // ChannelsPanel::clearOutForegroundData
+} // EntitiesPanel::clearOutForegroundData
 #endif // 0
 
 #if 0
-void ChannelsPanel::drawConnections(Graphics & gg)
+void EntitiesPanel::drawConnections(Graphics & gg)
 {
 #if 0
     OD_LOG_OBJENTER(); //####
@@ -504,11 +504,11 @@ void ChannelsPanel::drawConnections(Graphics & gg)
 #if 0
     OD_LOG_OBJEXIT(); //####
 #endif // 0
-} // ChannelsPanel::drawConnections
+} // EntitiesPanel::drawConnections
 #endif // 0
 
 #if 0
-void ChannelsPanel::drawContainers(Graphics & gg)
+void EntitiesPanel::drawContainers(Graphics & gg)
 {
 #if 0
     OD_LOG_OBJENTER(); //####
@@ -565,11 +565,11 @@ void ChannelsPanel::drawContainers(Graphics & gg)
 #if 0
     OD_LOG_OBJEXIT(); //####
 #endif // 0
-} // ChannelsPanel::drawContainers
+} // EntitiesPanel::drawContainers
 #endif // 0
 
 #if 0
-void ChannelsPanel::moveEntityToEndOfForegroundList(ChannelContainer * anEntity)
+void EntitiesPanel::moveEntityToEndOfForegroundList(ChannelContainer * anEntity)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("anEntity = ", anEntity); //####
@@ -592,11 +592,11 @@ void ChannelsPanel::moveEntityToEndOfForegroundList(ChannelContainer * anEntity)
 #endif // 0
     }
     OD_LOG_OBJEXIT(); //####
-} // ChannelsPanel::moveEntityToEndOfForegroundList
+} // EntitiesPanel::moveEntityToEndOfForegroundList
 #endif // 0
 
 #if 0
-void ChannelsPanel::swapBackgroundAndForeground(void)
+void EntitiesPanel::swapBackgroundAndForeground(void)
 {
     OD_LOG_OBJENTER(); //####
     if (/*(! _firstAddPort) && (! _firstRemovePort) &&*/ (! _movementActive))
@@ -607,7 +607,7 @@ void ChannelsPanel::swapBackgroundAndForeground(void)
         _foregroundLock.exit();
     }
     OD_LOG_OBJEXIT(); //####
-} // ChannelsPanel::swapBackgroundAndForeground
+} // EntitiesPanel::swapBackgroundAndForeground
 #endif // 0
 
 #if defined(__APPLE__)
@@ -618,37 +618,37 @@ void ChannelsPanel::swapBackgroundAndForeground(void)
 # pragma mark Global functions
 #endif // defined(__APPLE__)
 
-Colour ChannelsPanel::getMarkerColor(void)
+Colour EntitiesPanel::getMarkerColor(void)
 {
     return Colours::yellow;
-} // ChannelsPanel::getMarkerColor
+} // EntitiesPanel::getMarkerColor
 
-Colour ChannelsPanel::getNewConnectionColor(void)
+Colour EntitiesPanel::getNewConnectionColor(void)
 {
     return Colours::gold;
-} // ChannelsPanel::getNewConnectionColor
+} // EntitiesPanel::getNewConnectionColor
 
-float ChannelsPanel::getNormalConnectionWidth(void)
+float EntitiesPanel::getNormalConnectionWidth(void)
 {
     return kNormalConnectionWidth;
-} // ChannelsPanel::getNormalConnectionWidth
+} // EntitiesPanel::getNormalConnectionWidth
 
-Colour ChannelsPanel::getOtherConnectionColor(void)
+Colour EntitiesPanel::getOtherConnectionColor(void)
 {
     return Colours::orange;
-} // ChannelsPanel::getOtherConnectionColor
+} // EntitiesPanel::getOtherConnectionColor
 
-float ChannelsPanel::getServiceConnectionWidth(void)
+float EntitiesPanel::getServiceConnectionWidth(void)
 {
     return kServiceConnectionWidth;
-} // ChannelsPanel::getServiceConnectionWidth
+} // EntitiesPanel::getServiceConnectionWidth
 
-Colour ChannelsPanel::getTcpConnectionColor(void)
+Colour EntitiesPanel::getTcpConnectionColor(void)
 {
     return Colours::teal;
-} // ChannelsPanel::getTcpConnectionColor
+} // EntitiesPanel::getTcpConnectionColor
 
-Colour ChannelsPanel::getUdpConnectionColor(void)
+Colour EntitiesPanel::getUdpConnectionColor(void)
 {
     return Colours::purple;
-} // ChannelsPanel::getUdpConnectionColor
+} // EntitiesPanel::getUdpConnectionColor

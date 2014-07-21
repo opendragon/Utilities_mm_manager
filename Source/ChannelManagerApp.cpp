@@ -146,7 +146,7 @@ void ChannelManagerApplication::initialise(const String & commandLine)
         theLogger.fail("YARP network not running.");
     }
 #endif // CheckNetworkWorks_
-    _mainWindow = new ChannelsWindow(ProjectInfo::projectName);
+    _mainWindow = new ChannelManagerWindow(ProjectInfo::projectName);
     if (_yarp)
     {
         _scanner = new ScannerThread(ProjectInfo::projectName, _mainWindow);

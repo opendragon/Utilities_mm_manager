@@ -38,7 +38,7 @@
 
 #include "ScannerThread.h"
 #include "ChannelContainer.h"
-#include "ChannelsWindow.h"
+#include "ChannelManagerWindow.h"
 
 #include "ODEnableLogging.h"
 #include "ODLogging.h"
@@ -271,8 +271,8 @@ static ChannelEntry * findRecordedPort(PortEntryMap & portsSeen,
 # pragma mark Constructors and destructors
 #endif // defined(__APPLE__)
 
-ScannerThread::ScannerThread(const String &   name,
-                             ChannelsWindow * window) :
+ScannerThread::ScannerThread(const String &         name,
+                             ChannelManagerWindow * window) :
     inherited(name), _window(window), _rememberedPorts(), _detectedServices(), _associatedPorts(),
     _standalonePorts(), _connections(), _entitiesSeen()
 {
@@ -399,7 +399,7 @@ void ScannerThread::addRegularPortEntities(const MplusM::Utilities::PortVector &
         {
             String           caption(walker->_portIpAddress + ":" + walker->_portPortNumber);
             NameAndDirection info;
-            ChannelsPanel &  activePanel = getActivePanel();
+            EntitiesPanel &  activePanel = _window->getEntitiesPanel();
             ChannelEntry *   oldEntry = activePanel.findKnownPort(walkerName);
             
             _rememberedPorts.insert(walkerName);
@@ -482,17 +482,7 @@ void ScannerThread::gatherEntities(void)
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::gatherEntities
 
-ChannelsPanel & ScannerThread::getActivePanel(void)
-const
-{
-    OD_LOG_OBJENTER(); //####
-    ChannelsPanel * result = static_cast<ChannelsPanel *>(_window->getContentComponent());
-    
-    OD_LOG_OBJEXIT_P(result); //####
-    return *result;
-} // ScannerThread::getActivePanel
-
-void ScannerThread::addEntitiesToPanel(ChannelsPanel * newPanel)
+void ScannerThread::addEntitiesToPanel(EntitiesPanel * newPanel)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("newPanel = ", newPanel); //####
@@ -620,7 +610,7 @@ void ScannerThread::run(void)
     while (! threadShouldExit())
     {
         // Create a new panel to add entities to.
-        ChannelsPanel * newPanel = new ChannelsPanel;
+        EntitiesPanel * newPanel = new EntitiesPanel;
         int64           loopStartTime = Time::currentTimeMillis();
         
         gatherEntities();
@@ -665,7 +655,7 @@ void ScannerThread::run(void)
 void ScannerThread::setEntityPositions(void)
 {
     OD_LOG_OBJENTER(); //####
-    ChannelsPanel &       activePanel = getActivePanel();
+    EntitiesPanel &       activePanel = _window->getEntitiesPanel();
     Random                randomizer(Time::currentTimeMillis());
     bool                  positionsNeedUpdate = false;
     float                 fullHeight = activePanel.getHeight();
@@ -807,7 +797,7 @@ void ScannerThread::setEntityPositions(void)
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::setEntityPositions
 
-bool ScannerThread::updateActivePanel(ChannelsPanel * newPanel)
+bool ScannerThread::updateActivePanel(EntitiesPanel * newPanel)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("newPanel = ", newPanel); //####
@@ -820,7 +810,7 @@ bool ScannerThread::updateActivePanel(ChannelsPanel * newPanel)
     // return.
     if (mml.lockWasGained())
     {
-        ChannelsPanel & activePanel = getActivePanel();
+        EntitiesPanel & activePanel = _window->getEntitiesPanel();
         
         activePanel.clearAllVisitedFlags();
         newPanel->clearAllVisitedFlags();

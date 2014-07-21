@@ -39,7 +39,7 @@
 #if (! defined(ChannelManagerApp_H_))
 # define ChannelManagerApp_H_ /* Header guard */
 
-# include "ChannelsWindow.h"
+# include "ChannelManagerWindow.h"
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -122,7 +122,7 @@ namespace ChannelManager
         typedef JUCEApplication inherited;
         
         /*! @brief The primary window of the application. */
-        ScopedPointer<ChannelsWindow> _mainWindow;
+        ScopedPointer<ChannelManagerWindow> _mainWindow;
         
         /*! @brief Used to establish connections to the YARP infrastructure. */
         ScopedPointer<yarp::os::Network> _yarp;

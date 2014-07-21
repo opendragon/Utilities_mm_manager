@@ -38,7 +38,7 @@
 
 #include "ChannelEntry.h"
 #include "ChannelContainer.h"
-#include "ChannelsPanel.h"
+#include "EntitiesPanel.h"
 
 #include "ODEnableLogging.h"
 #include "ODLogging.h"
@@ -388,13 +388,13 @@ void ChannelEntry::drawDragLine(const float xPos,
         }
         if (isUDP)
         {
-            ofSetColor(ChannelsPanel::getUdpConnectionColor());
+            ofSetColor(EntitiesPanel::getUdpConnectionColor());
         }
         else
         {
-            ofSetColor(ChannelsPanel::getTcpConnectionColor());
+            ofSetColor(EntitiesPanel::getTcpConnectionColor());
         }
-        ofSetLineWidth(ChannelsPanel::getNormalConnectionWidth());
+        ofSetLineWidth(EntitiesPanel::getNormalConnectionWidth());
         DrawBezier(fromHere, toThere, aCentre, newCentre);
         ofSetLineWidth(1);
         drawSourceAnchor(anchorHere, fromHere);

@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       ChannelsWindow.cpp
+//  File:       ChannelManagerWindow.cpp
 //
 //  Project:    M+M
 //
@@ -36,8 +36,8 @@
 //
 //--------------------------------------------------------------------------------------------------
 
-#include "ChannelsWindow.h"
-#include "ChannelsPanel.h"
+#include "ChannelManagerWindow.h"
+#include "ContentPanel.h"
 
 #include "ODEnableLogging.h"
 #include "ODLogging.h"
@@ -72,30 +72,31 @@ using namespace std;
 # pragma mark Constructors and destructors
 #endif // defined(__APPLE__)
 
-ChannelsWindow::ChannelsWindow(const String & title)  :
-    inherited(title, Colours::lightgrey, inherited::allButtons)
+ChannelManagerWindow::ChannelManagerWindow(const String & title)  :
+    inherited(title, Colours::lightgrey, inherited::allButtons), _connectionsPanel(new Component),
+    _contentPanel(new ContentPanel)
 {
     OD_LOG_ENTER(); //####
     setOpaque(true);
-    setContentOwned(new ChannelsPanel, true);
+    setContentOwned(_contentPanel, true);
     centreWithSize(getWidth(), getHeight());
     setVisible(true);
     setResizable(true, true);
     setDropShadowEnabled(true);
     OD_LOG_EXIT(); //####
-} // ChannelsWindow::ChannelsWindow
+} // ChannelManagerWindow::ChannelManagerWindow
 
-ChannelsWindow::~ChannelsWindow(void)
+ChannelManagerWindow::~ChannelManagerWindow(void)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_OBJEXIT(); //####
-} // ChannelsWindow::~ChannelsWindow
+} // ChannelManagerWindow::~ChannelManagerWindow
 
 #if defined(__APPLE__)
 # pragma mark Actions
 #endif // defined(__APPLE__)
 
-void ChannelsWindow::closeButtonPressed(void)
+void ChannelManagerWindow::closeButtonPressed(void)
 {
     OD_LOG_OBJENTER(); //####
     // This is called when the user tries to close this window. Here, we'll just
@@ -103,11 +104,31 @@ void ChannelsWindow::closeButtonPressed(void)
     // whatever you need.
     JUCEApplication::getInstance()->systemRequestedQuit();
     OD_LOG_OBJEXIT(); //####
-} // ChannelsWindow::closeButtonPressed
+} // ChannelManagerWindow::closeButtonPressed
 
 #if defined(__APPLE__)
 # pragma mark Accessors
 #endif // defined(__APPLE__)
+
+ConnectionsPanel & ChannelManagerWindow::getConnectionsPanel(void)
+const
+{
+    OD_LOG_OBJENTER(); //####
+    ConnectionsPanel & thePanel = _contentPanel->getConnectionsPanel();
+    
+    OD_LOG_OBJEXIT_P(&thePanel); //####
+    return thePanel;
+} // ChannelManagerWindow::getConnectionsPanel
+
+EntitiesPanel & ChannelManagerWindow::getEntitiesPanel(void)
+const
+{
+    OD_LOG_OBJENTER(); //####
+    EntitiesPanel & thePanel = _contentPanel->getEntitiesPanel();
+    
+    OD_LOG_OBJEXIT_P(&thePanel); //####
+    return thePanel;
+} // ChannelManagerWindow::getEntitiesPanel
 
 #if defined(__APPLE__)
 # pragma mark Global functions

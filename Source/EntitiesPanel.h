@@ -1,11 +1,11 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       ChannelsPanel.h
+//  File:       EntitiesPanel.h
 //
 //  Project:    M+M
 //
-//  Contains:   The class declaration for the contents of the primary window of the channel manager
-//              application.
+//  Contains:   The class declaration for the entities layer of the primary window of the channel
+//              manager application.
 //
 //  Written by: Norman Jaffe
 //
@@ -37,8 +37,8 @@
 //
 //--------------------------------------------------------------------------------------------------
 
-#if (! defined(ChannelsPanel_H_))
-# define ChannelsPanel_H_ /* Header guard */
+#if (! defined(EntitiesPanel_H_))
+# define EntitiesPanel_H_ /* Header guard */
 
 # include "ChannelsDataTypes.h"
 
@@ -48,7 +48,7 @@
 # endif // defined(__APPLE__)
 /*! @file
  
- @brief The class declaration for the contents of the primary window of the channel manager
+ @brief The class declaration for the entities layer of the primary window of the channel manager
  application. */
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
@@ -59,16 +59,16 @@ namespace ChannelManager
     class ChannelContainer;
     class ChannelEntry;
     
-    /*! @brief The content area of the main window of the application. */
-    class ChannelsPanel : public Component
+    /*! @brief The entities layer of the main window of the application. */
+    class EntitiesPanel : public Component
     {
     public:
         
         /*! @brief The constructor. */
-        ChannelsPanel(void);
+        EntitiesPanel(void);
         
         /*! @brief The destructor. */
-        virtual ~ChannelsPanel(void);
+        virtual ~EntitiesPanel(void);
         
         /*! @brief Add an entity to the list of known entities.
          @param anEntity The entity to be added. */
@@ -126,17 +126,17 @@ namespace ChannelManager
          @returns The line width for a normal connection. */
         static float getNormalConnectionWidth(void);
         
-        /*! @brief Return the number of entities.
-         @returns The number of entities. */
-        size_t getNumberOfEntities(void)
-        const;
-        
         /*! @brief Return the font to be used for normal text.
          @returns The font to be used for normal text. */
         Font & getNormalFont(void)
         {
             return *_defaultNormalFont;
         } // getNormalFont
+        
+        /*! @brief Return the number of entities.
+         @returns The number of entities. */
+        size_t getNumberOfEntities(void)
+        const;
         
         /*! @brief Return the color to be used for non-TCP/non-UDP connections.
          @returns The color to be used for non-TCP/non-UDP connection. */
@@ -269,10 +269,10 @@ namespace ChannelManager
          scrollbar). */
         int _scrollbarThickness;
         
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ChannelsPanel)
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(EntitiesPanel)
         
-    }; // ChannelsPanel
+    }; // EntitiesPanel
     
 } // ChannelManager
 
-#endif // ! defined(ChannelsPanel_H_)
+#endif // ! defined(EntitiesPanel_H_)

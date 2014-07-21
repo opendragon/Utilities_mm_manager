@@ -40,7 +40,7 @@
 # define ScannerThread_H_ /* Header guard */
 
 # include "ChannelEntry.h"
-# include "ChannelsPanel.h"
+# include "EntitiesPanel.h"
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -55,8 +55,8 @@
 
 namespace ChannelManager
 {
-    class ChannelsPanel;
-    class ChannelsWindow;
+    class EntitiesPanel;
+    class ChannelManagerWindow;
     
     /*! @brief A background scanner thread. */
     class ScannerThread : public Thread
@@ -66,8 +66,8 @@ namespace ChannelManager
         /*! @brief The constructor.
          @param name The name to give to the thread.
          @param window The window to be updated. */
-        ScannerThread(const String &   name,
-                      ChannelsWindow * window);
+        ScannerThread(const String &         name,
+                      ChannelManagerWindow * window);
         
         /*! @brief The destructor. */
         virtual ~ScannerThread(void);
@@ -84,7 +84,7 @@ namespace ChannelManager
         
         /*! @brief Add the detected entities to a panel.
          @param newPanel The panel to be updated. */
-        void addEntitiesToPanel(ChannelsPanel * newPanel);
+        void addEntitiesToPanel(EntitiesPanel * newPanel);
         
         /*! @brief Add connections between detected ports in the to-be-displayed list.
          @param detectedPorts The set of detected YARP ports. */
@@ -105,21 +105,16 @@ namespace ChannelManager
         /*! @brief Identify the YARP network entities. */
         void gatherEntities(void);
         
-        /*! @brief Returns the active (displayed) panel.
-         @returns The active (displayed) panel. */
-        ChannelsPanel & getActivePanel(void)
-        const;
-        
         /*! @brief Set the entity positions. */
         void setEntityPositions(void);
         
         /*! @brief Refresh the displayed entities, based on the scanned entities.
          @param newPanel The panel containing the scanned entities.
          @returns @c true if the thread should leave and @c false otherwise. */
-        bool updateActivePanel(ChannelsPanel * newPanel);
+        bool updateActivePanel(EntitiesPanel * newPanel);
         
         /*! @brief The window to be updated. */
-        ChannelsWindow * _window;
+        ChannelManagerWindow * _window;
         
         /*! @brief A set of known ports. */
         PortSet _rememberedPorts;
