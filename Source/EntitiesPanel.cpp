@@ -129,6 +129,16 @@ static bool protocolsMatch(const String & sourceProtocol,
 # pragma mark Class methods
 #endif // defined(__APPLE__)
 
+Colour EntitiesPanel::getMarkerColor(void)
+{
+    return Colours::yellow;
+} // EntitiesPanel::getMarkerColor
+
+Colour EntitiesPanel::getNewConnectionColor(void)
+{
+    return Colours::gold;
+} // EntitiesPanel::getNewConnectionColor
+
 #if defined(__APPLE__)
 # pragma mark Constructors and destructors
 #endif // defined(__APPLE__)
@@ -216,6 +226,26 @@ void EntitiesPanel::clearOutData(void)
     _knownEntities.clear();
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::clearOutData
+
+void EntitiesPanel::drawConnections(Graphics & gg)
+{
+#if 0
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("gg = ", &gg); //####
+#endif // 0
+    for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
+    {
+        ChannelContainer * anEntity = *it;
+        
+        if (anEntity)
+        {
+            anEntity->drawOutgoingConnections(gg);
+        }
+    }
+#if 0
+    OD_LOG_OBJEXIT(); //####
+#endif // 0
+} // EntitiesPanel::drawConnections
 
 ChannelContainer * EntitiesPanel::findKnownEntity(const String & name)
 {
@@ -355,6 +385,10 @@ void EntitiesPanel::paint(Graphics & gg)
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("gg = ", &gg); //####
 #endif // 0
+    Rectangle<int> ggBounds = gg.getClipBounds();
+    
+    OD_LOG_L4("ggBounds.x = ", ggBounds.getX(), "ggBounds.y = ", ggBounds.getY(), //####
+              "ggBounds.w = ", ggBounds.getWidth(), "ggBounds.h = ", ggBounds.getHeight()); //####
     // Set up a gradient background, using a radial gradient from the centre to the furthest edge.
     int            hh = getHeight();
     int            ww = getWidth();
@@ -364,7 +398,7 @@ void EntitiesPanel::paint(Graphics & gg)
     
     gg.setFillType(theBackgroundFill);
     gg.fillAll();
-    //drawContainers(gg);
+    drawConnections(gg);
 #if 0
     OD_LOG_OBJEXIT(); //####
 #endif // 0
@@ -485,39 +519,6 @@ void EntitiesPanel::clearOutForegroundData(void)
 #endif // 0
 
 #if 0
-void EntitiesPanel::drawConnections(Graphics & gg)
-{
-#if 0
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("gg = ", &gg); //####
-#endif // 0
-    
-#if 0
-    // to draw Bezier curves -
-    Path myPath;
-    
-    myPath.startNewSubPath (10.0f, 10.0f);          // move the current position to (10, 10)
-    myPath.lineTo (100.0f, 200.0f);                 // draw a line from here to (100, 200)
-    myPath.quadraticTo (0.0f, 150.0f, 5.0f, 50.0f); // draw a curve that ends at (5, 50)
-    myPath.closeSubPath();                          // close the subpath with a line back to (10, 10)
-    
-    // add an ellipse as well, which will form a second sub-path within the path..
-    myPath.addEllipse (50.0f, 50.0f, 40.0f, 30.0f);
-    
-    // double the width of the whole thing..
-    myPath.applyTransform (AffineTransform::scale (2.0f, 1.0f));
-    
-    // and draw it to a graphics context with a 5-pixel thick outline.
-    g.strokePath (myPath, PathStrokeType (5.0f));
-    
-#endif // 0
-#if 0
-    OD_LOG_OBJEXIT(); //####
-#endif // 0
-} // EntitiesPanel::drawConnections
-#endif // 0
-
-#if 0
 void EntitiesPanel::drawContainers(Graphics & gg)
 {
 #if 0
@@ -627,13 +628,3 @@ void EntitiesPanel::swapBackgroundAndForeground(void)
 #if defined(__APPLE__)
 # pragma mark Global functions
 #endif // defined(__APPLE__)
-
-Colour EntitiesPanel::getMarkerColor(void)
-{
-    return Colours::yellow;
-} // EntitiesPanel::getMarkerColor
-
-Colour EntitiesPanel::getNewConnectionColor(void)
-{
-    return Colours::gold;
-} // EntitiesPanel::getNewConnectionColor

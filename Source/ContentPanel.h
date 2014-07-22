@@ -56,7 +56,6 @@
 
 namespace ChannelManager
 {
-    class ConnectionsPanel;
     class EntitiesPanel;
     
     /*! @brief The content area of the main window of the application. */
@@ -69,14 +68,6 @@ namespace ChannelManager
         
         /*! @brief The destructor. */
         virtual ~ContentPanel(void);
-        
-        /*! @brief Returns the connections panel.
-         @returns The entities panel. */
-        ConnectionsPanel & getConnectionsPanel(void)
-        const
-        {
-            return *_connectionsPanel;
-        } // getConnectionsPanel
         
         /*! @brief Returns the entities panel.
          @returns The entities panel. */
@@ -95,9 +86,6 @@ namespace ChannelManager
         
         /*! @brief The class that this class is derived from. */
         typedef Component inherited;
-        
-        /*! @brief The connections panel. */
-        ScopedPointer<ConnectionsPanel> _connectionsPanel;
         
         /*! @brief The entities panel. */
         ScopedPointer<EntitiesPanel> _entitiesPanel;

@@ -54,7 +54,6 @@
 
 namespace ChannelManager
 {
-    class ConnectionsPanel;
     class ContentPanel;
     class EntitiesPanel;
     
@@ -72,11 +71,6 @@ namespace ChannelManager
         
         /*! @brief This method is called when the user tries to close the window. */
         void closeButtonPressed(void);
-        
-        /*! @brief Returns the entities panel.
-         @returns The entities panel. */
-        ConnectionsPanel & getConnectionsPanel(void)
-        const;
         
         /*! @brief Returns the entities panel.
          @returns The entities panel. */

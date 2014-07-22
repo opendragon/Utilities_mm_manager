@@ -34,7 +34,6 @@
 		DF1470A61979833900E182D6 /* libOGDFDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF1470A51979833900E182D6 /* libOGDFDebug.a */; };
 		DF1470AB1979848700E182D6 /* libOGDF.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF74B6781979747800A6ECD3 /* libOGDF.a */; };
 		DF1470F0197D80A000E182D6 /* ChannelManagerWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF1470E8197D80A000E182D6 /* ChannelManagerWindow.cpp */; };
-		DF1470F1197D80A000E182D6 /* ConnectionsPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF1470EA197D80A000E182D6 /* ConnectionsPanel.cpp */; };
 		DF1470F2197D80A000E182D6 /* ContentPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF1470EC197D80A000E182D6 /* ContentPanel.cpp */; };
 		DF1470F3197D80A000E182D6 /* EntitiesPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF1470EE197D80A000E182D6 /* EntitiesPanel.cpp */; };
 		DF4C6E1C19797ABD006CFB14 /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF74B66F1976D2BF00A6ECD3 /* libc++.dylib */; };
@@ -811,8 +810,6 @@
 		DF1470AC19798BC000E182D6 /* ChannelsDataTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ChannelsDataTypes.h; path = ../../Source/ChannelsDataTypes.h; sourceTree = "<group>"; };
 		DF1470E8197D80A000E182D6 /* ChannelManagerWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ChannelManagerWindow.cpp; path = ../../Source/ChannelManagerWindow.cpp; sourceTree = "<group>"; };
 		DF1470E9197D80A000E182D6 /* ChannelManagerWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChannelManagerWindow.h; path = ../../Source/ChannelManagerWindow.h; sourceTree = "<group>"; };
-		DF1470EA197D80A000E182D6 /* ConnectionsPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ConnectionsPanel.cpp; path = ../../Source/ConnectionsPanel.cpp; sourceTree = "<group>"; };
-		DF1470EB197D80A000E182D6 /* ConnectionsPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConnectionsPanel.h; path = ../../Source/ConnectionsPanel.h; sourceTree = "<group>"; };
 		DF1470EC197D80A000E182D6 /* ContentPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ContentPanel.cpp; path = ../../Source/ContentPanel.cpp; sourceTree = "<group>"; };
 		DF1470ED197D80A000E182D6 /* ContentPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContentPanel.h; path = ../../Source/ContentPanel.h; sourceTree = "<group>"; };
 		DF1470EE197D80A000E182D6 /* EntitiesPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EntitiesPanel.cpp; path = ../../Source/EntitiesPanel.cpp; sourceTree = "<group>"; };
@@ -1243,8 +1240,6 @@
 				DF1470E8197D80A000E182D6 /* ChannelManagerWindow.cpp */,
 				DF1470E9197D80A000E182D6 /* ChannelManagerWindow.h */,
 				DF1470AC19798BC000E182D6 /* ChannelsDataTypes.h */,
-				DF1470EA197D80A000E182D6 /* ConnectionsPanel.cpp */,
-				DF1470EB197D80A000E182D6 /* ConnectionsPanel.h */,
 				DF1470EC197D80A000E182D6 /* ContentPanel.cpp */,
 				DF1470ED197D80A000E182D6 /* ContentPanel.h */,
 				DF1470EE197D80A000E182D6 /* EntitiesPanel.cpp */,
@@ -2780,7 +2775,6 @@
 				DF74B6731976D8F000A6ECD3 /* ChannelEntry.cpp in Sources */,
 				DF74B66E19759B8100A6ECD3 /* ChannelContainer.cpp in Sources */,
 				8293E78EF60A5024CA9EB2B7 /* juce_data_structures.mm in Sources */,
-				DF1470F1197D80A000E182D6 /* ConnectionsPanel.cpp in Sources */,
 				DF74B676197851F600A6ECD3 /* ScannerThread.cpp in Sources */,
 				50F1CB5B2A0C22454AF41833 /* juce_events.mm in Sources */,
 				81E02713982BA5A1CFDA27C2 /* juce_graphics.mm in Sources */,

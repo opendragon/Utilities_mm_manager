@@ -156,6 +156,22 @@ ChannelEntry * ChannelContainer::addPort(const String &      portName,
     return aPort;
 } // ChannelContainer::addPort
 
+void ChannelContainer::drawOutgoingConnections(Graphics & gg)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("gg = ", &gg); //####
+    for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
+    {
+        ChannelEntry * aPort = getPort(ii);
+        
+        if (aPort)
+        {
+            aPort->drawOutgoingConnections(gg);
+        }
+    }
+    OD_LOG_OBJEXIT(); //####
+} // ChannelContainer::drawOutgoingConnections
+
 ChannelEntry * ChannelContainer::getPort(const int num)
 const
 {
@@ -167,7 +183,7 @@ const
     
     if (0 <= num)
     {
-        result = reinterpret_cast<ChannelEntry *> (getChildComponent(num));
+        result = reinterpret_cast<ChannelEntry *>(getChildComponent(num));
     }
     else
     {
@@ -178,6 +194,16 @@ const
 #endif // 0
     return result;
 } // ChannelContainer::getPort
+
+Point<float> ChannelContainer::getPositionInPanel(void)
+const
+{
+    OD_LOG_OBJENTER(); //####
+    Point<float> result(getPosition().toFloat());
+    
+    OD_LOG_OBJEXIT(); //####
+    return result;
+} // ChannelContainer::getPositionInPanel
 
 bool ChannelContainer::hasPort(const ChannelEntry * aPort)
 {
@@ -227,6 +253,12 @@ void ChannelContainer::mouseDrag(const MouseEvent & ee)
     OD_LOG_OBJENTER(); //####
     // Moves this Component according to the mouse drag event and applies our constraints to it
     _dragger.dragComponent(this, ee, &_constrainer);
+    
+    
+    _owner.repaint();
+    
+    
+    
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::mouseDrag
 
@@ -236,6 +268,11 @@ void ChannelContainer::paint(Graphics & gg)
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("gg = ", &gg); //####
 #endif // 0
+    Rectangle<int> ggBounds = gg.getClipBounds();
+    
+    OD_LOG_L4("ggBounds.x = ", ggBounds.getX(), "ggBounds.y = ", ggBounds.getY(), //####
+              "ggBounds.w = ", ggBounds.getWidth(), "ggBounds.h = ", ggBounds.getHeight()); //####
+
     AttributedString as;
     
     as.setJustification(Justification::left);
@@ -244,7 +281,7 @@ void ChannelContainer::paint(Graphics & gg)
     Rectangle<float> area(bounds.getX(), bounds.getY(), bounds.getWidth(), _titleHeight);
     
 #if 0
-    OD_LOG_D4("x <- ", area.getX(), "y <- ", area.getY(), "w <- ",area.getWidth(), "h <- ", //####
+    OD_LOG_D4("x <- ", area.getX(), "y <- ", area.getY(), "w <- ", area.getWidth(), "h <- ", //####
               area.getHeight()); //####
 #endif // 0
     gg.setColour(Colours::darkgrey);

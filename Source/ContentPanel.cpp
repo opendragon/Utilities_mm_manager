@@ -38,7 +38,6 @@
 //--------------------------------------------------------------------------------------------------
 
 #include "ContentPanel.h"
-#include "ConnectionsPanel.h"
 #include "EntitiesPanel.h"
 
 #include "ODEnableLogging.h"
@@ -76,13 +75,11 @@ using namespace std;
 #endif // defined(__APPLE__)
 
 ContentPanel::ContentPanel(void) :
-    inherited(), _connectionsPanel(new ConnectionsPanel), _entitiesPanel(new EntitiesPanel)
+    inherited(), _entitiesPanel(new EntitiesPanel)
 {
     OD_LOG_ENTER(); //####
     addAndMakeVisible(_entitiesPanel);
     setSize(_entitiesPanel->getWidth(), _entitiesPanel->getHeight());
-    addAndMakeVisible(_connectionsPanel);
-    _connectionsPanel->setSize(getWidth(), getHeight());
     OD_LOG_EXIT(); //####
 } // ContentPanel::ContentPanel
 
@@ -100,7 +97,6 @@ void ContentPanel::resized(void)
 {
     OD_LOG_OBJENTER(); //####
     _entitiesPanel->setSize(getWidth(), getHeight());
-    _connectionsPanel->setSize(getWidth(), getHeight());
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::resized
 

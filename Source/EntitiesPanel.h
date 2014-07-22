@@ -178,11 +178,11 @@ namespace ChannelManager
         /*! @brief Release all data held by the panel. */
         void clearOutData(void);
         
-#if 0
         /*! @brief Display the connections between containers.
          @param gg The graphics context in which to draw. */
         void drawConnections(Graphics & gg);
         
+#if 0
         /*! @brief Display the containers.
          @param gg The graphics context in which to draw. */
         void drawContainers(Graphics & gg);

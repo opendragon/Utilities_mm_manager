@@ -110,16 +110,6 @@ void ChannelManagerWindow::closeButtonPressed(void)
 # pragma mark Accessors
 #endif // defined(__APPLE__)
 
-ConnectionsPanel & ChannelManagerWindow::getConnectionsPanel(void)
-const
-{
-    OD_LOG_OBJENTER(); //####
-    ConnectionsPanel & thePanel = _contentPanel->getConnectionsPanel();
-    
-    OD_LOG_OBJEXIT_P(&thePanel); //####
-    return thePanel;
-} // ChannelManagerWindow::getConnectionsPanel
-
 EntitiesPanel & ChannelManagerWindow::getEntitiesPanel(void)
 const
 {

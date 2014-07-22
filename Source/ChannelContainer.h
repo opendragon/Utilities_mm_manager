@@ -105,6 +105,15 @@ namespace ChannelManager
             _selected = false;
         } // deselect
         
+        /*! @brief Display the connections between containers.
+         @param gg The graphics context in which to draw. */
+        void drawOutgoingConnections(Graphics & gg);
+        
+        /*! @brief Return the position of the entity within it's containing panel.
+         @returns The position of the entity within it's containing panel. */
+        Point<float> getPositionInPanel(void)
+        const;
+        
         /*! @brief Return the behavioural model for the entity.
          @returns The behavioural model for the entity. */
         inline String getBehaviour(void)

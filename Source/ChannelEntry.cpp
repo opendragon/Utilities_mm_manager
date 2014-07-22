@@ -64,6 +64,9 @@ using namespace std;
 /*! @brief The horizontal and vertical length of the arrow 'arm'. */
 static const float kArrowSize = 7;
 
+/*! @brief The scale factor to apply to get the length of the control vector. */
+static const float kControlLengthScale = 0.25;
+
 /*! @brief The line width for a normal connection. */
 static const float kNormalConnectionWidth = 2;
 
@@ -72,6 +75,15 @@ static const float kServiceConnectionWidth = (2 * kNormalConnectionWidth);
 
 /*! @brief The scale factor to apply to get the size of the target box. */
 static const float kTargetBoxScale = 0.25;
+
+/*! @brief The color to be used for non-TCP/non-UDP connection. */
+static const Colour & kOtherConnectionColour(Colours::orange);
+
+/*! @brief The color to be used for TCP connections. */
+static const Colour & kTcpConnectionColour(Colours::teal);
+
+/*! @brief The color to be used for UDP connections. */
+static const Colour & kUdpConnectionColour(Colours::purple);
 
 #if defined(__APPLE__)
 # pragma mark Local functions
@@ -174,6 +186,271 @@ static AnchorSide calculateAnchorForPoint(Point<float> &       newCentre,
 #endif // 0
     return anchor;
 } // calculateAnchorForPoint
+
+/*! @brief Displays an anchor leaving the given location.
+ @param gg The graphics context in which to draw.
+ @param anchor The side to which the anchor is attached.
+ @param anchorPos The coordinates of the anchor point.
+ @param thickness The line thickness to be used. */
+static void drawSourceAnchor(Graphics &           gg,
+                             const AnchorSide     anchor,
+                             const Point<float> & anchorPos,
+                             const float          thickness)
+{
+#if 0
+    OD_LOG_ENTER(); //####
+    OD_LOG_P2("gg = ", &gg, "anchorPos = ", &anchorPos); //####
+    OD_LOG_L1("anchor = ", static_cast<int>(anchor)); //####
+    OD_LOG_D1("thickness = ", thickness); //####
+#endif // 0
+    Rectangle<int> ggBounds = gg.getClipBounds();
+    
+    OD_LOG_L4("ggBounds.x = ", ggBounds.getX(), "ggBounds.y = ", ggBounds.getY(), //####
+              "ggBounds.w = ", ggBounds.getWidth(), "ggBounds.h = ", ggBounds.getHeight()); //####
+    Point<float> first;
+    Point<float> second;
+    
+    switch (anchor)
+    {
+	    case kAnchorLeft :
+            first = anchorPos + Point<float>(kArrowSize, -kArrowSize);
+            second = anchorPos + Point<float>(kArrowSize, kArrowSize);
+            break;
+            
+	    case kAnchorRight :
+            first = anchorPos + Point<float>(-kArrowSize, -kArrowSize);
+            second = anchorPos + Point<float>(-kArrowSize, kArrowSize);
+            break;
+            
+	    case kAnchorBottomCentre :
+            first = anchorPos + Point<float>(-kArrowSize, -kArrowSize);
+            second = anchorPos + Point<float>(kArrowSize, -kArrowSize);
+            break;
+            
+	    case kAnchorTopCentre :
+            first = anchorPos + Point<float>(-kArrowSize, kArrowSize);
+            second = anchorPos + Point<float>(kArrowSize, kArrowSize);
+            break;
+            
+	    default :
+            break;
+            
+    }
+    if (kAnchorUnknown != anchor)
+    {
+        OD_LOG_D4("anchor.x = ", anchorPos.getX(), "anchor.y = ", anchorPos.getY(), //####
+                  "first.x = ", first.getX(), "first.y = ", first.getY()); //####
+        OD_LOG_D2("second.x = ", second.getX(), "second.y = ", second.getY()); //####
+        gg.drawLine(anchorPos.getX(), anchorPos.getY(), first.getX(), first.getY(), thickness);
+        gg.drawLine(anchorPos.getX(), anchorPos.getY(), second.getX(), second.getY(), thickness);
+    }
+#if 0
+    OD_LOG_EXIT(); //####
+#endif // 0
+} // drawSourceAnchor
+
+/*! @brief Displays an anchor arriving at the given location.
+ @param gg The graphics context in which to draw.
+ @param anchor The side to which the anchor is attached.
+ @param anchorPos The coordinates of the anchor point.
+ @param thickness The line thickness to be used. */
+static void drawTargetAnchor(Graphics &           gg,
+                             const AnchorSide     anchor,
+                             const Point<float> & anchorPos,
+                             const float          thickness)
+{
+#if 0
+    OD_LOG_ENTER(); //####
+    OD_LOG_P2("gg = ", &gg, "anchorPos = ", &anchorPos); //####
+    OD_LOG_L1("anchor = ", static_cast<int>(anchor)); //####
+    OD_LOG_D1("thickness = ", thickness); //####
+#endif // 0
+    Rectangle<int> ggBounds = gg.getClipBounds();
+    
+    OD_LOG_L4("ggBounds.x = ", ggBounds.getX(), "ggBounds.y = ", ggBounds.getY(), //####
+              "ggBounds.w = ", ggBounds.getWidth(), "ggBounds.h = ", ggBounds.getHeight()); //####
+    Point<float> first;
+    Point<float> second;
+    
+    switch (anchor)
+    {
+	    case kAnchorLeft :
+            first = anchorPos + Point<float>(-kArrowSize, -kArrowSize);
+            second = anchorPos + Point<float>(-kArrowSize, kArrowSize);
+            break;
+            
+	    case kAnchorRight :
+            first = anchorPos + Point<float>(kArrowSize, -kArrowSize);
+            second = anchorPos + Point<float>(kArrowSize, kArrowSize);
+            break;
+            
+	    case kAnchorBottomCentre :
+            first = anchorPos + Point<float>(-kArrowSize, kArrowSize);
+            second = anchorPos + Point<float>(kArrowSize, kArrowSize);
+            break;
+            
+	    case kAnchorTopCentre :
+            first = anchorPos + Point<float>(-kArrowSize, -kArrowSize);
+            second = anchorPos + Point<float>(kArrowSize, -kArrowSize);
+            break;
+            
+	    default :
+            break;
+            
+    }
+    if (kAnchorUnknown != anchor)
+    {
+        OD_LOG_D4("anchor.x = ", anchorPos.getX(), "anchor.y = ", anchorPos.getY(), //####
+                  "first.x = ", first.getX(), "first.y = ", first.getY()); //####
+        OD_LOG_D2("second.x = ", second.getX(), "second.y = ", second.getY()); //####
+        gg.drawLine(anchorPos.getX(), anchorPos.getY(), first.getX(), first.getY(), thickness);
+        gg.drawLine(anchorPos.getX(), anchorPos.getY(), second.getX(), second.getY(), thickness);
+    }
+#if 0
+    OD_LOG_EXIT(); //####
+#endif // 0
+} // drawTargetAnchor
+
+/*! @brief Draw a bezier curve between two points.
+ @param startPoint The beginning of the curve.
+ @param endPoint The end of the curve.
+ @param startCentre A reference point for the beginning of the curve, used to calculate the
+ beginning tangent.
+ @param endCentre A reference point for the end of the curve, used to calculate the ending
+ tangent. */
+static void drawBezier(Graphics &           gg,
+                       const Point<float> & startPoint,
+                       const Point<float> & endPoint,
+                       const Point<float> & startCentre,
+                       const Point<float> & endCentre,
+                       const float          thickness)
+{
+#if 0
+    OD_LOG_ENTER(); //####
+    OD_LOG_P4("gg = ", &gg, "startPoint = ", &startPoint, "endPoint = ", &endPoint, //####
+              "startCentre = ", &startCentre); //####
+    OD_LOG_P1("endCentre = ", &endCentre); //####
+    OD_LOG_D1("thickness = ", thickness); //####
+#endif // 0
+    Path         bPath;
+    float        controlLength = (startPoint.getDistanceFrom(endPoint) * kControlLengthScale);
+    float        startAngle = atan2(startPoint.getY() - startCentre.getY(),
+                                    startPoint.getX() - startCentre.getX());
+    float        endAngle = atan2(endPoint.getY() - endCentre.getY(),
+                                  endPoint.getX() - endCentre.getX());
+    Point<float> controlPoint1(controlLength * cos(startAngle), controlLength * sin(startAngle));
+    Point<float> controlPoint2(controlLength * cos(endAngle), controlLength * sin(endAngle));
+    
+    bPath.startNewSubPath(startPoint);
+    bPath.cubicTo(startPoint + controlPoint1, endPoint + controlPoint2, endPoint);
+    gg.strokePath(bPath, PathStrokeType(thickness));
+#if 0
+    OD_LOG_EXIT();//####
+#endif // 0
+} // DrawBezier
+
+/*! @brief Draw a connection between entries.
+ @param gg The graphics context in which to draw.
+ @param source The originating entry.
+ @param destination The terminating entry.
+ @param mode The kind of connection. */
+static void drawConnection(Graphics &                  gg,
+                           ChannelEntry *              source,
+                           ChannelEntry *              destination,
+                           MplusM::Common::ChannelMode mode)
+{
+#if 0
+    OD_LOG_ENTER(); //####
+    OD_LOG_P3("gg = ", &gg, "source = ", source, "destination = ", destination); //####
+    OD_LOG_L1("mode = ", static_cast<int>(mode)); //####
+#endif // 0
+    Rectangle<int> ggBounds = gg.getClipBounds();
+    
+    OD_LOG_L4("ggBounds.x = ", ggBounds.getX(), "ggBounds.y = ", ggBounds.getY(), //####
+              "ggBounds.w = ", ggBounds.getWidth(), "ggBounds.h = ", ggBounds.getHeight()); //####
+    if (source && destination)
+    {
+        AnchorSide   sourceAnchor;
+        AnchorSide   destinationAnchor;
+        Point<float> sourcePosition(source->getPositionInPanel());
+        Point<float> destinationPosition(destination->getPositionInPanel());
+        Point<float> sourceCentre(source->getCentre() + sourcePosition);
+        Point<float> destinationCentre(destination->getCentre() + destinationPosition);
+        Point<float> startPoint;
+        Point<float> endPoint;
+        float        thickness;
+        
+#if 0
+        OD_LOG_D4("sourcePosition.x = ", sourcePosition.getX(), "sourcePosition.y = ", //####
+                  sourcePosition.getY(), "destinationPosition.x = ", //####
+                  destinationPosition.getX(), "destinationPosition.y = ", //####
+                  destinationPosition.getY()); //####
+        OD_LOG_D4("sourceCentre.x = ", sourceCentre.getX(), "sourceCentre.y = ", //####
+                  sourceCentre.getY(), "destinationCentre.x = ", destinationCentre.getX(), //####
+                  "destinationCentre.y = ", destinationCentre.getY()); //####
+#endif // 0
+        // Check if the destination is above the source, in which case we determine the anchors in
+        // the reverse order.
+        if (sourceCentre.getY() < destinationCentre.getY())
+        {
+            sourceAnchor = source->calculateClosestAnchor(startPoint, true, false,
+                                                          destinationCentre);
+            destinationAnchor = destination->calculateClosestAnchor(endPoint, false,
+                                                                kAnchorBottomCentre == sourceAnchor,
+                                                                    sourceCentre);
+        }
+        else
+        {
+            destinationAnchor = destination->calculateClosestAnchor(endPoint, false, false,
+                                                                    sourceCentre);
+            sourceAnchor = source->calculateClosestAnchor(startPoint, true,
+                                                          kAnchorBottomCentre == destinationAnchor,
+                                                          destinationCentre);
+        }
+#if 0
+        OD_LOG_D4("startPoint.x <- ", startPoint.getX(), "startPoint.y <- ", //####
+                  startPoint.getY(), "endPoint.x <- ", endPoint.getX(), "endPoint.y <- ", //####
+                  endPoint.getY()); //####
+#endif // 0
+        if (destination->isService())
+        {
+            thickness = kServiceConnectionWidth;
+        }
+        else
+        {
+            thickness = kNormalConnectionWidth;
+        }
+#if 0
+        OD_LOG_D1("thickness <- ", thickness); //####
+#endif // 0
+        switch (mode)
+        {
+            case MplusM::Common::kChannelModeTCP :
+                gg.setColour(kTcpConnectionColour);
+                break;
+                
+            case MplusM::Common::kChannelModeUDP :
+                gg.setColour(kUdpConnectionColour);
+                break;
+                
+            default :
+                gg.setColour(kOtherConnectionColour);
+                break;
+                
+        }
+#if 0
+        OD_LOG_D4("startPoint.x = ", startPoint.getX(), "startPoint.y <= ", //####
+                  startPoint.getY(), "endPoint.x = ", endPoint.getX(), //####
+                  "endPoint.y = ", endPoint.getY()); //####
+#endif // 0
+        drawBezier(gg, startPoint, endPoint, sourceCentre, destinationCentre, thickness);
+        drawSourceAnchor(gg, sourceAnchor, startPoint, 1);
+        drawTargetAnchor(gg, destinationAnchor, endPoint, 1);
+    }
+#if 0
+    OD_LOG_EXIT(); //####
+#endif // 0
+} // drawConnection
 
 #if defined(__APPLE__)
 # pragma mark Class methods
@@ -320,13 +597,13 @@ const
     OD_LOG_P2("result = ", &result, "pp = ", &pp); //####
     OD_LOG_B1("isSource = ", isSource); //####
 #endif // 0
-       // Check each anchor point - the two side centres and optionally the bottom - to find the
-       // shortest distance.
-    AnchorSide       anchor = kAnchorUnknown;
-    float            soFar = 1e23; // Ridiculously big, just in case.
-    Rectangle<float> outer(getLocalBounds().toFloat());
+    // Check each anchor point - the two side centres and optionally the bottom - to find the
+    // shortest distance.
+    AnchorSide   anchor = kAnchorUnknown;
+    float        soFar = 1e23; // Ridiculously big, just in case.
+    Point<float> location(getPositionInPanel());
     
-    if (calculateMinDistance(soFar, pp, outer.getX(), outer.getY() + (outer.getHeight() / 2),
+    if (calculateMinDistance(soFar, pp, location.getX(), location.getY() + (getHeight() / 2),
                              result))
     {
         anchor = kAnchorLeft;
@@ -336,8 +613,8 @@ const
             result.x -= kArrowSize;
         }
     }
-    if (calculateMinDistance(soFar, pp, outer.getX() + outer.getWidth(),
-                             outer.getY() + (outer.getHeight() / 2), result))
+    if (calculateMinDistance(soFar, pp, location.getX() + getWidth(),
+                             location.getY() + (getHeight() / 2), result))
     {
         anchor = kAnchorRight;
         if (isSource)
@@ -348,8 +625,8 @@ const
     }
     if (_isLastPort && (! disallowBottom))
     {
-        if (calculateMinDistance(soFar, pp, outer.getX() + (outer.getWidth() / 2),
-                                 outer.getY() + outer.getHeight(), result))
+        if (calculateMinDistance(soFar, pp, location.getX() + (getWidth() / 2),
+                                 location.getY() + getHeight(), result))
         {
             anchor = kAnchorBottomCentre;
             if (isSource)
@@ -360,7 +637,8 @@ const
         }
     }
 #if 0
-    OD_LOG_OBJEXIT_L(static_cast<int> (anchor)); //####
+    OD_LOG_D2("result.x = ", result.getX(), "result.y = ", result.getY()); //####
+    OD_LOG_OBJEXIT_L(static_cast<int>(anchor)); //####
 #endif // 0
     return anchor;
 } // ChannelEntry::calculateClosestAnchor
@@ -402,13 +680,13 @@ void ChannelEntry::drawDragLine(const float xPos,
         }
         if (isUDP)
         {
-            ofSetColor(EntitiesPanel::getUdpConnectionColor());
+            ofSetColor(kUdpConnectionColour);
         }
         else
         {
-            ofSetColor(EntitiesPanel::getTcpConnectionColor());
+            ofSetColor(kTcpConnectionColour);
         }
-        ofSetLineWidth(EntitiesPanel::getNormalConnectionWidth());
+        ofSetLineWidth(kNormalConnectionWidth);
         DrawBezier(fromHere, toThere, aCentre, newCentre);
         ofSetLineWidth(1);
         drawSourceAnchor(anchorHere, fromHere);
@@ -420,111 +698,30 @@ void ChannelEntry::drawDragLine(const float xPos,
 } // ChannelEntry::drawDragLine
 #endif // 0
 
-void ChannelEntry::drawSourceAnchor(Graphics &           gg,
-                                    const AnchorSide     anchor,
-                                    const Point<float> & anchorPos,
-                                    const float          thickness)
+void ChannelEntry::drawOutgoingConnections(Graphics & gg)
 {
-    //#if 0
-    OD_LOG_ENTER(); //####
-    OD_LOG_P2("gg = ", &gg, "anchorPos = ", &anchorPos); //####
-    OD_LOG_L1("anchor = ", static_cast<int>(anchor)); //####
-    OD_LOG_D1("thickness = ", thickness); //####
-                                           //#endif // 0
-    Point<float> first;
-    Point<float> second;
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("gg = ", &gg); //####
+    Point<int> location(getPosition());
     
-    switch (anchor)
+    OD_LOG_L2("location.x = ", location.getX(), "location.y = ", location.getY()); //####
+    for (Connections::const_iterator walker(_outputConnections.begin());
+         _outputConnections.end() != walker; ++walker)
     {
-	    case kAnchorLeft :
-            first = anchorPos + Point<float>(kArrowSize, -kArrowSize);
-            second = anchorPos + Point<float>(kArrowSize, kArrowSize);
-            break;
-            
-	    case kAnchorRight :
-            first = anchorPos + Point<float>(-kArrowSize, -kArrowSize);
-            second = anchorPos + Point<float>(-kArrowSize, kArrowSize);
-            break;
-            
-	    case kAnchorBottomCentre :
-            first = anchorPos + Point<float>(-kArrowSize, -kArrowSize);
-            second = anchorPos + Point<float>(kArrowSize, -kArrowSize);
-            break;
-            
-	    case kAnchorTopCentre :
-            first = anchorPos + Point<float>(-kArrowSize, kArrowSize);
-            second = anchorPos + Point<float>(kArrowSize, kArrowSize);
-            break;
-            
-	    default :
-            break;
-            
+        drawConnection(gg, this, walker->_otherPort, walker->_connectionMode);
     }
-    if (kAnchorUnknown != anchor)
-    {
-        OD_LOG_D4("anchor.x = ", anchorPos.getX(), "anchor.y = ", anchorPos.getY(), //####
-                  "first.x = ", first.getX(), "first.y = ", first.getY()); //####
-        OD_LOG_D2("second.x = ", second.getX(), "second.y = ", second.getY()); //####
-        gg.drawLine(anchorPos.getX(), anchorPos.getY(), first.getX(), first.getY(), thickness);
-        gg.drawLine(anchorPos.getX(), anchorPos.getY(), second.getX(), second.getY(), thickness);
-    }
-    //#if 0
-    OD_LOG_EXIT(); //####
-                   //#endif // 0
-} // ChannelEntry::drawSourceAnchor
+    OD_LOG_OBJEXIT(); //####
+} // ChannelEntry::drawOutgoingConnections
 
-void ChannelEntry::drawTargetAnchor(Graphics &           gg,
-                                    const AnchorSide     anchor,
-                                    const Point<float> & anchorPos,
-                                    const float          thickness)
+Point<float> ChannelEntry::getPositionInPanel(void)
+const
 {
-    //#if 0
-    OD_LOG_ENTER(); //####
-    OD_LOG_P2("gg = ", &gg, "anchorPos = ", &anchorPos); //####
-    OD_LOG_L1("anchor = ", static_cast<int>(anchor)); //####
-    OD_LOG_D1("thickness = ", thickness); //####
-                                           //#endif // 0
-    Point<float> first;
-    Point<float> second;
+    OD_LOG_OBJENTER(); //####
+    Point<float> result(getPosition().toFloat() + _parent->getPositionInPanel());
     
-    switch (anchor)
-    {
-	    case kAnchorLeft :
-            first = anchorPos + Point<float>(-kArrowSize, -kArrowSize);
-            second = anchorPos + Point<float>(-kArrowSize, kArrowSize);
-            break;
-            
-	    case kAnchorRight :
-            first = anchorPos + Point<float>(kArrowSize, -kArrowSize);
-            second = anchorPos + Point<float>(kArrowSize, kArrowSize);
-            break;
-            
-	    case kAnchorBottomCentre :
-            first = anchorPos + Point<float>(-kArrowSize, kArrowSize);
-            second = anchorPos + Point<float>(kArrowSize, kArrowSize);
-            break;
-            
-	    case kAnchorTopCentre :
-            first = anchorPos + Point<float>(-kArrowSize, -kArrowSize);
-            second = anchorPos + Point<float>(kArrowSize, -kArrowSize);
-            break;
-            
-	    default :
-            break;
-            
-    }
-    if (kAnchorUnknown != anchor)
-    {
-        OD_LOG_D4("anchor.x = ", anchorPos.getX(), "anchor.y = ", anchorPos.getY(), //####
-                  "first.x = ", first.getX(), "first.y = ", first.getY()); //####
-        OD_LOG_D2("second.x = ", second.getX(), "second.y = ", second.getY()); //####
-        gg.drawLine(anchorPos.getX(), anchorPos.getY(), first.getX(), first.getY(), thickness);
-        gg.drawLine(anchorPos.getX(), anchorPos.getY(), second.getX(), second.getY(), thickness);
-    }
-    //#if 0
-    OD_LOG_EXIT(); //####
-                   //#endif // 0
-} // ChannelEntry::drawTargetAnchor
+    OD_LOG_OBJEXIT(); //####
+    return result;
+} // ChannelEntry::getPositionInPanel
 
 void ChannelEntry::invalidateConnections(void)
 {
@@ -576,6 +773,24 @@ const
     return result;
 } // ChannelEntry::isPointInside
 #endif // 0
+
+void ChannelEntry::mouseDown(const MouseEvent & ee)
+{
+    OD_LOG_OBJENTER(); //####
+    Component * parent = getParentComponent();
+    
+    parent->mouseDown(ee);
+    OD_LOG_OBJEXIT(); //####
+} // ChannelEntry::mouseDown
+
+void ChannelEntry::mouseDrag(const MouseEvent & ee)
+{
+    OD_LOG_OBJENTER(); //####
+    Component * parent = getParentComponent();
+
+    parent->mouseDrag(ee);
+    OD_LOG_OBJEXIT(); //####
+} // ChannelEntry::mouseDrag
 
 #if 0
 bool ChannelEntry::mouseDragged(ofMouseEventArgs & args)
@@ -757,81 +972,24 @@ void ChannelEntry::paint(Graphics & gg)
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("gg = ", &gg); //####
 #endif // 0
+    Rectangle<int> ggBounds = gg.getClipBounds();
+    
+    OD_LOG_L4("ggBounds.x = ", ggBounds.getX(), "ggBounds.y = ", ggBounds.getY(), //####
+              "ggBounds.w = ", ggBounds.getWidth(), "ggBounds.h = ", ggBounds.getHeight()); //####
     AttributedString as;
-    Point<float>     aCentre(getCentre());
     
     as.setJustification(Justification::left);
     as.append(_title, _parent->getOwner().getNormalFont(), Colours::white);
     Rectangle<float> area(getLocalBounds().toFloat());
     
-    //#if 0
+#if 0
     OD_LOG_D4("x <- ", area.getX(), "y <- ", area.getY(), "w <- ",area.getWidth(), "h <- ", //####
               area.getHeight()); //####
-                                 //#endif // 0
+#endif // 0
     gg.setColour(Colours::black);
     gg.fillRect(area);
     area.setLeft(area.getX() + _parent->getTextInset());
     as.draw(gg, area);
-    for (Connections::const_iterator walker(_outputConnections.begin());
-         _outputConnections.end() != walker; ++walker)
-    {
-        AnchorSide                  anchorHere;
-        AnchorSide                  anchorThere;
-        ChannelEntry *              other = walker->_otherPort;
-        MplusM::Common::ChannelMode mode = walker->_connectionMode;
-        Point<float>                otherCentre(other->getCentre());
-        Point<float>                fromHere;
-        Point<float>                toThere;
-        float                       thickness;
-    
-        // Check if the destination is above the source, in which case we determine the anchors in
-        // the reverse order.
-        if (aCentre.getY() < otherCentre.getY())
-        {
-            anchorHere = calculateClosestAnchor(fromHere, true, false, otherCentre);
-            anchorThere = other->calculateClosestAnchor(toThere, false,
-                                                        kAnchorBottomCentre == anchorHere,
-                                                        aCentre);
-        }
-        else
-        {
-            anchorThere = other->calculateClosestAnchor(toThere, false, false, aCentre);
-            anchorHere = calculateClosestAnchor(fromHere, true, kAnchorBottomCentre == anchorThere,
-                                                otherCentre);
-        }
-        //#if 0
-        OD_LOG_D4("fromHere.x <- ", fromHere.getX(), "fromHere.y <- ", fromHere.getY(), //####
-                  "toThere.x <- ", toThere.getX(), "toThere.y <- ", toThere.getY()); //####
-                                                                                     //#endif // 0
-        if (other->isService())
-        {
-            thickness = getServiceConnectionWidth();
-        }
-        else
-        {
-            thickness = getNormalConnectionWidth();
-        }
-        switch (mode)
-        {
-            case MplusM::Common::kChannelModeTCP :
-                gg.setColour(getTcpConnectionColor());
-                break;
-                
-            case MplusM::Common::kChannelModeUDP :
-                gg.setColour(getUdpConnectionColor());
-                break;
-                
-            default :
-                gg.setColour(getOtherConnectionColor());
-                break;
-                
-        }
-        // use thickness with Bezier, not anchors!
-//        DrawBezier(fromHere, toThere, aCentre, otherCentre);
-//        ofSetLineWidth(1);
-        drawSourceAnchor(gg, anchorHere, fromHere, 1);
-        drawTargetAnchor(gg, anchorThere, toThere, 1);
-    }
 #if 0
     OD_LOG_OBJEXIT(); //####
 #endif // 0
@@ -927,28 +1085,3 @@ const
 #if defined(__APPLE__)
 # pragma mark Global functions
 #endif // defined(__APPLE__)
-
-float ChannelEntry::getNormalConnectionWidth(void)
-{
-    return kNormalConnectionWidth;
-} // ChannelEntry::getNormalConnectionWidth
-
-Colour ChannelEntry::getOtherConnectionColor(void)
-{
-    return Colours::orange;
-} // ChannelEntry::getOtherConnectionColor
-
-float ChannelEntry::getServiceConnectionWidth(void)
-{
-    return kServiceConnectionWidth;
-} // ChannelEntry::getServiceConnectionWidth
-
-Colour ChannelEntry::getTcpConnectionColor(void)
-{
-    return Colours::teal;
-} // ChannelEntry::getTcpConnectionColor
-
-Colour ChannelEntry::getUdpConnectionColor(void)
-{
-    return Colours::purple;
-} // ChannelEntry::getUdpConnectionColor

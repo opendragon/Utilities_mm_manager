@@ -40,7 +40,6 @@
 #include "ChannelContainer.h"
 #include "ChannelEntry.h"
 #include "ChannelManagerWindow.h"
-#include "ConnectionsPanel.h"
 #include "EntitiesPanel.h"
 
 #include "ODEnableLogging.h"
@@ -222,7 +221,7 @@ static PortDirection determineDirection(ChannelEntry *                oldEntry,
     {
         result = kPortDirectionUnknown;
     }
-    OD_LOG_EXIT_L(static_cast<long> (result)); //####
+    OD_LOG_EXIT_L(static_cast<long>(result)); //####
     return result;
 } // determineDirection
 
@@ -304,12 +303,10 @@ ScannerThread::~ScannerThread(void)
 # pragma mark Actions
 #endif // defined(__APPLE__)
 
-void ScannerThread::addEntitiesToPanels(EntitiesPanel *    newEntitiesPanel,
-                                        ConnectionsPanel * newConnectionsPanel)
+void ScannerThread::addEntitiesToPanels(EntitiesPanel * newEntitiesPanel)
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_P2("newEntitiesPanel = ", newEntitiesPanel, "newConnectionsPanel = ", //####
-              newConnectionsPanel); //####
+    OD_LOG_P1("newEntitiesPanel = ", newEntitiesPanel); //####
     PortEntryMap portsSeen;
     
     _entitiesSeen.clear();
@@ -603,14 +600,12 @@ void ScannerThread::run(void)
     while (! threadShouldExit())
     {
         // Create a new panel to add entities to.
-        ConnectionsPanel * newConnectionsPanel = new ConnectionsPanel;
         EntitiesPanel *    newEntitiesPanel = new EntitiesPanel;
         int64              loopStartTime = Time::currentTimeMillis();
-        //        PortEntryMap       portsSeen;
         
         gatherEntities();
-        addEntitiesToPanels(/* portsSeen,*/ newEntitiesPanel, newConnectionsPanel);
-        if (updatePanels(/* portsSeen,*/ newEntitiesPanel, newConnectionsPanel))
+        addEntitiesToPanels(newEntitiesPanel);
+        if (updatePanels(newEntitiesPanel))
         {
             break;
         }
@@ -792,11 +787,10 @@ void ScannerThread::setEntityPositions(void)
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::setEntityPositions
 
-bool ScannerThread::updatePanels(EntitiesPanel *    newPanel,
-                                 ConnectionsPanel * newConnections)
+bool ScannerThread::updatePanels(EntitiesPanel * newPanel)
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_P2("newPanel = ", newPanel, "newConnections = ", newConnections); //####
+    OD_LOG_P1("newPanel = ", newPanel); //####
     // Because this is a background thread, we mustn't do any UI work without first grabbing a
     // MessageManagerLock.
     bool                     result = true;
@@ -873,10 +867,11 @@ bool ScannerThread::updatePanels(EntitiesPanel *    newPanel,
         }
         entitiesPanel.removeUnvisitedEntities();
         entitiesPanel.removeInvalidConnections();
+        // Force a repaint of the containing panel.
+        entitiesPanel.repaint();
         result = false;
     }
     delete newPanel;
-    delete newConnections;
     OD_LOG_OBJEXIT_B(result); //####
     return result;
 } // ScannerThread::updatePanels

@@ -117,6 +117,10 @@ namespace ChannelManager
                                           const Point<float> & pp)
         const;
         
+        /*! @brief Display the connections between containers.
+         @param gg The graphics context in which to draw. */
+        void drawOutgoingConnections(Graphics & gg);
+        
         /*! @brief Return the location of the centre of the port entry.
          @returns The location of the centre of the port entry. */
         Point<float> getCentre(void)
@@ -160,6 +164,11 @@ namespace ChannelManager
             return _portName;
         } // getPortName
         
+        /*! @brief Return the position of the entity within it's containing panel.
+         @returns The position of the entity within it's containing panel. */
+        Point<float> getPositionInPanel(void)
+        const;
+        
         /*! @brief Return the protocol of the associated port.
          @returns The protocol of the associated port. */
         inline String getProtocol(void)
@@ -198,6 +207,14 @@ namespace ChannelManager
             return (kPortUsageService == _usage);
         } // isService
         
+        /*! @brief Called when a mouse button is pressed.
+         @param ee Details about the position and status of the mouse event. */
+        void mouseDown(const MouseEvent & ee) override;
+        
+        /*! @brief Called when the mouse is moved while a button is held down.
+         @param ee Details about the position and status of the mouse event. */
+        void mouseDrag(const MouseEvent & ee) override;
+        
         /*! @brief Draw the content of the component.
          @param gg The graphics context in which to draw. */
         void paint(Graphics & gg) override;
@@ -231,44 +248,6 @@ namespace ChannelManager
         
         /*! @brief The class that this class is derived from. */
         typedef Component inherited;
-        
-        /*! @brief Displays an anchor leaving the given location.
-         @param anchor The side to which the anchor is attached.
-         @param anchorPos The coordinates of the anchor point.
-         @param thickness The line thickness to be used. */
-        static void drawSourceAnchor(Graphics &           gg,
-                                     const AnchorSide     anchor,
-                                     const Point<float> & anchorPos,
-                                     const float          thickness);
-        
-        /*! @brief Displays an anchor arriving at the given location.
-         @param anchor The side to which the anchor is attached.
-         @param anchorPos The coordinates of the anchor point.
-         @param thickness The line thickness to be used. */
-        static void drawTargetAnchor(Graphics &           gg,
-                                     const AnchorSide     anchor,
-                                     const Point<float> & anchorPos,
-                                     const float          thickness);
-        
-        /*! @brief Return the line width for a normal connection.
-         @returns The line width for a normal connection. */
-        static float getNormalConnectionWidth(void);
-
-        /*! @brief Return the color to be used for non-TCP/non-UDP connections.
-         @returns The color to be used for non-TCP/non-UDP connection. */
-        static Colour getOtherConnectionColor(void);
-        
-        /*! @brief Return the line width for a service connection.
-         @returns The line width for a service connection. */
-        static float getServiceConnectionWidth(void);
-        
-        /*! @brief Return the color to be used for TCP connections.
-         @returns The color to be used for TCP connections. */
-        static Colour getTcpConnectionColor(void);
-        
-        /*! @brief Return the color to be used for UDP connections.
-         @returns The color to be used for UDP connections. */
-        static Colour getUdpConnectionColor(void);
 
         /*! @brief The connections to the port. */
         Connections _inputConnections;
