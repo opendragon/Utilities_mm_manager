@@ -667,12 +667,12 @@ void ScannerThread::setEntityPositions(void)
         
         if (anEntity)
         {
-            float              newX;
-            float              newY;
-            Rectangle<float>   entityShape(anEntity->getLocalBounds().toFloat());
-            ogdf::node         aNode = gg.newNode();
-            ChannelEntry *     firstPort = anEntity->getPort(0);
-            ChannelContainer * olderVersion = NULL;
+            float                  newX;
+            float                  newY;
+            juce::Rectangle<float> entityShape(anEntity->getLocalBounds().toFloat());
+            ogdf::node             aNode = gg.newNode();
+            ChannelEntry *         firstPort = anEntity->getPort(0);
+            ChannelContainer *     olderVersion = NULL;
             
             if (firstPort)
             {
@@ -687,7 +687,7 @@ void ScannerThread::setEntityPositions(void)
             anEntity->setNode(aNode);
             if (olderVersion)
             {
-                Rectangle<float> oldShape(olderVersion->getLocalBounds().toFloat());
+                juce::Rectangle<float> oldShape(olderVersion->getLocalBounds().toFloat());
                 
                 newX = oldShape.getX();
                 newY = oldShape.getY();
