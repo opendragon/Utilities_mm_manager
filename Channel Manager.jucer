@@ -5,10 +5,34 @@
               jucerVersion="3.1.0" companyName="HPlus Technologies Ltd. and Simon Fraser University">
   <MAINGROUP id="OL479e" name="Channel Manager">
     <GROUP id="{A78E9CC6-F073-D9D4-035B-BA5785A3D3C6}" name="Source">
-      <FILE id="vJx65G" name="MainComponent.cpp" compile="1" resource="0"
-            file="Source/MainComponent.cpp"/>
-      <FILE id="ohFknU" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
-      <FILE id="elBnxS" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+      <FILE id="uZibtZ" name="ChannelContainer.cpp" compile="1" resource="0"
+            file="Source/ChannelContainer.cpp"/>
+      <FILE id="OWbexv" name="ChannelContainer.h" compile="0" resource="0"
+            file="Source/ChannelContainer.h"/>
+      <FILE id="xoQ6qa" name="ChannelEntry.cpp" compile="1" resource="0"
+            file="Source/ChannelEntry.cpp"/>
+      <FILE id="rHBnob" name="ChannelEntry.h" compile="0" resource="0" file="Source/ChannelEntry.h"/>
+      <FILE id="vypYXp" name="ChannelManagerApp.cpp" compile="1" resource="0"
+            file="Source/ChannelManagerApp.cpp"/>
+      <FILE id="M0kKkG" name="ChannelManagerApp.h" compile="0" resource="0"
+            file="Source/ChannelManagerApp.h"/>
+      <FILE id="j0Tz73" name="ChannelManagerMain.cpp" compile="1" resource="0"
+            file="Source/ChannelManagerMain.cpp"/>
+      <FILE id="BC2y5e" name="ChannelManagerWindow.cpp" compile="1" resource="0"
+            file="Source/ChannelManagerWindow.cpp"/>
+      <FILE id="EX1ER4" name="ChannelManagerWindow.h" compile="0" resource="0"
+            file="Source/ChannelManagerWindow.h"/>
+      <FILE id="PcGPSM" name="ChannelsDataTypes.h" compile="0" resource="0"
+            file="Source/ChannelsDataTypes.h"/>
+      <FILE id="BcwaEb" name="ContentPanel.cpp" compile="1" resource="0"
+            file="Source/ContentPanel.cpp"/>
+      <FILE id="N8yfyG" name="ContentPanel.h" compile="0" resource="0" file="Source/ContentPanel.h"/>
+      <FILE id="Nr7TgF" name="EntitiesPanel.cpp" compile="1" resource="0"
+            file="Source/EntitiesPanel.cpp"/>
+      <FILE id="n9ESXv" name="EntitiesPanel.h" compile="0" resource="0" file="Source/EntitiesPanel.h"/>
+      <FILE id="jDwYaF" name="ScannerThread.cpp" compile="1" resource="0"
+            file="Source/ScannerThread.cpp"/>
+      <FILE id="WNpmUm" name="ScannerThread.h" compile="0" resource="0" file="Source/ScannerThread.h"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
@@ -35,6 +59,29 @@
         <MODULEPATH id="juce_audio_processors" path="JUCE/modules"/>
       </MODULEPATHS>
     </XCODE_MAC>
+    <VS2012 targetFolder="Builds/VisualStudio2012">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="1" optimisation="1" targetName="Channel Manager"/>
+        <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="0" optimisation="2" targetName="Channel Manager"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_video" path="D:\dev\JUCE\modules"/>
+        <MODULEPATH id="juce_opengl" path="D:\dev\JUCE\modules"/>
+        <MODULEPATH id="juce_gui_extra" path="D:\dev\JUCE\modules"/>
+        <MODULEPATH id="juce_gui_basics" path="D:\dev\JUCE\modules"/>
+        <MODULEPATH id="juce_graphics" path="D:\dev\JUCE\modules"/>
+        <MODULEPATH id="juce_events" path="D:\dev\JUCE\modules"/>
+        <MODULEPATH id="juce_data_structures" path="D:\dev\JUCE\modules"/>
+        <MODULEPATH id="juce_cryptography" path="D:\dev\JUCE\modules"/>
+        <MODULEPATH id="juce_core" path="D:\dev\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_processors" path="D:\dev\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_formats" path="D:\dev\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_devices" path="D:\dev\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_basics" path="D:\dev\JUCE\modules"/>
+      </MODULEPATHS>
+    </VS2012>
   </EXPORTFORMATS>
   <MODULES>
     <MODULES id="juce_audio_basics" showAllCode="1" useLocalCopy="1"/>

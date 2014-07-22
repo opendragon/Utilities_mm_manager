@@ -1413,19 +1413,28 @@
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_video\juce_video.cpp">
       <Filter>Juce Library Code</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\ChannelContainer.cpp">
+      <Filter>ChannelManager\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\ChannelEntry.cpp">
+      <Filter>ChannelManager\Source</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\ChannelManagerApp.cpp">
       <Filter>ChannelManager\Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\ChannelManagerMain.cpp">
       <Filter>ChannelManager\Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\MainContentComponent.cpp">
+    <ClCompile Include="..\..\Source\ChannelManagerWindow.cpp">
       <Filter>ChannelManager\Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\MainWindow.cpp">
+    <ClCompile Include="..\..\Source\ContentPanel.cpp">
       <Filter>ChannelManager\Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\ChannelContainer.cpp">
+    <ClCompile Include="..\..\Source\EntitiesPanel.cpp">
+      <Filter>ChannelManager\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\ScannerThread.cpp">
       <Filter>ChannelManager\Source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -2747,16 +2756,28 @@
     <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h">
       <Filter>Juce Library Code</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\ChannelContainer.h">
+      <Filter>ChannelManager\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\ChannelEntry.h">
+      <Filter>ChannelManager\Source</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\ChannelManagerApp.h">
       <Filter>ChannelManager\Source</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\MainContentComponent.h">
+    <ClInclude Include="..\..\Source\ChannelManagerWindow.h">
       <Filter>ChannelManager\Source</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\MainWindow.h">
+    <ClInclude Include="..\..\Source\ChannelsDataTypes.h">
       <Filter>ChannelManager\Source</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\ChannelContainer.h">
+    <ClInclude Include="..\..\Source\ContentPanel.h">
+      <Filter>ChannelManager\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\EntitiesPanel.h">
+      <Filter>ChannelManager\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\ScannerThread.h">
       <Filter>ChannelManager\Source</Filter>
     </ClInclude>
   </ItemGroup>

@@ -76,6 +76,8 @@
       <TargetMachine>MachineX86</TargetMachine>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <LargeAddressAware>true</LargeAddressAware>
+      <AdditionalLibraryDirectories>$(ACE_ROOT)/lib;$(YARP_DIR)/lib/Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>YARP_OSd.lib;YARP_initd.lib;D:\dev\MPlusM\Common\Release\mpmCommon.lib;D:\dev\MPlusM\Logging\Release\odLogging.lib;D:\dev\OGDF\Win32\Release\ogdf.lib;psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -118,6 +120,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <LargeAddressAware>true</LargeAddressAware>
+      <AdditionalLibraryDirectories>$(ACE_ROOT)/lib; $(YARP_DIR)/lib/Release</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ACE.lib;YARP_OS.lib;YARP_init.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -1219,10 +1223,13 @@
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_opengl\juce_opengl.cpp" />
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_video\juce_video.cpp" />
     <ClCompile Include="..\..\Source\ChannelContainer.cpp" />
+    <ClCompile Include="..\..\Source\ChannelEntry.cpp" />
     <ClCompile Include="..\..\Source\ChannelManagerApp.cpp" />
     <ClCompile Include="..\..\Source\ChannelManagerMain.cpp" />
-    <ClCompile Include="..\..\Source\MainContentComponent.cpp" />
-    <ClCompile Include="..\..\Source\MainWindow.cpp" />
+    <ClCompile Include="..\..\Source\ChannelManagerWindow.cpp" />
+    <ClCompile Include="..\..\Source\ContentPanel.cpp" />
+    <ClCompile Include="..\..\Source\EntitiesPanel.cpp" />
+    <ClCompile Include="..\..\Source\ScannerThread.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_audio_basics\buffers\juce_AudioDataConverters.h" />
@@ -1665,9 +1672,13 @@
     <ClInclude Include="..\..\JuceLibraryCode\AppConfig.h" />
     <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h" />
     <ClInclude Include="..\..\Source\ChannelContainer.h" />
+    <ClInclude Include="..\..\Source\ChannelEntry.h" />
     <ClInclude Include="..\..\Source\ChannelManagerApp.h" />
-    <ClInclude Include="..\..\Source\MainContentComponent.h" />
-    <ClInclude Include="..\..\Source\MainWindow.h" />
+    <ClInclude Include="..\..\Source\ChannelManagerWindow.h" />
+    <ClInclude Include="..\..\Source\ChannelsDataTypes.h" />
+    <ClInclude Include="..\..\Source\ContentPanel.h" />
+    <ClInclude Include="..\..\Source\EntitiesPanel.h" />
+    <ClInclude Include="..\..\Source\ScannerThread.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\JuceLibraryCode\modules\juce_audio_basics\juce_module_info" />
