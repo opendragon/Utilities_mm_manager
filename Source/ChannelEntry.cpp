@@ -152,12 +152,12 @@ static AnchorSide calculateAnchorForPoint(Point<float> &       newCentre,
     OD_LOG_P3("newCentre = ", &newCentre, "targetPoint = ", &targetPoint, //####
               "refCentre = ", &refCentre); //####
 #endif // 0
-    AnchorSide       anchor = kAnchorUnknown;
-    float            boxSize = (refCentre.getDistanceFrom(targetPoint) * kTargetBoxScale);
-    float            soFar = 1e23;           // Ridiculously big, just in case.
-    Point<float>     tempPoint;
-    Rectangle<float> box(targetPoint.getX() - (boxSize / 2), targetPoint.y - (boxSize / 2), boxSize,
-                         boxSize);
+    AnchorSide             anchor = kAnchorUnknown;
+    float                  boxSize = (refCentre.getDistanceFrom(targetPoint) * kTargetBoxScale);
+    float                  soFar = 1e23;           // Ridiculously big, just in case.
+    Point<float>           tempPoint;
+    juce::Rectangle<float> box(targetPoint.getX() - (boxSize / 2), targetPoint.y - (boxSize / 2),
+                               boxSize, boxSize);
     
     if (calculateMinDistance(soFar, refCentre, box.getX(), box.getY() + (boxSize / 2), tempPoint))
     {
@@ -203,10 +203,6 @@ static void drawSourceAnchor(Graphics &           gg,
     OD_LOG_L1("anchor = ", static_cast<int>(anchor)); //####
     OD_LOG_D1("thickness = ", thickness); //####
 #endif // 0
-    Rectangle<int> ggBounds = gg.getClipBounds();
-    
-    OD_LOG_L4("ggBounds.x = ", ggBounds.getX(), "ggBounds.y = ", ggBounds.getY(), //####
-              "ggBounds.w = ", ggBounds.getWidth(), "ggBounds.h = ", ggBounds.getHeight()); //####
     Point<float> first;
     Point<float> second;
     
@@ -265,10 +261,6 @@ static void drawTargetAnchor(Graphics &           gg,
     OD_LOG_L1("anchor = ", static_cast<int>(anchor)); //####
     OD_LOG_D1("thickness = ", thickness); //####
 #endif // 0
-    Rectangle<int> ggBounds = gg.getClipBounds();
-    
-    OD_LOG_L4("ggBounds.x = ", ggBounds.getX(), "ggBounds.y = ", ggBounds.getY(), //####
-              "ggBounds.w = ", ggBounds.getWidth(), "ggBounds.h = ", ggBounds.getHeight()); //####
     Point<float> first;
     Point<float> second;
     
@@ -364,10 +356,6 @@ static void drawConnection(Graphics &                  gg,
     OD_LOG_P3("gg = ", &gg, "source = ", source, "destination = ", destination); //####
     OD_LOG_L1("mode = ", static_cast<int>(mode)); //####
 #endif // 0
-    Rectangle<int> ggBounds = gg.getClipBounds();
-    
-    OD_LOG_L4("ggBounds.x = ", ggBounds.getX(), "ggBounds.y = ", ggBounds.getY(), //####
-              "ggBounds.w = ", ggBounds.getWidth(), "ggBounds.h = ", ggBounds.getHeight()); //####
     if (source && destination)
     {
         AnchorSide   sourceAnchor;
@@ -972,15 +960,11 @@ void ChannelEntry::paint(Graphics & gg)
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("gg = ", &gg); //####
 #endif // 0
-    Rectangle<int> ggBounds = gg.getClipBounds();
-    
-    OD_LOG_L4("ggBounds.x = ", ggBounds.getX(), "ggBounds.y = ", ggBounds.getY(), //####
-              "ggBounds.w = ", ggBounds.getWidth(), "ggBounds.h = ", ggBounds.getHeight()); //####
     AttributedString as;
     
     as.setJustification(Justification::left);
     as.append(_title, _parent->getOwner().getNormalFont(), Colours::white);
-    Rectangle<float> area(getLocalBounds().toFloat());
+    juce::Rectangle<float> area(getLocalBounds().toFloat());
     
 #if 0
     OD_LOG_D4("x <- ", area.getX(), "y <- ", area.getY(), "w <- ",area.getWidth(), "h <- ", //####
@@ -1074,7 +1058,7 @@ const
 #if 0
     OD_LOG_OBJENTER(); //####
 #endif // 0
-    Rectangle<float> outer(getLocalBounds().toFloat());
+    juce::Rectangle<float> outer(getLocalBounds().toFloat());
     
 #if 0
     OD_LOG_OBJEXIT(); //####

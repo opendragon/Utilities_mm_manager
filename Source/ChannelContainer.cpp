@@ -268,17 +268,12 @@ void ChannelContainer::paint(Graphics & gg)
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("gg = ", &gg); //####
 #endif // 0
-    Rectangle<int> ggBounds = gg.getClipBounds();
-    
-    OD_LOG_L4("ggBounds.x = ", ggBounds.getX(), "ggBounds.y = ", ggBounds.getY(), //####
-              "ggBounds.w = ", ggBounds.getWidth(), "ggBounds.h = ", ggBounds.getHeight()); //####
-
     AttributedString as;
     
     as.setJustification(Justification::left);
     as.append(getName(), _owner.getNormalFont(), Colours::white);
-    Rectangle<int>   bounds(getLocalBounds());
-    Rectangle<float> area(bounds.getX(), bounds.getY(), bounds.getWidth(), _titleHeight);
+    juce::Rectangle<int>   bounds(getLocalBounds());
+    juce::Rectangle<float> area(bounds.getX(), bounds.getY(), bounds.getWidth(), _titleHeight);
     
 #if 0
     OD_LOG_D4("x <- ", area.getX(), "y <- ", area.getY(), "w <- ", area.getWidth(), "h <- ", //####

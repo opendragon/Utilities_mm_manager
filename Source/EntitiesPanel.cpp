@@ -385,10 +385,6 @@ void EntitiesPanel::paint(Graphics & gg)
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("gg = ", &gg); //####
 #endif // 0
-    Rectangle<int> ggBounds = gg.getClipBounds();
-    
-    OD_LOG_L4("ggBounds.x = ", ggBounds.getX(), "ggBounds.y = ", ggBounds.getY(), //####
-              "ggBounds.w = ", ggBounds.getWidth(), "ggBounds.h = ", ggBounds.getHeight()); //####
     // Set up a gradient background, using a radial gradient from the centre to the furthest edge.
     int            hh = getHeight();
     int            ww = getWidth();
