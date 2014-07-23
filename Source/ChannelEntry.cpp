@@ -67,6 +67,9 @@ static const float kArrowSize = 7;
 /*! @brief The scale factor to apply to get the length of the control vector. */
 static const float kControlLengthScale = 0.25;
 
+/*! @brief The width and height of the marker displayed during movement. */
+static const float kMarkerSide = 10;
+
 /*! @brief The line width for a normal connection. */
 static const float kNormalConnectionWidth = 2;
 
@@ -78,6 +81,9 @@ static const float kTargetBoxScale = 0.25;
 
 /*! @brief The color to be used for non-TCP/non-UDP connection. */
 static const Colour & kOtherConnectionColour(Colours::orange);
+
+/*! @brief The color to be used for markers. */
+static const Colour & kMarkerColour(Colours::yellow);
 
 /*! @brief The color to be used for TCP connections. */
 static const Colour & kTcpConnectionColour(Colours::teal);
@@ -100,9 +106,11 @@ static bool calculateMinDistance(float &              distanceSoFar,
                                  const Point<float> & testPoint,
                                  Point<float> &       bestSoFar)
 {
+#if 0
     OD_LOG_ENTER(); //####
     OD_LOG_P4("distanceSoFar = ", &distanceSoFar, "refPoint = ", &refPoint, "testPoint = ", //####
               &testPoint, "bestSoFar = ", &bestSoFar); //####
+#endif // 0
     bool  result;
     float newDistance = refPoint.getDistanceFrom(testPoint);
     
@@ -116,7 +124,9 @@ static bool calculateMinDistance(float &              distanceSoFar,
     {
         result = false;
     }
+#if 0
     OD_LOG_EXIT_B(result); //####
+#endif // 0
     return result;
 } // calculateMinDistance
 
@@ -234,9 +244,11 @@ static void drawSourceAnchor(Graphics &           gg,
     }
     if (kAnchorUnknown != anchor)
     {
+#if 0
         OD_LOG_D4("anchor.x = ", anchorPos.getX(), "anchor.y = ", anchorPos.getY(), //####
                   "first.x = ", first.getX(), "first.y = ", first.getY()); //####
         OD_LOG_D2("second.x = ", second.getX(), "second.y = ", second.getY()); //####
+#endif // 0
         gg.drawLine(anchorPos.getX(), anchorPos.getY(), first.getX(), first.getY(), thickness);
         gg.drawLine(anchorPos.getX(), anchorPos.getY(), second.getX(), second.getY(), thickness);
     }
@@ -292,9 +304,11 @@ static void drawTargetAnchor(Graphics &           gg,
     }
     if (kAnchorUnknown != anchor)
     {
+#if 0
         OD_LOG_D4("anchor.x = ", anchorPos.getX(), "anchor.y = ", anchorPos.getY(), //####
                   "first.x = ", first.getX(), "first.y = ", first.getY()); //####
         OD_LOG_D2("second.x = ", second.getX(), "second.y = ", second.getY()); //####
+#endif // 0
         gg.drawLine(anchorPos.getX(), anchorPos.getY(), first.getX(), first.getY(), thickness);
         gg.drawLine(anchorPos.getX(), anchorPos.getY(), second.getX(), second.getY(), thickness);
     }
@@ -440,6 +454,31 @@ static void drawConnection(Graphics &                  gg,
 #endif // 0
 } // drawConnection
 
+/*! @brief Determine whether a connection can be made, based on the port protocols.
+ @param sourceProtocol The protocol of the source port.
+ @param destinationProtocol The protocol of the destination port.
+ @returns @c true if the protocols permit a connection to be made and @c false
+ otherwise. */
+static bool protocolsMatch(const String & sourceProtocol,
+                           const String & destinationProtocol)
+{
+    OD_LOG_ENTER(); //####
+    OD_LOG_S2s("sourceProtocol = ", sourceProtocol.toStdString(), "destinationProtocol = ", //####
+               destinationProtocol.toStdString()); //####
+    bool result = false;
+    
+    if (0 == destinationProtocol.length())
+    {
+        result = true;
+    }
+    else
+    {
+        result = (sourceProtocol == destinationProtocol);
+    }
+    OD_LOG_EXIT_B(result); //####
+    return result;
+} // protocolsMatch
+
 #if defined(__APPLE__)
 # pragma mark Class methods
 #endif // defined(__APPLE__)
@@ -454,14 +493,15 @@ ChannelEntry::ChannelEntry(ChannelContainer *  parent,
                            const PortUsage     portKind,
                            const PortDirection direction) :
     inherited(), _portName(portName), _portProtocol(portProtocol), _parent(parent),
-    _direction(direction), _usage(portKind), _isLastPort(true)
+    _direction(direction), _usage(portKind), _drawConnectMarker(false),
+    _drawDisconnectMarker(false), _isLastPort(true)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P1("parent = ", parent); //####
     OD_LOG_S2s("portName = ", portName.toStdString(), "portProtocol = ", //####
                portProtocol.toStdString()); //####
     OD_LOG_L2("portKind = ", portKind, "direction = ", direction); //####
-    Font & textFont = _parent->getOwner().getNormalFont();
+    Font & textFont = getOwningPanel().getNormalFont();
     String prefix;
     
     switch (_direction)
@@ -631,83 +671,47 @@ const
     return anchor;
 } // ChannelEntry::calculateClosestAnchor
 
-#if 0
-void ChannelEntry::drawDragLine(const float xPos,
-                                const float yPos,
-                                const bool  isUDP)
-{
-#if 0
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_D2("xPos = ", xPos, "yPos = ", yPos); //####
-    OD_LOG_B1("isUDP = ", isUDP); //####
-#endif // 0
-    PortPanel * theParent = getParent();
-    
-    if (! theParent->isPointInside(xPos, yPos))
-    {
-        AnchorSide   anchorHere;
-        AnchorSide   anchorThere;
-        Point<float> aCentre(getCentre());
-        Point<float> toThere(xPos, yPos);
-        Point<float> fromHere;
-        Point<float> newCentre;
-        
-        // Check if the destination is above the source, in which case we determine the
-        // anchors in the reverse order.
-        if (aCentre.y < yPos)
-        {
-            anchorHere = calculateClosestAnchor(fromHere, true, false, toThere);
-            anchorThere = calculateAnchorForPoint(newCentre, kAnchorBottomCentre == anchorHere,
-                                                  toThere, aCentre);
-        }
-        else
-        {
-            anchorThere = calculateAnchorForPoint(newCentre, false, toThere, aCentre);
-            anchorHere = calculateClosestAnchor(fromHere, true, kAnchorBottomCentre == anchorThere,
-                                                toThere);
-        }
-        if (isUDP)
-        {
-            ofSetColor(kUdpConnectionColour);
-        }
-        else
-        {
-            ofSetColor(kTcpConnectionColour);
-        }
-        ofSetLineWidth(kNormalConnectionWidth);
-        DrawBezier(fromHere, toThere, aCentre, newCentre);
-        ofSetLineWidth(1);
-        drawSourceAnchor(anchorHere, fromHere);
-        drawTargetAnchor(anchorThere, toThere);
-    }
-#if 0
-    OD_LOG_OBJEXIT(); //####
-#endif // 0
-} // ChannelEntry::drawDragLine
-#endif // 0
-
 void ChannelEntry::drawOutgoingConnections(Graphics & gg)
 {
+#if 0
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("gg = ", &gg); //####
-    Point<int> location(getPosition());
-    
-    OD_LOG_L2("location.x = ", location.getX(), "location.y = ", location.getY()); //####
+#endif // 0
     for (Connections::const_iterator walker(_outputConnections.begin());
          _outputConnections.end() != walker; ++walker)
     {
         drawConnection(gg, this, walker->_otherPort, walker->_connectionMode);
     }
+#if 0
     OD_LOG_OBJEXIT(); //####
+#endif // 0
 } // ChannelEntry::drawOutgoingConnections
+
+EntitiesPanel & ChannelEntry::getOwningPanel(void)
+const
+{
+#if 0
+    OD_LOG_OBJENTER(); //####
+#endif // 0
+    EntitiesPanel & result = _parent->getOwner();
+    
+#if 0
+    OD_LOG_OBJEXIT_P(&result); //####
+#endif // 0
+    return result;
+} // ChannelEntry::getOwningPanel
 
 Point<float> ChannelEntry::getPositionInPanel(void)
 const
 {
+#if 0
     OD_LOG_OBJENTER(); //####
+#endif // 0
     Point<float> result(getPosition().toFloat() + _parent->getPositionInPanel());
     
+#if 0
     OD_LOG_OBJEXIT(); //####
+#endif // 0
     return result;
 } // ChannelEntry::getPositionInPanel
 
@@ -727,232 +731,161 @@ void ChannelEntry::invalidateConnections(void)
     OD_LOG_EXIT(); //####
 } // ChannelEntry::invalidateConnections
 
-#if 0
-bool ChannelEntry::isPointInside(const Point<float> & aPoint)
-const
-{
-#if 0
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("aPoint = ", &aPoint); //####
-#endif // 0
-    bool result = b.inside(aPoint);
-    
-#if 0
-    OD_LOG_OBJEXIT_B(result); //####
-#endif // 0
-    return result;
-} // ChannelEntry::isPointInside
-#endif // 0
-
-#if 0
-bool ChannelEntry::isPointInside(const float xPos,
-                                 const float yPos)
-const
-{
-#if 0
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_D2("xPos = ", xPos, "yPos = ", yPos); //####
-#endif // 0
-    bool result = b.inside(xPos, yPos);
-    
-#if 0
-    OD_LOG_OBJEXIT_B(result); //####
-#endif // 0
-    return result;
-} // ChannelEntry::isPointInside
-#endif // 0
-
 void ChannelEntry::mouseDown(const MouseEvent & ee)
 {
     OD_LOG_OBJENTER(); //####
-    Component * parent = getParentComponent();
+    bool           passOn = true;
+    bool           wasUdp;
+    ChannelEntry * firstAddPort = getOwningPanel().getFirstAddPoint(wasUdp);
+    ChannelEntry * firstRemovePort = getOwningPanel().getFirstRemovePoint();
     
-    parent->mouseDown(ee);
+    if (firstRemovePort)
+    {
+        // We started a 'remove' operation.
+        clearDisconnectMarker();
+        repaint();
+        getOwningPanel().rememberConnectionStartPoint();
+        passOn = false;
+        if (firstRemovePort != this)
+        {
+            // Check if we can end here.
+            String firstName(firstRemovePort->getPortName());
+            
+            // Check if we can end here.
+            firstRemovePort->clearDisconnectMarker();
+            firstRemovePort->repaint();
+            if (kPortDirectionOutput != _direction)
+            {
+                if (MplusM::Utilities::RemoveConnection(firstName.toStdString().c_str(),
+                                                        getPortName().toStdString().c_str()))
+                {
+                    firstRemovePort->removeOutputConnection(this);
+                    removeInputConnection(firstRemovePort);
+                    getOwningPanel().repaint();
+                }
+            }
+        }
+    }
+    else if (firstAddPort)
+    {
+        // We started an 'add' operation.
+        clearConnectMarker();
+        repaint();
+        getOwningPanel().rememberConnectionStartPoint();
+        passOn = false;
+        if (firstAddPort != this)
+        {
+            // Check if we can end here.
+            String firstName(firstAddPort->getPortName());
+            String firstProtocol(firstAddPort->getProtocol());
+            
+            // Check if we can end here.
+            firstAddPort->clearConnectMarker();
+            firstAddPort->repaint();
+            if ((kPortDirectionOutput != _direction) &&
+                protocolsMatch(firstProtocol, _portProtocol))
+            {
+                if (MplusM::Utilities::AddConnection(firstName.toStdString().c_str(),
+                                                     getPortName().toStdString().c_str(),
+                                                     STANDARD_WAIT_TIME, wasUdp))
+                {
+                    MplusM::Common::ChannelMode mode = (wasUdp ? MplusM::Common::kChannelModeUDP :
+                                                        MplusM::Common::kChannelModeTCP);
+                    
+                    firstAddPort->addOutputConnection(this, mode);
+                    addInputConnection(firstAddPort, mode);
+                    getOwningPanel().repaint();
+                }
+            }
+        }
+    }
+    else
+    {
+        // No active operation.
+        if (ee.mods.isAltDown())
+        {
+            // Check if Add is OK for this entry.
+            if ((kPortDirectionInput != _direction) &&
+                (kPortUsageClient != _usage))
+            {
+                getOwningPanel().rememberConnectionStartPoint(this, true, ee.mods.isShiftDown());
+                setConnectMarker();
+                repaint();
+            }
+            passOn = false;
+            OD_LOG("ALT"); //####
+        }
+        else if (ee.mods.isCommandDown())
+        {
+            // Check if Remove is OK for this entry.
+            if ((kPortDirectionInput != _direction) &&
+                (kPortUsageClient != _usage))
+            {
+                getOwningPanel().rememberConnectionStartPoint(this, false);
+                setDisconnectMarker();
+                repaint();
+            }
+            passOn = false;
+            OD_LOG("COMMAND"); //####
+        }
+        else if (ee.mods.isCtrlDown())
+        {
+            // Popup of description.
+            passOn = false;
+            OD_LOG("CTRL"); //####
+        }
+    }
+    if (passOn)
+    {
+        _parent->mouseDown(ee);
+    }
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::mouseDown
 
 void ChannelEntry::mouseDrag(const MouseEvent & ee)
 {
     OD_LOG_OBJENTER(); //####
-    Component * parent = getParentComponent();
+    bool passOn = true;
 
-    parent->mouseDrag(ee);
+    if (ee.mods.isAltDown() || ee.mods.isCommandDown() || ee.mods.isCtrlDown())
+    {
+        passOn = false;
+    }
+    if (passOn)
+    {
+        _parent->mouseDrag(ee);
+    }
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::mouseDrag
 
-#if 0
-bool ChannelEntry::mouseDragged(ofMouseEventArgs & args)
+void ChannelEntry::mouseUp(const MouseEvent & ee)
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("args = ", &args); //####
-    OD_LOG_L1("args.button = ", args.button); //####
-    bool result = inherited::mouseDragged(args);
+    bool passOn = true;
     
-    if (! result)
+    if (ee.mods.isAltDown())
     {
-        ServiceViewerApp & owner = getParent()->getOwner();
-        
-        if (b.inside(args.x, args.y))
-        {
-            bool addIsActive = owner.addIsActive();
-            bool controlWasActive = owner.controlActive();
-            bool removeIsActive = owner.removeIsActive();
-            
-            OD_LOG_B3("addIsActive = ", addIsActive, "controlWasActive = ", controlWasActive, //####
-                      "removeIsActive = ", removeIsActive); //####
-            if (OF_MOUSE_BUTTON_3 == args.button)
-            {
-                result = true;
-            }
-            else if (controlWasActive)
-            {
-                result = true;
-            }
-            else if (addIsActive || removeIsActive)
-            {
-                result = true;
-            }
-        }
+        // Check if we are processing an Add and this is OK.
+        passOn = false;
+        OD_LOG("ALT"); //####
     }
-    OD_LOG_OBJEXIT_B(result); //####
-    return result;
-} // ChannelEntry::mouseDragged
-#endif // 0
-
-#if 0
-bool ChannelEntry::mouseMoved(ofMouseEventArgs & args)
-{
-#if 0
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("args = ", &args); //####
-#endif // 0
-    bool result = inherited::mouseMoved(args);
-    
-#if 0
-    OD_LOG_OBJEXIT_B(result); //####
-#endif // 0
-    return result;
-} // ChannelEntry::mouseMoved
-#endif // 0
-
-#if 0
-bool ChannelEntry::mousePressed(ofMouseEventArgs & args)
-{
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("args = ", &args); //####
-    OD_LOG_L1("args.button = ", args.button); //####
-    bool result = inherited::mousePressed(args);
-    
-    if (! result)
+    else if (ee.mods.isCommandDown())
     {
-        ServiceViewerApp & owner = getParent()->getOwner();
-        
-        if (b.inside(args.x, args.y))
-        {
-            bool addIsActive = owner.addIsActive();
-            bool controlWasActive = owner.controlActive();
-            bool removeIsActive = owner.removeIsActive();
-            
-            OD_LOG_B3("addIsActive = ", addIsActive, "controlWasActive = ", controlWasActive, //####
-                      "removeIsActive = ", removeIsActive); //####
-            if (OF_MOUSE_BUTTON_3 == args.button)
-            {
-                string prefix;
-                string suffix;
-                
-                switch (MplusM::Utilities::GetPortKind(_portName.c_str()))
-                {
-                    case MplusM::Utilities::kPortKindAdapter :
-                        prefix = "Adapter port ";
-                        break;
-                        
-                    case MplusM::Utilities::kPortKindClient :
-                        prefix = "Client port ";
-                        break;
-                        
-                    case MplusM::Utilities::kPortKindService :
-                        prefix = "Service port ";
-                        break;
-                        
-                    case MplusM::Utilities::kPortKindServiceRegistry :
-                        prefix = "Service Registry port ";
-                        break;
-                        
-                    case MplusM::Utilities::kPortKindStandard :
-                        prefix = "Standard port ";
-                        break;
-                        
-                }
-                if (0 < _portProtocol.size())
-                {
-                    suffix = "\nProtocol = '" + _portProtocol + "'";
-                }
-                ofSystemAlertDialog(prefix + _portName + suffix);
-                result = true;
-            }
-            else if (controlWasActive)
-            {
-                result = true;
-            }
-            else if (addIsActive || removeIsActive)
-            {
-                owner.reportPortEntryClicked(this);
-                result = true;
-            }
-        }
+        // Check if we are processing a Remove and this is OK.
+        passOn = false;
+        OD_LOG("COMMAND"); //####
     }
-    OD_LOG_OBJEXIT_B(result); //####
-    return result;
-} // ChannelEntry::mousePressed
-#endif // 0
-
-#if 0
-bool ChannelEntry::mouseReleased(ofMouseEventArgs & args)
-{
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("args = ", &args); //####
-    OD_LOG_L1("args.button = ", args.button); //####
-    bool result = inherited::mouseReleased(args);
-    
-    if (! result)
+    else if (ee.mods.isCtrlDown())
     {
-        ServiceViewerApp & owner = getParent()->getOwner();
-        
-        if (b.inside(args.x, args.y))
-        {
-            bool addIsActive = owner.addIsActive();
-            bool controlWasActive = owner.controlActive();
-            bool removeIsActive = owner.removeIsActive();
-            
-            OD_LOG_B3("addIsActive = ", addIsActive, "controlWasActive = ", controlWasActive, //####
-                      "removeIsActive = ", removeIsActive); //####
-            if (OF_MOUSE_BUTTON_3 == args.button)
-            {
-                result = true;
-            }
-            else if (controlWasActive)
-            {
-                result = true;
-            }
-            else if (addIsActive)
-            {
-                if (owner.dragActive())
-                {
-                    owner.reportPortEntryClicked(this);
-                    owner.clearDragState();
-                }
-                result = true;
-            }
-            else if (removeIsActive)
-            {
-                result = true;
-            }
-        }
+        passOn = false;
+        OD_LOG("CTRL"); //####
     }
-    OD_LOG_OBJEXIT_B(result); //####
-    return result;
-} // ChannelEntry::mouseReleased
-#endif // 0
+    if (passOn)
+    {
+        _parent->mouseUp(ee);
+    }
+    OD_LOG_OBJEXIT(); //####
+} // ChannelEntry::mouseUp
 
 void ChannelEntry::paint(Graphics & gg)
 {
@@ -963,7 +896,7 @@ void ChannelEntry::paint(Graphics & gg)
     AttributedString as;
     
     as.setJustification(Justification::left);
-    as.append(_title, _parent->getOwner().getNormalFont(), Colours::white);
+    as.append(_title, getOwningPanel().getNormalFont(), Colours::white);
     juce::Rectangle<float> area(getLocalBounds().toFloat());
     
 #if 0
@@ -974,6 +907,20 @@ void ChannelEntry::paint(Graphics & gg)
     gg.fillRect(area);
     area.setLeft(area.getX() + _parent->getTextInset());
     as.draw(gg, area);
+    if (_drawConnectMarker)
+    {
+        Point<float> markerPos(getCentre() - Point<float>(kMarkerSide / 2, kMarkerSide / 2));
+        
+        gg.setColour(kMarkerColour);
+        gg.fillEllipse(markerPos.getX(), markerPos.getY(), kMarkerSide, kMarkerSide);
+    }
+    else if (_drawDisconnectMarker)
+    {
+        Point<float> markerPos(getCentre() - Point<float>(kMarkerSide / 2, kMarkerSide / 2));
+        
+        gg.setColour(kMarkerColour);
+        gg.drawEllipse(markerPos.getX(), markerPos.getY(), kMarkerSide, kMarkerSide, 2);
+    }
 #if 0
     OD_LOG_OBJEXIT(); //####
 #endif // 0

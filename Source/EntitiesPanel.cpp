@@ -100,39 +100,9 @@ static const int kInitialPanelWidth = 500;
 # pragma mark Local functions
 #endif // defined(__APPLE__)
 
-/*! @brief Determine whether a connection can be made, based on the port protocols.
- @param sourceProtocol The protocol of the source port.
- @param destinationProtocol The protocol of the destination port.
- @returns @c true if the protocols permit a connection to be made and @c false
- otherwise. */
-static bool protocolsMatch(const String & sourceProtocol,
-                           const String & destinationProtocol)
-{
-    OD_LOG_ENTER(); //####
-    OD_LOG_S2s("sourceProtocol = ", sourceProtocol.toStdString(), "destinationProtocol = ", //####
-               destinationProtocol.toStdString()); //####
-    bool result = false;
-    
-    if (0 == destinationProtocol.length())
-    {
-        result = true;
-    }
-    else
-    {
-        result = (sourceProtocol == destinationProtocol);
-    }
-    OD_LOG_EXIT_B(result); //####
-    return result;
-} // protocolsMatch
-
 #if defined(__APPLE__)
 # pragma mark Class methods
 #endif // defined(__APPLE__)
-
-Colour EntitiesPanel::getMarkerColor(void)
-{
-    return Colours::yellow;
-} // EntitiesPanel::getMarkerColor
 
 Colour EntitiesPanel::getNewConnectionColor(void)
 {
@@ -146,13 +116,8 @@ Colour EntitiesPanel::getNewConnectionColor(void)
 EntitiesPanel::EntitiesPanel(void) :
     inherited(), _knownPorts(), _knownEntities(), _defaultBoldFont(), _defaultNormalFont(),
     _horizontalScrollBar(NULL), _verticalScrollBar(NULL), _innerPanel(new Component),
-    _scrollbarThickness(kDefaultScrollbarThickness)
-#if 0
-_entities1(), _entities2(),
-,
-_foregroundLock(), _backgroundEntities(&_entities1), _foregroundEntities(&_entities2),
-_backgroundPorts(&_ports1), _randomizer(Time::currentTimeMillis()), _movementActive(false)
-#endif // 0
+    _firstAddPoint(NULL), _firstRemovePoint(NULL), _scrollbarThickness(kDefaultScrollbarThickness),
+    _addUdpConnection(false)
 {
     OD_LOG_ENTER(); //####
     _defaultBoldFont = new Font(kFontName, kFontSize, Font::bold);
@@ -208,6 +173,21 @@ void EntitiesPanel::clearAllVisitedFlags(void)
     }
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::clearAllVisitedFlags
+
+void EntitiesPanel::clearMarkers(void)
+{
+    OD_LOG_OBJENTER(); //####
+    for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
+    {
+        ChannelContainer * anEntity = *it;
+        
+        if (anEntity)
+        {
+            anEntity->clearMarkers();
+        }
+    }
+    OD_LOG_OBJEXIT(); //####
+} // EntitiesPanel::clearMarkers
 
 void EntitiesPanel::clearOutData(void)
 {
@@ -379,6 +359,61 @@ const
     return result;
 } // EntitiesPanel::getNumberOfEntities
 
+void EntitiesPanel::mouseDown(const MouseEvent & ee)
+{
+    OD_LOG_OBJENTER(); //####
+    rememberConnectionStartPoint();
+    if (ee.mods.isAltDown())
+    {
+        OD_LOG("ALT"); //####
+    }
+    else if (ee.mods.isCommandDown())
+    {
+        OD_LOG("COMMAND"); //####
+    }
+    else if (ee.mods.isCtrlDown())
+    {
+        OD_LOG("CTRL"); //####
+    }
+    OD_LOG_OBJEXIT(); //####
+} // EntitiesPanel::mouseDown
+
+void EntitiesPanel::mouseDrag(const MouseEvent & ee)
+{
+    OD_LOG_OBJENTER(); //####
+    if (ee.mods.isAltDown())
+    {
+        OD_LOG("ALT"); //####
+    }
+    else if (ee.mods.isCommandDown())
+    {
+        OD_LOG("COMMAND"); //####
+    }
+    else if (ee.mods.isCtrlDown())
+    {
+        OD_LOG("CTRL"); //####
+    }
+    OD_LOG_OBJEXIT(); //####
+} // EntitiesPanel::mouseDrag
+
+void EntitiesPanel::mouseUp(const MouseEvent & ee)
+{
+    OD_LOG_OBJENTER(); //####
+    if (ee.mods.isAltDown())
+    {
+        OD_LOG("ALT"); //####
+    }
+    else if (ee.mods.isCommandDown())
+    {
+        OD_LOG("COMMAND"); //####
+    }
+    else if (ee.mods.isCtrlDown())
+    {
+        OD_LOG("CTRL"); //####
+    }
+    OD_LOG_OBJEXIT(); //####
+} // EntitiesPanel::mouseUp
+
 void EntitiesPanel::paint(Graphics & gg)
 {
 #if 0
@@ -399,6 +434,28 @@ void EntitiesPanel::paint(Graphics & gg)
     OD_LOG_OBJEXIT(); //####
 #endif // 0
 } // EntitiesPanel::paint
+
+void EntitiesPanel::rememberConnectionStartPoint(ChannelEntry * aPort,
+                                                 const bool     beingAdded,
+                                                 const bool     isUdpBeingAdded)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("aPort = ", aPort); //####
+    OD_LOG_B2("beingAdded = ", beingAdded, "isUdpBeingAdded = ", isUdpBeingAdded); //####
+    
+    if (beingAdded)
+    {
+        _firstAddPoint = aPort;
+        _firstRemovePoint = NULL;
+        _addUdpConnection = isUdpBeingAdded;
+    }
+    else
+    {
+        _firstAddPoint = NULL;
+        _firstRemovePoint = aPort;
+    }
+    OD_LOG_OBJEXIT(); //####
+} // EntitiesPanel::rememberConnectionStartPoint
 
 void EntitiesPanel::rememberPort(ChannelEntry * aPort)
 {
@@ -469,153 +526,6 @@ void EntitiesPanel::updateScrollBars(void)
      _horizontalScrollBar->setCurrentRange(xOffset, columnsOnScreen);*/
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::updateScrollBars
-
-
-
-
-#if 0
-void EntitiesPanel::clearOutBackgroundData(void)
-{
-    OD_LOG_OBJENTER(); //####
-    for (ContainerList::const_iterator it(_backgroundEntities->begin());
-         _backgroundEntities->end() != it; ++it)
-    {
-        ChannelContainer * anEntity = *it;
-        
-        if (anEntity)
-        {
-            delete anEntity;
-        }
-    }
-    _backgroundEntities->clear();
-    // Note that the ports will have been deleted by the deletion of the entities.
-    _backgroundPorts->clear();
-    OD_LOG_OBJEXIT(); //####
-} // EntitiesPanel::clearOutBackgroundData
-#endif // 0
-
-#if 0
-void EntitiesPanel::clearOutForegroundData(void)
-{
-    OD_LOG_OBJENTER(); //####
-    for (ContainerList::const_iterator it(_foregroundEntities->begin());
-         _foregroundEntities->end() != it; ++it)
-    {
-        ChannelContainer * anEntity = *it;
-        
-        if (anEntity)
-        {
-            delete anEntity;
-        }
-    }
-    _backgroundEntities->clear();
-    _foregroundPorts->clear();
-    OD_LOG_OBJEXIT(); //####
-} // EntitiesPanel::clearOutForegroundData
-#endif // 0
-
-#if 0
-void EntitiesPanel::drawContainers(Graphics & gg)
-{
-#if 0
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("gg = ", &gg); //####
-#endif // 0
-    if (_networkAvailable)
-    {
-        _foregroundLock.enter();
-        for (ContainerList::const_iterator it(_foregroundEntities->begin());
-             _foregroundEntities->end() != it; ++it)
-        {
-            ChannelContainer * anEntity = *it;
-            
-            if (anEntity && (! anEntity->isSelected()))
-            {
-                //addChildComponent(anEntity);
-                anEntity->paint(gg);
-            }
-        }
-        for (ContainerList::const_iterator it(_foregroundEntities->begin());
-             _foregroundEntities->end() != it; ++it)
-        {
-            ChannelContainer * anEntity = *it;
-            
-            if (anEntity && anEntity->isSelected())
-            {
-                //addChildComponent(anEntity);
-                anEntity->paint(gg);
-            }
-        }
-        drawConnections(gg);
-#if 0
-        if (_dragActive)
-        {
-            if (_firstAddPort)
-            {
-                _firstAddPort->drawDragLine(_dragXpos, _dragYpos, _addingUDPConnection);
-            }
-            else
-            {
-                _dragActive = false;
-            }
-        }
-#endif // 0
-        _foregroundLock.exit();
-    }
-    else
-    {
-        gg.setFont(Font(36.0f));
-        gg.setColour(Colours::yellow);
-        gg.drawText("The YARP network is not running", getLocalBounds(), Justification::centred,
-                    true);
-    }
-#if 0
-    OD_LOG_OBJEXIT(); //####
-#endif // 0
-} // EntitiesPanel::drawContainers
-#endif // 0
-
-#if 0
-void EntitiesPanel::moveEntityToEndOfForegroundList(ChannelContainer * anEntity)
-{
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("anEntity = ", anEntity); //####
-    if (anEntity->isSelected())
-    {
-        ContainerList::iterator it(_foregroundEntities->begin());
-        
-        for ( ; _foregroundEntities->end() != it; ++it)
-        {
-            if (anEntity == *it)
-            {
-                _foregroundEntities->erase(it);
-                addEntityToForeground(anEntity);
-                break;
-            }
-            
-        }
-#if 0
-        _movementActive = false;
-#endif // 0
-    }
-    OD_LOG_OBJEXIT(); //####
-} // EntitiesPanel::moveEntityToEndOfForegroundList
-#endif // 0
-
-#if 0
-void EntitiesPanel::swapBackgroundAndForeground(void)
-{
-    OD_LOG_OBJENTER(); //####
-    if (/*(! _firstAddPort) && (! _firstRemovePort) &&*/ (! _movementActive))
-    {
-        _foregroundLock.enter();
-        swap(_backgroundPorts, _foregroundPorts);
-        swap(_backgroundEntities, _foregroundEntities);
-        _foregroundLock.exit();
-    }
-    OD_LOG_OBJEXIT(); //####
-} // EntitiesPanel::swapBackgroundAndForeground
-#endif // 0
 
 #if defined(__APPLE__)
 # pragma mark Accessors

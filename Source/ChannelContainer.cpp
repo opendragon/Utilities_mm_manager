@@ -156,10 +156,32 @@ ChannelEntry * ChannelContainer::addPort(const String &      portName,
     return aPort;
 } // ChannelContainer::addPort
 
+void ChannelContainer::clearMarkers(void)
+{
+#if 0
+    OD_LOG_OBJENTER(); //####
+#endif // 0
+    for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
+    {
+        ChannelEntry * aPort = getPort(ii);
+        
+        if (aPort)
+        {
+            aPort->clearConnectMarker();
+            aPort->clearDisconnectMarker();
+        }
+    }
+#if 0
+    OD_LOG_OBJEXIT(); //####
+#endif // 0
+} // ChannelContainer::clearMarkers
+
 void ChannelContainer::drawOutgoingConnections(Graphics & gg)
 {
+#if 0
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("gg = ", &gg); //####
+#endif // 0
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
     {
         ChannelEntry * aPort = getPort(ii);
@@ -169,7 +191,9 @@ void ChannelContainer::drawOutgoingConnections(Graphics & gg)
             aPort->drawOutgoingConnections(gg);
         }
     }
+#if 0
     OD_LOG_OBJEXIT(); //####
+#endif // 0
 } // ChannelContainer::drawOutgoingConnections
 
 ChannelEntry * ChannelContainer::getPort(const int num)
@@ -198,10 +222,14 @@ const
 Point<float> ChannelContainer::getPositionInPanel(void)
 const
 {
+#if 0
     OD_LOG_OBJENTER(); //####
+#endif // 0
     Point<float> result(getPosition().toFloat());
     
+#if 0
     OD_LOG_OBJEXIT(); //####
+#endif // 0
     return result;
 } // ChannelContainer::getPositionInPanel
 
@@ -243,24 +271,78 @@ void ChannelContainer::invalidateConnections(void)
 void ChannelContainer::mouseDown(const MouseEvent & ee)
 {
     OD_LOG_OBJENTER(); //####
+    bool doDrag = true;
+    
     // Prepares our dragger to drag this Component
-    _dragger.startDraggingComponent(this, ee);
+    if (ee.mods.isAltDown())
+    {
+        doDrag = false;
+        OD_LOG("ALT"); //####
+    }
+    else if (ee.mods.isCommandDown())
+    {
+        doDrag = false;
+        OD_LOG("COMMAND"); //####
+    }
+    else if (ee.mods.isCtrlDown())
+    {
+        // Popup of description.
+        doDrag = false;
+        OD_LOG("CTRL"); //####
+    }
+    if (doDrag)
+    {
+        _dragger.startDraggingComponent(this, ee);
+    }
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::mouseDown
 
 void ChannelContainer::mouseDrag(const MouseEvent & ee)
 {
     OD_LOG_OBJENTER(); //####
+    bool doDrag = true;
+    
     // Moves this Component according to the mouse drag event and applies our constraints to it
-    _dragger.dragComponent(this, ee, &_constrainer);
-    
-    
-    _owner.repaint();
-    
-    
-    
+    if (ee.mods.isAltDown())
+    {
+        doDrag = false;
+        OD_LOG("ALT"); //####
+    }
+    else if (ee.mods.isCommandDown())
+    {
+        doDrag = false;
+        OD_LOG("COMMAND"); //####
+    }
+    else if (ee.mods.isCtrlDown())
+    {
+        doDrag = false;
+        OD_LOG("CTRL"); //####
+    }
+    if (doDrag)
+    {
+        _dragger.dragComponent(this, ee, &_constrainer);
+        _owner.repaint();
+    }
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::mouseDrag
+
+void ChannelContainer::mouseUp(const MouseEvent & ee)
+{
+    OD_LOG_OBJENTER(); //####
+    if (ee.mods.isAltDown())
+    {
+        OD_LOG("ALT"); //####
+    }
+    else if (ee.mods.isCommandDown())
+    {
+        OD_LOG("COMMAND"); //####
+    }
+    else if (ee.mods.isCtrlDown())
+    {
+        OD_LOG("CTRL"); //####
+    }
+    OD_LOG_OBJEXIT(); //####
+} // ChannelContainer::mouseUp
 
 void ChannelContainer::paint(Graphics & gg)
 {

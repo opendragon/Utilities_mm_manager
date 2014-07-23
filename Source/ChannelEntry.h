@@ -55,6 +55,7 @@
 namespace ChannelManager
 {
     class ChannelContainer;
+    class EntitiesPanel;
     
     /*! @brief A port or channel. */
     class ChannelEntry : public Component
@@ -117,6 +118,18 @@ namespace ChannelManager
                                           const Point<float> & pp)
         const;
         
+        /*! @brief Stop displaying the connect marker. */
+        inline void clearConnectMarker(void)
+        {
+            _drawConnectMarker = false;
+        } // clearConnectMarker
+        
+        /*! @brief Stop displaying the disconnect marker. */
+        inline void clearDisconnectMarker(void)
+        {
+            _drawDisconnectMarker = false;
+        } // clearDisconnectMarker
+        
         /*! @brief Display the connections between containers.
          @param gg The graphics context in which to draw. */
         void drawOutgoingConnections(Graphics & gg);
@@ -149,6 +162,11 @@ namespace ChannelManager
         {
             return _outputConnections;
         } // getOutputConnections
+        
+        /*! @brief Return the panel which contains the entry.
+         @returns The panel which contains the entry. */
+        EntitiesPanel & getOwningPanel(void)
+        const;
         
         inline ChannelContainer * getParent(void)
         const
@@ -209,11 +227,15 @@ namespace ChannelManager
         
         /*! @brief Called when a mouse button is pressed.
          @param ee Details about the position and status of the mouse event. */
-        void mouseDown(const MouseEvent & ee) override;
+        virtual void mouseDown(const MouseEvent & ee) override;
         
         /*! @brief Called when the mouse is moved while a button is held down.
          @param ee Details about the position and status of the mouse event. */
-        void mouseDrag(const MouseEvent & ee) override;
+        virtual void mouseDrag(const MouseEvent & ee) override;
+        
+        /*! @brief Called when a mouse button is released.
+         @param ee Details about the position and status of the mouse event. */
+        virtual void mouseUp (const MouseEvent& event) override;
         
         /*! @brief Draw the content of the component.
          @param gg The graphics context in which to draw. */
@@ -235,6 +257,18 @@ namespace ChannelManager
         {
             _isLastPort = true;
         } // setAsLastPort
+        
+        /*! @brief Start displaying the connect marker. */
+        inline void setConnectMarker(void)
+        {
+            _drawConnectMarker = true;
+        } // setConnectMarker
+        
+        /*! @brief Start displaying the disconnect marker. */
+        inline void setDisconnectMarker(void)
+        {
+            _drawDisconnectMarker = true;
+        } // setDisconnectMarker
         
         /*! @brief Mark the port entry as not being the bottom-most port entry in a panel. */
         inline void unsetAsLastPort(void)
@@ -273,6 +307,12 @@ namespace ChannelManager
         /*! @brief The primary usage for the port. */
         PortUsage _usage;
         
+        /*! @brief @c true if the connect marker is to be displayed and @c false otherwise. */
+        bool _drawConnectMarker;
+        
+        /*! @brief @c true if the disconnect marker is to be displayed and @c false otherwise. */
+        bool _drawDisconnectMarker;
+        
         /*! @brief @c true if the channel entry is the bottom-most (last) channel entry in a panel
          and @c false otherwise. */
         bool _isLastPort;
@@ -282,7 +322,7 @@ namespace ChannelManager
 #  pragma clang diagnostic ignored "-Wunused-private-field"
 # endif // defined(__APPLE__)
         /*! @brief Filler to pad to alignment boundary */
-        char _filler[7];
+        char _filler[5];
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)

@@ -93,6 +93,9 @@ namespace ChannelManager
                                const PortUsage     portKind = kPortUsageOther,
                                const PortDirection direction = kPortDirectionInputOutput);
         
+        /*! @brief Clear any connect / disconnect markers. */
+        void clearMarkers(void);
+        
         /*! @brief Clears the visited flag for the entity. */
         inline void clearVisited(void)
         {
@@ -189,12 +192,16 @@ namespace ChannelManager
         
         /*! @brief Called when a mouse button is pressed.
          @param ee Details about the position and status of the mouse event. */
-        void mouseDown(const MouseEvent & ee) override;
+        virtual void mouseDown(const MouseEvent & ee) override;
         
         /*! @brief Called when the mouse is moved while a button is held down.
          @param ee Details about the position and status of the mouse event. */
-        void mouseDrag(const MouseEvent & ee) override;
+        virtual void mouseDrag(const MouseEvent & ee) override;
         
+        /*! @brief Called when a mouse button is released.
+         @param ee Details about the position and status of the mouse event. */
+        virtual void mouseUp (const MouseEvent& event) override;
+
         /*! @brief Draw the content of the component.
          @param gg The graphics context in which to draw. */
         void paint(Graphics & gg) override;

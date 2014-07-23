@@ -77,6 +77,9 @@ namespace ChannelManager
         /*! @brief Call the visited flags for all entities. */
         void clearAllVisitedFlags(void);
         
+        /*! @brief Clear any connect / disconnect markers. */
+        void clearMarkers(void);
+        
         /*! @brief Find an entity in the currently-displayed list by name.
          @param name The name of the entity.
          @returns @c NULL if the entity cannot be found and non-@c NULL if it is found. */
@@ -108,15 +111,29 @@ namespace ChannelManager
             return *_defaultBoldFont;
         } // getBoldFont
         
-        /* @brief Return an entity by index.
+        /*! @brief Return an entity by index.
          @param index The zero-origin index of the entity.
          @returns The entity if the index is within range and @c NULL otherwise. */
         ChannelContainer * getEntity(const size_t index)
         const;
         
-        /*! @brief Return the color to be used for markers.
-         @returns The color to be used for markers. */
-        static Colour getMarkerColor(void);
+        /*! @brief Return the starting point for a connection being added.
+         @param isUdpConnection Set @c true if the connection is UDP and @c false otherwise.
+         @returns The starting point for a connection being added. */
+        ChannelEntry * getFirstAddPoint(bool & isUdpConnection)
+        const
+        {
+            isUdpConnection = _addUdpConnection;
+            return _firstAddPoint;
+        } // getFirstAddPoint
+        
+        /*! @brief Return the starting point for a connection being removed.
+         @returns The starting point for a connection being removed. */
+        ChannelEntry * getFirstRemovePoint(void)
+        const
+        {
+            return _firstRemovePoint;
+        } // getFirstRemovePoint
         
         /*! @brief Return the color to be used for connections being made by dragging.
          @returns The color to be used for connections being made by dragging. */
@@ -142,9 +159,31 @@ namespace ChannelManager
             return _scrollbarThickness;
         } // getScrollbarThickness
         
+        /*! @brief Called when a mouse button is pressed.
+         @param ee Details about the position and status of the mouse event. */
+        virtual void mouseDown(const MouseEvent & ee) override;
+        
+        /*! @brief Called when the mouse is moved while a button is held down.
+         @param ee Details about the position and status of the mouse event. */
+        virtual void mouseDrag(const MouseEvent & ee) override;
+        
+        /*! @brief Called when a mouse button is released.
+         @param ee Details about the position and status of the mouse event. */
+        virtual void mouseUp (const MouseEvent& event) override;
+        
         /*! @brief Draw the content of the component.
          @param gg The graphics context in which to draw. */
         void paint(Graphics & gg);
+        
+        /*! @brief Record the initial entry when adding or removing a connection.
+         @param aPort The first entry selected.
+         @param beingAdded @c true if the connection is being added and @c false if it is being
+         removed.
+         @param isUdpBeingAdded @c true if the connection being added is UDP and @c false
+         otherwise. */
+        void rememberConnectionStartPoint(ChannelEntry * aPort = NULL,
+                                          const bool     beingAdded = false,
+                                          const bool     isUdpBeingAdded = false);
         
         /*! @brief Record a newly added port.
          @param aPort The port to be recorded. */
@@ -181,55 +220,7 @@ namespace ChannelManager
         /*! @brief Display the connections between containers.
          @param gg The graphics context in which to draw. */
         void drawConnections(Graphics & gg);
-        
-#if 0
-        /*! @brief Display the containers.
-         @param gg The graphics context in which to draw. */
-        void drawContainers(Graphics & gg);
-        
-        /*! @brief Move an entity to the end of the entity list so that it will be the last drawn.
-         @param anEntity The entity to be moved. */
-        void moveEntityToEndOfForegroundList(ChannelContainer * anEntity);
-        
-        /*! @brief Set the entity positions. */
-        void setEntityPositions(void);
-        
-        /*! @brief Swap the background and foreground data structures. */
-        void swapBackgroundAndForeground(void);
-        
-        /*! @brief A set of known ports. */
-        PortEntryMap _ports1;
-        
-        /*! @brief A set of known ports. */
-        PortEntryMap _ports2;
-        
-        /*! @brief Control access to the currently-displayed lists. */
-        CriticalSection _foregroundLock;
-        
-        /*! @brief The background set of known entities. */
-        ContainerList * _backgroundEntities;
-        
-        /*! @brief The foreground set of known entities. */
-        ContainerList * _foregroundEntities;
-        
-        /*! @brief The background set of known ports. */
-        PortEntryMap * _backgroundPorts;
-        
-        /*! @brief @c true if an entity is being moved. */
-        bool _movementActive;
-        
-# if defined(__APPLE__)
-#  pragma clang diagnostic push
-#  pragma clang diagnostic ignored "-Wunused-private-field"
-# endif // defined(__APPLE__)
-        /*! @brief Filler to pad to alignment boundary */
-        char _filler[7];
-# if defined(__APPLE__)
-#  pragma clang diagnostic pop
-# endif // defined(__APPLE__)
-        
-#endif // 0
-        
+                
         /*! @brief The bold font to be used. */
         ScopedPointer<Font> _defaultBoldFont;
         
@@ -248,9 +239,28 @@ namespace ChannelManager
          rendering purposes; objects of this class don't directly display entities. */
         ScopedPointer<Component> _innerPanel;
         
+        /*! @brief The starting port for a connection being added. */
+        ChannelEntry * _firstAddPoint;
+        
+        /*! @brief The starting port for a connection being removed. */
+        ChannelEntry * _firstRemovePoint;
+        
         /*! @brief The desired width (for a vertical scrollbar) or height (for a horizontal
          scrollbar). */
         int _scrollbarThickness;
+        
+        /*! @brief @c true if a UDP connection is being added and @c false otherwise. */
+        bool _addUdpConnection;
+        
+# if defined(__APPLE__)
+#  pragma clang diagnostic push
+#  pragma clang diagnostic ignored "-Wunused-private-field"
+# endif // defined(__APPLE__)
+        /*! @brief Filler to pad to alignment boundary */
+        char _filler[7];
+# if defined(__APPLE__)
+#  pragma clang diagnostic pop
+# endif // defined(__APPLE__)
         
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(EntitiesPanel)
         
