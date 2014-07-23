@@ -642,15 +642,15 @@ void ScannerThread::run(void)
             
 #if MAC_OR_LINUX_
             snprintf(numBuff, sizeof(numBuff), "%g", (loopEndTime - loopStartTime) / 1000.0);
-#else // ! MAC_OR_LINUX_
-            _snprintf(numBuff, sizeof(numBuff) - 1, "%g", (loopEndTime - loopStartTime) / 1000.0);
-            // Correct for the weird behaviour of _snprintf
-            numBuff[sizeof(numBuff) - 1] = '\0';
-#endif // ! MAC_OR_LINUX_
             yarp::os::impl::Logger & theLogger = MplusM::Common::GetLogger();
             
             theLogger.info(yarp::os::ConstString("actual interval = ") + numBuff +
                            yarp::os::ConstString(" seconds"));
+#else // ! MAC_OR_LINUX_
+//            _snprintf(numBuff, sizeof(numBuff) - 1, "%g", (loopEndTime - loopStartTime) / 1000.0);
+//            // Correct for the weird behaviour of _snprintf
+//            numBuff[sizeof(numBuff) - 1] = '\0';
+#endif // ! MAC_OR_LINUX_
             yield();
         }
     }

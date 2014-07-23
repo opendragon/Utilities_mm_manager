@@ -139,7 +139,9 @@ const String ChannelManagerApplication::getApplicationVersion(void)
 void ChannelManagerApplication::initialise(const String & commandLine)
 {
     OD_LOG_OBJENTER(); //####
+#if MAC_OR_LINUX_
     MplusM::Common::SetUpLogger(ProjectInfo::projectName);
+#endif // MAC_OR_LINUX_
     MplusM::Common::Initialize(ProjectInfo::projectName);
 #if CheckNetworkWorks_
     if (yarp::os::Network::checkNetwork())
@@ -152,9 +154,11 @@ void ChannelManagerApplication::initialise(const String & commandLine)
     else
     {
         OD_LOG("! (yarp::os::Network::checkNetwork())"); //####
+# if MAC_OR_LINUX_
         yarp::os::impl::Logger & theLogger = MplusM::Common::GetLogger();
         
         theLogger.fail("YARP network not running.");
+# endif // MAC_OR_LINUX_
     }
 #endif // CheckNetworkWorks_
     _mainWindow = new ChannelManagerWindow(ProjectInfo::projectName);
