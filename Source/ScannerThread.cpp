@@ -60,7 +60,9 @@
 # pragma clang diagnostic ignored "-Wunused-parameter"
 # pragma clang diagnostic ignored "-Wweak-vtables"
 #endif // defined(__APPLE__)
+#if MAC_OR_LINUX_
 #include <yarp/os/impl/Logger.h>
+#endif //MAC_OR_LINUX_
 #if defined(__APPLE__)
 # pragma clang diagnostic pop
 #endif // defined(__APPLE__)
