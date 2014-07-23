@@ -39,7 +39,7 @@
 #include "ChannelManagerWindow.h"
 #include "ContentPanel.h"
 
-#include "ODEnableLogging.h"
+//#include "ODEnableLogging.h"
 #include "ODLogging.h"
 
 #if defined(__APPLE__)
@@ -114,7 +114,7 @@ EntitiesPanel & ChannelManagerWindow::getEntitiesPanel(void)
 const
 {
     OD_LOG_OBJENTER(); //####
-    EntitiesPanel & thePanel = _contentPanel->getEntitiesPanel();
+    EntitiesPanel & thePanel(_contentPanel->getEntitiesPanel());
     
     OD_LOG_OBJEXIT_P(&thePanel); //####
     return thePanel;

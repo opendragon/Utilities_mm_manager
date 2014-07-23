@@ -42,7 +42,7 @@
 #include "ChannelManagerWindow.h"
 #include "EntitiesPanel.h"
 
-#include "ODEnableLogging.h"
+//#include "ODEnableLogging.h"
 #include "ODLogging.h"
 
 #include <ogdf/basic/GraphAttributes.h>
@@ -526,7 +526,7 @@ void ScannerThread::addRegularPortEntities(const MplusM::Utilities::PortVector &
         {
             String           caption(walker->_portIpAddress + ":" + walker->_portPortNumber);
             NameAndDirection info;
-            EntitiesPanel &  entitiesPanel = _window->getEntitiesPanel();
+            EntitiesPanel &  entitiesPanel(_window->getEntitiesPanel());
             ChannelEntry *   oldEntry = entitiesPanel.findKnownPort(walkerName);
             
             _rememberedPorts.insert(walkerName);
@@ -660,7 +660,7 @@ void ScannerThread::run(void)
 void ScannerThread::setEntityPositions(void)
 {
     OD_LOG_OBJENTER(); //####
-    EntitiesPanel &       entitiesPanel = _window->getEntitiesPanel();
+    EntitiesPanel &       entitiesPanel(_window->getEntitiesPanel());
     Random                randomizer(Time::currentTimeMillis());
     bool                  positionsNeedUpdate = false;
     float                 fullHeight = entitiesPanel.getHeight();
@@ -815,7 +815,7 @@ bool ScannerThread::updatePanels(EntitiesPanel * newPanel)
     // return.
     if (mml.lockWasGained())
     {
-        EntitiesPanel & entitiesPanel = _window->getEntitiesPanel();
+        EntitiesPanel & entitiesPanel(_window->getEntitiesPanel());
         
         entitiesPanel.clearAllVisitedFlags();
         newPanel->clearAllVisitedFlags();

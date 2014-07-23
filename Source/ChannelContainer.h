@@ -182,6 +182,11 @@ namespace ChannelManager
         /*! @brief Mark all the connections as invalid. */
         void invalidateConnections(void);
         
+        /*! @brief Returns @c true if one of the port entries is marked and @c false otherwise.
+         @returns @c true if one of the port entries is marked and @c false otherwise. */
+        bool isMarked(void)
+        const;
+        
         /*! @brief Return @c true is the entity is selected.
          @returns @c true if the entity is selected and @c false otherwise. */
         inline bool isSelected(void)
@@ -189,6 +194,12 @@ namespace ChannelManager
         {
             return _selected;
         } // isSelected
+        
+        /*! @brief Returns an entry at the given location, if it exists.
+         @param location The coordinates to check.
+         @returns A pointer to the entry at the given location, or @c NULL if there is none. */
+        ChannelEntry * locateEntry(const Point<float> & location)
+        const;
         
         /*! @brief Called when a mouse button is pressed.
          @param ee Details about the position and status of the mouse event. */
@@ -198,10 +209,6 @@ namespace ChannelManager
          @param ee Details about the position and status of the mouse event. */
         virtual void mouseDrag(const MouseEvent & ee) override;
         
-        /*! @brief Called when a mouse button is released.
-         @param ee Details about the position and status of the mouse event. */
-        virtual void mouseUp (const MouseEvent& event) override;
-
         /*! @brief Draw the content of the component.
          @param gg The graphics context in which to draw. */
         void paint(Graphics & gg) override;

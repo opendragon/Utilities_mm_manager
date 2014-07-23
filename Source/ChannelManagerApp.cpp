@@ -40,7 +40,7 @@
 #include "ChannelContainer.h"
 #include "ScannerThread.h"
 
-#include "ODEnableLogging.h"
+//#include "ODEnableLogging.h"
 #include "ODLogging.h"
 
 #if defined(__APPLE__)
@@ -124,19 +124,15 @@ void ChannelManagerApplication::anotherInstanceStarted(const String & commandLin
 
 const String ChannelManagerApplication::getApplicationName(void)
 {
-#if 0
     OD_LOG_OBJENTER(); //####
     OD_LOG_OBJEXIT_S(ProjectInfo::projectName); //####
-#endif // 0
     return ProjectInfo::projectName;
 } // ChannelManagerApplication::getApplicationName
 
 const String ChannelManagerApplication::getApplicationVersion(void)
 {
-#if 0
     OD_LOG_OBJENTER(); //####
     OD_LOG_OBJEXIT_S(ProjectInfo::versionString); //####
-#endif // 0
     return ProjectInfo::versionString;
 } // ChannelManagerApplication::getApplicationVersion
 

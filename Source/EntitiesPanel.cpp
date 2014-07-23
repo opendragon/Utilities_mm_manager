@@ -41,7 +41,7 @@
 #include "ChannelContainer.h"
 #include "ChannelEntry.h"
 
-#include "ODEnableLogging.h"
+//#include "ODEnableLogging.h"
 #include "ODLogging.h"
 
 #include "M+MAdapterChannel.h"
@@ -104,11 +104,6 @@ static const int kInitialPanelWidth = 500;
 # pragma mark Class methods
 #endif // defined(__APPLE__)
 
-Colour EntitiesPanel::getNewConnectionColor(void)
-{
-    return Colours::gold;
-} // EntitiesPanel::getNewConnectionColor
-
 #if defined(__APPLE__)
 # pragma mark Constructors and destructors
 #endif // defined(__APPLE__)
@@ -117,7 +112,7 @@ EntitiesPanel::EntitiesPanel(void) :
     inherited(), _knownPorts(), _knownEntities(), _defaultBoldFont(), _defaultNormalFont(),
     _horizontalScrollBar(NULL), _verticalScrollBar(NULL), _innerPanel(new Component),
     _firstAddPoint(NULL), _firstRemovePoint(NULL), _scrollbarThickness(kDefaultScrollbarThickness),
-    _addUdpConnection(false)
+    _dragConnectionActive(false)
 {
     OD_LOG_ENTER(); //####
     _defaultBoldFont = new Font(kFontName, kFontSize, Font::bold);
@@ -125,12 +120,15 @@ EntitiesPanel::EntitiesPanel(void) :
     _horizontalScrollBar = new ScrollBar(false);
     _verticalScrollBar = new ScrollBar(true);
     _innerPanel->setSize(kInitialPanelWidth, kInitialPanelHeight);
+    _innerPanel->setInterceptsMouseClicks(false, true);
     addAndMakeVisible(_innerPanel);
     addAndMakeVisible(_verticalScrollBar);
     _verticalScrollBar->setSingleStepSize(1.0);
     addAndMakeVisible(_horizontalScrollBar);
     _horizontalScrollBar->setSingleStepSize(1.0);
     setSize(kInitialPanelWidth, kInitialPanelHeight);
+    setOpaque(true);
+    setVisible(true);
     OD_LOG_EXIT(); //####
 } // EntitiesPanel::EntitiesPanel
 
@@ -155,8 +153,57 @@ void EntitiesPanel::addEntity(ChannelContainer * anEntity)
     OD_LOG_P1("anEntity = ", anEntity); //####
     _knownEntities.push_back(anEntity);
     _innerPanel->addChildComponent(anEntity);
+    adjustSize();
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::addEntity
+
+void EntitiesPanel::adjustSize(void)
+{
+    OD_LOG_OBJENTER(); //####
+    bool haveValues = false;
+    int  minX = -1;
+    int  maxX = -1;
+    int  minY = -1;
+    int  maxY = -1;
+    
+    for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
+    {
+        ChannelContainer * anEntity = *it;
+        
+        if (anEntity)
+        {
+            Rectangle<int> entityBounds(anEntity->getBounds());
+            int            entityLeft = entityBounds.getX();
+            int            entityTop = entityBounds.getY();
+            int            entityRight = entityLeft + entityBounds.getWidth();
+            int            entityBottom = entityTop + entityBounds.getHeight();
+            
+            if (haveValues)
+            {
+                minX = min(minX, entityLeft);
+                maxX = max(maxX, entityRight);
+                minY = min(minY, entityTop);
+                maxY = max(maxY, entityBottom);
+            }
+            else
+            {
+                minX = entityLeft;
+                maxX = entityRight;
+                minY = entityTop;
+                maxY = entityBottom;
+            }
+        }
+    }
+    if (haveValues)
+    {
+        const int gutter = 5;
+        int       newWidth = (2 * gutter) + maxX - minX;
+        int       newHeight = (2 * gutter) + maxY - minY;
+        
+        setBounds(minX - gutter, minY - gutter, newWidth, newHeight);
+    }
+    OD_LOG_OBJEXIT(); //####
+} // EntitiesPanel::adjustSize
 
 void EntitiesPanel::clearAllVisitedFlags(void)
 {
@@ -174,6 +221,13 @@ void EntitiesPanel::clearAllVisitedFlags(void)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::clearAllVisitedFlags
 
+void EntitiesPanel::clearDragInfo(void)
+{
+    OD_LOG_OBJENTER(); //####
+    _dragConnectionActive = false;
+    OD_LOG_OBJEXIT(); //####
+} // EntitiesPanel::clearDragInfo
+
 void EntitiesPanel::clearMarkers(void)
 {
     OD_LOG_OBJENTER(); //####
@@ -183,7 +237,11 @@ void EntitiesPanel::clearMarkers(void)
         
         if (anEntity)
         {
-            anEntity->clearMarkers();
+            if (anEntity->isMarked())
+            {
+                anEntity->clearMarkers();
+                anEntity->repaint();
+            }
         }
     }
     OD_LOG_OBJEXIT(); //####
@@ -209,10 +267,8 @@ void EntitiesPanel::clearOutData(void)
 
 void EntitiesPanel::drawConnections(Graphics & gg)
 {
-#if 0
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("gg = ", &gg); //####
-#endif // 0
     for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
     {
         ChannelContainer * anEntity = *it;
@@ -222,9 +278,11 @@ void EntitiesPanel::drawConnections(Graphics & gg)
             anEntity->drawOutgoingConnections(gg);
         }
     }
-#if 0
+    if (_dragConnectionActive && _firstAddPoint)
+    {
+        _firstAddPoint->drawDragLine(gg, _dragPosition, _firstAddPoint->wasUdpConnectionRequest());
+    }
     OD_LOG_OBJEXIT(); //####
-#endif // 0
 } // EntitiesPanel::drawConnections
 
 ChannelContainer * EntitiesPanel::findKnownEntity(const String & name)
@@ -359,67 +417,51 @@ const
     return result;
 } // EntitiesPanel::getNumberOfEntities
 
+ChannelEntry * EntitiesPanel::locateEntry(const Point<float> & location)
+const
+{
+    OD_LOG_OBJENTER(); //####
+    ChannelEntry * result = NULL;
+    
+    for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
+    {
+        ChannelContainer * anEntity = *it;
+        
+        if (anEntity)
+        {
+            result = anEntity->locateEntry(location);
+            if (result)
+            {
+                break;
+            }
+            
+        }
+    }
+    OD_LOG_OBJEXIT_P(result); //####
+    return result;
+} // EntitiesPanel::locateEntry
+
 void EntitiesPanel::mouseDown(const MouseEvent & ee)
 {
     OD_LOG_OBJENTER(); //####
     rememberConnectionStartPoint();
-    if (ee.mods.isAltDown())
-    {
-        OD_LOG("ALT"); //####
-    }
-    else if (ee.mods.isCommandDown())
-    {
-        OD_LOG("COMMAND"); //####
-    }
-    else if (ee.mods.isCtrlDown())
-    {
-        OD_LOG("CTRL"); //####
-    }
+    clearMarkers();
+    repaint();
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::mouseDown
-
-void EntitiesPanel::mouseDrag(const MouseEvent & ee)
-{
-    OD_LOG_OBJENTER(); //####
-    if (ee.mods.isAltDown())
-    {
-        OD_LOG("ALT"); //####
-    }
-    else if (ee.mods.isCommandDown())
-    {
-        OD_LOG("COMMAND"); //####
-    }
-    else if (ee.mods.isCtrlDown())
-    {
-        OD_LOG("CTRL"); //####
-    }
-    OD_LOG_OBJEXIT(); //####
-} // EntitiesPanel::mouseDrag
 
 void EntitiesPanel::mouseUp(const MouseEvent & ee)
 {
     OD_LOG_OBJENTER(); //####
-    if (ee.mods.isAltDown())
-    {
-        OD_LOG("ALT"); //####
-    }
-    else if (ee.mods.isCommandDown())
-    {
-        OD_LOG("COMMAND"); //####
-    }
-    else if (ee.mods.isCtrlDown())
-    {
-        OD_LOG("CTRL"); //####
-    }
+    rememberConnectionStartPoint();
+    clearMarkers();
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::mouseUp
 
 void EntitiesPanel::paint(Graphics & gg)
 {
-#if 0
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("gg = ", &gg); //####
-#endif // 0
     // Set up a gradient background, using a radial gradient from the centre to the furthest edge.
     int            hh = getHeight();
     int            ww = getWidth();
@@ -430,24 +472,19 @@ void EntitiesPanel::paint(Graphics & gg)
     gg.setFillType(theBackgroundFill);
     gg.fillAll();
     drawConnections(gg);
-#if 0
     OD_LOG_OBJEXIT(); //####
-#endif // 0
 } // EntitiesPanel::paint
 
 void EntitiesPanel::rememberConnectionStartPoint(ChannelEntry * aPort,
-                                                 const bool     beingAdded,
-                                                 const bool     isUdpBeingAdded)
+                                                 const bool     beingAdded)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("aPort = ", aPort); //####
-    OD_LOG_B2("beingAdded = ", beingAdded, "isUdpBeingAdded = ", isUdpBeingAdded); //####
-    
+    OD_LOG_B1("beingAdded = ", beingAdded); //####
     if (beingAdded)
     {
         _firstAddPoint = aPort;
         _firstRemovePoint = NULL;
-        _addUdpConnection = isUdpBeingAdded;
     }
     else
     {
@@ -497,6 +534,7 @@ void EntitiesPanel::removeUnvisitedEntities(void)
             delete anEntity;
         }
     }
+    adjustSize();
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::removeUnvisitedEntities
 
@@ -514,6 +552,17 @@ void EntitiesPanel::resized(void)
     updateScrollBars();
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::resized
+
+void EntitiesPanel::setDragInfo(const Point<float> position)
+{
+    OD_LOG_OBJENTER(); //####
+    if (_firstAddPoint)
+    {
+        _dragConnectionActive = true;
+        _dragPosition = position;
+    }
+    OD_LOG_OBJEXIT(); //####
+} // EntitiesPanel::setDragInfo
 
 void EntitiesPanel::updateScrollBars(void)
 {

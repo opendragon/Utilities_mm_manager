@@ -77,6 +77,9 @@ namespace ChannelManager
         /*! @brief Call the visited flags for all entities. */
         void clearAllVisitedFlags(void);
         
+        /*! @brief Clear any active dragging information. */
+        void clearDragInfo(void);
+        
         /*! @brief Clear any connect / disconnect markers. */
         void clearMarkers(void);
         
@@ -118,12 +121,10 @@ namespace ChannelManager
         const;
         
         /*! @brief Return the starting point for a connection being added.
-         @param isUdpConnection Set @c true if the connection is UDP and @c false otherwise.
          @returns The starting point for a connection being added. */
-        ChannelEntry * getFirstAddPoint(bool & isUdpConnection)
+        ChannelEntry * getFirstAddPoint(void)
         const
         {
-            isUdpConnection = _addUdpConnection;
             return _firstAddPoint;
         } // getFirstAddPoint
         
@@ -134,10 +135,6 @@ namespace ChannelManager
         {
             return _firstRemovePoint;
         } // getFirstRemovePoint
-        
-        /*! @brief Return the color to be used for connections being made by dragging.
-         @returns The color to be used for connections being made by dragging. */
-        static Colour getNewConnectionColor(void);
         
         /*! @brief Return the font to be used for normal text.
          @returns The font to be used for normal text. */
@@ -159,17 +156,27 @@ namespace ChannelManager
             return _scrollbarThickness;
         } // getScrollbarThickness
         
+        /*! @brief Return @c true if dragging a connection and @c false otherwise.
+         @returns @c true if dragging a connection and @c false otherwise. */
+        inline bool isDragActive(void)
+        const
+        {
+            return _dragConnectionActive;
+        } // isDragActive
+
+        /*! @brief Returns an entry at the given location, if it exists.
+         @param location The coordinates to check.
+         @returns A pointer to the entry at the given location, or @c NULL if there is none. */
+        ChannelEntry * locateEntry(const Point<float> & location)
+        const;
+        
         /*! @brief Called when a mouse button is pressed.
          @param ee Details about the position and status of the mouse event. */
         virtual void mouseDown(const MouseEvent & ee) override;
         
-        /*! @brief Called when the mouse is moved while a button is held down.
-         @param ee Details about the position and status of the mouse event. */
-        virtual void mouseDrag(const MouseEvent & ee) override;
-        
         /*! @brief Called when a mouse button is released.
          @param ee Details about the position and status of the mouse event. */
-        virtual void mouseUp (const MouseEvent& event) override;
+        virtual void mouseUp(const MouseEvent& event) override;
         
         /*! @brief Draw the content of the component.
          @param gg The graphics context in which to draw. */
@@ -178,12 +185,9 @@ namespace ChannelManager
         /*! @brief Record the initial entry when adding or removing a connection.
          @param aPort The first entry selected.
          @param beingAdded @c true if the connection is being added and @c false if it is being
-         removed.
-         @param isUdpBeingAdded @c true if the connection being added is UDP and @c false
-         otherwise. */
+         removed. */
         void rememberConnectionStartPoint(ChannelEntry * aPort = NULL,
-                                          const bool     beingAdded = false,
-                                          const bool     isUdpBeingAdded = false);
+                                          const bool     beingAdded = false);
         
         /*! @brief Record a newly added port.
          @param aPort The port to be recorded. */
@@ -198,6 +202,10 @@ namespace ChannelManager
         /*! @brief Called when the component size has been changed. */
         void resized(void);
         
+        /*! @brief Update the dragging information.
+         @param position The location of the dragging connection. */
+        void setDragInfo(const Point<float> position);
+        
         /*! @brief Adjust the horizontal and vertial scrollbars. */
         void updateScrollBars(void);
         
@@ -208,11 +216,8 @@ namespace ChannelManager
         /*! @brief The class that this class is derived from. */
         typedef Component inherited;
         
-        /*! @brief The set of known ports. */
-        PortEntryMap _knownPorts;
-        
-        /*! @brief A collection of known services and ports. */
-        ContainerList _knownEntities;
+        /*! @brief Recalculate size based on entities present. */
+        void adjustSize(void);
         
         /*! @brief Release all data held by the panel. */
         void clearOutData(void);
@@ -220,7 +225,13 @@ namespace ChannelManager
         /*! @brief Display the connections between containers.
          @param gg The graphics context in which to draw. */
         void drawConnections(Graphics & gg);
-                
+        
+        /*! @brief The set of known ports. */
+        PortEntryMap _knownPorts;
+        
+        /*! @brief A collection of known services and ports. */
+        ContainerList _knownEntities;
+        
         /*! @brief The bold font to be used. */
         ScopedPointer<Font> _defaultBoldFont;
         
@@ -239,6 +250,9 @@ namespace ChannelManager
          rendering purposes; objects of this class don't directly display entities. */
         ScopedPointer<Component> _innerPanel;
         
+        /*! @brief The coordinates of the drag-connection operation. */
+        Point<float> _dragPosition;
+        
         /*! @brief The starting port for a connection being added. */
         ChannelEntry * _firstAddPoint;
         
@@ -249,8 +263,8 @@ namespace ChannelManager
          scrollbar). */
         int _scrollbarThickness;
         
-        /*! @brief @c true if a UDP connection is being added and @c false otherwise. */
-        bool _addUdpConnection;
+        /*! @brief @c true if a drag-connection operation is active. */
+        bool _dragConnectionActive;
         
 # if defined(__APPLE__)
 #  pragma clang diagnostic push

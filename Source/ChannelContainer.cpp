@@ -40,7 +40,7 @@
 #include "ChannelEntry.h"
 #include "EntitiesPanel.h"
 
-#include "ODEnableLogging.h"
+//#include "ODEnableLogging.h"
 #include "ODLogging.h"
 
 #if defined(__APPLE__)
@@ -94,6 +94,7 @@ ChannelContainer::ChannelContainer(const ContainerKind kind,
     
     _titleHeight = headerFont.getHeight();
     setSize(headerFont.getStringWidthFloat(getName() + " ") + getTextInset(), _titleHeight);
+    setOpaque(true);
     setVisible(true);
     OD_LOG_EXIT(); //####
 } // ChannelContainer::ChannelContainer
@@ -158,9 +159,7 @@ ChannelEntry * ChannelContainer::addPort(const String &      portName,
 
 void ChannelContainer::clearMarkers(void)
 {
-#if 0
     OD_LOG_OBJENTER(); //####
-#endif // 0
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
     {
         ChannelEntry * aPort = getPort(ii);
@@ -171,17 +170,13 @@ void ChannelContainer::clearMarkers(void)
             aPort->clearDisconnectMarker();
         }
     }
-#if 0
     OD_LOG_OBJEXIT(); //####
-#endif // 0
 } // ChannelContainer::clearMarkers
 
 void ChannelContainer::drawOutgoingConnections(Graphics & gg)
 {
-#if 0
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("gg = ", &gg); //####
-#endif // 0
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
     {
         ChannelEntry * aPort = getPort(ii);
@@ -191,18 +186,14 @@ void ChannelContainer::drawOutgoingConnections(Graphics & gg)
             aPort->drawOutgoingConnections(gg);
         }
     }
-#if 0
     OD_LOG_OBJEXIT(); //####
-#endif // 0
 } // ChannelContainer::drawOutgoingConnections
 
 ChannelEntry * ChannelContainer::getPort(const int num)
 const
 {
-#if 0
     OD_LOG_OBJENTER(); //####
     OD_LOG_L1("num = ", num); //####
-#endif // 0
     ChannelEntry * result;
     
     if (0 <= num)
@@ -213,23 +204,17 @@ const
     {
         result = NULL;
     }
-#if 0
     OD_LOG_OBJEXIT_P(result); //####
-#endif // 0
     return result;
 } // ChannelContainer::getPort
 
 Point<float> ChannelContainer::getPositionInPanel(void)
 const
 {
-#if 0
     OD_LOG_OBJENTER(); //####
-#endif // 0
     Point<float> result(getPosition().toFloat());
     
-#if 0
     OD_LOG_OBJEXIT(); //####
-#endif // 0
     return result;
 } // ChannelContainer::getPositionInPanel
 
@@ -268,27 +253,86 @@ void ChannelContainer::invalidateConnections(void)
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::invalidateConnections
 
+bool ChannelContainer::isMarked(void)
+const
+{
+    OD_LOG_OBJENTER(); //####
+    bool marked = false;
+    
+    for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
+    {
+        ChannelEntry * aPort = getPort(ii);
+        
+        if (aPort && aPort->isMarked())
+        {
+            marked = true;
+            break;
+        }
+        
+    }
+    OD_LOG_OBJEXIT_B(marked); //####
+    return marked;
+} // ChannelContainer::isMarked
+
+ChannelEntry * ChannelContainer::locateEntry(const Point<float> & location)
+const
+{
+    OD_LOG_OBJENTER(); //####
+    ChannelEntry * result = NULL;
+    
+    for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
+    {
+        ChannelEntry * aPort = getPort(ii);
+        
+        if (aPort)
+        {
+            Point<float> where = aPort->getPositionInPanel();
+            
+            if (aPort->reallyContains((location - where).toInt(), true))
+            {
+                result = aPort;
+                break;
+            }
+            
+        }
+    }
+    OD_LOG_OBJEXIT_P(result); //####
+    return result;
+} // ChannelContainer::locateEntry
+
 void ChannelContainer::mouseDown(const MouseEvent & ee)
 {
     OD_LOG_OBJENTER(); //####
     bool doDrag = true;
     
     // Prepares our dragger to drag this Component
-    if (ee.mods.isAltDown())
+    if (ee.mods.isAltDown() || ee.mods.isCommandDown())
     {
         doDrag = false;
-        OD_LOG("ALT"); //####
-    }
-    else if (ee.mods.isCommandDown())
-    {
-        doDrag = false;
-        OD_LOG("COMMAND"); //####
     }
     else if (ee.mods.isCtrlDown())
     {
         // Popup of description.
+        String thePanelDescription;
+        
+        switch (_kind)
+        {
+            case kContainerKindClientOrAdapter :
+                thePanelDescription = "A client or adapter";
+                break;
+                
+            case kContainerKindService :
+                thePanelDescription = _description;
+                break;
+                
+            case kContainerKindOther :
+                thePanelDescription = "A standard port";
+                break;
+                
+        }
+        AlertWindow::showMessageBox(AlertWindow::NoIcon, getName(), thePanelDescription, "OK",
+                                    this);
         doDrag = false;
-        OD_LOG("CTRL"); //####
     }
     if (doDrag)
     {
@@ -303,20 +347,9 @@ void ChannelContainer::mouseDrag(const MouseEvent & ee)
     bool doDrag = true;
     
     // Moves this Component according to the mouse drag event and applies our constraints to it
-    if (ee.mods.isAltDown())
+    if (ee.mods.isAltDown() || ee.mods.isCommandDown() || ee.mods.isCtrlDown())
     {
         doDrag = false;
-        OD_LOG("ALT"); //####
-    }
-    else if (ee.mods.isCommandDown())
-    {
-        doDrag = false;
-        OD_LOG("COMMAND"); //####
-    }
-    else if (ee.mods.isCtrlDown())
-    {
-        doDrag = false;
-        OD_LOG("CTRL"); //####
     }
     if (doDrag)
     {
@@ -326,30 +359,10 @@ void ChannelContainer::mouseDrag(const MouseEvent & ee)
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::mouseDrag
 
-void ChannelContainer::mouseUp(const MouseEvent & ee)
-{
-    OD_LOG_OBJENTER(); //####
-    if (ee.mods.isAltDown())
-    {
-        OD_LOG("ALT"); //####
-    }
-    else if (ee.mods.isCommandDown())
-    {
-        OD_LOG("COMMAND"); //####
-    }
-    else if (ee.mods.isCtrlDown())
-    {
-        OD_LOG("CTRL"); //####
-    }
-    OD_LOG_OBJEXIT(); //####
-} // ChannelContainer::mouseUp
-
 void ChannelContainer::paint(Graphics & gg)
 {
-#if 0
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("gg = ", &gg); //####
-#endif // 0
     AttributedString as;
     
     as.setJustification(Justification::left);
@@ -365,9 +378,7 @@ void ChannelContainer::paint(Graphics & gg)
     gg.fillRect(area);
     area.setLeft(area.getX() + getTextInset());
     as.draw(gg, area);
-#if 0
     OD_LOG_OBJEXIT(); //####
-#endif // 0
 } // ChannelContainer::paint
 
 void ChannelContainer::removeInvalidConnections(void)
@@ -400,10 +411,8 @@ void ChannelContainer::resized(void)
 float ChannelContainer::getTextInset(void)
 const
 {
-#if 0
     OD_LOG_OBJENTER(); //####
     OD_LOG_OBJEXIT_D(lTextInset); //####
-#endif // 0
     return lTextInset;
 } // ChannelContainer::getTextInset
 

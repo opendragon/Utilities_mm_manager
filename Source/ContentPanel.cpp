@@ -40,7 +40,7 @@
 #include "ContentPanel.h"
 #include "EntitiesPanel.h"
 
-#include "ODEnableLogging.h"
+//#include "ODEnableLogging.h"
 #include "ODLogging.h"
 
 #if defined(__APPLE__)

@@ -119,16 +119,19 @@ namespace ChannelManager
         const;
         
         /*! @brief Stop displaying the connect marker. */
-        inline void clearConnectMarker(void)
-        {
-            _drawConnectMarker = false;
-        } // clearConnectMarker
+        void clearConnectMarker(void);
         
         /*! @brief Stop displaying the disconnect marker. */
-        inline void clearDisconnectMarker(void)
-        {
-            _drawDisconnectMarker = false;
-        } // clearDisconnectMarker
+        void clearDisconnectMarker(void);
+        
+        /*! @brief Draw a drag line from an entry.
+         @param gg The graphics context in which to draw.
+         @param source The originating entry.
+         @param position The coordinates of the drag line endpoint.
+         @param isUdp @c true if the connection is UDP and @c false otherwise. */
+        void drawDragLine(Graphics &           gg,
+                          const Point<float> & position,
+                          const bool           isUDP);
         
         /*! @brief Display the connections between containers.
          @param gg The graphics context in which to draw. */
@@ -203,6 +206,12 @@ namespace ChannelManager
             return _usage;
         } // getUsage
         
+        /*! @brief Returns @c true if there is an outgoing connection to the named port.
+         @param otherPort The name of the destination port.
+         @returns @c true if there is an outgoing connection to the named port. */
+        bool hasOutgoingConnectionTo(const String & otherPort)
+        const;
+        
         /*! @brief Mark all the connections as invalid. */
         void invalidateConnections(void);
         
@@ -215,6 +224,14 @@ namespace ChannelManager
         {
             return _isLastPort;
         } // isLastPort
+        
+        /*! @brief Returns @c true if the port entry is marked and @c false otherwise.
+         @returns @c true if the port entry is marked and @c false otherwise. */
+        bool isMarked(void)
+        const
+        {
+            return (_drawConnectMarker || _drawDisconnectMarker);
+        } // isMarked
         
         /*! @brief Returns @c true if the port entry is part of a service and @c false
          otherwise.
@@ -235,7 +252,7 @@ namespace ChannelManager
         
         /*! @brief Called when a mouse button is released.
          @param ee Details about the position and status of the mouse event. */
-        virtual void mouseUp (const MouseEvent& event) override;
+        virtual void mouseUp(const MouseEvent& event) override;
         
         /*! @brief Draw the content of the component.
          @param gg The graphics context in which to draw. */
@@ -275,6 +292,15 @@ namespace ChannelManager
         {
             _isLastPort = false;
         } // unsetAsLastPort
+        
+        /*! @brief Return @c true if the current connection request was UDP and @c false
+         otherwise.
+         @returns @c true if the current connection request was UDP and @c false otherwise. */
+        inline bool wasUdpConnectionRequest(void)
+        const
+        {
+            return _wasUdp;
+        } // wasUdpConnectionRequest
         
     protected:
         
@@ -316,6 +342,9 @@ namespace ChannelManager
         /*! @brief @c true if the channel entry is the bottom-most (last) channel entry in a panel
          and @c false otherwise. */
         bool _isLastPort;
+        
+        /*! @brief @c true if the drag connection is for UDP and @c false otherwise. */
+        bool _wasUdp;
         
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
