@@ -172,7 +172,7 @@ void EntitiesPanel::adjustSize(void)
         
         if (anEntity)
         {
-            Rectangle<int> entityBounds(anEntity->getBounds());
+            juce::Rectangle<int> entityBounds(anEntity->getBounds());
             int            entityLeft = entityBounds.getX();
             int            entityTop = entityBounds.getY();
             int            entityRight = entityLeft + entityBounds.getWidth();
