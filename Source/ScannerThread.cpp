@@ -40,7 +40,6 @@
 #include "ChannelContainer.h"
 #include "ChannelEntry.h"
 #include "ChannelManagerApp.h"
-#include "ChannelManagerWindow.h"
 #include "EntitiesPanel.h"
 
 //#include "ODEnableLogging.h"

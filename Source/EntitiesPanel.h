@@ -176,7 +176,7 @@ namespace ChannelManager
         
         /*! @brief Called when a mouse button is released.
          @param ee Details about the position and status of the mouse event. */
-        virtual void mouseUp(const MouseEvent& event) override;
+        virtual void mouseUp(const MouseEvent& ee) override;
         
         /*! @brief Draw the content of the component.
          @param gg The graphics context in which to draw. */

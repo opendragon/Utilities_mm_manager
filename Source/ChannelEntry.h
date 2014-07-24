@@ -126,9 +126,8 @@ namespace ChannelManager
         
         /*! @brief Draw a drag line from an entry.
          @param gg The graphics context in which to draw.
-         @param source The originating entry.
          @param position The coordinates of the drag line endpoint.
-         @param isUdp @c true if the connection is UDP and @c false otherwise. */
+         @param isUDP @c true if the connection is UDP and @c false otherwise. */
         void drawDragLine(Graphics &           gg,
                           const Point<float> & position,
                           const bool           isUDP);
@@ -252,7 +251,7 @@ namespace ChannelManager
         
         /*! @brief Called when a mouse button is released.
          @param ee Details about the position and status of the mouse event. */
-        virtual void mouseUp(const MouseEvent& event) override;
+        virtual void mouseUp(const MouseEvent& ee) override;
         
         /*! @brief Draw the content of the component.
          @param gg The graphics context in which to draw. */

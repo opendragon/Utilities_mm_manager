@@ -303,12 +303,14 @@ static void drawTargetAnchor(Graphics &           gg,
 } // drawTargetAnchor
 
 /*! @brief Draw a bezier curve between two points.
+ @param gg The graphics context in which to draw.
  @param startPoint The beginning of the curve.
  @param endPoint The end of the curve.
  @param startCentre A reference point for the beginning of the curve, used to calculate the
  beginning tangent.
  @param endCentre A reference point for the end of the curve, used to calculate the ending
- tangent. */
+ tangent.
+ @param thickness The line thickness to be used. */
 static void drawBezier(Graphics &           gg,
                        const Point<float> & startPoint,
                        const Point<float> & endPoint,
