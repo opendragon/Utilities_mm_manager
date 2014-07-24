@@ -1065,22 +1065,46 @@ void ChannelEntry::removeInputConnection(ChannelEntry * other)
 void ChannelEntry::removeInvalidConnections(void)
 {
     OD_LOG_OBJENTER(); //####
-    for (Connections::iterator walker(_inputConnections.begin()); _inputConnections.end() != walker;
-         ++walker)
+    bool keepGoing;
+    
+    do
     {
-        if (! walker->_valid)
+        Connections::iterator walker(_inputConnections.begin());
+        
+        for (keepGoing = false; _inputConnections.end() != walker; ++walker)
+        {
+            if (! walker->_valid)
+            {
+                break;
+            }
+            
+        }
+        if (_inputConnections.end() != walker)
         {
             _inputConnections.erase(walker);
+            keepGoing = true;
         }
     }
-    for (Connections::iterator walker(_outputConnections.begin());
-         _outputConnections.end() != walker; ++walker)
+    while (keepGoing);
+    do
     {
-        if (! walker->_valid)
+        Connections::iterator walker(_outputConnections.begin());
+        
+        for (keepGoing = false; _outputConnections.end() != walker; ++walker)
         {
-            _inputConnections.erase(walker);
+            if (! walker->_valid)
+            {
+                break;
+            }
+            
+        }
+        if (_outputConnections.end() != walker)
+        {
+            _outputConnections.erase(walker);
+            keepGoing = true;
         }
     }
+    while (keepGoing);
     OD_LOG_EXIT(); //####
 } // ChannelEntry::removeInvalidConnections
 
