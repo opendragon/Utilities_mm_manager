@@ -83,7 +83,7 @@ namespace ChannelManager
         
         /*! @brief Add the detected entities and connections to panels.
          @param newEntitiesPanel The entities panel to be updated. */
-        void addEntitiesToPanels(EntitiesPanel * newEntitiesPanel);
+        void addEntitiesToPanels(EntitiesPanel & newEntitiesPanel);
         
         /*! @brief Add connections between detected ports in the to-be-displayed list.
          @param detectedPorts The set of detected YARP ports.
@@ -129,7 +129,7 @@ namespace ChannelManager
         /*! @brief Refresh the displayed entities and connections, based on the scanned entities.
          @param newPanel The panel containing the scanned entities.
          @returns @c true if the thread should leave and @c false otherwise. */
-        bool updatePanels(EntitiesPanel * newPanel);
+        bool updatePanels(EntitiesPanel & newPanel);
         
         /*! @brief The window to be updated. */
         ChannelManagerWindow * _window;

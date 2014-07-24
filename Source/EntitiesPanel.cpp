@@ -40,6 +40,7 @@
 #include "EntitiesPanel.h"
 #include "ChannelContainer.h"
 #include "ChannelEntry.h"
+#include "ContentPanel.h"
 
 //#include "ODEnableLogging.h"
 #include "ODLogging.h"
@@ -87,8 +88,10 @@ static const char * kFontName = "Courier New";
 /*! @brief The size of the font to be used for text. */
 static const float kFontSize = 15.0;
 
+#if defined(HAVE_OWN_SCROLLBARS)
 /*! @brief The initial thickness of the horizontal and vertical scrollbars. */
 static const int kDefaultScrollbarThickness = 16;
+#endif // defined(HAVE_OWN_SCROLLBARS)
 
 /*! @brief The initial height of the displayed region. */
 static const int kInitialPanelHeight = 400;
@@ -110,26 +113,36 @@ static const int kInitialPanelWidth = 500;
 
 EntitiesPanel::EntitiesPanel(void) :
     inherited(), _knownPorts(), _knownEntities(), _defaultBoldFont(), _defaultNormalFont(),
-    _horizontalScrollBar(NULL), _verticalScrollBar(NULL), _innerPanel(new Component),
-    _firstAddPoint(NULL), _firstRemovePoint(NULL), _scrollbarThickness(kDefaultScrollbarThickness),
+#if defined(HAVE_OWN_SCROLLBARS)
+    _horizontalScrollBar(NULL), _verticalScrollBar(NULL),
+#endif // defined(HAVE_OWN_SCROLLBARS)
+    _innerPanel(new Component),
+    _firstAddPoint(NULL), _firstRemovePoint(NULL), _container(NULL),
+#if defined(HAVE_OWN_SCROLLBARS)
+    _scrollbarThickness(kDefaultScrollbarThickness),
+#endif // defined(HAVE_OWN_SCROLLBARS)
     _dragConnectionActive(false)
 {
     OD_LOG_ENTER(); //####
     _defaultBoldFont = new Font(kFontName, kFontSize, Font::bold);
     _defaultNormalFont = new Font(kFontName, kFontSize, Font::plain);
+#if defined(HAVE_OWN_SCROLLBARS)
     _horizontalScrollBar = new ScrollBar(false);
     _verticalScrollBar = new ScrollBar(true);
+#endif // defined(HAVE_OWN_SCROLLBARS)
     _innerPanel->setSize(kInitialPanelWidth, kInitialPanelHeight);
     _innerPanel->setInterceptsMouseClicks(false, true);
     addAndMakeVisible(_innerPanel);
+#if defined(HAVE_OWN_SCROLLBARS)
     addAndMakeVisible(_verticalScrollBar);
     _verticalScrollBar->setSingleStepSize(1.0);
     addAndMakeVisible(_horizontalScrollBar);
     _horizontalScrollBar->setSingleStepSize(1.0);
+#endif // defined(HAVE_OWN_SCROLLBARS)
     setSize(kInitialPanelWidth, kInitialPanelHeight);
     setOpaque(true);
     setVisible(true);
-    OD_LOG_EXIT(); //####
+    OD_LOG_EXIT_P(this); //####
 } // EntitiesPanel::EntitiesPanel
 
 EntitiesPanel::~EntitiesPanel(void)
@@ -138,8 +151,10 @@ EntitiesPanel::~EntitiesPanel(void)
     clearOutData();
     _defaultBoldFont = nullptr;
     _defaultNormalFont = nullptr;
+#if defined(HAVE_OWN_SCROLLBARS)
     _horizontalScrollBar = nullptr;
     _verticalScrollBar = nullptr;
+#endif // defined(HAVE_OWN_SCROLLBARS)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::~EntitiesPanel
 
@@ -157,6 +172,8 @@ void EntitiesPanel::addEntity(ChannelContainer * anEntity)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::addEntity
 
+#include "ODEnableLogging.h"
+#include "ODLogging.h"
 void EntitiesPanel::adjustSize(void)
 {
     OD_LOG_OBJENTER(); //####
@@ -191,6 +208,7 @@ void EntitiesPanel::adjustSize(void)
                 maxX = entityRight;
                 minY = entityTop;
                 maxY = entityBottom;
+                haveValues = true;
             }
         }
     }
@@ -232,10 +250,49 @@ void EntitiesPanel::adjustSize(void)
             newHeight = (2 * gutter) + maxY - minY;
         }
         OD_LOG_L2("newWidth = ", newWidth, "newHeight = ", newHeight); //####
+#if defined(HAVE_OWN_SCROLLBARS)
         setBounds(minX, minY, newWidth, newHeight);
+#else // ! defined(HAVE_OWN_SCROLLBARS)
+        ContentPanel * within = getContainer();
+        OD_LOG_P1("within <- ", within); //####
+        Rectangle<int> outerBounds(getLocalBounds());
+        int            outerL = outerBounds.getX();
+        int            outerT = outerBounds.getY();
+        int            outerW = outerBounds.getWidth();
+        int            outerH = outerBounds.getHeight();
+        int            outerR = outerL + outerW;
+        int            outerB = outerT + outerH;
+        int            innerL = min(minX, outerL);
+        int            innerT = min(minY, outerT);
+        int            innerR = max(outerR, minX + newWidth);
+        int            innerB = max(outerB, minY + newHeight);
+        
+        OD_LOG_L4("innerL = ", innerL, "innerT = ", innerT, "innerR = ", innerR, //####
+                  "innerB = ", innerB); //####
+        _innerPanel->setBounds(innerL, innerT, innerR - innerL, innerB - innerT);
+        if (within)
+        {
+            ScrollBar * horizBar = within->getHorizontalScrollBar();
+            ScrollBar * vertBar = within->getVerticalScrollBar();
+            
+            OD_LOG_P2("horizBar = ", horizBar, "vertBar = ", vertBar); //####
+            if (horizBar)
+            {
+                horizBar->setRangeLimits(innerL, innerR);
+                horizBar->setCurrentRange(outerL, outerR - outerL);
+            }
+            if (vertBar)
+            {
+                vertBar->setRangeLimits(innerT, innerB);
+                vertBar->setCurrentRange(outerT, outerB - outerT);                
+            }
+        }
+#endif // ! defined(HAVE_OWN_SCROLLBARS)
     }
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::adjustSize
+#include "ODDisableLogging.h"
+#include "ODLogging.h"
 
 void EntitiesPanel::clearAllVisitedFlags(void)
 {
@@ -570,9 +627,12 @@ void EntitiesPanel::removeUnvisitedEntities(void)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::removeUnvisitedEntities
 
+#include "ODEnableLogging.h"
+#include "ODLogging.h"
 void EntitiesPanel::resized(void)
 {
     OD_LOG_OBJENTER(); //####
+#if defined(HAVE_OWN_SCROLLBARS)
     // This is called when the EntitiesPanel is resized.
     // If you add any child components, this is where you should update their positions.
     const int visibleHeight = getHeight() - _scrollbarThickness;
@@ -582,8 +642,13 @@ void EntitiesPanel::resized(void)
     _verticalScrollBar->setBounds(visibleWidth, 0, _scrollbarThickness, visibleHeight);
     _horizontalScrollBar->setBounds(0, visibleHeight, visibleWidth, _scrollbarThickness);
     updateScrollBars();
+#else // ! defined(HAVE_OWN_SCROLLBARS)
+    adjustSize();
+#endif // ! defined(HAVE_OWN_SCROLLBARS)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::resized
+#include "ODDisableLogging.h"
+#include "ODLogging.h"
 
 void EntitiesPanel::setDragInfo(const Point<float> position)
 {
@@ -596,6 +661,7 @@ void EntitiesPanel::setDragInfo(const Point<float> position)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::setDragInfo
 
+#if defined(HAVE_OWN_SCROLLBARS)
 void EntitiesPanel::updateScrollBars(void)
 {
     OD_LOG_OBJENTER(); //####
@@ -607,6 +673,7 @@ void EntitiesPanel::updateScrollBars(void)
      _horizontalScrollBar->setCurrentRange(xOffset, columnsOnScreen);*/
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::updateScrollBars
+#endif // defined(HAVE_OWN_SCROLLBARS)
 
 #if defined(__APPLE__)
 # pragma mark Accessors

@@ -293,7 +293,7 @@ ScannerThread::ScannerThread(const String &         name,
     OD_LOG_S1s("name = ", name.toStdString()); //####
     OD_LOG_P1("window = ", window); //####
     createDirectionTestPorts();
-    OD_LOG_EXIT(); //####
+    OD_LOG_EXIT_P(this); //####
 } // ScannerThread::ScannerThread
 
 ScannerThread::~ScannerThread(void)
@@ -314,10 +314,10 @@ ScannerThread::~ScannerThread(void)
 # pragma mark Actions
 #endif // defined(__APPLE__)
 
-void ScannerThread::addEntitiesToPanels(EntitiesPanel * newEntitiesPanel)
+void ScannerThread::addEntitiesToPanels(EntitiesPanel & newEntitiesPanel)
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("newEntitiesPanel = ", newEntitiesPanel); //####
+    OD_LOG_P1("newEntitiesPanel = ", &newEntitiesPanel); //####
     PortEntryMap portsSeen;
     
     _entitiesSeen.clear();
@@ -329,7 +329,7 @@ void ScannerThread::addEntitiesToPanels(EntitiesPanel * newEntitiesPanel)
                                                                  descriptor._canonicalName.c_str(),
                                                                          descriptor._kind.c_str(),
                                                                  descriptor._description.c_str(),
-                                                                             *newEntitiesPanel);
+                                                                             newEntitiesPanel);
         ChannelEntry *                       aPort =
                                                 anEntity->addPort(descriptor._channelName.c_str(),
                                                                   "", kPortUsageService,
@@ -357,7 +357,7 @@ void ScannerThread::addEntitiesToPanels(EntitiesPanel * newEntitiesPanel)
             recordPort(portsSeen, aPort);
         }
         _entitiesSeen.push_back(anEntity);
-        newEntitiesPanel->addEntity(anEntity);
+        newEntitiesPanel.addEntity(anEntity);
     }
     // Convert the detected ports with associates into entities in the background list.
     for (AssociatesMap::const_iterator outer(_associatedPorts.begin());
@@ -367,7 +367,7 @@ void ScannerThread::addEntitiesToPanels(EntitiesPanel * newEntitiesPanel)
         ChannelContainer *                         anEntity =
                                                 new ChannelContainer(kContainerKindClientOrAdapter,
                                                                      outer->first, "", "",
-                                                                     *newEntitiesPanel);
+                                                                     newEntitiesPanel);
         const MplusM::Utilities::PortAssociation & associates = outer->second._associates;
         
         for (MplusM::Common::StringVector::const_iterator inner = associates._inputs.begin();
@@ -386,14 +386,14 @@ void ScannerThread::addEntitiesToPanels(EntitiesPanel * newEntitiesPanel)
                                   kPortDirectionInputOutput);
         recordPort(portsSeen, aPort);
         _entitiesSeen.push_back(anEntity);
-        newEntitiesPanel->addEntity(anEntity);
+        newEntitiesPanel.addEntity(anEntity);
     }
     // Convert the detected standalone ports into entities in the background list.
     for (PortMap::const_iterator walker(_standalonePorts.begin());
          _standalonePorts.end() != walker; ++walker)
     {
         ChannelContainer * anEntity = new ChannelContainer(kContainerKindOther, walker->first, "",
-                                                           "", *newEntitiesPanel);
+                                                           "", newEntitiesPanel);
         PortUsage          usage;
         
         switch (MplusM::Utilities::GetPortKind(walker->second._name.toStdString().c_str()))
@@ -417,7 +417,7 @@ void ScannerThread::addEntitiesToPanels(EntitiesPanel * newEntitiesPanel)
         
         recordPort(portsSeen, aPort);
         _entitiesSeen.push_back(anEntity);
-        newEntitiesPanel->addEntity(anEntity);
+        newEntitiesPanel.addEntity(anEntity);
     }
     setEntityPositions();
     OD_LOG_OBJEXIT(); //####
@@ -617,6 +617,16 @@ void ScannerThread::gatherEntities(MplusM::Common::CheckFunction checker,
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::gatherEntities
 
+#if 0
+const MessageManagerLock mml(Thread::getCurrentThread());
+
+// If something is trying to kill this job, the lock will fail, in which case we'd better
+// return.
+if (mml.lockWasGained())
+{
+}
+#endif//0
+
 void ScannerThread::run(void)
 {
     OD_LOG_OBJENTER(); //####
@@ -627,8 +637,11 @@ void ScannerThread::run(void)
         int64           loopStartTime = Time::currentTimeMillis();
         
         gatherEntities(CheckForExit, NULL);
-        addEntitiesToPanels(newEntitiesPanel);
-        if (updatePanels(newEntitiesPanel))
+        addEntitiesToPanels(*newEntitiesPanel);
+        bool needToLeave = updatePanels(*newEntitiesPanel);
+        
+        delete newEntitiesPanel;
+        if (needToLeave)
         {
             break;
         }
@@ -810,10 +823,10 @@ void ScannerThread::setEntityPositions(void)
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::setEntityPositions
 
-bool ScannerThread::updatePanels(EntitiesPanel * newPanel)
+bool ScannerThread::updatePanels(EntitiesPanel & newPanel)
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("newPanel = ", newPanel); //####
+    OD_LOG_P1("newPanel = ", &newPanel); //####
     // Because this is a background thread, we mustn't do any UI work without first grabbing a
     // MessageManagerLock.
     bool                     result = true;
@@ -826,12 +839,12 @@ bool ScannerThread::updatePanels(EntitiesPanel * newPanel)
         EntitiesPanel & entitiesPanel(_window->getEntitiesPanel());
         
         entitiesPanel.clearAllVisitedFlags();
-        newPanel->clearAllVisitedFlags();
+        newPanel.clearAllVisitedFlags();
         // Retrieve each entity from our new list; if it is known already, ignore it but mark the
         // old entity as known.
-        for (int ii = 0, mm = newPanel->getNumberOfEntities(); mm > ii; ++ii)
+        for (int ii = 0, mm = newPanel.getNumberOfEntities(); mm > ii; ++ii)
         {
-            ChannelContainer * anEntity = newPanel->getEntity(ii);
+            ChannelContainer * anEntity = newPanel.getEntity(ii);
             
             if (anEntity)
             {
@@ -894,7 +907,6 @@ bool ScannerThread::updatePanels(EntitiesPanel * newPanel)
         entitiesPanel.repaint();
         result = false;
     }
-    delete newPanel;
     OD_LOG_OBJEXIT_B(result); //####
     return result;
 } // ScannerThread::updatePanels

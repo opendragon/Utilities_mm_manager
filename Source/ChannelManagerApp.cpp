@@ -40,7 +40,7 @@
 #include "ChannelContainer.h"
 #include "ScannerThread.h"
 
-//#include "ODEnableLogging.h"
+#include "ODEnableLogging.h"
 #include "ODLogging.h"
 
 #if defined(__APPLE__)
@@ -88,7 +88,7 @@ ChannelManagerApplication::ChannelManagerApplication(void) :
                 kODLoggingOptionIncludeThreadID | kODLoggingOptionEnableThreadSupport); //####
 #endif // ! defined(MpM_ServicesLogToStandardError)
     OD_LOG_ENTER(); //####
-    OD_LOG_EXIT(); //####
+    OD_LOG_EXIT_P(this); //####
 } // ChannelManagerApplication::ChannelManagerApplication
 
 ChannelManagerApplication::~ChannelManagerApplication(void)
@@ -196,8 +196,10 @@ void ChannelManagerApplication::systemRequestedQuit(void)
 
 bool CheckForExit(void * stuff)
 {
+#if 0
     OD_LOG_ENTER(); //####
     OD_LOG_EXIT_B(lExitRequested); //####
+#endif // 0
     return lExitRequested;
 } // CheckForExit
 

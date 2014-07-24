@@ -96,7 +96,7 @@ ChannelContainer::ChannelContainer(const ContainerKind kind,
     setSize(headerFont.getStringWidthFloat(getName() + " ") + getTextInset(), _titleHeight);
     setOpaque(true);
     setVisible(true);
-    OD_LOG_EXIT(); //####
+    OD_LOG_EXIT_P(this); //####
 } // ChannelContainer::ChannelContainer
 
 ChannelContainer::~ChannelContainer(void)

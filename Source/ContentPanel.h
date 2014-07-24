@@ -59,7 +59,11 @@ namespace ChannelManager
     class EntitiesPanel;
     
     /*! @brief The content area of the main window of the application. */
+# if defined(HAVE_OWN_SCROLLBARS)
     class ContentPanel : public Component
+# else // ! defined(HAVE_OWN_SCROLLBARS)
+    class ContentPanel : public Viewport
+# endif // ! defined(HAVE_OWN_SCROLLBARS)
     {
     public:
         
@@ -85,7 +89,11 @@ namespace ChannelManager
     private:
         
         /*! @brief The class that this class is derived from. */
+# if defined(HAVE_OWN_SCROLLBARS)
         typedef Component inherited;
+# else // ! defined(HAVE_OWN_SCROLLBARS)
+        typedef Viewport inherited;
+# endif // ! defined(HAVE_OWN_SCROLLBARS)
         
         /*! @brief The entities panel. */
         ScopedPointer<EntitiesPanel> _entitiesPanel;

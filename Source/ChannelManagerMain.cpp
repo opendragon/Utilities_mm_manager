@@ -38,7 +38,7 @@
 
 #include "ChannelManagerApp.h"
 
-//#include "ODEnableLogging.h"
+#include "ODEnableLogging.h"
 #include "ODLogging.h"
 
 #if defined(__APPLE__)

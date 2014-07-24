@@ -40,7 +40,7 @@
 #include "ContentPanel.h"
 #include "EntitiesPanel.h"
 
-//#include "ODEnableLogging.h"
+#include "ODEnableLogging.h"
 #include "ODLogging.h"
 
 #if defined(__APPLE__)
@@ -62,6 +62,11 @@ using namespace std;
 # pragma mark Private structures, constants and variables
 #endif // defined(__APPLE__)
 
+#if (! defined(HAVE_OWN_SCROLLBARS))
+/*! @brief The initial thickness of the horizontal and vertical scrollbars. */
+static const int kDefaultScrollbarThickness = 16;
+#endif // ! defined(HAVE_OWN_SCROLLBARS)
+
 #if defined(__APPLE__)
 # pragma mark Local functions
 #endif // defined(__APPLE__)
@@ -78,9 +83,32 @@ ContentPanel::ContentPanel(void) :
     inherited(), _entitiesPanel(new EntitiesPanel)
 {
     OD_LOG_ENTER(); //####
+    _entitiesPanel->setContainer(this);
+#if defined(HAVE_OWN_SCROLLBARS)
     addAndMakeVisible(_entitiesPanel);
+#endif // ! defined(HAVE_OWN_SCROLLBARS)
     setSize(_entitiesPanel->getWidth(), _entitiesPanel->getHeight());
-    OD_LOG_EXIT(); //####
+#if (! defined(HAVE_OWN_SCROLLBARS))
+    setScrollBarsShown(true, true);
+    setScrollBarThickness(kDefaultScrollbarThickness);
+    _entitiesPanel->setVisible(true);
+    setViewedComponent(_entitiesPanel);
+//#if 0
+    ScrollBar * horizBar = getHorizontalScrollBar();
+    ScrollBar * vertBar = getVerticalScrollBar();
+    
+    OD_LOG_P2("horizBar = ", horizBar, "vertBar = ", vertBar); //####
+    if (horizBar)
+    {
+        horizBar->setAutoHide(false);
+    }
+    if (vertBar)
+    {
+        vertBar->setAutoHide(false);
+    }
+//#endif // 0
+#endif // ! defined(HAVE_OWN_SCROLLBARS)
+    OD_LOG_EXIT_P(this); //####
 } // ContentPanel::ContentPanel
 
 ContentPanel::~ContentPanel(void)
@@ -97,6 +125,7 @@ void ContentPanel::resized(void)
 {
     OD_LOG_OBJENTER(); //####
     _entitiesPanel->setSize(getWidth(), getHeight());
+//    repaint();
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::resized
 

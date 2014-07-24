@@ -73,8 +73,7 @@ using namespace std;
 #endif // defined(__APPLE__)
 
 ChannelManagerWindow::ChannelManagerWindow(const String & title)  :
-    inherited(title, Colours::lightgrey, inherited::allButtons), _connectionsPanel(new Component),
-    _contentPanel(new ContentPanel)
+    inherited(title, Colours::lightgrey, inherited::allButtons), _contentPanel(new ContentPanel)
 {
     OD_LOG_ENTER(); //####
     setOpaque(true);
@@ -83,7 +82,7 @@ ChannelManagerWindow::ChannelManagerWindow(const String & title)  :
     setVisible(true);
     setResizable(true, true);
     setDropShadowEnabled(true);
-    OD_LOG_EXIT(); //####
+    OD_LOG_EXIT_P(this); //####
 } // ChannelManagerWindow::ChannelManagerWindow
 
 ChannelManagerWindow::~ChannelManagerWindow(void)

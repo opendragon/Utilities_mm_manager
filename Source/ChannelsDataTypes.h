@@ -61,6 +61,8 @@
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
 
+//# define HAVE_OWN_SCROLLBARS /* */
+
 namespace ChannelManager
 {
     class ChannelContainer;

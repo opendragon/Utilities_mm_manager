@@ -58,6 +58,7 @@ namespace ChannelManager
 {
     class ChannelContainer;
     class ChannelEntry;
+    class ContentPanel;
     
     /*! @brief The entities layer of the main window of the application. */
     class EntitiesPanel : public Component
@@ -114,6 +115,14 @@ namespace ChannelManager
             return *_defaultBoldFont;
         } // getBoldFont
         
+        /*! @brief Return the container in which the panel is embedded.
+         @returns The container in which the panel is embedded. */
+        ContentPanel * getContainer(void)
+        const
+        {
+            return _container;
+        } // getContainer
+        
         /*! @brief Return an entity by index.
          @param index The zero-origin index of the entity.
          @returns The entity if the index is within range and @c NULL otherwise. */
@@ -148,6 +157,7 @@ namespace ChannelManager
         size_t getNumberOfEntities(void)
         const;
         
+# if defined(HAVE_OWN_SCROLLBARS)
         /*! @brief Returns the scrollbar thickness.
          @returns The scrollbar thickness. */
         inline int getScrollbarThickness(void)
@@ -155,6 +165,7 @@ namespace ChannelManager
         {
             return _scrollbarThickness;
         } // getScrollbarThickness
+# endif // defined(HAVE_OWN_SCROLLBARS)
         
         /*! @brief Return @c true if dragging a connection and @c false otherwise.
          @returns @c true if dragging a connection and @c false otherwise. */
@@ -202,12 +213,16 @@ namespace ChannelManager
         /*! @brief Called when the component size has been changed. */
         void resized(void);
         
+        /*! @brief Set the container in which the panel is embedded.
+         @param The container in which the panel is embedded. */
+        void setContainer(ContentPanel * theContainer)
+        {
+            _container = theContainer;
+        } // setContainer
+        
         /*! @brief Update the dragging information.
          @param position The location of the dragging connection. */
         void setDragInfo(const Point<float> position);
-        
-        /*! @brief Adjust the horizontal and vertial scrollbars. */
-        void updateScrollBars(void);
         
     protected:
         
@@ -226,6 +241,11 @@ namespace ChannelManager
          @param gg The graphics context in which to draw. */
         void drawConnections(Graphics & gg);
         
+# if defined(HAVE_OWN_SCROLLBARS)
+        /*! @brief Adjust the horizontal and vertial scrollbars. */
+        void updateScrollBars(void);
+# endif // defined(HAVE_OWN_SCROLLBARS)
+        
         /*! @brief The set of known ports. */
         PortEntryMap _knownPorts;
         
@@ -238,11 +258,15 @@ namespace ChannelManager
         /*! @brief The normal font to be used. */
         ScopedPointer<Font> _defaultNormalFont;
         
+# if defined(HAVE_OWN_SCROLLBARS)
         /*! @brief The horizontal scrollbar. */
         ScopedPointer<ScrollBar> _horizontalScrollBar;
+# endif // defined(HAVE_OWN_SCROLLBARS)
         
+# if defined(HAVE_OWN_SCROLLBARS)
         /*! @brief The vertical scrollbar. */
         ScopedPointer<ScrollBar> _verticalScrollBar;
+# endif // defined(HAVE_OWN_SCROLLBARS)
         
         /*! @brief The area in which to draw the displayed entities.
          
@@ -259,9 +283,14 @@ namespace ChannelManager
         /*! @brief The starting port for a connection being removed. */
         ChannelEntry * _firstRemovePoint;
         
+        /*! @brief The container in which the panel is embedded. */
+        ContentPanel * _container;
+        
+# if defined(HAVE_OWN_SCROLLBARS)
         /*! @brief The desired width (for a vertical scrollbar) or height (for a horizontal
          scrollbar). */
         int _scrollbarThickness;
+# endif // defined(HAVE_OWN_SCROLLBARS)
         
         /*! @brief @c true if a drag-connection operation is active. */
         bool _dragConnectionActive;
