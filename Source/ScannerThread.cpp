@@ -39,6 +39,7 @@
 #include "ScannerThread.h"
 #include "ChannelContainer.h"
 #include "ChannelEntry.h"
+#include "ChannelManagerApp.h"
 #include "ChannelManagerWindow.h"
 #include "EntitiesPanel.h"
 
@@ -49,23 +50,6 @@
 #include <ogdf/energybased/FMMMLayout.h>
 
 #include "M+MAdapterChannel.h"
-
-#if defined(__APPLE__)
-# pragma clang diagnostic push
-# pragma clang diagnostic ignored "-Wc++11-extensions"
-# pragma clang diagnostic ignored "-Wdocumentation"
-# pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
-# pragma clang diagnostic ignored "-Wpadded"
-# pragma clang diagnostic ignored "-Wshadow"
-# pragma clang diagnostic ignored "-Wunused-parameter"
-# pragma clang diagnostic ignored "-Wweak-vtables"
-#endif // defined(__APPLE__)
-#if MAC_OR_LINUX_
-#include <yarp/os/impl/Logger.h>
-#endif //MAC_OR_LINUX_
-#if defined(__APPLE__)
-# pragma clang diagnostic pop
-#endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
 # pragma clang diagnostic push
@@ -162,12 +146,17 @@ static void destroyDirectionTestPorts(void)
 /*! @brief Determine whether a port can be used for input and/or output.
  @param oldEntry The previous record for the port, if it exists.
  @param portName The name of the port to check.
+ @param checker A function that provides for early exit from loops.
+ @param checkStuff The private data for the early exit function.
  @returns The allowed directions for the port. */
 static PortDirection determineDirection(ChannelEntry *                oldEntry,
-                                        const yarp::os::ConstString & portName)
+                                        const yarp::os::ConstString & portName,
+                                        MplusM::Common::CheckFunction checker,
+                                        void *                        checkStuff)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_S1s("portName = ", portName); //####
+    OD_LOG_P1("checkStuff = ", checkStuff); //####
     PortDirection result = kPortDirectionUnknown;
     
     if (oldEntry)
@@ -196,26 +185,32 @@ static PortDirection determineDirection(ChannelEntry *                oldEntry,
             default :
                 // Determine by doing a test connection.
                 if (MplusM::Common::NetworkConnectWithRetries(lOutputOnlyPortName, portName,
-                                                              STANDARD_WAIT_TIME, false))
+                                                              STANDARD_WAIT_TIME, false, checker,
+                                                              checkStuff))
                 {
                     canDoInput = true;
                     if (! MplusM::Common::NetworkDisconnectWithRetries(lOutputOnlyPortName,
                                                                        portName,
-                                                                       STANDARD_WAIT_TIME))
+                                                                       STANDARD_WAIT_TIME, checker,
+                                                                       checkStuff))
                     {
                         OD_LOG("(! MplusM::Common::NetworkDisconnectWithRetries(" //####
-                               "lOutputOnlyPortName, portName, STANDARD_WAIT_TIME))"); //####
+                               "lOutputOnlyPortName, portName, STANDARD_WAIT_TIME, " //####
+                               "checker, checkStuff))"); //####
                     }
                 }
                 if (MplusM::Common::NetworkConnectWithRetries(portName, lInputOnlyPortName,
-                                                              STANDARD_WAIT_TIME, false))
+                                                              STANDARD_WAIT_TIME, false, checker,
+                                                              checkStuff))
                 {
                     canDoOutput = true;
                     if (! MplusM::Common::NetworkDisconnectWithRetries(portName, lInputOnlyPortName,
-                                                                       STANDARD_WAIT_TIME))
+                                                                       STANDARD_WAIT_TIME, checker,
+                                                                       checkStuff))
                     {
                         OD_LOG("(! MplusM::Common::NetworkDisconnectWithRetries(portName, " //####
-                               "lInputOnlyPortName, STANDARD_WAIT_TIME))"); //####
+                               "lInputOnlyPortName, STANDARD_WAIT_TIME, checker, " //####
+                               "checkStuff))"); //####
                     }
                 }
                 break;
@@ -429,10 +424,12 @@ void ScannerThread::addEntitiesToPanels(EntitiesPanel * newEntitiesPanel)
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::addEntitiesToPanel
 
-void ScannerThread::addPortConnections(const MplusM::Utilities::PortVector & detectedPorts)
+void ScannerThread::addPortConnections(const MplusM::Utilities::PortVector & detectedPorts,
+                                       MplusM::Common::CheckFunction         checker,
+                                       void *                                checkStuff)
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("detectedPorts = ", &detectedPorts); //####
+    OD_LOG_P2("detectedPorts = ", &detectedPorts, "checkStuff = ", checkStuff); //####
     _connections.clear();
     for (MplusM::Utilities::PortVector::const_iterator outer(detectedPorts.begin());
          detectedPorts.end() != outer; ++outer)
@@ -448,7 +445,7 @@ void ScannerThread::addPortConnections(const MplusM::Utilities::PortVector & det
             details._outPortName = outerName;
             MplusM::Utilities::GatherPortConnections(outer->_portName, inputs, outputs,
                                                      MplusM::Utilities::kInputAndOutputOutput,
-                                                     true);
+                                                     true, checker, checkStuff);
             for (MplusM::Common::ChannelVector::const_iterator inner(outputs.begin());
                  outputs.end() != inner; ++inner)
             {
@@ -468,10 +465,12 @@ void ScannerThread::addPortConnections(const MplusM::Utilities::PortVector & det
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::addPortConnections
 
-void ScannerThread::addPortsWithAssociates(const MplusM::Utilities::PortVector & detectedPorts)
+void ScannerThread::addPortsWithAssociates(const MplusM::Utilities::PortVector & detectedPorts,
+                                           MplusM::Common::CheckFunction         checker,
+                                           void *                                checkStuff)
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("detectedPorts = ", &detectedPorts); //####
+    OD_LOG_P2("detectedPorts = ", &detectedPorts, "checkStuff = ", checkStuff); //####
     _associatedPorts.clear();
     for (MplusM::Utilities::PortVector::const_iterator outer(detectedPorts.begin());
          detectedPorts.end() != outer; ++outer)
@@ -483,7 +482,8 @@ void ScannerThread::addPortsWithAssociates(const MplusM::Utilities::PortVector &
             PortAndAssociates associates;
             
             if (MplusM::Utilities::GetAssociatedPorts(outer->_portName, associates._associates,
-                                                      STANDARD_WAIT_TIME, true))
+                                                      STANDARD_WAIT_TIME, true, checker,
+                                                      checkStuff))
             {
                 if (associates._associates._primary)
                 {
@@ -514,10 +514,12 @@ void ScannerThread::addPortsWithAssociates(const MplusM::Utilities::PortVector &
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::addPortsWithAssociates
 
-void ScannerThread::addRegularPortEntities(const MplusM::Utilities::PortVector & detectedPorts)
+void ScannerThread::addRegularPortEntities(const MplusM::Utilities::PortVector & detectedPorts,
+                                           MplusM::Common::CheckFunction         checker,
+                                           void *                                checkStuff)
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("detectedPorts = ", &detectedPorts); //####
+    OD_LOG_P2("detectedPorts = ", &detectedPorts, "checkStuff = ", checkStuff); //####
     _standalonePorts.clear();
     for (MplusM::Utilities::PortVector::const_iterator walker(detectedPorts.begin());
          detectedPorts.end() != walker; ++walker)
@@ -533,7 +535,7 @@ void ScannerThread::addRegularPortEntities(const MplusM::Utilities::PortVector &
             
             _rememberedPorts.insert(walkerName);
             info._name = walkerName;
-            info._direction = determineDirection(oldEntry, walker->_portName);
+            info._direction = determineDirection(oldEntry, walker->_portName, checker, checkStuff);
             _standalonePorts.insert(PortMap::value_type(caption, info));
         }
         yield();
@@ -541,10 +543,12 @@ void ScannerThread::addRegularPortEntities(const MplusM::Utilities::PortVector &
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::addRegularPortEntities
 
-void ScannerThread::addServices(const MplusM::Common::StringVector & services)
+void ScannerThread::addServices(const MplusM::Common::StringVector & services,
+                                MplusM::Common::CheckFunction        checker,
+                                void *                               checkStuff)
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("services = ", &services); //####
+    OD_LOG_P2("services = ", &services, "checkStuff = ", checkStuff); //####
     _detectedServices.clear();
     for (MplusM::Common::StringVector::const_iterator outer(services.begin());
          services.end() != outer; ++outer)
@@ -556,7 +560,8 @@ void ScannerThread::addServices(const MplusM::Common::StringVector & services)
             MplusM::Utilities::ServiceDescriptor descriptor;
             
             if (MplusM::Utilities::GetNameAndDescriptionForService(*outer, descriptor,
-                                                                   STANDARD_WAIT_TIME))
+                                                                   STANDARD_WAIT_TIME, checker,
+                                                                   checkStuff))
             {
                 _detectedServices.insert(ServiceMap::value_type(outerName, descriptor));
                 _rememberedPorts.insert(descriptor._channelName.c_str());
@@ -585,9 +590,11 @@ void ScannerThread::addServices(const MplusM::Common::StringVector & services)
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::addServices
 
-void ScannerThread::gatherEntities(void)
+void ScannerThread::gatherEntities(MplusM::Common::CheckFunction checker,
+                                   void *                        checkStuff)
 {
     OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("checkStuff = ", checkStuff); //####
     MplusM::Utilities::PortVector detectedPorts;
     MplusM::Common::StringVector  services;
     
@@ -596,18 +603,18 @@ void ScannerThread::gatherEntities(void)
     _rememberedPorts.insert(lInputOnlyPortName.c_str());
     _rememberedPorts.insert(lOutputOnlyPortName.c_str());
     MplusM::Utilities::GetDetectedPortList(detectedPorts);
-    MplusM::Utilities::GetServiceNames(services, true);
+    MplusM::Utilities::GetServiceNames(services, true, checker, checkStuff);
     // Record the services to be displayed.
-    addServices(services);
+    addServices(services, checker, checkStuff);
     // Record the ports that have associates.
     if (MplusM::Utilities::CheckForRegistryService(detectedPorts))
     {
-        addPortsWithAssociates(detectedPorts);
+        addPortsWithAssociates(detectedPorts, checker, checkStuff);
     }
     // Record the ports that are standalone.
-    addRegularPortEntities(detectedPorts);
+    addRegularPortEntities(detectedPorts, checker, checkStuff);
     // Record the port connections.
-    addPortConnections(detectedPorts);
+    addPortConnections(detectedPorts, checker, checkStuff);
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::gatherEntities
 
@@ -617,10 +624,10 @@ void ScannerThread::run(void)
     while (! threadShouldExit())
     {
         // Create a new panel to add entities to.
-        EntitiesPanel *    newEntitiesPanel = new EntitiesPanel;
-        int64              loopStartTime = Time::currentTimeMillis();
+        EntitiesPanel * newEntitiesPanel = new EntitiesPanel;
+        int64           loopStartTime = Time::currentTimeMillis();
         
-        gatherEntities();
+        gatherEntities(CheckForExit, NULL);
         addEntitiesToPanels(newEntitiesPanel);
         if (updatePanels(newEntitiesPanel))
         {

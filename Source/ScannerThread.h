@@ -86,23 +86,42 @@ namespace ChannelManager
         void addEntitiesToPanels(EntitiesPanel * newEntitiesPanel);
         
         /*! @brief Add connections between detected ports in the to-be-displayed list.
-         @param detectedPorts The set of detected YARP ports. */
-        void addPortConnections(const MplusM::Utilities::PortVector & detectedPorts);
+         @param detectedPorts The set of detected YARP ports.
+         @param checker A function that provides for early exit from loops.
+         @param checkStuff The private data for the early exit function. */
+        void addPortConnections(const MplusM::Utilities::PortVector & detectedPorts,
+                                MplusM::Common::CheckFunction         checker,
+                                void *                                checkStuff);
         
         /*! @brief Add ports that have associates as 'adapter' entities to the to-be-displayed list.
-         @param detectedPorts The set of detected YARP ports. */
-        void addPortsWithAssociates(const MplusM::Utilities::PortVector & detectedPorts);
+         @param detectedPorts The set of detected YARP ports.
+         @param checker A function that provides for early exit from loops.
+         @param checkStuff The private data for the early exit function. */
+        void addPortsWithAssociates(const MplusM::Utilities::PortVector & detectedPorts,
+                                    MplusM::Common::CheckFunction         checker,
+                                    void *                                checkStuff);
         
         /*! @brief Add regular YARP ports as distinct entities to the to-be-displayed list.
-         @param detectedPorts The set of detected YARP ports. */
-        void addRegularPortEntities(const MplusM::Utilities::PortVector & detectedPorts);
+         @param detectedPorts The set of detected YARP ports.
+         @param checker A function that provides for early exit from loops.
+         @param checkStuff The private data for the early exit function. */
+        void addRegularPortEntities(const MplusM::Utilities::PortVector & detectedPorts,
+                                    MplusM::Common::CheckFunction         checker,
+                                    void *                                checkStuff);
         
         /*! @brief Add services as distinct entities to the list of entities.
-         @param services The set of detected services. */
-        void addServices(const MplusM::Common::StringVector & services);
+         @param services The set of detected services.
+         @param checker A function that provides for early exit from loops.
+         @param checkStuff The private data for the early exit function. */
+        void addServices(const MplusM::Common::StringVector & services,
+                         MplusM::Common::CheckFunction        checker,
+                         void *                               checkStuff);
         
-        /*! @brief Identify the YARP network entities. */
-        void gatherEntities(void);
+        /*! @brief Identify the YARP network entities.
+         @param checker A function that provides for early exit from loops.
+         @param checkStuff The private data for the early exit function. */
+        void gatherEntities(MplusM::Common::CheckFunction checker,
+                            void *                        checkStuff);
         
         /*! @brief Set the entity positions. */
         void setEntityPositions(void);

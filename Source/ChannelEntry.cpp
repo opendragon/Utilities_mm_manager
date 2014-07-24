@@ -38,6 +38,7 @@
 
 #include "ChannelEntry.h"
 #include "ChannelContainer.h"
+#include "ChannelManagerApp.h"
 #include "EntitiesPanel.h"
 
 //#include "ODEnableLogging.h"
@@ -796,7 +797,8 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
                 firstRemovePort->hasOutgoingConnectionTo(getPortName()))
             {
                 if (MplusM::Utilities::RemoveConnection(firstName.toStdString().c_str(),
-                                                        getPortName().toStdString().c_str()))
+                                                        getPortName().toStdString().c_str(),
+                                                        CheckForExit, NULL))
                 {
                     firstRemovePort->removeOutputConnection(this);
                     removeInputConnection(firstRemovePort);
@@ -826,7 +828,8 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
             {
                 if (MplusM::Utilities::AddConnection(firstName.toStdString().c_str(),
                                                      getPortName().toStdString().c_str(),
-                                                     STANDARD_WAIT_TIME, firstAddPort->_wasUdp))
+                                                     STANDARD_WAIT_TIME, firstAddPort->_wasUdp,
+                                                     CheckForExit, NULL))
                 {
                     MplusM::Common::ChannelMode mode = (firstAddPort->_wasUdp ?
                                                         MplusM::Common::kChannelModeUDP :
@@ -971,7 +974,8 @@ void ChannelEntry::mouseUp(const MouseEvent & ee)
                 {
                     if (MplusM::Utilities::AddConnection(getPortName().toStdString().c_str(),
                                                          secondName.toStdString().c_str(),
-                                                         STANDARD_WAIT_TIME, _wasUdp))
+                                                         STANDARD_WAIT_TIME, _wasUdp, CheckForExit,
+                                                         NULL))
                     {
                         MplusM::Common::ChannelMode mode = (_wasUdp ?
                                                             MplusM::Common::kChannelModeUDP :

@@ -368,16 +368,16 @@ void ChannelContainer::paint(Graphics & gg)
     as.setJustification(Justification::left);
     as.append(getName(), _owner.getNormalFont(), Colours::white);
     juce::Rectangle<int>   bounds(getLocalBounds());
-    juce::Rectangle<float> area(bounds.getX(), bounds.getY(), bounds.getWidth(), _titleHeight);
+    juce::Rectangle<float> area1(bounds.getX(), bounds.getY(), bounds.getWidth(), _titleHeight);
+    juce::Rectangle<float> area2(bounds.getX(), bounds.getY() + _titleHeight, bounds.getWidth(),
+                                 bounds.getHeight() - _titleHeight);
     
-#if 0
-    OD_LOG_D4("x <- ", area.getX(), "y <- ", area.getY(), "w <- ", area.getWidth(), "h <- ", //####
-              area.getHeight()); //####
-#endif // 0
     gg.setColour(Colours::darkgrey);
-    gg.fillRect(area);
-    area.setLeft(area.getX() + getTextInset());
-    as.draw(gg, area);
+    gg.fillRect(area1);
+    area1.setLeft(area1.getX() + getTextInset());
+    as.draw(gg, area1);
+    gg.setColour(Colours::grey);
+    gg.fillRect(area2);
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::paint
 

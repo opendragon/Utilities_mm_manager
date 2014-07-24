@@ -134,4 +134,12 @@ namespace ChannelManager
     
 } // ChannelManager
 
+/*! @brief Return @c true if exit is requested.
+ @param stuff Dummy argument to satisfy caller.
+ @returns @c true if exit has been requested. */
+bool CheckForExit(void * stuff);
+
+/*! @brief Indicate that an exit has been requested. */
+void SetExitRequest(void);
+
 #endif // ! defined(ChannelManagerApp_H_)

@@ -45,25 +45,6 @@
 
 #if defined(__APPLE__)
 # pragma clang diagnostic push
-# pragma clang diagnostic ignored "-Wc++11-extensions"
-# pragma clang diagnostic ignored "-Wdocumentation"
-# pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
-# pragma clang diagnostic ignored "-Wpadded"
-# pragma clang diagnostic ignored "-Wshadow"
-# pragma clang diagnostic ignored "-Wunused-parameter"
-# pragma clang diagnostic ignored "-Wweak-vtables"
-#endif // defined(__APPLE__)
-
-# if MAC_OR_LINUX_
-#include <yarp/os/impl/Logger.h>
-#endif //MAC_OR_LINUX_
-
-#if defined(__APPLE__)
-# pragma clang diagnostic pop
-#endif // defined(__APPLE__)
-
-#if defined(__APPLE__)
-# pragma clang diagnostic push
 # pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
 #endif // defined(__APPLE__)
 /*! @file
@@ -79,6 +60,9 @@ using namespace std;
 #if defined(__APPLE__)
 # pragma mark Private structures, constants and variables
 #endif // defined(__APPLE__)
+
+/*! @brief @c true if an exit has been requested and @c false otherwise. */
+static bool lExitRequested = false;
 
 #if defined(__APPLE__)
 # pragma mark Local functions
@@ -151,7 +135,7 @@ void ChannelManagerApplication::initialise(const String & commandLine)
     if (yarp::os::Network::checkNetwork())
 #endif // CheckNetworkWorks_
     {
-        _yarp = new yarp::os::Network; // This is necessary to establish any connection to the YARP
+        _yarp = new yarp::os::Network; // This is necessary to establish any connections to the YARP
                                        // infrastructure
     }
 #if CheckNetworkWorks_
@@ -184,6 +168,8 @@ bool ChannelManagerApplication::moreThanOneInstanceAllowed(void)
 void ChannelManagerApplication::shutdown(void)
 {
     OD_LOG_OBJENTER(); //####
+    SetExitRequest();
+    _scanner->stopThread(5000);
     _scanner = nullptr; // shuts down thread
     _mainWindow = nullptr; // (deletes our window)
     yarp::os::Network::fini();
@@ -207,3 +193,17 @@ void ChannelManagerApplication::systemRequestedQuit(void)
 #if defined(__APPLE__)
 # pragma mark Global functions
 #endif // defined(__APPLE__)
+
+bool CheckForExit(void * stuff)
+{
+    OD_LOG_ENTER(); //####
+    OD_LOG_EXIT_B(lExitRequested); //####
+    return lExitRequested;
+} // CheckForExit
+
+void SetExitRequest(void)
+{
+    OD_LOG_ENTER(); //####
+    lExitRequested = true;
+    OD_LOG_EXIT(); //####
+} // SetExitRequest

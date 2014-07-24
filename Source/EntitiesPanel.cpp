@@ -197,10 +197,42 @@ void EntitiesPanel::adjustSize(void)
     if (haveValues)
     {
         const int gutter = 5;
-        int       newWidth = (2 * gutter) + maxX - minX;
-        int       newHeight = (2 * gutter) + maxY - minY;
+        int       newWidth;
+        int       newHeight;
         
-        setBounds(minX - gutter, minY - gutter, newWidth, newHeight);
+        OD_LOG_L4("minX = ", minX, "maxX = ", maxX, "minY = ", minY, "maxY = ", maxY); //####
+        if (0 > maxX)
+        {
+            minX -= gutter;
+            newWidth = (2 * gutter) + maxX - minX;
+        }
+        else if (gutter < minX)
+        {
+            minX = 0;
+            newWidth = maxX + gutter;
+        }
+        else
+        {
+            minX -= gutter;
+            newWidth = (2 * gutter) + maxX - minX;
+        }
+        if (0 > maxY)
+        {
+            minY -= gutter;
+            newHeight = (2 * gutter) + maxY - minY;
+        }
+        else if (gutter < minY)
+        {
+            minY = 0;
+            newHeight = maxY + gutter;
+        }
+        else
+        {
+            minY -= gutter;
+            newHeight = (2 * gutter) + maxY - minY;
+        }
+        OD_LOG_L2("newWidth = ", newWidth, "newHeight = ", newHeight); //####
+        setBounds(minX, minY, newWidth, newHeight);
     }
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::adjustSize
