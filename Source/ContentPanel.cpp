@@ -38,6 +38,7 @@
 //--------------------------------------------------------------------------------------------------
 
 #include "ContentPanel.h"
+#include "ChannelManagerWindow.h"
 #include "EntitiesPanel.h"
 
 #include "ODEnableLogging.h"
@@ -62,10 +63,11 @@ using namespace std;
 # pragma mark Private structures, constants and variables
 #endif // defined(__APPLE__)
 
-#if (! defined(HAVE_OWN_SCROLLBARS))
 /*! @brief The initial thickness of the horizontal and vertical scrollbars. */
 static const int kDefaultScrollbarThickness = 16;
-#endif // ! defined(HAVE_OWN_SCROLLBARS)
+
+/*! @brief The initial single-step size of the horizontal and vertical scrollbars. */
+static const int kDefaultSingleStepSize = 10;
 
 #if defined(__APPLE__)
 # pragma mark Local functions
@@ -79,35 +81,18 @@ static const int kDefaultScrollbarThickness = 16;
 # pragma mark Constructors and destructors
 #endif // defined(__APPLE__)
 
-ContentPanel::ContentPanel(void) :
-    inherited(), _entitiesPanel(new EntitiesPanel)
+ContentPanel::ContentPanel(ChannelManagerWindow * containingWindow) :
+    inherited(), _entitiesPanel(new EntitiesPanel(this)), _containingWindow(containingWindow)
 {
     OD_LOG_ENTER(); //####
-    _entitiesPanel->setContainer(this);
-#if defined(HAVE_OWN_SCROLLBARS)
-    addAndMakeVisible(_entitiesPanel);
-#endif // ! defined(HAVE_OWN_SCROLLBARS)
+    _entitiesPanel->setSize(_entitiesPanel->getWidth(),
+                            _entitiesPanel->getHeight() -_containingWindow->getTitleBarHeight());
     setSize(_entitiesPanel->getWidth(), _entitiesPanel->getHeight());
-#if (! defined(HAVE_OWN_SCROLLBARS))
     setScrollBarsShown(true, true);
     setScrollBarThickness(kDefaultScrollbarThickness);
+    setSingleStepSizes(kDefaultSingleStepSize, kDefaultSingleStepSize);
     _entitiesPanel->setVisible(true);
     setViewedComponent(_entitiesPanel);
-//#if 0
-    ScrollBar * horizBar = getHorizontalScrollBar();
-    ScrollBar * vertBar = getVerticalScrollBar();
-    
-    OD_LOG_P2("horizBar = ", horizBar, "vertBar = ", vertBar); //####
-    if (horizBar)
-    {
-        horizBar->setAutoHide(false);
-    }
-    if (vertBar)
-    {
-        vertBar->setAutoHide(false);
-    }
-//#endif // 0
-#endif // ! defined(HAVE_OWN_SCROLLBARS)
     OD_LOG_EXIT_P(this); //####
 } // ContentPanel::ContentPanel
 
@@ -125,7 +110,31 @@ void ContentPanel::resized(void)
 {
     OD_LOG_OBJENTER(); //####
     _entitiesPanel->setSize(getWidth(), getHeight());
-//    repaint();
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::resized
 
+void ContentPanel::visibleAreaChanged(const Rectangle<int> & newVisibleArea)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_L4("nVA.x = ", newVisibleArea.getX(), "nVA.y = ", newVisibleArea.getY(), //####
+              "nVA.w = ", newVisibleArea.getWidth(), "nVA.h = ", newVisibleArea.getHeight()); //####
+#if 0
+    OD_LOG("about to call adjustSize(true)"); //####
+    _entitiesPanel->adjustSize(true);
+    ScrollBar * horizBar = getHorizontalScrollBar();
+    ScrollBar * vertBar = getVerticalScrollBar();
+    
+    if (horizBar)
+    {
+//                horizBar->setRangeLimits(minLeft, maxRight);
+        horizBar->setCurrentRange(getViewPositionX(), getViewWidth());
+//                horizBar->setCurrentRange(outerL, outerR - outerL);
+    }
+    if (vertBar)
+    {
+//                vertBar->setRangeLimits(minY, maxY);
+//                vertBar->setCurrentRange(outerT, outerB - outerT);
+    }
+#endif // 0
+    OD_LOG_OBJEXIT(); //####
+} // ContentPanel::visibleAreaChanged

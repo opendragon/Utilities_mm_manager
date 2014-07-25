@@ -88,16 +88,11 @@ static const char * kFontName = "Courier New";
 /*! @brief The size of the font to be used for text. */
 static const float kFontSize = 15.0;
 
-#if defined(HAVE_OWN_SCROLLBARS)
-/*! @brief The initial thickness of the horizontal and vertical scrollbars. */
-static const int kDefaultScrollbarThickness = 16;
-#endif // defined(HAVE_OWN_SCROLLBARS)
-
 /*! @brief The initial height of the displayed region. */
-static const int kInitialPanelHeight = 400;
+static const int kInitialPanelHeight = 300;
 
 /*! @brief The initial width of the displayed region. */
-static const int kInitialPanelWidth = 500;
+static const int kInitialPanelWidth = 300;
 
 #if defined(__APPLE__)
 # pragma mark Local functions
@@ -111,34 +106,14 @@ static const int kInitialPanelWidth = 500;
 # pragma mark Constructors and destructors
 #endif // defined(__APPLE__)
 
-EntitiesPanel::EntitiesPanel(void) :
+EntitiesPanel::EntitiesPanel(ContentPanel * theContainer) :
     inherited(), _knownPorts(), _knownEntities(), _defaultBoldFont(), _defaultNormalFont(),
-#if defined(HAVE_OWN_SCROLLBARS)
-    _horizontalScrollBar(NULL), _verticalScrollBar(NULL),
-#endif // defined(HAVE_OWN_SCROLLBARS)
-    _innerPanel(new Component),
-    _firstAddPoint(NULL), _firstRemovePoint(NULL), _container(NULL),
-#if defined(HAVE_OWN_SCROLLBARS)
-    _scrollbarThickness(kDefaultScrollbarThickness),
-#endif // defined(HAVE_OWN_SCROLLBARS)
+    _firstAddPoint(NULL), _firstRemovePoint(NULL), _container(theContainer),
     _dragConnectionActive(false)
 {
     OD_LOG_ENTER(); //####
     _defaultBoldFont = new Font(kFontName, kFontSize, Font::bold);
     _defaultNormalFont = new Font(kFontName, kFontSize, Font::plain);
-#if defined(HAVE_OWN_SCROLLBARS)
-    _horizontalScrollBar = new ScrollBar(false);
-    _verticalScrollBar = new ScrollBar(true);
-#endif // defined(HAVE_OWN_SCROLLBARS)
-    _innerPanel->setSize(kInitialPanelWidth, kInitialPanelHeight);
-    _innerPanel->setInterceptsMouseClicks(false, true);
-    addAndMakeVisible(_innerPanel);
-#if defined(HAVE_OWN_SCROLLBARS)
-    addAndMakeVisible(_verticalScrollBar);
-    _verticalScrollBar->setSingleStepSize(1.0);
-    addAndMakeVisible(_horizontalScrollBar);
-    _horizontalScrollBar->setSingleStepSize(1.0);
-#endif // defined(HAVE_OWN_SCROLLBARS)
     setSize(kInitialPanelWidth, kInitialPanelHeight);
     setOpaque(true);
     setVisible(true);
@@ -151,10 +126,6 @@ EntitiesPanel::~EntitiesPanel(void)
     clearOutData();
     _defaultBoldFont = nullptr;
     _defaultNormalFont = nullptr;
-#if defined(HAVE_OWN_SCROLLBARS)
-    _horizontalScrollBar = nullptr;
-    _verticalScrollBar = nullptr;
-#endif // defined(HAVE_OWN_SCROLLBARS)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::~EntitiesPanel
 
@@ -167,127 +138,126 @@ void EntitiesPanel::addEntity(ChannelContainer * anEntity)
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("anEntity = ", anEntity); //####
     _knownEntities.push_back(anEntity);
-    _innerPanel->addChildComponent(anEntity);
-    adjustSize();
+    addChildComponent(anEntity);
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::addEntity
 
 #include "ODEnableLogging.h"
 #include "ODLogging.h"
-void EntitiesPanel::adjustSize(void)
+void EntitiesPanel::adjustSize(const bool dontChangeBounds)
 {
     OD_LOG_OBJENTER(); //####
-    bool haveValues = false;
-    int  minX = -1;
-    int  maxX = -1;
-    int  minY = -1;
-    int  maxY = -1;
+    OD_LOG_B1("dontChangeBounds = ", dontChangeBounds); //####
+    ContentPanel * within = getContainer();
     
-    for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
+    OD_LOG_P1("within <- ", within); //####
+    if (within)
     {
-        ChannelContainer * anEntity = *it;
+        OD_LOG("(within)"); //####
+        int  outerW = within->getMaximumVisibleWidth();
+        int  outerW2 = within->getViewWidth();
+        int  outerH = within->getMaximumVisibleHeight();
+        int  outerH2 = within->getViewHeight();
+        int  outerL = within->getViewPositionX();
+        int  outerT = within->getViewPositionY();
+        int  outerR = outerL + outerW;
+        int  outerB = outerT + outerH;
+        int  minX = -1;
+        int  maxX = -1;
+        int  minY = -1;
+        int  maxY = -1;
+        bool haveValues = false;
         
-        if (anEntity)
+        OD_LOG_L4("outerL = ", outerL, "outerT = ", outerT, "outerR = ", outerR, "outerB = ", //####
+                  outerB); //####
+        OD_LOG_L4("outerW = ", outerW, "outerH = ", outerH, "outerW2 = ", outerW2, //####
+                  "outerH2 = ", outerH2); //####
+        for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it;
+             ++it)
         {
-            juce::Rectangle<int> entityBounds(anEntity->getBounds());
-            int                  entityLeft = entityBounds.getX();
-            int                  entityTop = entityBounds.getY();
-            int                  entityRight = entityLeft + entityBounds.getWidth();
-            int                  entityBottom = entityTop + entityBounds.getHeight();
+            ChannelContainer * anEntity = *it;
             
-            if (haveValues)
+            if (anEntity)
             {
-                minX = min(minX, entityLeft);
-                maxX = max(maxX, entityRight);
-                minY = min(minY, entityTop);
-                maxY = max(maxY, entityBottom);
+                juce::Rectangle<int> entityBounds(anEntity->getBounds());
+                OD_LOG_L4("eB.x = ", entityBounds.getX(), "eB.y = ", entityBounds.getY(), //####
+                          "eB.w = ", entityBounds.getWidth(), "eB.h = ", //####
+                          entityBounds.getHeight()); //####
+                int                  entityLeft = entityBounds.getX();
+                int                  entityTop = entityBounds.getY();
+                int                  entityRight = entityLeft + entityBounds.getWidth();
+                int                  entityBottom = entityTop + entityBounds.getHeight();
+                
+                if (haveValues)
+                {
+                    minX = min(minX, entityLeft);
+                    maxX = max(maxX, entityRight);
+                    minY = min(minY, entityTop);
+                    maxY = max(maxY, entityBottom);
+                }
+                else
+                {
+                    minX = entityLeft;
+                    maxX = entityRight;
+                    minY = entityTop;
+                    maxY = entityBottom;
+                    haveValues = true;
+                }
             }
-            else
+        }
+        if (haveValues)
+        {
+            OD_LOG("(haveValues)"); //####
+            OD_LOG_L4("minX = ", minX, "maxX = ", maxX, "minY = ", minY, "maxY = ", maxY); //####
+            if (! dontChangeBounds)
             {
-                minX = entityLeft;
-                maxX = entityRight;
-                minY = entityTop;
-                maxY = entityBottom;
-                haveValues = true;
+                Rectangle<int> oldBounds(getBounds());
+                int            oldX = oldBounds.getX();
+                int            oldY = oldBounds.getY();
+                int            oldW = oldBounds.getWidth();
+                int            oldH = oldBounds.getHeight();
+                int            minLeft = min(0, minX);
+                int            maxRight = max(0, maxX);
+                int            minTop = min(0, minY);
+                int            maxBottom = max(0, maxY);
+                
+                OD_LOG_L4("minLeft = ", minLeft, "minTop = ", minTop, "maxRight = ", //####
+                          maxRight, "maxBottom = ", maxBottom); //####
+                OD_LOG_L4("oldX = ", oldX, "oldY = ", oldY, "oldW = ", oldW, "oldH = ", //####
+                          oldH); //####
+                if ((oldX != minLeft) || (oldY != minTop) || (oldW != (maxRight - minLeft)) ||
+                    (oldH != (maxBottom - minTop)))
+                {
+                    OD_LOG("about to call setBounds()"); //####
+                    OD_LOG_L4("minLeft = ", minLeft, "minTop = ", minTop, //####
+                              "maxRight-minLeft = ", maxRight - minLeft, //####
+                              "maxBottom-minTop = ", maxBottom - minTop); //####
+                    setBounds(minLeft, minTop, maxRight - minLeft, maxBottom - minTop);
+                }
             }
-        }
-    }
-    if (haveValues)
-    {
-        const int gutter = 5;
-        int       newWidth;
-        int       newHeight;
-        
-        OD_LOG_L4("minX = ", minX, "maxX = ", maxX, "minY = ", minY, "maxY = ", maxY); //####
-        if (0 > maxX)
-        {
-            minX -= gutter;
-            newWidth = (2 * gutter) + maxX - minX;
-        }
-        else if (gutter < minX)
-        {
-            minX = 0;
-            newWidth = maxX + gutter;
-        }
-        else
-        {
-            minX -= gutter;
-            newWidth = (2 * gutter) + maxX - minX;
-        }
-        if (0 > maxY)
-        {
-            minY -= gutter;
-            newHeight = (2 * gutter) + maxY - minY;
-        }
-        else if (gutter < minY)
-        {
-            minY = 0;
-            newHeight = maxY + gutter;
-        }
-        else
-        {
-            minY -= gutter;
-            newHeight = (2 * gutter) + maxY - minY;
-        }
-        OD_LOG_L2("newWidth = ", newWidth, "newHeight = ", newHeight); //####
-#if defined(HAVE_OWN_SCROLLBARS)
-        setBounds(minX, minY, newWidth, newHeight);
-#else // ! defined(HAVE_OWN_SCROLLBARS)
-        ContentPanel * within = getContainer();
-        OD_LOG_P1("within <- ", within); //####
-        Rectangle<int> outerBounds(getLocalBounds());
-        int            outerL = outerBounds.getX();
-        int            outerT = outerBounds.getY();
-        int            outerW = outerBounds.getWidth();
-        int            outerH = outerBounds.getHeight();
-        int            outerR = outerL + outerW;
-        int            outerB = outerT + outerH;
-        int            innerL = min(minX, outerL);
-        int            innerT = min(minY, outerT);
-        int            innerR = max(outerR, minX + newWidth);
-        int            innerB = max(outerB, minY + newHeight);
-        
-        OD_LOG_L4("innerL = ", innerL, "innerT = ", innerT, "innerR = ", innerR, //####
-                  "innerB = ", innerB); //####
-        _innerPanel->setBounds(innerL, innerT, innerR - innerL, innerB - innerT);
-        if (within)
-        {
-            ScrollBar * horizBar = within->getHorizontalScrollBar();
-            ScrollBar * vertBar = within->getVerticalScrollBar();
+            ScrollBar *    horizBar = within->getHorizontalScrollBar();
+            ScrollBar *    vertBar = within->getVerticalScrollBar();
+            Rectangle<int> currBounds(getBounds());
+            int            currX = currBounds.getX();
+            int            currY = currBounds.getY();
+            int            currW = currBounds.getWidth();
+            int            currH = currBounds.getHeight();
             
-            OD_LOG_P2("horizBar = ", horizBar, "vertBar = ", vertBar); //####
+            OD_LOG_L4("currX = ", currX, "currY = ", currY, "currW = ", currW, //####
+                      "currH = ", currH); //####
             if (horizBar)
             {
-                horizBar->setRangeLimits(innerL, innerR);
-                horizBar->setCurrentRange(outerL, outerR - outerL);
+                OD_LOG_L2("CR.x = ", outerL, "CR.w = ", outerW); //####
+                horizBar->setRangeLimits(currX, currX + currW);
+                horizBar->setCurrentRange(outerL, outerW);
             }
             if (vertBar)
             {
-                vertBar->setRangeLimits(innerT, innerB);
-                vertBar->setCurrentRange(outerT, outerB - outerT);                
+                OD_LOG_L2("CR.y = ", outerT, "CR.h = ", outerH); //####
+                vertBar->setRangeLimits(currY, currY + currH);
+                vertBar->setCurrentRange(outerT, outerH);
             }
         }
-#endif // ! defined(HAVE_OWN_SCROLLBARS)
     }
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::adjustSize
@@ -348,7 +318,7 @@ void EntitiesPanel::clearOutData(void)
             delete anEntity;
         }
     }
-    _innerPanel->removeAllChildren();
+    removeAllChildren();
     _knownPorts.clear();
     _knownEntities.clear();
     OD_LOG_OBJEXIT(); //####
@@ -618,12 +588,11 @@ void EntitiesPanel::removeUnvisitedEntities(void)
         
         if (anEntity && (! anEntity->wasVisited()))
         {
-            _innerPanel->removeChildComponent(anEntity);
+            removeChildComponent(anEntity);
             *it = NULL;
             delete anEntity;
         }
     }
-    adjustSize();
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::removeUnvisitedEntities
 
@@ -632,19 +601,10 @@ void EntitiesPanel::removeUnvisitedEntities(void)
 void EntitiesPanel::resized(void)
 {
     OD_LOG_OBJENTER(); //####
-#if defined(HAVE_OWN_SCROLLBARS)
-    // This is called when the EntitiesPanel is resized.
-    // If you add any child components, this is where you should update their positions.
-    const int visibleHeight = getHeight() - _scrollbarThickness;
-    const int visibleWidth = getWidth() - _scrollbarThickness;
-    
-    _innerPanel->setBounds(0, 0, visibleWidth, visibleHeight);
-    _verticalScrollBar->setBounds(visibleWidth, 0, _scrollbarThickness, visibleHeight);
-    _horizontalScrollBar->setBounds(0, visibleHeight, visibleWidth, _scrollbarThickness);
-    updateScrollBars();
-#else // ! defined(HAVE_OWN_SCROLLBARS)
-    adjustSize();
-#endif // ! defined(HAVE_OWN_SCROLLBARS)
+#if 0
+    OD_LOG("about to call adjustSize()"); //####
+    adjustSize(false);
+#endif // 0
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::resized
 #include "ODDisableLogging.h"
@@ -660,20 +620,6 @@ void EntitiesPanel::setDragInfo(const Point<float> position)
     }
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::setDragInfo
-
-#if defined(HAVE_OWN_SCROLLBARS)
-void EntitiesPanel::updateScrollBars(void)
-{
-    OD_LOG_OBJENTER(); //####
-    /*
-     _verticalScrollBar->setRangeLimits(0, jmax (document.getNumLines(), firstLineOnScreen + linesOnScreen));
-     _verticalScrollBar->setCurrentRange(firstLineOnScreen, linesOnScreen);
-     
-     _horizontalScrollBar->setRangeLimits(0, jmax ((double) document.getMaximumLineLength(), xOffset + columnsOnScreen));
-     _horizontalScrollBar->setCurrentRange(xOffset, columnsOnScreen);*/
-    OD_LOG_OBJEXIT(); //####
-} // EntitiesPanel::updateScrollBars
-#endif // defined(HAVE_OWN_SCROLLBARS)
 
 #if defined(__APPLE__)
 # pragma mark Accessors

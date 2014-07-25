@@ -56,19 +56,17 @@
 
 namespace ChannelManager
 {
+    class ChannelManagerWindow;
     class EntitiesPanel;
     
     /*! @brief The content area of the main window of the application. */
-# if defined(HAVE_OWN_SCROLLBARS)
-    class ContentPanel : public Component
-# else // ! defined(HAVE_OWN_SCROLLBARS)
     class ContentPanel : public Viewport
-# endif // ! defined(HAVE_OWN_SCROLLBARS)
     {
     public:
         
-        /*! @brief The constructor. */
-        ContentPanel(void);
+        /*! @brief The constructor.
+         @param containingWindow The window in which the panel is embedded. */
+        ContentPanel(ChannelManagerWindow * containingWindow);
         
         /*! @brief The destructor. */
         virtual ~ContentPanel(void);
@@ -84,19 +82,22 @@ namespace ChannelManager
         /*! @brief Called when the component size has been changed. */
         void resized(void);
         
+        /*! @brief Called when the visible area changes.
+         @param newVisibleArea The new visible area. */
+        virtual void visibleAreaChanged(const Rectangle<int> & newVisibleArea) override;
+        
     protected:
         
     private:
         
         /*! @brief The class that this class is derived from. */
-# if defined(HAVE_OWN_SCROLLBARS)
-        typedef Component inherited;
-# else // ! defined(HAVE_OWN_SCROLLBARS)
         typedef Viewport inherited;
-# endif // ! defined(HAVE_OWN_SCROLLBARS)
         
         /*! @brief The entities panel. */
         ScopedPointer<EntitiesPanel> _entitiesPanel;
+        
+        /*! @brief The window in which the panel is embedded. */
+        ChannelManagerWindow * _containingWindow;
         
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ContentPanel)
         

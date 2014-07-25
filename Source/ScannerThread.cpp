@@ -40,6 +40,7 @@
 #include "ChannelContainer.h"
 #include "ChannelEntry.h"
 #include "ChannelManagerApp.h"
+#include "ContentPanel.h"
 #include "EntitiesPanel.h"
 
 //#include "ODEnableLogging.h"
@@ -627,17 +628,20 @@ if (mml.lockWasGained())
 }
 #endif//0
 
+#include "ODEnableLogging.h"
+#include "ODLogging.h"
 void ScannerThread::run(void)
 {
     OD_LOG_OBJENTER(); //####
     while (! threadShouldExit())
     {
         // Create a new panel to add entities to.
-        EntitiesPanel * newEntitiesPanel = new EntitiesPanel;
+        EntitiesPanel * newEntitiesPanel = new EntitiesPanel(NULL);
         int64           loopStartTime = Time::currentTimeMillis();
         
         gatherEntities(CheckForExit, NULL);
         addEntitiesToPanels(*newEntitiesPanel);
+        OD_LOG("about to call updatePanels()"); //####
         bool needToLeave = updatePanels(*newEntitiesPanel);
         
         delete newEntitiesPanel;
@@ -677,6 +681,8 @@ void ScannerThread::run(void)
     }
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::run
+#include "ODDisableLogging.h"
+#include "ODLogging.h"
 
 void ScannerThread::setEntityPositions(void)
 {
@@ -823,6 +829,8 @@ void ScannerThread::setEntityPositions(void)
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::setEntityPositions
 
+#include "ODEnableLogging.h"
+#include "ODLogging.h"
 bool ScannerThread::updatePanels(EntitiesPanel & newPanel)
 {
     OD_LOG_OBJENTER(); //####
@@ -837,6 +845,8 @@ bool ScannerThread::updatePanels(EntitiesPanel & newPanel)
     if (mml.lockWasGained())
     {
         EntitiesPanel & entitiesPanel(_window->getEntitiesPanel());
+//        ContentPanel *  entityContainer = entitiesPanel.getContainer();
+//        Point<int>      viewPosition(entityContainer->getViewPosition());
         
         entitiesPanel.clearAllVisitedFlags();
         newPanel.clearAllVisitedFlags();
@@ -892,17 +902,23 @@ bool ScannerThread::updatePanels(EntitiesPanel & newPanel)
             ChannelEntry * thisPort = entitiesPanel.findKnownPort(walker->_outPortName);
             ChannelEntry * otherPort = entitiesPanel.findKnownPort(walker->_inPortName);
 
+#if 0
             OD_LOG_P2("thisPort <- ", thisPort, "otherPort <- ", otherPort); //####
+#endif // 0
             if (thisPort && otherPort)
             {
+#if 0
                 OD_LOG_S2s("thisPort.name = ", thisPort->getPortName().toStdString(), //####
                            "otherPort.name = ", otherPort->getPortName().toStdString()); //####
+#endif // 0
                 thisPort->addOutputConnection(otherPort, walker->_mode);
                 otherPort->addInputConnection(thisPort, walker->_mode);
             }
         }
         entitiesPanel.removeUnvisitedEntities();
         entitiesPanel.removeInvalidConnections();
+        OD_LOG("about to call adjustSize()"); //####
+        entitiesPanel.adjustSize(false);
         // Force a repaint of the containing panel.
         entitiesPanel.repaint();
         result = false;
@@ -910,6 +926,8 @@ bool ScannerThread::updatePanels(EntitiesPanel & newPanel)
     OD_LOG_OBJEXIT_B(result); //####
     return result;
 } // ScannerThread::updatePanels
+#include "ODDisableLogging.h"
+#include "ODLogging.h"
 
 #if defined(__APPLE__)
 # pragma mark Accessors

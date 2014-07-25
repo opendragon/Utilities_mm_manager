@@ -65,8 +65,9 @@ namespace ChannelManager
     {
     public:
         
-        /*! @brief The constructor. */
-        EntitiesPanel(void);
+        /*! @brief The constructor.
+        @param container The container in which the panel is embedded. */
+        EntitiesPanel(ContentPanel * container);
         
         /*! @brief The destructor. */
         virtual ~EntitiesPanel(void);
@@ -75,6 +76,9 @@ namespace ChannelManager
          @param anEntity The entity to be added. */
         void addEntity(ChannelContainer * anEntity);
 
+        /*! @brief Recalculate size based on entities present. */
+        void adjustSize(const bool dontChangeBounds);
+        
         /*! @brief Call the visited flags for all entities. */
         void clearAllVisitedFlags(void);
         
@@ -157,16 +161,6 @@ namespace ChannelManager
         size_t getNumberOfEntities(void)
         const;
         
-# if defined(HAVE_OWN_SCROLLBARS)
-        /*! @brief Returns the scrollbar thickness.
-         @returns The scrollbar thickness. */
-        inline int getScrollbarThickness(void)
-        const noexcept
-        {
-            return _scrollbarThickness;
-        } // getScrollbarThickness
-# endif // defined(HAVE_OWN_SCROLLBARS)
-        
         /*! @brief Return @c true if dragging a connection and @c false otherwise.
          @returns @c true if dragging a connection and @c false otherwise. */
         inline bool isDragActive(void)
@@ -213,13 +207,6 @@ namespace ChannelManager
         /*! @brief Called when the component size has been changed. */
         void resized(void);
         
-        /*! @brief Set the container in which the panel is embedded.
-         @param The container in which the panel is embedded. */
-        void setContainer(ContentPanel * theContainer)
-        {
-            _container = theContainer;
-        } // setContainer
-        
         /*! @brief Update the dragging information.
          @param position The location of the dragging connection. */
         void setDragInfo(const Point<float> position);
@@ -231,20 +218,12 @@ namespace ChannelManager
         /*! @brief The class that this class is derived from. */
         typedef Component inherited;
         
-        /*! @brief Recalculate size based on entities present. */
-        void adjustSize(void);
-        
         /*! @brief Release all data held by the panel. */
         void clearOutData(void);
         
         /*! @brief Display the connections between containers.
          @param gg The graphics context in which to draw. */
         void drawConnections(Graphics & gg);
-        
-# if defined(HAVE_OWN_SCROLLBARS)
-        /*! @brief Adjust the horizontal and vertial scrollbars. */
-        void updateScrollBars(void);
-# endif // defined(HAVE_OWN_SCROLLBARS)
         
         /*! @brief The set of known ports. */
         PortEntryMap _knownPorts;
@@ -258,22 +237,6 @@ namespace ChannelManager
         /*! @brief The normal font to be used. */
         ScopedPointer<Font> _defaultNormalFont;
         
-# if defined(HAVE_OWN_SCROLLBARS)
-        /*! @brief The horizontal scrollbar. */
-        ScopedPointer<ScrollBar> _horizontalScrollBar;
-# endif // defined(HAVE_OWN_SCROLLBARS)
-        
-# if defined(HAVE_OWN_SCROLLBARS)
-        /*! @brief The vertical scrollbar. */
-        ScopedPointer<ScrollBar> _verticalScrollBar;
-# endif // defined(HAVE_OWN_SCROLLBARS)
-        
-        /*! @brief The area in which to draw the displayed entities.
-         
-         Note that this class is also a Component - entities are added to the 'inner panel' for
-         rendering purposes; objects of this class don't directly display entities. */
-        ScopedPointer<Component> _innerPanel;
-        
         /*! @brief The coordinates of the drag-connection operation. */
         Point<float> _dragPosition;
         
@@ -285,12 +248,6 @@ namespace ChannelManager
         
         /*! @brief The container in which the panel is embedded. */
         ContentPanel * _container;
-        
-# if defined(HAVE_OWN_SCROLLBARS)
-        /*! @brief The desired width (for a vertical scrollbar) or height (for a horizontal
-         scrollbar). */
-        int _scrollbarThickness;
-# endif // defined(HAVE_OWN_SCROLLBARS)
         
         /*! @brief @c true if a drag-connection operation is active. */
         bool _dragConnectionActive;

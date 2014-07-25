@@ -73,15 +73,15 @@ using namespace std;
 #endif // defined(__APPLE__)
 
 ChannelManagerWindow::ChannelManagerWindow(const String & title)  :
-    inherited(title, Colours::lightgrey, inherited::allButtons), _contentPanel(new ContentPanel)
+    inherited(title, Colours::lightgrey, inherited::allButtons),
+    _contentPanel(new ContentPanel(this))
 {
     OD_LOG_ENTER(); //####
     setOpaque(true);
-    setContentOwned(_contentPanel, true);
     centreWithSize(getWidth(), getHeight());
-    setVisible(true);
     setResizable(true, true);
-    setDropShadowEnabled(true);
+    setContentOwned(_contentPanel, true);
+    setVisible(true);
     OD_LOG_EXIT_P(this); //####
 } // ChannelManagerWindow::ChannelManagerWindow
 

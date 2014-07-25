@@ -94,6 +94,7 @@ ChannelContainer::ChannelContainer(const ContainerKind kind,
     
     _titleHeight = headerFont.getHeight();
     setSize(headerFont.getStringWidthFloat(getName() + " ") + getTextInset(), _titleHeight);
+    OD_LOG_L2("width = ", getWidth(), "height = ", getHeight()); //####
     setOpaque(true);
     setVisible(true);
     OD_LOG_EXIT_P(this); //####
@@ -132,6 +133,7 @@ ChannelEntry * ChannelContainer::addPort(const String &      portName,
     float          newWidth = max(aPort->getWidth(), getWidth());
     float          newHeight = aPort->getHeight() + getHeight() + lEntryGap;
     
+    OD_LOG_L2("newWidth = ", newWidth, "newHeight = ", newHeight); //####
     aPort->setTopLeftPosition(0, getHeight() + lEntryGap);
     setSize(newWidth, newHeight);
     addAndMakeVisible(aPort);
