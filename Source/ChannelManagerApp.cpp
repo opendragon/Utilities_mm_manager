@@ -40,7 +40,7 @@
 #include "ChannelContainer.h"
 #include "ScannerThread.h"
 
-#include "ODEnableLogging.h"
+//#include "ODEnableLogging.h"
 #include "ODLogging.h"
 
 #if defined(__APPLE__)
@@ -196,10 +196,8 @@ void ChannelManagerApplication::systemRequestedQuit(void)
 
 bool CheckForExit(void * stuff)
 {
-#if 0
     OD_LOG_ENTER(); //####
     OD_LOG_EXIT_B(lExitRequested); //####
-#endif // 0
     return lExitRequested;
 } // CheckForExit
 

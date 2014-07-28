@@ -77,7 +77,7 @@ namespace ChannelManager
         void addEntity(ChannelContainer * anEntity);
 
         /*! @brief Recalculate size based on entities present. */
-        void adjustSize(const bool dontChangeBounds);
+        void adjustSize(void);
         
         /*! @brief Call the visited flags for all entities. */
         void clearAllVisitedFlags(void);

@@ -115,7 +115,6 @@ EntitiesPanel::EntitiesPanel(ContentPanel * theContainer) :
     _defaultBoldFont = new Font(kFontName, kFontSize, Font::bold);
     _defaultNormalFont = new Font(kFontName, kFontSize, Font::plain);
     setSize(kInitialPanelWidth, kInitialPanelHeight);
-    setOpaque(true);
     setVisible(true);
     OD_LOG_EXIT_P(this); //####
 } // EntitiesPanel::EntitiesPanel
@@ -142,9 +141,7 @@ void EntitiesPanel::addEntity(ChannelContainer * anEntity)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::addEntity
 
-#include "ODEnableLogging.h"
-#include "ODLogging.h"
-void EntitiesPanel::adjustSize(const bool dontChangeBounds)
+void EntitiesPanel::adjustSize(void)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_B1("dontChangeBounds = ", dontChangeBounds); //####
@@ -155,13 +152,9 @@ void EntitiesPanel::adjustSize(const bool dontChangeBounds)
     {
         OD_LOG("(within)"); //####
         int  outerW = within->getMaximumVisibleWidth();
-        int  outerW2 = within->getViewWidth();
         int  outerH = within->getMaximumVisibleHeight();
-        int  outerH2 = within->getViewHeight();
         int  outerL = within->getViewPositionX();
         int  outerT = within->getViewPositionY();
-        int  outerR = outerL + outerW;
-        int  outerB = outerT + outerH;
         int  minX = -1;
         int  maxX = -1;
         int  minY = -1;
@@ -209,31 +202,19 @@ void EntitiesPanel::adjustSize(const bool dontChangeBounds)
         {
             OD_LOG("(haveValues)"); //####
             OD_LOG_L4("minX = ", minX, "maxX = ", maxX, "minY = ", minY, "maxY = ", maxY); //####
-            if (! dontChangeBounds)
+            Rectangle<int> oldBounds(getBounds());
+            int            minLeft = min(0, minX);
+            int            maxRight = max(0, maxX);
+            int            minTop = min(0, minY);
+            int            maxBottom = max(0, maxY);
+            Rectangle<int> newBounds(minLeft, minTop, maxRight - minLeft, maxBottom - minTop);
+            
+            OD_LOG_L4("minLeft = ", minLeft, "minTop = ", minTop, "maxRight = ", maxRight, //####
+                      "maxBottom = ", maxBottom); //####
+            if (oldBounds != newBounds)
             {
-                Rectangle<int> oldBounds(getBounds());
-                int            oldX = oldBounds.getX();
-                int            oldY = oldBounds.getY();
-                int            oldW = oldBounds.getWidth();
-                int            oldH = oldBounds.getHeight();
-                int            minLeft = min(0, minX);
-                int            maxRight = max(0, maxX);
-                int            minTop = min(0, minY);
-                int            maxBottom = max(0, maxY);
-                
-                OD_LOG_L4("minLeft = ", minLeft, "minTop = ", minTop, "maxRight = ", //####
-                          maxRight, "maxBottom = ", maxBottom); //####
-                OD_LOG_L4("oldX = ", oldX, "oldY = ", oldY, "oldW = ", oldW, "oldH = ", //####
-                          oldH); //####
-                if ((oldX != minLeft) || (oldY != minTop) || (oldW != (maxRight - minLeft)) ||
-                    (oldH != (maxBottom - minTop)))
-                {
-                    OD_LOG("about to call setBounds()"); //####
-                    OD_LOG_L4("minLeft = ", minLeft, "minTop = ", minTop, //####
-                              "maxRight-minLeft = ", maxRight - minLeft, //####
-                              "maxBottom-minTop = ", maxBottom - minTop); //####
-                    setBounds(minLeft, minTop, maxRight - minLeft, maxBottom - minTop);
-                }
+                OD_LOG("about to call setBounds()"); //####
+                setBounds(newBounds);
             }
             ScrollBar *    horizBar = within->getHorizontalScrollBar();
             ScrollBar *    vertBar = within->getVerticalScrollBar();
@@ -243,26 +224,48 @@ void EntitiesPanel::adjustSize(const bool dontChangeBounds)
             int            currW = currBounds.getWidth();
             int            currH = currBounds.getHeight();
             
-            OD_LOG_L4("currX = ", currX, "currY = ", currY, "currW = ", currW, //####
-                      "currH = ", currH); //####
-            if (horizBar)
-            {
-                OD_LOG_L2("CR.x = ", outerL, "CR.w = ", outerW); //####
-                horizBar->setRangeLimits(currX, currX + currW);
-                horizBar->setCurrentRange(outerL, outerW);
-            }
+            OD_LOG_L4("currX = ", currX, "currY = ", currY, "currW = ", currW, "currH = ", //####
+                      currH); //####
             if (vertBar)
             {
                 OD_LOG_L2("CR.y = ", outerT, "CR.h = ", outerH); //####
-                vertBar->setRangeLimits(currY, currY + currH);
-                vertBar->setCurrentRange(outerT, outerH);
+                Range<double> currLimits(vertBar->getRangeLimit());
+                Range<double> currRange(vertBar->getCurrentRange());
+                Range<double> newLimits(currY, currY + currH);
+                Range<double> newRange(outerT, outerH);
+                
+                if (currLimits != newLimits)
+                {
+                    vertBar->setRangeLimits(newLimits);
+                }
+                if (currRange != newRange)
+                {
+                    vertBar->setCurrentRange(newRange);
+                }
             }
+            if (horizBar)
+            {
+                OD_LOG_L2("CR.x = ", outerL, "CR.w = ", outerW); //####
+                Range<double> currLimits(horizBar->getRangeLimit());
+                Range<double> currRange(horizBar->getCurrentRange());
+                Range<double> newLimits(currX, currX + currW);
+                Range<double> newRange(outerL, outerW);
+                
+                if (currLimits != newLimits)
+                {
+                    horizBar->setRangeLimits(newLimits);
+                }
+                if (currRange != newRange)
+                {
+                    horizBar->setCurrentRange(newRange);
+                }
+            }
+            within->setViewPosition(outerL, outerT);
+            within->repaint();
         }
     }
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::adjustSize
-#include "ODDisableLogging.h"
-#include "ODLogging.h"
 
 void EntitiesPanel::clearAllVisitedFlags(void)
 {
@@ -521,15 +524,6 @@ void EntitiesPanel::paint(Graphics & gg)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("gg = ", &gg); //####
-    // Set up a gradient background, using a radial gradient from the centre to the furthest edge.
-    int            hh = getHeight();
-    int            ww = getWidth();
-    ColourGradient theGradient(Colours::white, ww / 2.0, hh / 2.0, Colours::grey,
-                               (hh > ww) ? 0 : ww, (hh > ww) ? hh : 0, true);
-    FillType       theBackgroundFill(theGradient);
-    
-    gg.setFillType(theBackgroundFill);
-    gg.fillAll();
     drawConnections(gg);
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::paint
@@ -596,19 +590,13 @@ void EntitiesPanel::removeUnvisitedEntities(void)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::removeUnvisitedEntities
 
-#include "ODEnableLogging.h"
-#include "ODLogging.h"
 void EntitiesPanel::resized(void)
 {
     OD_LOG_OBJENTER(); //####
-#if 0
     OD_LOG("about to call adjustSize()"); //####
-    adjustSize(false);
-#endif // 0
+    adjustSize();
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::resized
-#include "ODDisableLogging.h"
-#include "ODLogging.h"
 
 void EntitiesPanel::setDragInfo(const Point<float> position)
 {

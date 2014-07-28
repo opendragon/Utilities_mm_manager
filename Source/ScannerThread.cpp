@@ -618,18 +618,6 @@ void ScannerThread::gatherEntities(MplusM::Common::CheckFunction checker,
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::gatherEntities
 
-#if 0
-const MessageManagerLock mml(Thread::getCurrentThread());
-
-// If something is trying to kill this job, the lock will fail, in which case we'd better
-// return.
-if (mml.lockWasGained())
-{
-}
-#endif//0
-
-#include "ODEnableLogging.h"
-#include "ODLogging.h"
 void ScannerThread::run(void)
 {
     OD_LOG_OBJENTER(); //####
@@ -681,8 +669,6 @@ void ScannerThread::run(void)
     }
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::run
-#include "ODDisableLogging.h"
-#include "ODLogging.h"
 
 void ScannerThread::setEntityPositions(void)
 {
@@ -829,8 +815,6 @@ void ScannerThread::setEntityPositions(void)
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::setEntityPositions
 
-#include "ODEnableLogging.h"
-#include "ODLogging.h"
 bool ScannerThread::updatePanels(EntitiesPanel & newPanel)
 {
     OD_LOG_OBJENTER(); //####
@@ -845,8 +829,6 @@ bool ScannerThread::updatePanels(EntitiesPanel & newPanel)
     if (mml.lockWasGained())
     {
         EntitiesPanel & entitiesPanel(_window->getEntitiesPanel());
-//        ContentPanel *  entityContainer = entitiesPanel.getContainer();
-//        Point<int>      viewPosition(entityContainer->getViewPosition());
         
         entitiesPanel.clearAllVisitedFlags();
         newPanel.clearAllVisitedFlags();
@@ -902,15 +884,11 @@ bool ScannerThread::updatePanels(EntitiesPanel & newPanel)
             ChannelEntry * thisPort = entitiesPanel.findKnownPort(walker->_outPortName);
             ChannelEntry * otherPort = entitiesPanel.findKnownPort(walker->_inPortName);
 
-#if 0
             OD_LOG_P2("thisPort <- ", thisPort, "otherPort <- ", otherPort); //####
-#endif // 0
             if (thisPort && otherPort)
             {
-#if 0
                 OD_LOG_S2s("thisPort.name = ", thisPort->getPortName().toStdString(), //####
                            "otherPort.name = ", otherPort->getPortName().toStdString()); //####
-#endif // 0
                 thisPort->addOutputConnection(otherPort, walker->_mode);
                 otherPort->addInputConnection(thisPort, walker->_mode);
             }
@@ -918,7 +896,7 @@ bool ScannerThread::updatePanels(EntitiesPanel & newPanel)
         entitiesPanel.removeUnvisitedEntities();
         entitiesPanel.removeInvalidConnections();
         OD_LOG("about to call adjustSize()"); //####
-        entitiesPanel.adjustSize(false);
+        entitiesPanel.adjustSize();
         // Force a repaint of the containing panel.
         entitiesPanel.repaint();
         result = false;
@@ -926,8 +904,6 @@ bool ScannerThread::updatePanels(EntitiesPanel & newPanel)
     OD_LOG_OBJEXIT_B(result); //####
     return result;
 } // ScannerThread::updatePanels
-#include "ODDisableLogging.h"
-#include "ODLogging.h"
 
 #if defined(__APPLE__)
 # pragma mark Accessors

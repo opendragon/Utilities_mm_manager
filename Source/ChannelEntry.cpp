@@ -235,11 +235,9 @@ static void drawSourceAnchor(Graphics &           gg,
     }
     if (kAnchorUnknown != anchor)
     {
-#if 0
         OD_LOG_D4("anchor.x = ", anchorPos.getX(), "anchor.y = ", anchorPos.getY(), //####
                   "first.x = ", first.getX(), "first.y = ", first.getY()); //####
         OD_LOG_D2("second.x = ", second.getX(), "second.y = ", second.getY()); //####
-#endif // 0
         gg.drawLine(anchorPos.getX(), anchorPos.getY(), first.getX(), first.getY(), thickness);
         gg.drawLine(anchorPos.getX(), anchorPos.getY(), second.getX(), second.getY(), thickness);
     }
@@ -291,11 +289,9 @@ static void drawTargetAnchor(Graphics &           gg,
     }
     if (kAnchorUnknown != anchor)
     {
-#if 0
         OD_LOG_D4("anchor.x = ", anchorPos.getX(), "anchor.y = ", anchorPos.getY(), //####
                   "first.x = ", first.getX(), "first.y = ", first.getY()); //####
         OD_LOG_D2("second.x = ", second.getX(), "second.y = ", second.getY()); //####
-#endif // 0
         gg.drawLine(anchorPos.getX(), anchorPos.getY(), first.getX(), first.getY(), thickness);
         gg.drawLine(anchorPos.getX(), anchorPos.getY(), second.getX(), second.getY(), thickness);
     }
@@ -363,7 +359,6 @@ static void drawConnection(Graphics &                  gg,
         Point<float> endPoint;
         float        thickness;
         
-#if 0
         OD_LOG_D4("sourcePosition.x = ", sourcePosition.getX(), "sourcePosition.y = ", //####
                   sourcePosition.getY(), "destinationPosition.x = ", //####
                   destinationPosition.getX(), "destinationPosition.y = ", //####
@@ -371,7 +366,6 @@ static void drawConnection(Graphics &                  gg,
         OD_LOG_D4("sourceCentre.x = ", sourceCentre.getX(), "sourceCentre.y = ", //####
                   sourceCentre.getY(), "destinationCentre.x = ", destinationCentre.getX(), //####
                   "destinationCentre.y = ", destinationCentre.getY()); //####
-#endif // 0
         // Check if the destination is above the source, in which case we determine the anchors in
         // the reverse order.
         if (sourceCentre.getY() < destinationCentre.getY())
@@ -390,11 +384,9 @@ static void drawConnection(Graphics &                  gg,
                                                           kAnchorBottomCentre == destinationAnchor,
                                                           destinationCentre);
         }
-#if 0
         OD_LOG_D4("startPoint.x <- ", startPoint.getX(), "startPoint.y <- ", //####
                   startPoint.getY(), "endPoint.x <- ", endPoint.getX(), "endPoint.y <- ", //####
                   endPoint.getY()); //####
-#endif // 0
         if (destination->isService())
         {
             thickness = kServiceConnectionWidth;
@@ -403,9 +395,7 @@ static void drawConnection(Graphics &                  gg,
         {
             thickness = kNormalConnectionWidth;
         }
-#if 0
         OD_LOG_D1("thickness <- ", thickness); //####
-#endif // 0
         switch (mode)
         {
             case MplusM::Common::kChannelModeTCP :
@@ -684,11 +674,9 @@ void ChannelEntry::drawDragLine(Graphics &           gg,
         sourceAnchor = calculateClosestAnchor(startPoint, true,
                                               kAnchorBottomCentre == destinationAnchor, position);
     }
-#if 0
     OD_LOG_D4("startPoint.x <- ", startPoint.getX(), "startPoint.y <- ", //####
               startPoint.getY(), "position.x <- ", position.getX(), "position.y <- ", //####
               position.getY()); //####
-#endif // 0
     if (isUDP)
     {
         gg.setColour(kUdpConnectionColour);
@@ -1015,10 +1003,8 @@ void ChannelEntry::paint(Graphics & gg)
     as.append(_title, getOwningPanel().getNormalFont(), Colours::white);
     juce::Rectangle<float> area(getLocalBounds().toFloat());
     
-#if 0
     OD_LOG_D4("x <- ", area.getX(), "y <- ", area.getY(), "w <- ",area.getWidth(), "h <- ", //####
               area.getHeight()); //####
-#endif // 0
     gg.setColour(Colours::black);
     gg.fillRect(area);
     area.setLeft(area.getX() + _parent->getTextInset());

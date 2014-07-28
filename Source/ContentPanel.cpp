@@ -41,7 +41,7 @@
 #include "ChannelManagerWindow.h"
 #include "EntitiesPanel.h"
 
-#include "ODEnableLogging.h"
+//#include "ODEnableLogging.h"
 #include "ODLogging.h"
 
 #if defined(__APPLE__)
@@ -87,6 +87,7 @@ ContentPanel::ContentPanel(ChannelManagerWindow * containingWindow) :
     OD_LOG_ENTER(); //####
     _entitiesPanel->setSize(_entitiesPanel->getWidth(),
                             _entitiesPanel->getHeight() -_containingWindow->getTitleBarHeight());
+    //setOpaque(true);
     setSize(_entitiesPanel->getWidth(), _entitiesPanel->getHeight());
     setScrollBarsShown(true, true);
     setScrollBarThickness(kDefaultScrollbarThickness);
@@ -106,6 +107,22 @@ ContentPanel::~ContentPanel(void)
 # pragma mark Actions
 #endif // defined(__APPLE__)
 
+void ContentPanel::paint(Graphics & gg)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("gg = ", &gg); //####
+    // Set up a gradient background, using a radial gradient from the centre to the furthest edge.
+    int            hh = getHeight();
+    int            ww = getWidth();
+    ColourGradient theGradient(Colours::white, ww / 2.0, hh / 2.0, Colours::grey,
+                               (hh > ww) ? 0 : ww, (hh > ww) ? hh : 0, true);
+    FillType       theBackgroundFill(theGradient);
+    
+    gg.setFillType(theBackgroundFill);
+    gg.fillAll();
+    OD_LOG_OBJEXIT(); //####
+} // ContentPanel::paint
+
 void ContentPanel::resized(void)
 {
     OD_LOG_OBJENTER(); //####
@@ -118,23 +135,5 @@ void ContentPanel::visibleAreaChanged(const Rectangle<int> & newVisibleArea)
     OD_LOG_OBJENTER(); //####
     OD_LOG_L4("nVA.x = ", newVisibleArea.getX(), "nVA.y = ", newVisibleArea.getY(), //####
               "nVA.w = ", newVisibleArea.getWidth(), "nVA.h = ", newVisibleArea.getHeight()); //####
-#if 0
-    OD_LOG("about to call adjustSize(true)"); //####
-    _entitiesPanel->adjustSize(true);
-    ScrollBar * horizBar = getHorizontalScrollBar();
-    ScrollBar * vertBar = getVerticalScrollBar();
-    
-    if (horizBar)
-    {
-//                horizBar->setRangeLimits(minLeft, maxRight);
-        horizBar->setCurrentRange(getViewPositionX(), getViewWidth());
-//                horizBar->setCurrentRange(outerL, outerR - outerL);
-    }
-    if (vertBar)
-    {
-//                vertBar->setRangeLimits(minY, maxY);
-//                vertBar->setCurrentRange(outerT, outerB - outerT);
-    }
-#endif // 0
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::visibleAreaChanged

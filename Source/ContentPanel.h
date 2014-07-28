@@ -79,6 +79,10 @@ namespace ChannelManager
             return *_entitiesPanel;
         } // getEntitiesPanel
         
+        /*! @brief Draw the content of the component.
+         @param gg The graphics context in which to draw. */
+        void paint(Graphics & gg);
+                
         /*! @brief Called when the component size has been changed. */
         void resized(void);
         
