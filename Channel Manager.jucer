@@ -59,12 +59,16 @@
         <MODULEPATH id="juce_audio_processors" path="JUCE/modules"/>
       </MODULEPATHS>
     </XCODE_MAC>
-    <VS2012 targetFolder="Builds/VisualStudio2012">
+    <VS2012 targetFolder="Builds/VisualStudio2012" externalLibraries="ACE.lib&#10;YARP_OS.lib&#10;YARP_init.lib&#10;odLogging.lib&#10;mpmCommon.lib&#10;ogdf.lib">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="1" optimisation="1" targetName="Channel Manager"/>
+                       isDebug="1" optimisation="1" targetName="Channel Manager" headerPath="$(ACE_ROOT)&#10;$(YARP_DIR)\generated_include&#10;$(YARP_DIR)\src\libYARP_OS\include&#10;$(MPlusM_ROOT)\Common&#10;$(MPlusM_ROOT)\Logging&#10;$(OGDF)"
+                       libraryPath="$(ACE_ROOT)\lib&#10;$(YARP_DIR)\lib\Debug&#10;$(MPlusM_ROOT)\Common\Debug&#10;$(MPlusM_ROOT)\Logging\Debug&#10;$(OGDF)\Win32\Debug"
+                       useRuntimeLibDLL="1"/>
         <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="0" optimisation="2" targetName="Channel Manager"/>
+                       isDebug="0" optimisation="2" targetName="Channel Manager" libraryPath="$(ACE_ROOT)\lib&#10;$(YARP_DIR)\lib\Release&#10;$(MPlusM_ROOT)\Common\Release&#10;$(MPlusM_ROOT)\Logging\Release&#10;$(OGDF)\Win32\Release"
+                       headerPath="$(ACE_ROOT)&#10;$(YARP_DIR)\generated_include&#10;$(YARP_DIR)\src\libYARP_OS\include&#10;$(MPlusM_ROOT)\Common&#10;$(MPlusM_ROOT)\Logging&#10;$(OGDF)"
+                       useRuntimeLibDLL="1"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_video" path="D:\dev\JUCE\modules"/>
