@@ -130,7 +130,7 @@ void ContentPanel::resized(void)
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::resized
 
-void ContentPanel::visibleAreaChanged(const Rectangle<int> & newVisibleArea)
+void ContentPanel::visibleAreaChanged(const juce::Rectangle<int> & newVisibleArea)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_L4("nVA.x = ", newVisibleArea.getX(), "nVA.y = ", newVisibleArea.getY(), //####

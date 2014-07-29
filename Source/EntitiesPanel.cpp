@@ -202,12 +202,12 @@ void EntitiesPanel::adjustSize(void)
         {
             OD_LOG("(haveValues)"); //####
             OD_LOG_L4("minX = ", minX, "maxX = ", maxX, "minY = ", minY, "maxY = ", maxY); //####
-            Rectangle<int> oldBounds(getBounds());
+            juce::Rectangle<int> oldBounds(getBounds());
             int            minLeft = min(0, minX);
             int            maxRight = max(0, maxX);
             int            minTop = min(0, minY);
             int            maxBottom = max(0, maxY);
-            Rectangle<int> newBounds(minLeft, minTop, maxRight - minLeft, maxBottom - minTop);
+            juce::Rectangle<int> newBounds(minLeft, minTop, maxRight - minLeft, maxBottom - minTop);
             
             OD_LOG_L4("minLeft = ", minLeft, "minTop = ", minTop, "maxRight = ", maxRight, //####
                       "maxBottom = ", maxBottom); //####
@@ -218,7 +218,7 @@ void EntitiesPanel::adjustSize(void)
             }
             ScrollBar *    horizBar = within->getHorizontalScrollBar();
             ScrollBar *    vertBar = within->getVerticalScrollBar();
-            Rectangle<int> currBounds(getBounds());
+            juce::Rectangle<int> currBounds(getBounds());
             int            currX = currBounds.getX();
             int            currY = currBounds.getY();
             int            currW = currBounds.getWidth();
