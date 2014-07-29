@@ -203,10 +203,10 @@ void EntitiesPanel::adjustSize(void)
             OD_LOG("(haveValues)"); //####
             OD_LOG_L4("minX = ", minX, "maxX = ", maxX, "minY = ", minY, "maxY = ", maxY); //####
             juce::Rectangle<int> oldBounds(getBounds());
-            int            minLeft = min(0, minX);
-            int            maxRight = max(0, maxX);
-            int            minTop = min(0, minY);
-            int            maxBottom = max(0, maxY);
+            int                  minLeft = min(0, minX);
+            int                  maxRight = max(0, maxX);
+            int                  minTop = min(0, minY);
+            int                  maxBottom = max(0, maxY);
             juce::Rectangle<int> newBounds(minLeft, minTop, maxRight - minLeft, maxBottom - minTop);
             
             OD_LOG_L4("minLeft = ", minLeft, "minTop = ", minTop, "maxRight = ", maxRight, //####
@@ -216,13 +216,13 @@ void EntitiesPanel::adjustSize(void)
                 OD_LOG("about to call setBounds()"); //####
                 setBounds(newBounds);
             }
-            ScrollBar *    horizBar = within->getHorizontalScrollBar();
-            ScrollBar *    vertBar = within->getVerticalScrollBar();
+            ScrollBar *          horizBar = within->getHorizontalScrollBar();
+            ScrollBar *          vertBar = within->getVerticalScrollBar();
             juce::Rectangle<int> currBounds(getBounds());
-            int            currX = currBounds.getX();
-            int            currY = currBounds.getY();
-            int            currW = currBounds.getWidth();
-            int            currH = currBounds.getHeight();
+            int                  currX = currBounds.getX();
+            int                  currY = currBounds.getY();
+            int                  currW = currBounds.getWidth();
+            int                  currH = currBounds.getHeight();
             
             OD_LOG_L4("currX = ", currX, "currY = ", currY, "currW = ", currW, "currH = ", //####
                       currH); //####
