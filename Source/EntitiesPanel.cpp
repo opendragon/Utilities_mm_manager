@@ -89,10 +89,10 @@ static const char * kFontName = "Courier New";
 static const float kFontSize = 15.0;
 
 /*! @brief The initial height of the displayed region. */
-static const int kInitialPanelHeight = 300;
+static const int kInitialPanelHeight = 768;
 
 /*! @brief The initial width of the displayed region. */
-static const int kInitialPanelWidth = 300;
+static const int kInitialPanelWidth = 1024;
 
 #if defined(__APPLE__)
 # pragma mark Local functions

@@ -78,9 +78,9 @@ ChannelManagerWindow::ChannelManagerWindow(const String & title)  :
 {
     OD_LOG_ENTER(); //####
     setOpaque(true);
-    centreWithSize(getWidth(), getHeight());
     setResizable(true, true);
     setContentOwned(_contentPanel, true);
+    centreWithSize(getWidth(), getHeight());
     setVisible(true);
     OD_LOG_EXIT_P(this); //####
 } // ChannelManagerWindow::ChannelManagerWindow

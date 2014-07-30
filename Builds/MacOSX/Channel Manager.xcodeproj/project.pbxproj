@@ -33,6 +33,7 @@
 		DEEF248165B3103CD7681805 /* juce_gui_extra.mm in Sources */ = {isa = PBXBuildFile; fileRef = 01BE58DF625AAE46E21A507C /* juce_gui_extra.mm */; };
 		DF1470F0197D80A000E182D6 /* ChannelManagerWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF1470E8197D80A000E182D6 /* ChannelManagerWindow.cpp */; };
 		DF1470F3197D80A000E182D6 /* EntitiesPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF1470EE197D80A000E182D6 /* EntitiesPanel.cpp */; };
+		DF332FF7198988FC0089004E /* libOGDFDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF1470A51979833900E182D6 /* libOGDFDebug.a */; };
 		DF355A5819819B89008D71DD /* ContentPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF355A5619819B89008D71DD /* ContentPanel.cpp */; };
 		DF4C6E1C19797ABD006CFB14 /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF74B66F1976D2BF00A6ECD3 /* libc++.dylib */; };
 		DF74B65919747BE800A6ECD3 /* ChannelManagerApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF74B65719747BE800A6ECD3 /* ChannelManagerApp.cpp */; };
@@ -810,6 +811,7 @@
 		DF1470EE197D80A000E182D6 /* EntitiesPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EntitiesPanel.cpp; path = ../../Source/EntitiesPanel.cpp; sourceTree = "<group>"; };
 		DF1470EF197D80A000E182D6 /* EntitiesPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EntitiesPanel.h; path = ../../Source/EntitiesPanel.h; sourceTree = "<group>"; };
 		DF2EFBEA7BAA9E19E83C151C /* juce_CharacterFunctions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_CharacterFunctions.cpp; path = ../../JuceLibraryCode/modules/juce_core/text/juce_CharacterFunctions.cpp; sourceTree = SOURCE_ROOT; };
+		DF332FF8198989030089004E /* libOGDFDebug.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOGDFDebug.a; path = ../../../../../../../usr/local/lib/libOGDFDebug.a; sourceTree = "<group>"; };
 		DF355A5619819B89008D71DD /* ContentPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ContentPanel.cpp; path = ../../Source/ContentPanel.cpp; sourceTree = SOURCE_ROOT; };
 		DF355A5719819B89008D71DD /* ContentPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContentPanel.h; path = ../../Source/ContentPanel.h; sourceTree = SOURCE_ROOT; };
 		DF4C6E1A19797AA2006CFB14 /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
@@ -961,6 +963,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DF332FF7198988FC0089004E /* libOGDFDebug.a in Frameworks */,
 				DF845F6C1988649300A57B53 /* libmpmCommon.a in Frameworks */,
 				DF845F6D1988649700A57B53 /* libodLogging.a in Frameworks */,
 				DF845F6E1988649A00A57B53 /* libYARP_init.a in Frameworks */,
@@ -2482,6 +2485,7 @@
 			children = (
 				DF845F72198864BA00A57B53 /* libmpmCommon.a */,
 				DF845F73198864BA00A57B53 /* libodLogging.a */,
+				DF332FF8198989030089004E /* libOGDFDebug.a */,
 				DF845F74198864BA00A57B53 /* libYARP_init.a */,
 				DF845F75198864BA00A57B53 /* libYARP_OS.a */,
 				DF845F76198864BA00A57B53 /* libACE.dylib */,
@@ -2825,7 +2829,7 @@
 					"-lpthread",
 					"-mtune=native",
 				);
-				OTHER_LDFLAGS = /usr/local/lib/libOGDFDebug.a;
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "Channel Manager Debug";
 				SDKROOT = macosx;
 			};
@@ -2892,7 +2896,7 @@
 					"-lpthread",
 					"-mtune=native",
 				);
-				OTHER_LDFLAGS = /usr/local/lib/libOGDF.a;
+				OTHER_LDFLAGS = "";
 				SDKROOT = macosx;
 			};
 			name = Release;
