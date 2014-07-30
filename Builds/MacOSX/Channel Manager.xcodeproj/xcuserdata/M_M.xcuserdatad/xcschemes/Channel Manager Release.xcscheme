@@ -69,15 +69,9 @@
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Release"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "3D401AEA48F74668882D2486"
-            BuildableName = "Channel Manager Debug.app"
-            BlueprintName = "Channel Manager"
-            ReferencedContainer = "container:Channel Manager.xcodeproj">
-         </BuildableReference>
-      </BuildableProductRunnable>
+      <PathRunnable
+         FilePath = "/Users/M_M/Documents/git.repositories/Channel Manager/Builds/MacOSX/build/Release/Channel Manager.app">
+      </PathRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Release">

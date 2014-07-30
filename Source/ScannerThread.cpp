@@ -602,6 +602,7 @@ void ScannerThread::gatherEntities(MplusM::Common::CheckFunction checker,
     _rememberedPorts.clear();
     _rememberedPorts.insert(lInputOnlyPortName.c_str());
     _rememberedPorts.insert(lOutputOnlyPortName.c_str());
+    MplusM::Utilities::RemoveStalePorts();
     MplusM::Utilities::GetDetectedPortList(detectedPorts);
     MplusM::Utilities::GetServiceNames(services, true, checker, checkStuff);
     // Record the services to be displayed.
