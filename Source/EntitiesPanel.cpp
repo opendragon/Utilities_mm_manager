@@ -88,6 +88,9 @@ static const char * kFontName = "Courier New";
 /*! @brief The size of the font to be used for text. */
 static const float kFontSize = 15.0;
 
+/*! @brief The outer 'gutter' for the entities. */
+static const int kGutter = 10;
+
 /*! @brief The initial height of the displayed region. */
 static const int kInitialPanelHeight = 768;
 
@@ -106,7 +109,9 @@ static const int kInitialPanelWidth = 1024;
 # pragma mark Constructors and destructors
 #endif // defined(__APPLE__)
 
-EntitiesPanel::EntitiesPanel(ContentPanel * theContainer) :
+EntitiesPanel::EntitiesPanel(ContentPanel * theContainer,
+                             const int      startingWidth,
+                             const int      startingHeight) :
     inherited(), _knownPorts(), _knownEntities(), _defaultBoldFont(), _defaultNormalFont(),
     _firstAddPoint(NULL), _firstRemovePoint(NULL), _container(theContainer),
     _dragConnectionActive(false)
@@ -114,7 +119,8 @@ EntitiesPanel::EntitiesPanel(ContentPanel * theContainer) :
     OD_LOG_ENTER(); //####
     _defaultBoldFont = new Font(kFontName, kFontSize, Font::bold);
     _defaultNormalFont = new Font(kFontName, kFontSize, Font::plain);
-    setSize(kInitialPanelWidth, kInitialPanelHeight);
+    setSize(startingWidth ? startingWidth : kInitialPanelWidth,
+            startingHeight ? startingHeight : kInitialPanelHeight);
     setVisible(true);
     OD_LOG_EXIT_P(this); //####
 } // EntitiesPanel::EntitiesPanel
@@ -204,9 +210,9 @@ void EntitiesPanel::adjustSize(void)
             OD_LOG_L4("minX = ", minX, "maxX = ", maxX, "minY = ", minY, "maxY = ", maxY); //####
             juce::Rectangle<int> oldBounds(getBounds());
             int                  minLeft = min(0, minX);
-            int                  maxRight = max(0, maxX);
-            int                  minTop = min(0, minY);
-            int                  maxBottom = max(0, maxY);
+            int                  maxRight = max(max(0, maxX), minLeft + outerW) + kGutter;
+            int                  minTop = min(0, minY) - kGutter;
+            int                  maxBottom = max(max(0, maxY), minTop + outerH) + kGutter;
             juce::Rectangle<int> newBounds(minLeft, minTop, maxRight - minLeft, maxBottom - minTop);
             
             OD_LOG_L4("minLeft = ", minLeft, "minTop = ", minTop, "maxRight = ", maxRight, //####

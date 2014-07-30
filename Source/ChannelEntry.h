@@ -214,6 +214,15 @@ namespace ChannelManager
         /*! @brief Mark all the connections as invalid. */
         void invalidateConnections(void);
         
+        /*! @brief Returns @c true if the port entry is a secondary port of a service and @c false
+         otherwise.
+         @returns @c true if the port is a secondary port of a service and @c false otherwise. */
+        inline bool isInputOutput(void)
+        const
+        {
+            return (kPortUsageInputOutput == _usage);
+        } // isInputOutput
+        
         /*! @brief Returns @c true if the port entry is the bottom-most (last) port entry in a
          panel and @c false otherwise.
          @returns @c true if the port is the last port entry in a panel and @c false

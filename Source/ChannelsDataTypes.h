@@ -126,6 +126,9 @@ namespace ChannelManager
         /*! @brief The port is for a service. */
         kPortUsageService,
         
+        /*! @brief The port is for input / output. */
+        kPortUsageInputOutput,
+        
         /*! @brief The port has no specific characterization. */
         kPortUsageOther
         

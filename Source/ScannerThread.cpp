@@ -344,7 +344,7 @@ void ScannerThread::addEntitiesToPanels(EntitiesPanel & newEntitiesPanel)
             MplusM::Common::ChannelDescription aChannel(*inner);
             
             aPort = anEntity->addPort(aChannel._portName.c_str(), aChannel._portProtocol.c_str(),
-                                      kPortUsageService, kPortDirectionInput);
+                                      kPortUsageInputOutput, kPortDirectionInput);
             recordPort(portsSeen, aPort);
         }
         for (MplusM::Common::ChannelVector::const_iterator inner =
@@ -354,7 +354,7 @@ void ScannerThread::addEntitiesToPanels(EntitiesPanel & newEntitiesPanel)
             MplusM::Common::ChannelDescription aChannel(*inner);
             
             aPort = anEntity->addPort(aChannel._portName.c_str(), aChannel._portProtocol.c_str(),
-                                      kPortUsageService, kPortDirectionOutput);
+                                      kPortUsageInputOutput, kPortDirectionOutput);
             recordPort(portsSeen, aPort);
         }
         _entitiesSeen.push_back(anEntity);
@@ -625,7 +625,9 @@ void ScannerThread::run(void)
     while (! threadShouldExit())
     {
         // Create a new panel to add entities to.
-        EntitiesPanel * newEntitiesPanel = new EntitiesPanel(NULL);
+        EntitiesPanel & activePanel(_window->getEntitiesPanel());
+        EntitiesPanel * newEntitiesPanel = new EntitiesPanel(NULL, activePanel.getWidth(),
+                                                             activePanel.getHeight());
         int64           loopStartTime = Time::currentTimeMillis();
         
         gatherEntities(CheckForExit, NULL);

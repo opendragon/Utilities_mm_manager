@@ -71,11 +71,14 @@ static const float kControlLengthScale = 0.25;
 /*! @brief The width and height of the marker displayed during movement. */
 static const float kMarkerSide = 10;
 
+/*! @brief The line width for an input / output connection. */
+static const float kInputOutputConnectionWidth = 4;
+
 /*! @brief The line width for a normal connection. */
 static const float kNormalConnectionWidth = 2;
 
 /*! @brief The line width for a normal connection. */
-static const float kServiceConnectionWidth = (2 * kNormalConnectionWidth);
+static const float kServiceConnectionWidth = 6;
 
 /*! @brief The scale factor to apply to get the size of the target box. */
 static const float kTargetBoxScale = 0.25;
@@ -390,6 +393,10 @@ static void drawConnection(Graphics &                  gg,
         if (destination->isService())
         {
             thickness = kServiceConnectionWidth;
+        }
+        else if (destination->isInputOutput())
+        {
+            thickness = kInputOutputConnectionWidth;
         }
         else
         {

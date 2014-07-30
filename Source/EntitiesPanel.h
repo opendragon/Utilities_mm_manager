@@ -66,8 +66,12 @@ namespace ChannelManager
     public:
         
         /*! @brief The constructor.
-        @param container The container in which the panel is embedded. */
-        EntitiesPanel(ContentPanel * container);
+         @param container The container in which the panel is embedded.
+         @param startingWidth The initial width to use, or zero to use a default width.
+         @param startingHeight The initial height to use, or zero to uase a default height. */
+        EntitiesPanel(ContentPanel * container,
+                      const int      startingWidth = 0,
+                      const int      startingHeight = 0);
         
         /*! @brief The destructor. */
         virtual ~EntitiesPanel(void);

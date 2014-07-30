@@ -402,7 +402,8 @@ void ChannelContainer::resized(void)
 {
     OD_LOG_OBJENTER(); //####
     // Just set the limits of our constrainer so that we don't drag ourselves off the screen
-    _constrainer.setMinimumOnscreenAmounts(getHeight(), getWidth(), getHeight(), getWidth());
+    _constrainer.setMinimumOnscreenAmounts(getHeight(), getWidth(), getHeight() / 2,
+                                           getWidth() / 2);
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::resized
 
