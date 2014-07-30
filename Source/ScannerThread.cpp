@@ -812,6 +812,7 @@ void ScannerThread::setEntityPositions(void)
             }
         }
     }
+    gg.clear();
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::setEntityPositions
 

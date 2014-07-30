@@ -44,7 +44,6 @@
 		DF845F6E1988649A00A57B53 /* libYARP_init.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF74B666197583E700A6ECD3 /* libYARP_init.a */; };
 		DF845F6F1988649E00A57B53 /* libYARP_OS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF74B668197583EE00A6ECD3 /* libYARP_OS.a */; };
 		DF845F70198864A300A57B53 /* libACE.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF74B66A197583F900A6ECD3 /* libACE.dylib */; };
-		DF845F7E198865F000A57B53 /* libOGDFDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF1470A51979833900E182D6 /* libOGDFDebug.a */; };
 		E2FED85FB76A3966795E8416 /* juce_core.mm in Sources */ = {isa = PBXBuildFile; fileRef = ADC373CE4DEDF850BDE3A738 /* juce_core.mm */; };
 		F33B431E9BA660F6B5034872 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA72840EFF14AF9F39FB65E /* Carbon.framework */; };
 		FC05A001CFB727F29DBDA646 /* juce_video.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8B6D44520CD8F84BD2C3B964 /* juce_video.mm */; };
@@ -841,7 +840,6 @@
 		DF845F74198864BA00A57B53 /* libYARP_init.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libYARP_init.a; path = ../../../../../../../usr/local/lib/libYARP_init.a; sourceTree = "<group>"; };
 		DF845F75198864BA00A57B53 /* libYARP_OS.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libYARP_OS.a; path = ../../../../../../../usr/local/lib/libYARP_OS.a; sourceTree = "<group>"; };
 		DF845F76198864BA00A57B53 /* libACE.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libACE.dylib; path = ../../../../../../../usr/local/lib/libACE.dylib; sourceTree = "<group>"; };
-		DF845F7F1988661600A57B53 /* libOGDFDebug.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOGDFDebug.a; path = ../../../../../../../usr/local/lib/libOGDFDebug.a; sourceTree = "<group>"; };
 		DF91B3E932852EBD0347C905 /* juce_android_Messaging.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_android_Messaging.cpp; path = ../../JuceLibraryCode/modules/juce_events/native/juce_android_Messaging.cpp; sourceTree = SOURCE_ROOT; };
 		DF9FF6D4DE18B3DF54A65B7D /* juce_Toolbar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_Toolbar.h; path = ../../JuceLibraryCode/modules/juce_gui_basics/widgets/juce_Toolbar.h; sourceTree = SOURCE_ROOT; };
 		E059C6388A6E99841B353887 /* juce_ZipFile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_ZipFile.cpp; path = ../../JuceLibraryCode/modules/juce_core/zip/juce_ZipFile.cpp; sourceTree = SOURCE_ROOT; };
@@ -963,7 +961,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DF845F7E198865F000A57B53 /* libOGDFDebug.a in Frameworks */,
 				DF845F6C1988649300A57B53 /* libmpmCommon.a in Frameworks */,
 				DF845F6D1988649700A57B53 /* libodLogging.a in Frameworks */,
 				DF845F6E1988649A00A57B53 /* libYARP_init.a in Frameworks */,
@@ -2484,7 +2481,6 @@
 			isa = PBXGroup;
 			children = (
 				DF845F72198864BA00A57B53 /* libmpmCommon.a */,
-				DF845F7F1988661600A57B53 /* libOGDFDebug.a */,
 				DF845F73198864BA00A57B53 /* libodLogging.a */,
 				DF845F74198864BA00A57B53 /* libYARP_init.a */,
 				DF845F75198864BA00A57B53 /* libYARP_OS.a */,
@@ -2799,6 +2795,7 @@
 		83047DF2773F8F8C0DC653C2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/build/$(CONFIGURATION)";
@@ -2812,6 +2809,10 @@
 					"JUCER_XCODE_MAC_F6D2F4CF=1",
 					"JUCE_APP_VERSION=1.0.0",
 					"JUCE_APP_VERSION_HEX=0x10000",
+					OGDF_DEBUG,
+					__MACOSX_CORE__,
+					OGDF_MEMORY_MALLOC_TS,
+					OGDF_USE_SSE2,
 				);
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Info.plist;
@@ -2821,14 +2822,10 @@
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "";
 				OTHER_CPLUSPLUSFLAGS = (
-					"-D__MACOSX_CORE__",
 					"-lpthread",
-					"-DOGDF_DEBUG",
-					"-DOGDF_MEMORY_MALLOC_TS",
-					"-DOGDF_USE_SSE2",
 					"-mtune=native",
 				);
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = /usr/local/lib/libOGDFDebug.a;
 				PRODUCT_NAME = "Channel Manager Debug";
 				SDKROOT = macosx;
 			};
@@ -2865,6 +2862,7 @@
 		B6F284AC52D9E9009DC2F2DE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/build/$(CONFIGURATION)";
@@ -2878,6 +2876,9 @@
 					"JUCER_XCODE_MAC_F6D2F4CF=1",
 					"JUCE_APP_VERSION=1.0.0",
 					"JUCE_APP_VERSION_HEX=0x10000",
+					__MACOSX_CORE__,
+					OGDF_MEMORY_MALLOC_TS,
+					OGDF_USE_SSE2,
 				);
 				GCC_UNROLL_LOOPS = YES;
 				HEADER_SEARCH_PATHS = "$(inherited)";
@@ -2888,13 +2889,10 @@
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "";
 				OTHER_CPLUSPLUSFLAGS = (
-					"-D__MACOSX_CORE__",
 					"-lpthread",
 					"-mtune=native",
-					"-DOGDF_MEMORY_MALLOC_TS",
-					"-DOGDF_USE_SSE2",
 				);
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = /usr/local/lib/libOGDF.a;
 				SDKROOT = macosx;
 			};
 			name = Release;
