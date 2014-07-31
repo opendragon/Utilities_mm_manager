@@ -976,7 +976,7 @@ bool ScannerThread::updatePanels(EntitiesPanel & newPanel)
         entitiesPanel.removeUnvisitedEntities();
         entitiesPanel.removeInvalidConnections();
         OD_LOG("about to call adjustSize()"); //####
-        entitiesPanel.adjustSize();
+        entitiesPanel.adjustSize(false);
         // Force a repaint of the containing panel.
         entitiesPanel.repaint();
         result = false;

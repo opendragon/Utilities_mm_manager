@@ -149,10 +149,10 @@ void EntitiesPanel::addEntity(ChannelContainer * anEntity)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::addEntity
 
-void EntitiesPanel::adjustSize(void)
+void EntitiesPanel::adjustSize(const bool andRepaint)
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_B1("dontChangeBounds = ", dontChangeBounds); //####
+    OD_LOG_B1("andRepaint = ", andRepaint); //####
     ContentPanel * within = getContainer();
     
     OD_LOG_P1("within <- ", within); //####
@@ -274,7 +274,10 @@ void EntitiesPanel::adjustSize(void)
                 }
             }
             within->setViewPosition(outerL, outerT);
-            within->repaint();
+            if (andRepaint)
+            {
+                within->repaint();
+            }
         }
     }
     OD_LOG_OBJEXIT(); //####
@@ -675,7 +678,7 @@ void EntitiesPanel::resized(void)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG("about to call adjustSize()"); //####
-    adjustSize();
+    adjustSize(true);
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::resized
 

@@ -80,8 +80,9 @@ namespace ChannelManager
          @param anEntity The entity to be added. */
         void addEntity(ChannelContainer * anEntity);
 
-        /*! @brief Recalculate size based on entities present. */
-        void adjustSize(void);
+        /*! @brief Recalculate size based on entities present.
+         @param andRepaint @c true if a repaint should be performed as well, and @c false if not. */
+        void adjustSize(const bool andRepaint);
         
         /*! @brief Call the visited flags for all entities. */
         void clearAllVisitedFlags(void);
