@@ -179,6 +179,9 @@ namespace ChannelManager
         ChannelEntry * locateEntry(const Point<float> & location)
         const;
         
+        /*! @brief Acquire the data structures. */
+        void lock(void);
+        
         /*! @brief Called when a mouse button is pressed.
          @param ee Details about the position and status of the mouse event. */
         virtual void mouseDown(const MouseEvent & ee) override;
@@ -215,6 +218,9 @@ namespace ChannelManager
          @param position The location of the dragging connection. */
         void setDragInfo(const Point<float> position);
         
+        /*! @brief Release the data structures. */
+        void unlock(void);
+        
     protected:
         
     private:
@@ -228,6 +234,9 @@ namespace ChannelManager
         /*! @brief Display the connections between containers.
          @param gg The graphics context in which to draw. */
         void drawConnections(Graphics & gg);
+        
+        /*! @brief A mutual-exclusion lock to protect the data structures. */
+        juce::CriticalSection _lock;
         
         /*! @brief The set of known ports. */
         PortEntryMap _knownPorts;

@@ -478,11 +478,11 @@ ChannelEntry::ChannelEntry(ChannelContainer *  parent,
     switch (_direction)
     {
 	    case kPortDirectionInput :
-            prefix = "In ";
+            prefix = ((kPortUsageService == _usage) ? "S " : "In ");
             break;
             
 	    case kPortDirectionInputOutput :
-            prefix = "I/O ";
+            prefix = ((kPortUsageClient == _usage) ? "C " : "I/O ");
             break;
             
 	    case kPortDirectionOutput :

@@ -142,6 +142,8 @@ void EntitiesPanel::addEntity(ChannelContainer * anEntity)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("anEntity = ", anEntity); //####
+    GenericScopedLock<CriticalSection> locker(_lock);
+
     _knownEntities.push_back(anEntity);
     addChildComponent(anEntity);
     OD_LOG_OBJEXIT(); //####
@@ -171,6 +173,8 @@ void EntitiesPanel::adjustSize(void)
                   outerB); //####
         OD_LOG_L4("outerW = ", outerW, "outerH = ", outerH, "outerW2 = ", outerW2, //####
                   "outerH2 = ", outerH2); //####
+        GenericScopedLock<CriticalSection> locker(_lock);
+
         if (0 < _knownEntities.size())
         {
             for (ContainerList::const_iterator it(_knownEntities.begin());
@@ -213,9 +217,9 @@ void EntitiesPanel::adjustSize(void)
             OD_LOG_L4("minX = ", minX, "maxX = ", maxX, "minY = ", minY, "maxY = ", maxY); //####
             juce::Rectangle<int> oldBounds(getBounds());
             int                  minLeft = min(0, minX);
-            int                  maxRight = max(max(0, maxX), minLeft + outerW) + kGutter;
-            int                  minTop = min(0, minY) - kGutter;
-            int                  maxBottom = max(max(0, maxY), minTop + outerH) + kGutter;
+            int                  maxRight = max(max(0, maxX + kGutter), minLeft + outerW);
+            int                  minTop = min(0, minY);
+            int                  maxBottom = max(max(0, maxY + kGutter), minTop + outerH);
             juce::Rectangle<int> newBounds(minLeft, minTop, maxRight - minLeft, maxBottom - minTop);
             
             OD_LOG_L4("minLeft = ", minLeft, "minTop = ", minTop, "maxRight = ", maxRight, //####
@@ -279,6 +283,8 @@ void EntitiesPanel::adjustSize(void)
 void EntitiesPanel::clearAllVisitedFlags(void)
 {
     OD_LOG_OBJENTER(); //####
+    GenericScopedLock<CriticalSection> locker(_lock);
+
     if (0 < _knownEntities.size())
     {
         for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it;
@@ -306,6 +312,8 @@ void EntitiesPanel::clearDragInfo(void)
 void EntitiesPanel::clearMarkers(void)
 {
     OD_LOG_OBJENTER(); //####
+    GenericScopedLock<CriticalSection> locker(_lock);
+
     if (0 < _knownEntities.size())
     {
         for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it;
@@ -329,6 +337,8 @@ void EntitiesPanel::clearMarkers(void)
 void EntitiesPanel::clearOutData(void)
 {
     OD_LOG_OBJENTER(); //####
+    GenericScopedLock<CriticalSection> locker(_lock);
+
     if (0 < _knownEntities.size())
     {
         for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it;
@@ -352,6 +362,8 @@ void EntitiesPanel::drawConnections(Graphics & gg)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("gg = ", &gg); //####
+    GenericScopedLock<CriticalSection> locker(_lock);
+
     if (0 < _knownEntities.size())
     {
         for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it;
@@ -376,7 +388,8 @@ ChannelContainer * EntitiesPanel::findKnownEntity(const String & name)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("name = ", name.toStdString()); //####
-    ChannelContainer * result = NULL;
+    GenericScopedLock<CriticalSection> locker(_lock);
+    ChannelContainer *                 result = NULL;
     
     if (0 < _knownEntities.size())
     {
@@ -401,8 +414,9 @@ ChannelContainer * EntitiesPanel::findKnownEntityForPort(const String & name)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("name = ", name.toStdString()); //####
-    PortEntryMap::const_iterator match(_knownPorts.find(name));
-    ChannelContainer *           result = NULL;
+    GenericScopedLock<CriticalSection> locker(_lock);
+    PortEntryMap::const_iterator       match(_knownPorts.find(name));
+    ChannelContainer *                 result = NULL;
     
     if (_knownPorts.end() != match)
     {
@@ -430,7 +444,8 @@ ChannelContainer * EntitiesPanel::findKnownEntityForPort(const ChannelEntry * aP
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("aPort = ", aPort); //####
-    ChannelContainer * result = NULL;
+    GenericScopedLock<CriticalSection> locker(_lock);
+    ChannelContainer *                 result = NULL;
     
     if (0 < _knownEntities.size())
     {
@@ -455,8 +470,9 @@ ChannelEntry * EntitiesPanel::findKnownPort(const String & name)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("name = ", name.toStdString()); //####
-    ChannelEntry *               result = NULL;
-    PortEntryMap::const_iterator match(_knownPorts.find(name));
+    GenericScopedLock<CriticalSection> locker(_lock);
+    ChannelEntry *                     result = NULL;
+    PortEntryMap::const_iterator       match(_knownPorts.find(name));
     
     if (_knownPorts.end() == match)
     {
@@ -474,6 +490,8 @@ void EntitiesPanel::forgetPort(ChannelEntry * aPort)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("aPort = ", aPort); //####
+    GenericScopedLock<CriticalSection> locker(_lock);
+
     if (aPort)
     {
         PortEntryMap::iterator match(_knownPorts.find(aPort->getName()));
@@ -490,7 +508,8 @@ ChannelContainer * EntitiesPanel::getEntity(const size_t index)
 const
 {
     OD_LOG_OBJENTER(); //####
-    ChannelContainer * result;
+    GenericScopedLock<CriticalSection> locker(_lock);
+    ChannelContainer *                 result;
     
     if (_knownEntities.size() > index)
     {
@@ -508,7 +527,8 @@ size_t EntitiesPanel::getNumberOfEntities(void)
 const
 {
     OD_LOG_OBJENTER(); //####
-    int result = _knownEntities.size();
+    GenericScopedLock<CriticalSection> locker(_lock);
+    int                                result = _knownEntities.size();
     
     OD_LOG_OBJEXIT_L(result); //####
     return result;
@@ -518,7 +538,8 @@ ChannelEntry * EntitiesPanel::locateEntry(const Point<float> & location)
 const
 {
     OD_LOG_OBJENTER(); //####
-    ChannelEntry * result = NULL;
+    GenericScopedLock<CriticalSection> locker(_lock);
+    ChannelEntry *                     result = NULL;
     
     if (0 < _knownEntities.size())
     {
@@ -542,6 +563,13 @@ const
     return result;
 } // EntitiesPanel::locateEntry
 
+void EntitiesPanel::lock(void)
+{
+    OD_LOG_OBJENTER(); //####
+    _lock.enter();
+    OD_LOG_OBJEXIT(); //####
+} // EntitiesPanel::lock
+
 void EntitiesPanel::mouseDown(const MouseEvent & ee)
 {
     OD_LOG_OBJENTER(); //####
@@ -563,6 +591,8 @@ void EntitiesPanel::paint(Graphics & gg)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("gg = ", &gg); //####
+    GenericScopedLock<CriticalSection> locker(_lock);
+
     drawConnections(gg);
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::paint
@@ -590,6 +620,8 @@ void EntitiesPanel::rememberPort(ChannelEntry * aPort)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("aPort = ", aPort); //####
+    GenericScopedLock<CriticalSection> locker(_lock);
+
     if (aPort)
     {
         _knownPorts.insert(PortEntryMap::value_type(aPort->getPortName(), aPort));
@@ -600,6 +632,8 @@ void EntitiesPanel::rememberPort(ChannelEntry * aPort)
 void EntitiesPanel::removeInvalidConnections(void)
 {
     OD_LOG_OBJENTER(); //####
+    GenericScopedLock<CriticalSection> locker(_lock);
+
     if (0 < _knownEntities.size())
     {
         for (ContainerList::iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
@@ -618,6 +652,8 @@ void EntitiesPanel::removeInvalidConnections(void)
 void EntitiesPanel::removeUnvisitedEntities(void)
 {
     OD_LOG_OBJENTER(); //####
+    GenericScopedLock<CriticalSection> locker(_lock);
+    
     if (0 < _knownEntities.size())
     {
         for (ContainerList::iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
@@ -653,6 +689,13 @@ void EntitiesPanel::setDragInfo(const Point<float> position)
     }
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::setDragInfo
+
+void EntitiesPanel::unlock(void)
+{
+    OD_LOG_OBJENTER(); //####
+    _lock.exit();
+    OD_LOG_OBJEXIT(); //####
+} // EntitiesPanel::unlock
 
 #if defined(__APPLE__)
 # pragma mark Accessors
