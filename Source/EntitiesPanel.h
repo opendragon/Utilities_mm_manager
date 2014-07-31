@@ -98,11 +98,6 @@ namespace ChannelManager
          @returns @c NULL if the entity cannot be found and non-@c NULL if it is found. */
         ChannelContainer * findKnownEntity(const String & name);
         
-        /*! @brief Find a port in the to-be-displayed list by name.
-         @param name The name of the port.
-         @returns @c NULL if the port cannot be found and non-@c NULL if it is found. */
-        ChannelEntry * findKnownPort(const String & name);
-        
         /*! @brief Find an entity by the name of a port within it.
          @param name The name of the port.
          @returns @c NULL if the entity cannot be found and non-@c NULL if it is found. */
@@ -112,6 +107,11 @@ namespace ChannelManager
          @param aPort The port of interest.
          @returns @c NULL if the entity cannot be found and non-@c NULL if it is found. */
         ChannelContainer * findKnownEntityForPort(const ChannelEntry * aPort);
+        
+        /*! @brief Find a port in the to-be-displayed list by name.
+         @param name The name of the port.
+         @returns @c NULL if the port cannot be found and non-@c NULL if it is found. */
+        ChannelEntry * findKnownPort(const String & name);
         
         /*! @brief Remove a port from the set of known ports.
          @param aPort The port to be removed. */
