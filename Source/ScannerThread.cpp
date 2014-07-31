@@ -43,13 +43,13 @@
 #include "ContentPanel.h"
 #include "EntitiesPanel.h"
 
-//#include "ODEnableLogging.h"
-#include "ODLogging.h"
+#include <mpm/M+MAdapterChannel.h>
+
+//#include <odl/ODEnableLogging.h>
+#include <odl/ODLogging.h>
 
 #include <ogdf/basic/GraphAttributes.h>
 #include <ogdf/energybased/FMMMLayout.h>
-
-#include "M+MAdapterChannel.h"
 
 #if defined(__APPLE__)
 # pragma clang diagnostic push
@@ -322,103 +322,131 @@ void ScannerThread::addEntitiesToPanels(EntitiesPanel & newEntitiesPanel)
     PortEntryMap portsSeen;
     
     _entitiesSeen.clear();
-    for (ServiceMap::const_iterator outer(_detectedServices.begin());
-         _detectedServices.end() != outer; ++outer)
+    if (0 < _detectedServices.size())
     {
-        MplusM::Utilities::ServiceDescriptor descriptor(outer->second);
-        ChannelContainer *                   anEntity = new ChannelContainer(kContainerKindService,
+        for (ServiceMap::const_iterator outer(_detectedServices.begin());
+             _detectedServices.end() != outer; ++outer)
+        {
+            MplusM::Utilities::ServiceDescriptor descriptor(outer->second);
+            ChannelContainer *                   anEntity =
+                                                        new ChannelContainer(kContainerKindService,
                                                                  descriptor._canonicalName.c_str(),
                                                                          descriptor._kind.c_str(),
                                                                  descriptor._description.c_str(),
                                                                              newEntitiesPanel);
-        ChannelEntry *                       aPort =
+            ChannelEntry *                       aPort =
                                                 anEntity->addPort(descriptor._channelName.c_str(),
                                                                   "", kPortUsageService,
                                                                   kPortDirectionInput);
-        
-        recordPort(portsSeen, aPort);
-        for (MplusM::Common::ChannelVector::const_iterator inner =
-                                                                descriptor._inputChannels.begin();
-             descriptor._inputChannels.end() != inner; ++inner)
-        {
-            MplusM::Common::ChannelDescription aChannel(*inner);
+            MplusM::Common::ChannelVector &      inChannels = descriptor._inputChannels;
+            MplusM::Common::ChannelVector &      outChannels = descriptor._outputChannels;
             
-            aPort = anEntity->addPort(aChannel._portName.c_str(), aChannel._portProtocol.c_str(),
-                                      kPortUsageInputOutput, kPortDirectionInput);
             recordPort(portsSeen, aPort);
+            if (0 < inChannels.size())
+            {
+                for (MplusM::Common::ChannelVector::const_iterator inner = inChannels.begin();
+                     inChannels.end() != inner; ++inner)
+                {
+                    MplusM::Common::ChannelDescription aChannel(*inner);
+                    
+                    aPort = anEntity->addPort(aChannel._portName.c_str(),
+                                              aChannel._portProtocol.c_str(), kPortUsageInputOutput,
+                                              kPortDirectionInput);
+                    recordPort(portsSeen, aPort);
+                }
+            }
+            if (0 < outChannels.size())
+            {
+                for (MplusM::Common::ChannelVector::const_iterator inner = outChannels.begin();
+                     outChannels.end() != inner; ++inner)
+                {
+                    MplusM::Common::ChannelDescription aChannel(*inner);
+                    
+                    aPort = anEntity->addPort(aChannel._portName.c_str(),
+                                              aChannel._portProtocol.c_str(), kPortUsageInputOutput,
+                                              kPortDirectionOutput);
+                    recordPort(portsSeen, aPort);
+                }
+            }
+            _entitiesSeen.push_back(anEntity);
+            newEntitiesPanel.addEntity(anEntity);
         }
-        for (MplusM::Common::ChannelVector::const_iterator inner =
-                                                                descriptor._outputChannels.begin();
-             descriptor._outputChannels.end() != inner; ++inner)
-        {
-            MplusM::Common::ChannelDescription aChannel(*inner);
-            
-            aPort = anEntity->addPort(aChannel._portName.c_str(), aChannel._portProtocol.c_str(),
-                                      kPortUsageInputOutput, kPortDirectionOutput);
-            recordPort(portsSeen, aPort);
-        }
-        _entitiesSeen.push_back(anEntity);
-        newEntitiesPanel.addEntity(anEntity);
     }
     // Convert the detected ports with associates into entities in the background list.
-    for (AssociatesMap::const_iterator outer(_associatedPorts.begin());
-         _associatedPorts.end() != outer; ++outer)
+    if (0 < _associatedPorts.size())
     {
-        ChannelEntry *                             aPort;
-        ChannelContainer *                         anEntity =
+        for (AssociatesMap::const_iterator outer(_associatedPorts.begin());
+             _associatedPorts.end() != outer; ++outer)
+        {
+            ChannelEntry *                             aPort;
+            ChannelContainer *                         anEntity =
                                                 new ChannelContainer(kContainerKindClientOrAdapter,
                                                                      outer->first, "", "",
                                                                      newEntitiesPanel);
-        const MplusM::Utilities::PortAssociation & associates = outer->second._associates;
-        
-        for (MplusM::Common::StringVector::const_iterator inner = associates._inputs.begin();
-             associates._inputs.end() != inner; ++inner)
-        {
-            aPort = anEntity->addPort(inner->c_str(), "", kPortUsageOther, kPortDirectionInput);
+            const MplusM::Utilities::PortAssociation & associates = outer->second._associates;
+            const MplusM::Common::StringVector &       assocInputs = associates._inputs;
+            const MplusM::Common::StringVector &       assocOutputs = associates._outputs;
+            
+            if (0 < assocInputs.size())
+            {
+                for (MplusM::Common::StringVector::const_iterator inner = assocInputs.begin();
+                     assocInputs.end() != inner; ++inner)
+                {
+                    aPort = anEntity->addPort(inner->c_str(), "", kPortUsageOther,
+                                              kPortDirectionInput);
+                    recordPort(portsSeen, aPort);
+                }
+            }
+            if (0 < assocOutputs.size())
+            {
+                for (MplusM::Common::StringVector::const_iterator inner = assocOutputs.begin();
+                     assocOutputs.end() != inner; ++inner)
+                {
+                    aPort = anEntity->addPort(inner->c_str(), "", kPortUsageOther,
+                                              kPortDirectionOutput);
+                    recordPort(portsSeen, aPort);
+                }
+            }
+            aPort = anEntity->addPort(outer->second._name, "", kPortUsageClient,
+                                      kPortDirectionInputOutput);
             recordPort(portsSeen, aPort);
+            _entitiesSeen.push_back(anEntity);
+            newEntitiesPanel.addEntity(anEntity);
         }
-        for (MplusM::Common::StringVector::const_iterator inner = associates._outputs.begin();
-             associates._outputs.end() != inner; ++inner)
-        {
-            aPort = anEntity->addPort(inner->c_str(), "", kPortUsageOther, kPortDirectionOutput);
-            recordPort(portsSeen, aPort);
-        }
-        aPort = anEntity->addPort(outer->second._name, "", kPortUsageClient,
-                                  kPortDirectionInputOutput);
-        recordPort(portsSeen, aPort);
-        _entitiesSeen.push_back(anEntity);
-        newEntitiesPanel.addEntity(anEntity);
     }
     // Convert the detected standalone ports into entities in the background list.
-    for (PortMap::const_iterator walker(_standalonePorts.begin());
-         _standalonePorts.end() != walker; ++walker)
+    if (0 < _standalonePorts.size())
     {
-        ChannelContainer * anEntity = new ChannelContainer(kContainerKindOther, walker->first, "",
-                                                           "", newEntitiesPanel);
-        PortUsage          usage;
-        
-        switch (MplusM::Utilities::GetPortKind(walker->second._name.toStdString().c_str()))
+        for (PortMap::const_iterator walker(_standalonePorts.begin());
+             _standalonePorts.end() != walker; ++walker)
         {
-            case MplusM::Utilities::kPortKindClient :
-                usage = kPortUsageClient;
-                break;
-                
-            case MplusM::Utilities::kPortKindService :
-            case MplusM::Utilities::kPortKindServiceRegistry :
-                usage = kPortUsageService;
-                break;
-                
-            default :
-                usage = kPortUsageOther;
-                break;
-                
+            ChannelContainer * anEntity = new ChannelContainer(kContainerKindOther, walker->first,
+                                                               "", "", newEntitiesPanel);
+            PortUsage          usage;
+            
+            switch (MplusM::Utilities::GetPortKind(walker->second._name.toStdString().c_str()))
+            {
+                case MplusM::Utilities::kPortKindClient :
+                    usage = kPortUsageClient;
+                    break;
+                    
+                case MplusM::Utilities::kPortKindService :
+                case MplusM::Utilities::kPortKindServiceRegistry :
+                    usage = kPortUsageService;
+                    break;
+                    
+                default :
+                    usage = kPortUsageOther;
+                    break;
+                    
+            }
+            ChannelEntry * aPort = anEntity->addPort(walker->second._name, "", usage,
+                                                     walker->second._direction);
+            
+            recordPort(portsSeen, aPort);
+            _entitiesSeen.push_back(anEntity);
+            newEntitiesPanel.addEntity(anEntity);
         }
-        ChannelEntry * aPort = anEntity->addPort(walker->second._name, "", usage,
-                                                 walker->second._direction);
-        
-        recordPort(portsSeen, aPort);
-        _entitiesSeen.push_back(anEntity);
-        newEntitiesPanel.addEntity(anEntity);
     }
     setEntityPositions();
     OD_LOG_OBJEXIT(); //####
@@ -431,36 +459,42 @@ void ScannerThread::addPortConnections(const MplusM::Utilities::PortVector & det
     OD_LOG_OBJENTER(); //####
     OD_LOG_P2("detectedPorts = ", &detectedPorts, "checkStuff = ", checkStuff); //####
     _connections.clear();
-    for (MplusM::Utilities::PortVector::const_iterator outer(detectedPorts.begin());
-         detectedPorts.end() != outer; ++outer)
+    if (0 < detectedPorts.size())
     {
-        String outerName(outer->_portName.c_str());
-        
-        if (_rememberedPorts.end() != _rememberedPorts.find(outerName))
+        for (MplusM::Utilities::PortVector::const_iterator outer(detectedPorts.begin());
+             detectedPorts.end() != outer; ++outer)
         {
-            ConnectionDetails             details;
-            MplusM::Common::ChannelVector inputs;
-            MplusM::Common::ChannelVector outputs;
+            String outerName(outer->_portName.c_str());
             
-            details._outPortName = outerName;
-            MplusM::Utilities::GatherPortConnections(outer->_portName, inputs, outputs,
-                                                     MplusM::Utilities::kInputAndOutputOutput,
-                                                     true, checker, checkStuff);
-            for (MplusM::Common::ChannelVector::const_iterator inner(outputs.begin());
-                 outputs.end() != inner; ++inner)
+            if (_rememberedPorts.end() != _rememberedPorts.find(outerName))
             {
-                String innerName(inner->_portName.c_str());
+                ConnectionDetails             details;
+                MplusM::Common::ChannelVector inputs;
+                MplusM::Common::ChannelVector outputs;
                 
-                if (_rememberedPorts.end() != _rememberedPorts.find(innerName))
+                details._outPortName = outerName;
+                MplusM::Utilities::GatherPortConnections(outer->_portName, inputs, outputs,
+                                                         MplusM::Utilities::kInputAndOutputOutput,
+                                                         true, checker, checkStuff);
+                if (0 < outputs.size())
                 {
-                    details._inPortName = innerName;
-                    details._mode = inner->_portMode;
-                    _connections.push_back(details);
+                    for (MplusM::Common::ChannelVector::const_iterator inner(outputs.begin());
+                         outputs.end() != inner; ++inner)
+                    {
+                        String innerName(inner->_portName.c_str());
+                        
+                        if (_rememberedPorts.end() != _rememberedPorts.find(innerName))
+                        {
+                            details._inPortName = innerName;
+                            details._mode = inner->_portMode;
+                            _connections.push_back(details);
+                        }
+                        yield();
+                    }
                 }
-                yield();
             }
+            yield();
         }
-        yield();
     }
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::addPortConnections
@@ -472,44 +506,57 @@ void ScannerThread::addPortsWithAssociates(const MplusM::Utilities::PortVector &
     OD_LOG_OBJENTER(); //####
     OD_LOG_P2("detectedPorts = ", &detectedPorts, "checkStuff = ", checkStuff); //####
     _associatedPorts.clear();
-    for (MplusM::Utilities::PortVector::const_iterator outer(detectedPorts.begin());
-         detectedPorts.end() != outer; ++outer)
+    if (0 < detectedPorts.size())
     {
-        String outerName(outer->_portName.c_str());
-        
-        if (_rememberedPorts.end() == _rememberedPorts.find(outerName))
+        for (MplusM::Utilities::PortVector::const_iterator outer(detectedPorts.begin());
+             detectedPorts.end() != outer; ++outer)
         {
-            PortAndAssociates associates;
+            String outerName(outer->_portName.c_str());
             
-            if (MplusM::Utilities::GetAssociatedPorts(outer->_portName, associates._associates,
-                                                      STANDARD_WAIT_TIME, true, checker,
-                                                      checkStuff))
+            if (_rememberedPorts.end() == _rememberedPorts.find(outerName))
             {
-                if (associates._associates._primary)
+                PortAndAssociates associates;
+                
+                if (MplusM::Utilities::GetAssociatedPorts(outer->_portName, associates._associates,
+                                                          STANDARD_WAIT_TIME, true, checker,
+                                                          checkStuff))
                 {
-                    String caption(outer->_portIpAddress + ":" + outer->_portPortNumber);
-                    
-                    associates._name = outerName;
-                    _associatedPorts.insert(AssociatesMap::value_type(caption, associates));
-                    _rememberedPorts.insert(outerName);
-                    for (MplusM::Common::StringVector::const_iterator inner =
-                         associates._associates._inputs.begin();
-                         associates._associates._inputs.end() != inner; ++inner)
+                    if (associates._associates._primary)
                     {
-                        _rememberedPorts.insert(inner->c_str());
-                        yield();
-                    }
-                    for (MplusM::Common::StringVector::const_iterator inner =
-                         associates._associates._outputs.begin();
-                         associates._associates._outputs.end() != inner; ++inner)
-                    {
-                        _rememberedPorts.insert(inner->c_str());
-                        yield();
+                        String caption(outer->_portIpAddress + ":" + outer->_portPortNumber);
+                        
+                        associates._name = outerName;
+                        _associatedPorts.insert(AssociatesMap::value_type(caption, associates));
+                        _rememberedPorts.insert(outerName);
+                        MplusM::Common::StringVector & assocInputs = associates._associates._inputs;
+                        MplusM::Common::StringVector & assocOutputs =
+                                                                    associates._associates._outputs;
+                        
+                        if (0 < assocInputs.size())
+                        {
+                            for (MplusM::Common::StringVector::const_iterator inner =
+                                                                                assocInputs.begin();
+                                 assocInputs.end() != inner; ++inner)
+                            {
+                                _rememberedPorts.insert(inner->c_str());
+                                yield();
+                            }
+                        }
+                        if (0 < assocOutputs.size())
+                        {
+                            for (MplusM::Common::StringVector::const_iterator inner =
+                                                                            assocOutputs.begin();
+                                 assocOutputs.end() != inner; ++inner)
+                            {
+                                _rememberedPorts.insert(inner->c_str());
+                                yield();
+                            }
+                        }
                     }
                 }
             }
+            yield();
         }
-        yield();
     }
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::addPortsWithAssociates
@@ -521,24 +568,28 @@ void ScannerThread::addRegularPortEntities(const MplusM::Utilities::PortVector &
     OD_LOG_OBJENTER(); //####
     OD_LOG_P2("detectedPorts = ", &detectedPorts, "checkStuff = ", checkStuff); //####
     _standalonePorts.clear();
-    for (MplusM::Utilities::PortVector::const_iterator walker(detectedPorts.begin());
-         detectedPorts.end() != walker; ++walker)
+    if (0 < detectedPorts.size())
     {
-        String walkerName(walker->_portName.c_str());
-        
-        if (_rememberedPorts.end() == _rememberedPorts.find(walkerName))
+        for (MplusM::Utilities::PortVector::const_iterator walker(detectedPorts.begin());
+             detectedPorts.end() != walker; ++walker)
         {
-            String           caption(walker->_portIpAddress + ":" + walker->_portPortNumber);
-            NameAndDirection info;
-            EntitiesPanel &  entitiesPanel(_window->getEntitiesPanel());
-            ChannelEntry *   oldEntry = entitiesPanel.findKnownPort(walkerName);
+            String walkerName(walker->_portName.c_str());
             
-            _rememberedPorts.insert(walkerName);
-            info._name = walkerName;
-            info._direction = determineDirection(oldEntry, walker->_portName, checker, checkStuff);
-            _standalonePorts.insert(PortMap::value_type(caption, info));
+            if (_rememberedPorts.end() == _rememberedPorts.find(walkerName))
+            {
+                String           caption(walker->_portIpAddress + ":" + walker->_portPortNumber);
+                NameAndDirection info;
+                EntitiesPanel &  entitiesPanel(_window->getEntitiesPanel());
+                ChannelEntry *   oldEntry = entitiesPanel.findKnownPort(walkerName);
+                
+                _rememberedPorts.insert(walkerName);
+                info._name = walkerName;
+                info._direction = determineDirection(oldEntry, walker->_portName, checker,
+                                                     checkStuff);
+                _standalonePorts.insert(PortMap::value_type(caption, info));
+            }
+            yield();
         }
-        yield();
     }
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::addRegularPortEntities
@@ -550,42 +601,54 @@ void ScannerThread::addServices(const MplusM::Common::StringVector & services,
     OD_LOG_OBJENTER(); //####
     OD_LOG_P2("services = ", &services, "checkStuff = ", checkStuff); //####
     _detectedServices.clear();
-    for (MplusM::Common::StringVector::const_iterator outer(services.begin());
-         services.end() != outer; ++outer)
+    if (0 < services.size())
     {
-        String outerName(outer->c_str());
-        
-        if (_detectedServices.end() == _detectedServices.find(outerName))
+        for (MplusM::Common::StringVector::const_iterator outer(services.begin());
+             services.end() != outer; ++outer)
         {
-            MplusM::Utilities::ServiceDescriptor descriptor;
+            String outerName(outer->c_str());
             
-            if (MplusM::Utilities::GetNameAndDescriptionForService(*outer, descriptor,
-                                                                   STANDARD_WAIT_TIME, checker,
-                                                                   checkStuff))
+            if (_detectedServices.end() == _detectedServices.find(outerName))
             {
-                _detectedServices.insert(ServiceMap::value_type(outerName, descriptor));
-                _rememberedPorts.insert(descriptor._channelName.c_str());
-                for (MplusM::Common::ChannelVector::const_iterator inner =
-                                                                descriptor._inputChannels.begin();
-                     descriptor._inputChannels.end() != inner; ++inner)
+                MplusM::Utilities::ServiceDescriptor descriptor;
+                
+                if (MplusM::Utilities::GetNameAndDescriptionForService(*outer, descriptor,
+                                                                       STANDARD_WAIT_TIME, checker,
+                                                                       checkStuff))
                 {
-                    MplusM::Common::ChannelDescription aChannel(*inner);
+                    _detectedServices.insert(ServiceMap::value_type(outerName, descriptor));
+                    _rememberedPorts.insert(descriptor._channelName.c_str());
+                    MplusM::Common::ChannelVector & inChannels = descriptor._inputChannels;
+                    MplusM::Common::ChannelVector & outChannels = descriptor._outputChannels;
                     
-                    _rememberedPorts.insert(aChannel._portName.c_str());
-                    yield();
-                }
-                for (MplusM::Common::ChannelVector::const_iterator inner =
-                                                                descriptor._outputChannels.begin();
-                     descriptor._outputChannels.end() != inner; ++inner)
-                {
-                    MplusM::Common::ChannelDescription aChannel(*inner);
-                    
-                    _rememberedPorts.insert(aChannel._portName.c_str());
-                    yield();
+                    if (0 < inChannels.size())
+                    {
+                        for (MplusM::Common::ChannelVector::const_iterator inner =
+                                                                                inChannels.begin();
+                             inChannels.end() != inner; ++inner)
+                        {
+                            MplusM::Common::ChannelDescription aChannel(*inner);
+                            
+                            _rememberedPorts.insert(aChannel._portName.c_str());
+                            yield();
+                        }
+                    }
+                    if (0 < outChannels.size())
+                    {
+                        for (MplusM::Common::ChannelVector::const_iterator inner =
+                                                                                outChannels.begin();
+                             outChannels.end() != inner; ++inner)
+                        {
+                            MplusM::Common::ChannelDescription aChannel(*inner);
+                            
+                            _rememberedPorts.insert(aChannel._portName.c_str());
+                            yield();
+                        }
+                    }
                 }
             }
+            yield();
         }
-        yield();
     }
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::addServices
@@ -692,51 +755,8 @@ void ScannerThread::setEntityPositions(void)
     ga.height(phantomNode) = 1;
     ga.x(phantomNode) = (randomizer.nextFloat() * fullWidth);
     ga.y(phantomNode) = (randomizer.nextFloat() * fullHeight);
-    for (ContainerList::const_iterator it(_entitiesSeen.begin()); _entitiesSeen.end() != it; ++it)
+    if (0 < _entitiesSeen.size())
     {
-        ChannelContainer * anEntity = *it;
-        
-        if (anEntity)
-        {
-            float                  newX;
-            float                  newY;
-            juce::Rectangle<float> entityShape(anEntity->getLocalBounds().toFloat());
-            ogdf::node             aNode = gg.newNode();
-            ChannelEntry *         firstPort = anEntity->getPort(0);
-            ChannelContainer *     olderVersion = NULL;
-            
-            if (firstPort)
-            {
-                olderVersion = entitiesPanel.findKnownEntityForPort(firstPort->getPortName());
-            }
-            else
-            {
-                olderVersion = entitiesPanel.findKnownEntity(anEntity->getName());
-            }
-            ga.width(aNode) = entityShape.getWidth();
-            ga.height(aNode) = entityShape.getHeight();
-            anEntity->setNode(aNode);
-            if (olderVersion)
-            {
-                juce::Rectangle<float> oldShape(olderVersion->getLocalBounds().toFloat());
-                
-                newX = oldShape.getX();
-                newY = oldShape.getY();
-            }
-            else
-            {
-                newX = (randomizer.nextFloat() * (fullWidth - entityShape.getWidth()));
-                newY = (randomizer.nextFloat() * (fullHeight - entityShape.getHeight()));
-                positionsNeedUpdate = true;
-            }
-            ga.x(aNode) = newX;
-            ga.y(aNode) = newY;
-            anEntity->setTopLeftPosition(newX, newY);
-        }
-    }
-    if (positionsNeedUpdate)
-    {
-        // Set up the edges (connections)
         for (ContainerList::const_iterator it(_entitiesSeen.begin()); _entitiesSeen.end() != it;
              ++it)
         {
@@ -744,47 +764,97 @@ void ScannerThread::setEntityPositions(void)
             
             if (anEntity)
             {
-                bool       wasConnected = false;
-                ogdf::node thisNode = anEntity->getNode();
+                float                  newX;
+                float                  newY;
+                juce::Rectangle<float> entityShape(anEntity->getLocalBounds().toFloat());
+                ogdf::node             aNode = gg.newNode();
+                ChannelEntry *         firstPort = anEntity->getPort(0);
+                ChannelContainer *     olderVersion = NULL;
                 
-                // Add edges between entities that are connected via their entries
-                for (int ii = 0, mm = anEntity->getNumPorts(); mm > ii; ++ii)
+                if (firstPort)
                 {
-                    ChannelEntry * aPort = anEntity->getPort(ii);
+                    olderVersion = entitiesPanel.findKnownEntityForPort(firstPort->getPortName());
+                }
+                else
+                {
+                    olderVersion = entitiesPanel.findKnownEntity(anEntity->getName());
+                }
+                ga.width(aNode) = entityShape.getWidth();
+                ga.height(aNode) = entityShape.getHeight();
+                anEntity->setNode(aNode);
+                if (olderVersion)
+                {
+                    juce::Rectangle<float> oldShape(olderVersion->getLocalBounds().toFloat());
                     
-                    if (aPort)
+                    newX = oldShape.getX();
+                    newY = oldShape.getY();
+                }
+                else
+                {
+                    newX = (randomizer.nextFloat() * (fullWidth - entityShape.getWidth()));
+                    newY = (randomizer.nextFloat() * (fullHeight - entityShape.getHeight()));
+                    positionsNeedUpdate = true;
+                }
+                ga.x(aNode) = newX;
+                ga.y(aNode) = newY;
+                anEntity->setTopLeftPosition(newX, newY);
+            }
+        }
+    }
+    if (positionsNeedUpdate)
+    {
+        // Set up the edges (connections)
+        if (0 < _entitiesSeen.size())
+        {
+            for (ContainerList::const_iterator it(_entitiesSeen.begin()); _entitiesSeen.end() != it;
+                 ++it)
+            {
+                ChannelContainer * anEntity = *it;
+                
+                if (anEntity)
+                {
+                    bool       wasConnected = false;
+                    ogdf::node thisNode = anEntity->getNode();
+                    
+                    // Add edges between entities that are connected via their entries
+                    for (int ii = 0, mm = anEntity->getNumPorts(); mm > ii; ++ii)
                     {
-                        const Connections & outputs(aPort->getOutputConnections());
+                        ChannelEntry * aPort = anEntity->getPort(ii);
                         
-                        for (int jj = 0, nn = outputs.size(); nn > jj; ++jj)
+                        if (aPort)
                         {
-                            ChannelEntry * otherPort = outputs[jj]._otherPort;
+                            const Connections & outputs(aPort->getOutputConnections());
                             
-                            if (otherPort)
+                            for (int jj = 0, nn = outputs.size(); nn > jj; ++jj)
                             {
-                                ChannelContainer * otherEntity = otherPort->getParent();
+                                ChannelEntry * otherPort = outputs[jj]._otherPort;
                                 
-                                if (otherEntity)
+                                if (otherPort)
                                 {
-                                    ogdf::node otherNode = otherEntity->getNode();
-                                    /*ogdf::edge ee =*/ gg.newEdge(thisNode, otherNode);
+                                    ChannelContainer * otherEntity = otherPort->getParent();
                                     
-                                    wasConnected = true;
+                                    if (otherEntity)
+                                    {
+                                        ogdf::node otherNode = otherEntity->getNode();
+                                        /*ogdf::edge ee =*/ gg.newEdge(thisNode, otherNode);
+                                        
+                                        wasConnected = true;
+                                    }
                                 }
                             }
-                        }
-                        const Connections & inputs(aPort->getInputConnections());
-                        
-                        if (0 < inputs.size())
-                        {
-                            wasConnected = true;
+                            const Connections & inputs(aPort->getInputConnections());
+                            
+                            if (0 < inputs.size())
+                            {
+                                wasConnected = true;
+                            }
                         }
                     }
-                }
-                if (! wasConnected)
-                {
-                    /*ogdf::edge phantomNodeToThis =*/ gg.newEdge(phantomNode, thisNode);
-                    
+                    if (! wasConnected)
+                    {
+                        /*ogdf::edge phantomNodeToThis =*/ gg.newEdge(phantomNode, thisNode);
+                        
+                    }
                 }
             }
         }
@@ -799,18 +869,21 @@ void ScannerThread::setEntityPositions(void)
         fmmm.initialPlacementForces(ogdf::FMMMLayout::ipfKeepPositions);
         fmmm.repForcesStrength(2.0);
         fmmm.call(ga);
-        for (ContainerList::const_iterator it(_entitiesSeen.begin()); _entitiesSeen.end() != it;
-             ++it)
+        if (0 < _entitiesSeen.size())
         {
-            ChannelContainer * anEntity = *it;
-            
-            if (anEntity)
+            for (ContainerList::const_iterator it(_entitiesSeen.begin()); _entitiesSeen.end() != it;
+                 ++it)
             {
-                ogdf::node aNode = anEntity->getNode();
+                ChannelContainer * anEntity = *it;
                 
-                if (aNode)
+                if (anEntity)
                 {
-                    anEntity->setTopLeftPosition(ga.x(aNode), ga.y(aNode));
+                    ogdf::node aNode = anEntity->getNode();
+                    
+                    if (aNode)
+                    {
+                        anEntity->setTopLeftPosition(ga.x(aNode), ga.y(aNode));
+                    }
                 }
             }
         }
@@ -882,19 +955,22 @@ bool ScannerThread::updatePanels(EntitiesPanel & newPanel)
             }
         }
         // Convert the detected connections into visible connections.
-        for (ConnectionList::const_iterator walker(_connections.begin());
-             _connections.end() != walker; ++walker)
+        if (0 < _connections.size())
         {
-            ChannelEntry * thisPort = entitiesPanel.findKnownPort(walker->_outPortName);
-            ChannelEntry * otherPort = entitiesPanel.findKnownPort(walker->_inPortName);
-
-            OD_LOG_P2("thisPort <- ", thisPort, "otherPort <- ", otherPort); //####
-            if (thisPort && otherPort)
+            for (ConnectionList::const_iterator walker(_connections.begin());
+                 _connections.end() != walker; ++walker)
             {
-                OD_LOG_S2s("thisPort.name = ", thisPort->getPortName().toStdString(), //####
-                           "otherPort.name = ", otherPort->getPortName().toStdString()); //####
-                thisPort->addOutputConnection(otherPort, walker->_mode);
-                otherPort->addInputConnection(thisPort, walker->_mode);
+                ChannelEntry * thisPort = entitiesPanel.findKnownPort(walker->_outPortName);
+                ChannelEntry * otherPort = entitiesPanel.findKnownPort(walker->_inPortName);
+                
+                OD_LOG_P2("thisPort <- ", thisPort, "otherPort <- ", otherPort); //####
+                if (thisPort && otherPort)
+                {
+                    OD_LOG_S2s("thisPort.name = ", thisPort->getPortName().toStdString(), //####
+                               "otherPort.name = ", otherPort->getPortName().toStdString()); //####
+                    thisPort->addOutputConnection(otherPort, walker->_mode);
+                    otherPort->addInputConnection(thisPort, walker->_mode);
+                }
             }
         }
         entitiesPanel.removeUnvisitedEntities();

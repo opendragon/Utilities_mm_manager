@@ -41,8 +41,8 @@
 #include "ChannelManagerApp.h"
 #include "EntitiesPanel.h"
 
-//#include "ODEnableLogging.h"
-#include "ODLogging.h"
+//#include <odl/ODEnableLogging.h>
+#include <odl/ODLogging.h>
 
 #if defined(__APPLE__)
 # pragma clang diagnostic push
@@ -523,18 +523,21 @@ void ChannelEntry::addInputConnection(ChannelEntry *              other,
     {
         bool canAdd = true;
         
-        for (Connections::iterator walker(_inputConnections.begin());
-             _inputConnections.end() != walker; ++walker)
+        if (0 < _inputConnections.size())
         {
-            if ((walker->_otherPort == other) ||
-                (walker->_otherPort->getPortName() == other->getPortName()))
+            for (Connections::iterator walker(_inputConnections.begin());
+                 _inputConnections.end() != walker; ++walker)
             {
-                OD_LOG("already present"); //####
-                walker->_valid = true;
-                canAdd = false;
-                break;
+                if ((walker->_otherPort == other) ||
+                    (walker->_otherPort->getPortName() == other->getPortName()))
+                {
+                    OD_LOG("already present"); //####
+                    walker->_valid = true;
+                    canAdd = false;
+                    break;
+                }
+                
             }
-            
         }
         if (canAdd)
         {
@@ -560,18 +563,21 @@ void ChannelEntry::addOutputConnection(ChannelEntry *              other,
     {
         bool canAdd = true;
         
-        for (Connections::iterator walker(_outputConnections.begin());
-             _outputConnections.end() != walker; ++walker)
+        if (0 < _outputConnections.size())
         {
-            if ((walker->_otherPort == other) ||
-                (walker->_otherPort->getPortName() == other->getPortName()))
+            for (Connections::iterator walker(_outputConnections.begin());
+                 _outputConnections.end() != walker; ++walker)
             {
-                OD_LOG("already present"); //####
-                walker->_valid = true;
-                canAdd = false;
-                break;
+                if ((walker->_otherPort == other) ||
+                    (walker->_otherPort->getPortName() == other->getPortName()))
+                {
+                    OD_LOG("already present"); //####
+                    walker->_valid = true;
+                    canAdd = false;
+                    break;
+                }
+                
             }
-            
         }
         if (canAdd)
         {
@@ -703,10 +709,13 @@ void ChannelEntry::drawOutgoingConnections(Graphics & gg)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("gg = ", &gg); //####
-    for (Connections::const_iterator walker(_outputConnections.begin());
-         _outputConnections.end() != walker; ++walker)
+    if (0 < _outputConnections.size())
     {
-        drawConnection(gg, this, walker->_otherPort, walker->_connectionMode);
+        for (Connections::const_iterator walker(_outputConnections.begin());
+             _outputConnections.end() != walker; ++walker)
+        {
+            drawConnection(gg, this, walker->_otherPort, walker->_connectionMode);
+        }
     }
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::drawOutgoingConnections
@@ -737,15 +746,18 @@ const
     OD_LOG_OBJENTER(); //####
     bool result = false;
     
-    for (Connections::const_iterator walker(_outputConnections.begin());
-         _outputConnections.end() != walker; ++walker)
+    if (0 < _outputConnections.size())
     {
-        if (walker->_otherPort && (walker->_otherPort->getPortName() == otherPort))
+        for (Connections::const_iterator walker(_outputConnections.begin());
+             _outputConnections.end() != walker; ++walker)
         {
-            result = true;
-            break;
+            if (walker->_otherPort && (walker->_otherPort->getPortName() == otherPort))
+            {
+                result = true;
+                break;
+            }
+            
         }
-        
     }
     OD_LOG_EXIT_B(result); //####
     return result;
@@ -754,15 +766,21 @@ const
 void ChannelEntry::invalidateConnections(void)
 {
     OD_LOG_OBJENTER(); //####
-    for (Connections::iterator walker(_inputConnections.begin()); _inputConnections.end() != walker;
-         ++walker)
+    if (0 < _inputConnections.size())
     {
-        walker->_valid = false;
+        for (Connections::iterator walker(_inputConnections.begin());
+             _inputConnections.end() != walker; ++walker)
+        {
+            walker->_valid = false;
+        }
     }
-    for (Connections::iterator walker(_outputConnections.begin());
-         _outputConnections.end() != walker; ++walker)
+    if (0 < _outputConnections.size())
     {
-        walker->_valid = false;
+        for (Connections::iterator walker(_outputConnections.begin());
+             _outputConnections.end() != walker; ++walker)
+        {
+            walker->_valid = false;
+        }
     }
     OD_LOG_EXIT(); //####
 } // ChannelEntry::invalidateConnections
@@ -1039,19 +1057,22 @@ void ChannelEntry::removeInputConnection(ChannelEntry * other)
     OD_LOG_P1("other = ", other); //####
     if (other)
     {
-        Connections::iterator walker(_inputConnections.begin());
-        
-        for ( ; _inputConnections.end() != walker; ++walker)
+        if (0 < _inputConnections.size())
         {
-            if (walker->_otherPort == other)
-            {
-                break;
-            }
+            Connections::iterator walker(_inputConnections.begin());
             
-        }
-        if (_inputConnections.end() != walker)
-        {
-            _inputConnections.erase(walker);
+            for ( ; _inputConnections.end() != walker; ++walker)
+            {
+                if (walker->_otherPort == other)
+                {
+                    break;
+                }
+                
+            }
+            if (_inputConnections.end() != walker)
+            {
+                _inputConnections.erase(walker);
+            }
         }
     }
     OD_LOG_OBJEXIT(); //####
@@ -1064,39 +1085,47 @@ void ChannelEntry::removeInvalidConnections(void)
     
     do
     {
-        Connections::iterator walker(_inputConnections.begin());
-        
-        for (keepGoing = false; _inputConnections.end() != walker; ++walker)
+        keepGoing = false;
+        if (0 < _inputConnections.size())
         {
-            if (! walker->_valid)
-            {
-                break;
-            }
+            Connections::iterator walker(_inputConnections.begin());
             
-        }
-        if (_inputConnections.end() != walker)
-        {
-            _inputConnections.erase(walker);
-            keepGoing = true;
+            for ( ; _inputConnections.end() != walker; ++walker)
+            {
+                if (! walker->_valid)
+                {
+                    break;
+                }
+                
+            }
+            if (_inputConnections.end() != walker)
+            {
+                _inputConnections.erase(walker);
+                keepGoing = true;
+            }
         }
     }
     while (keepGoing);
     do
     {
-        Connections::iterator walker(_outputConnections.begin());
-        
-        for (keepGoing = false; _outputConnections.end() != walker; ++walker)
+        keepGoing = false;
+        if (0 < _outputConnections.size())
         {
-            if (! walker->_valid)
-            {
-                break;
-            }
+            Connections::iterator walker(_outputConnections.begin());
             
-        }
-        if (_outputConnections.end() != walker)
-        {
-            _outputConnections.erase(walker);
-            keepGoing = true;
+            for ( ; _outputConnections.end() != walker; ++walker)
+            {
+                if (! walker->_valid)
+                {
+                    break;
+                }
+                
+            }
+            if (_outputConnections.end() != walker)
+            {
+                _outputConnections.erase(walker);
+                keepGoing = true;
+            }
         }
     }
     while (keepGoing);
@@ -1109,18 +1138,21 @@ void ChannelEntry::removeOutputConnection(ChannelEntry * other)
     OD_LOG_P1("other = ", other); //####
     if (other)
     {
-        Connections::iterator walker(_outputConnections.begin());
-        
-        for ( ; _outputConnections.end() != walker; ++walker)
+        if (0 < _outputConnections.size())
         {
-            if (walker->_otherPort == other)
+            Connections::iterator walker(_outputConnections.begin());
+            
+            for ( ; _outputConnections.end() != walker; ++walker)
             {
-                break;
+                if (walker->_otherPort == other)
+                {
+                    break;
+                }
             }
-        }
-        if (_outputConnections.end() != walker)
-        {
-            _outputConnections.erase(walker);
+            if (_outputConnections.end() != walker)
+            {
+                _outputConnections.erase(walker);
+            }
         }
     }
     OD_LOG_OBJEXIT(); //####

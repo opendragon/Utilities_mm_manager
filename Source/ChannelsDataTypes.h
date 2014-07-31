@@ -43,7 +43,7 @@
 #  include "../JuceLibraryCode/JuceHeader.h"
 # endif // ! defined(DOXYGEN)
 
-# include "M+MUtilities.h"
+# include <mpm/M+MUtilities.h>
 
 # include <list>
 # include <map>

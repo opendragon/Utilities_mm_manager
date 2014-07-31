@@ -42,10 +42,10 @@
 #include "ChannelEntry.h"
 #include "ContentPanel.h"
 
-//#include "ODEnableLogging.h"
-#include "ODLogging.h"
+//#include <odl/ODEnableLogging.h>
+#include <odl/ODLogging.h>
 
-#include "M+MAdapterChannel.h"
+#include <mpm/M+MAdapterChannel.h>
 
 #if defined(__APPLE__)
 # pragma clang diagnostic push
@@ -171,36 +171,39 @@ void EntitiesPanel::adjustSize(void)
                   outerB); //####
         OD_LOG_L4("outerW = ", outerW, "outerH = ", outerH, "outerW2 = ", outerW2, //####
                   "outerH2 = ", outerH2); //####
-        for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it;
-             ++it)
+        if (0 < _knownEntities.size())
         {
-            ChannelContainer * anEntity = *it;
-            
-            if (anEntity)
+            for (ContainerList::const_iterator it(_knownEntities.begin());
+                 _knownEntities.end() != it; ++it)
             {
-                juce::Rectangle<int> entityBounds(anEntity->getBounds());
-                OD_LOG_L4("eB.x = ", entityBounds.getX(), "eB.y = ", entityBounds.getY(), //####
-                          "eB.w = ", entityBounds.getWidth(), "eB.h = ", //####
-                          entityBounds.getHeight()); //####
-                int                  entityLeft = entityBounds.getX();
-                int                  entityTop = entityBounds.getY();
-                int                  entityRight = entityLeft + entityBounds.getWidth();
-                int                  entityBottom = entityTop + entityBounds.getHeight();
+                ChannelContainer * anEntity = *it;
                 
-                if (haveValues)
+                if (anEntity)
                 {
-                    minX = min(minX, entityLeft);
-                    maxX = max(maxX, entityRight);
-                    minY = min(minY, entityTop);
-                    maxY = max(maxY, entityBottom);
-                }
-                else
-                {
-                    minX = entityLeft;
-                    maxX = entityRight;
-                    minY = entityTop;
-                    maxY = entityBottom;
-                    haveValues = true;
+                    juce::Rectangle<int> entityBounds(anEntity->getBounds());
+                    OD_LOG_L4("eB.x = ", entityBounds.getX(), "eB.y = ", entityBounds.getY(), //####
+                              "eB.w = ", entityBounds.getWidth(), "eB.h = ", //####
+                              entityBounds.getHeight()); //####
+                    int                  entityLeft = entityBounds.getX();
+                    int                  entityTop = entityBounds.getY();
+                    int                  entityRight = entityLeft + entityBounds.getWidth();
+                    int                  entityBottom = entityTop + entityBounds.getHeight();
+                    
+                    if (haveValues)
+                    {
+                        minX = min(minX, entityLeft);
+                        maxX = max(maxX, entityRight);
+                        minY = min(minY, entityTop);
+                        maxY = max(maxY, entityBottom);
+                    }
+                    else
+                    {
+                        minX = entityLeft;
+                        maxX = entityRight;
+                        minY = entityTop;
+                        maxY = entityBottom;
+                        haveValues = true;
+                    }
                 }
             }
         }
@@ -276,14 +279,18 @@ void EntitiesPanel::adjustSize(void)
 void EntitiesPanel::clearAllVisitedFlags(void)
 {
     OD_LOG_OBJENTER(); //####
-    for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
+    if (0 < _knownEntities.size())
     {
-        ChannelContainer * anEntity = *it;
-        
-        if (anEntity)
+        for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it;
+             ++it)
         {
-            anEntity->clearVisited();
-            anEntity->invalidateConnections();
+            ChannelContainer * anEntity = *it;
+            
+            if (anEntity)
+            {
+                anEntity->clearVisited();
+                anEntity->invalidateConnections();
+            }
         }
     }
     OD_LOG_OBJEXIT(); //####
@@ -299,16 +306,20 @@ void EntitiesPanel::clearDragInfo(void)
 void EntitiesPanel::clearMarkers(void)
 {
     OD_LOG_OBJENTER(); //####
-    for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
+    if (0 < _knownEntities.size())
     {
-        ChannelContainer * anEntity = *it;
-        
-        if (anEntity)
+        for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it;
+             ++it)
         {
-            if (anEntity->isMarked())
+            ChannelContainer * anEntity = *it;
+            
+            if (anEntity)
             {
-                anEntity->clearMarkers();
-                anEntity->repaint();
+                if (anEntity->isMarked())
+                {
+                    anEntity->clearMarkers();
+                    anEntity->repaint();
+                }
             }
         }
     }
@@ -318,13 +329,17 @@ void EntitiesPanel::clearMarkers(void)
 void EntitiesPanel::clearOutData(void)
 {
     OD_LOG_OBJENTER(); //####
-    for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
+    if (0 < _knownEntities.size())
     {
-        ChannelContainer * anEntity = *it;
-        
-        if (anEntity)
+        for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it;
+             ++it)
         {
-            delete anEntity;
+            ChannelContainer * anEntity = *it;
+            
+            if (anEntity)
+            {
+                delete anEntity;
+            }
         }
     }
     removeAllChildren();
@@ -337,13 +352,17 @@ void EntitiesPanel::drawConnections(Graphics & gg)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("gg = ", &gg); //####
-    for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
+    if (0 < _knownEntities.size())
     {
-        ChannelContainer * anEntity = *it;
-        
-        if (anEntity)
+        for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it;
+             ++it)
         {
-            anEntity->drawOutgoingConnections(gg);
+            ChannelContainer * anEntity = *it;
+            
+            if (anEntity)
+            {
+                anEntity->drawOutgoingConnections(gg);
+            }
         }
     }
     if (_dragConnectionActive && _firstAddPoint)
@@ -359,16 +378,20 @@ ChannelContainer * EntitiesPanel::findKnownEntity(const String & name)
     OD_LOG_S1s("name = ", name.toStdString()); //####
     ChannelContainer * result = NULL;
     
-    for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
+    if (0 < _knownEntities.size())
     {
-        ChannelContainer * anEntity = *it;
-        
-        if (anEntity && (name == anEntity->getName()))
+        for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it;
+             ++it)
         {
-            result = anEntity;
-            break;
+            ChannelContainer * anEntity = *it;
+            
+            if (anEntity && (name == anEntity->getName()))
+            {
+                result = anEntity;
+                break;
+            }
+            
         }
-        
     }
     OD_LOG_OBJEXIT_P(result); //####
     return result;
@@ -383,17 +406,20 @@ ChannelContainer * EntitiesPanel::findKnownEntityForPort(const String & name)
     
     if (_knownPorts.end() != match)
     {
-        for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it;
-             ++it)
+        if (0 < _knownEntities.size())
         {
-            ChannelContainer * anEntity = *it;
-            
-            if (anEntity && anEntity->hasPort(match->second))
+            for (ContainerList::const_iterator it(_knownEntities.begin());
+                 _knownEntities.end() != it; ++it)
             {
-                result = anEntity;
-                break;
+                ChannelContainer * anEntity = *it;
+                
+                if (anEntity && anEntity->hasPort(match->second))
+                {
+                    result = anEntity;
+                    break;
+                }
+                
             }
-            
         }
     }
     OD_LOG_OBJEXIT_P(result); //####
@@ -406,17 +432,20 @@ ChannelContainer * EntitiesPanel::findKnownEntityForPort(const ChannelEntry * aP
     OD_LOG_P1("aPort = ", aPort); //####
     ChannelContainer * result = NULL;
     
-    for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it;
-         ++it)
+    if (0 < _knownEntities.size())
     {
-        ChannelContainer * anEntity = *it;
-        
-        if (anEntity && anEntity->hasPort(aPort))
+        for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it;
+             ++it)
         {
-            result = anEntity;
-            break;
+            ChannelContainer * anEntity = *it;
+            
+            if (anEntity && anEntity->hasPort(aPort))
+            {
+                result = anEntity;
+                break;
+            }
+            
         }
-        
     }
     OD_LOG_OBJEXIT_P(result); //####
     return result;
@@ -491,18 +520,22 @@ const
     OD_LOG_OBJENTER(); //####
     ChannelEntry * result = NULL;
     
-    for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
+    if (0 < _knownEntities.size())
     {
-        ChannelContainer * anEntity = *it;
-        
-        if (anEntity)
+        for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it;
+             ++it)
         {
-            result = anEntity->locateEntry(location);
-            if (result)
-            {
-                break;
-            }
+            ChannelContainer * anEntity = *it;
             
+            if (anEntity)
+            {
+                result = anEntity->locateEntry(location);
+                if (result)
+                {
+                    break;
+                }
+                
+            }
         }
     }
     OD_LOG_OBJEXIT_P(result); //####
@@ -567,13 +600,16 @@ void EntitiesPanel::rememberPort(ChannelEntry * aPort)
 void EntitiesPanel::removeInvalidConnections(void)
 {
     OD_LOG_OBJENTER(); //####
-    for (ContainerList::iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
+    if (0 < _knownEntities.size())
     {
-        ChannelContainer * anEntity = *it;
-        
-        if (anEntity)
+        for (ContainerList::iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
         {
-            anEntity->removeInvalidConnections();
+            ChannelContainer * anEntity = *it;
+            
+            if (anEntity)
+            {
+                anEntity->removeInvalidConnections();
+            }
         }
     }
     OD_LOG_OBJEXIT(); //####
@@ -582,15 +618,18 @@ void EntitiesPanel::removeInvalidConnections(void)
 void EntitiesPanel::removeUnvisitedEntities(void)
 {
     OD_LOG_OBJENTER(); //####
-    for (ContainerList::iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
+    if (0 < _knownEntities.size())
     {
-        ChannelContainer * anEntity = *it;
-        
-        if (anEntity && (! anEntity->wasVisited()))
+        for (ContainerList::iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
         {
-            removeChildComponent(anEntity);
-            *it = NULL;
-            delete anEntity;
+            ChannelContainer * anEntity = *it;
+            
+            if (anEntity && (! anEntity->wasVisited()))
+            {
+                removeChildComponent(anEntity);
+                *it = NULL;
+                delete anEntity;
+            }
         }
     }
     OD_LOG_OBJEXIT(); //####
