@@ -93,7 +93,8 @@ ChannelContainer::ChannelContainer(const ContainerKind kind,
     Font & headerFont = _owner.getNormalFont();
     
     _titleHeight = headerFont.getHeight();
-    setSize(headerFont.getStringWidthFloat(getName() + " ") + getTextInset(), _titleHeight);
+    setSize(static_cast<int>(headerFont.getStringWidthFloat(getName() + " ") + getTextInset()),
+            static_cast<int>(_titleHeight));
     OD_LOG_L2("width = ", getWidth(), "height = ", getHeight()); //####
     setOpaque(true);
     setVisible(true);
@@ -134,8 +135,8 @@ ChannelEntry * ChannelContainer::addPort(const String &      portName,
     float          newHeight = aPort->getHeight() + getHeight() + lEntryGap;
     
     OD_LOG_L2("newWidth = ", newWidth, "newHeight = ", newHeight); //####
-    aPort->setTopLeftPosition(0, getHeight() + lEntryGap);
-    setSize(newWidth, newHeight);
+    aPort->setTopLeftPosition(0, static_cast<int>(getHeight() + lEntryGap));
+    setSize(static_cast<int>(newWidth), static_cast<int>(newHeight));
     addAndMakeVisible(aPort);
     for (int ii = 0; countBefore >= ii; ++ii)
     {
@@ -143,7 +144,7 @@ ChannelEntry * ChannelContainer::addPort(const String &      portName,
         
         if (bPort)
         {
-            bPort->setSize(newWidth, bPort->getHeight());
+            bPort->setSize(static_cast<int>(newWidth), bPort->getHeight());
         }
     }
     if (0 < countBefore)
@@ -331,6 +332,9 @@ void ChannelContainer::mouseDown(const MouseEvent & ee)
                 thePanelDescription = "A standard port";
                 break;
                 
+            case kContainerKindUnknown :
+                break;
+                
         }
         AlertWindow::showMessageBox(AlertWindow::NoIcon, getName(), thePanelDescription, "OK",
                                     this);
@@ -402,8 +406,9 @@ void ChannelContainer::resized(void)
 {
     OD_LOG_OBJENTER(); //####
     // Just set the limits of our constrainer so that we don't drag ourselves off the screen
-    _constrainer.setMinimumOnscreenAmounts(getHeight(), getWidth(), getHeight() * 0.8,
-                                           getWidth() * 0.8);
+    _constrainer.setMinimumOnscreenAmounts(getHeight(), getWidth(),
+                                           static_cast<int>(getHeight() * 0.8),
+                                           static_cast<int>(getWidth() * 0.8));
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::resized
 

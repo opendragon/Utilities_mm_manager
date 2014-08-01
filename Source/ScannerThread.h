@@ -66,7 +66,7 @@ namespace ChannelManager
          @param name The name to give to the thread.
          @param window The window to be updated. */
         ScannerThread(const String &         name,
-                      ChannelManagerWindow * window);
+                      ChannelManagerWindow & window);
         
         /*! @brief The destructor. */
         virtual ~ScannerThread(void);
@@ -117,6 +117,17 @@ namespace ChannelManager
                          MplusM::Common::CheckFunction        checker,
                          void *                               checkStuff);
         
+        /*! @brief Determine whether a port can be used for input and/or output.
+         @param oldEntry The previous record for the port, if it exists.
+         @param portName The name of the port to check.
+         @param checker A function that provides for early exit from loops.
+         @param checkStuff The private data for the early exit function.
+         @returns The allowed directions for the port. */
+        PortDirection determineDirection(ChannelEntry *                oldEntry,
+                                         const yarp::os::ConstString & portName,
+                                         MplusM::Common::CheckFunction checker,
+                                         void *                        checkStuff);
+        
         /*! @brief Identify the YARP network entities.
          @param checker A function that provides for early exit from loops.
          @param checkStuff The private data for the early exit function. */
@@ -132,7 +143,7 @@ namespace ChannelManager
         bool updatePanels(EntitiesPanel & newPanel);
         
         /*! @brief The window to be updated. */
-        ChannelManagerWindow * _window;
+        ChannelManagerWindow & _window;
         
         /*! @brief A set of known ports. */
         PortSet _rememberedPorts;
@@ -151,6 +162,23 @@ namespace ChannelManager
         
         /*! @brief A set of entities. */
         ContainerList _entitiesSeen;
+        
+        /*! @brief The name of the port used to determine if a port being checked can be used as an
+         output. */
+        yarp::os::ConstString _inputOnlyPortName;
+        
+        /*! @brief The name of the port used to determine if a port being checked can be used as an
+         input. */
+        yarp::os::ConstString _outputOnlyPortName;
+        
+        /*! @brief The port used to determine if a port being checked can be used as an output. */
+        MplusM::Common::AdapterChannel * _inputOnlyPort;
+        
+        /*! @brief The port used to determine if a port being checked can be used as an input. */
+        MplusM::Common::AdapterChannel * _outputOnlyPort;
+        
+        /*! @brief @c true if the port direction resources are available. */
+        bool _portsValid;
         
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ScannerThread)
         

@@ -45,8 +45,6 @@
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
 
-#include <mpm/M+MAdapterChannel.h>
-
 #if defined(__APPLE__)
 # pragma clang diagnostic push
 # pragma clang diagnostic ignored "-Wc++11-extensions"
@@ -531,7 +529,7 @@ const
 {
     OD_LOG_OBJENTER(); //####
     GenericScopedLock<CriticalSection> locker(_lock);
-    int                                result = _knownEntities.size();
+    size_t                             result = _knownEntities.size();
     
     OD_LOG_OBJEXIT_L(result); //####
     return result;
@@ -575,6 +573,9 @@ void EntitiesPanel::lock(void)
 
 void EntitiesPanel::mouseDown(const MouseEvent & ee)
 {
+#if MAC_OR_LINUX_
+# pragma unused(ee)
+#endif // MAC_OR_LINUX_
     OD_LOG_OBJENTER(); //####
     rememberConnectionStartPoint();
     clearMarkers();
@@ -584,6 +585,9 @@ void EntitiesPanel::mouseDown(const MouseEvent & ee)
 
 void EntitiesPanel::mouseUp(const MouseEvent & ee)
 {
+#if MAC_OR_LINUX_
+# pragma unused(ee)
+#endif // MAC_OR_LINUX_
     OD_LOG_OBJENTER(); //####
     rememberConnectionStartPoint();
     clearMarkers();

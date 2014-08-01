@@ -88,7 +88,7 @@ namespace ChannelManager
         
         /*! @brief Called when the visible area changes.
          @param newVisibleArea The new visible area. */
-        virtual void visibleAreaChanged(const juce::Rectangle<int> & newVisibleArea) override;
+        virtual void visibleAreaChanged(const juce::Rectangle<int> & newVisibleArea);
         
     protected:
         

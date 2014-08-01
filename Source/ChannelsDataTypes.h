@@ -43,6 +43,7 @@
 #  include "../JuceLibraryCode/JuceHeader.h"
 # endif // ! defined(DOXYGEN)
 
+# include <mpm/M+MAdapterChannel.h>
 # include <mpm/M+MUtilities.h>
 
 # include <list>
@@ -81,8 +82,8 @@ namespace ChannelManager
         /*! @brief The connection is to the top edge of the port entry. */
         kAnchorTopCentre,
         
-        /*! @brief The connection point is unknown. */
-        kAnchorUnknown
+        /*! @brief Force the enumeration to be 4 bytes. */
+        kAnchorUnknown = 0x80000000
         
     }; // AnchorSide
     
@@ -96,7 +97,10 @@ namespace ChannelManager
         kContainerKindService,
         
         /*! @brief The container is neither a serice nor a client nor an adapter. */
-        kContainerKindOther
+        kContainerKindOther,
+        
+        /*! @brief Force the enumeration to be 4 bytes. */
+        kContainerKindUnknown = 0x80000000
         
     }; // ContainerKind
     
@@ -112,8 +116,8 @@ namespace ChannelManager
         /*! @brief The port direction is output. */
         kPortDirectionOutput,
         
-        /*! @brief The port direction is unknown. */
-        kPortDirectionUnknown
+        /*! @brief Force the enumeration to be 4 bytes. */
+        kPortDirectionUnknown = 0x80000000
         
     }; // PortDirection
     
@@ -130,7 +134,10 @@ namespace ChannelManager
         kPortUsageInputOutput,
         
         /*! @brief The port has no specific characterization. */
-        kPortUsageOther
+        kPortUsageOther,
+        
+        /*! @brief Force the enumeration to be 4 bytes. */
+        kPortUsageUnknown = 0x80000000
         
     }; // PortUsage
     

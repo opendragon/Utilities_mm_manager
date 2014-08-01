@@ -114,8 +114,9 @@ void ContentPanel::paint(Graphics & gg)
     // Set up a gradient background, using a radial gradient from the centre to the furthest edge.
     int            hh = getHeight();
     int            ww = getWidth();
-    ColourGradient theGradient(Colours::white, ww / 2.0, hh / 2.0, Colours::grey,
-                               (hh > ww) ? 0 : ww, (hh > ww) ? hh : 0, true);
+    ColourGradient theGradient(Colours::white, static_cast<float>(ww / 2.0),
+                               static_cast<float>(hh / 2.0), Colours::grey, (hh > ww) ? 0 : ww,
+                               (hh > ww) ? hh : 0, true);
     FillType       theBackgroundFill(theGradient);
     
     gg.setFillType(theBackgroundFill);
@@ -132,6 +133,9 @@ void ContentPanel::resized(void)
 
 void ContentPanel::visibleAreaChanged(const juce::Rectangle<int> & newVisibleArea)
 {
+#if MAC_OR_LINUX_
+# pragma unused(newVisibleArea)
+#endif // MAC_OR_LINUX_
     OD_LOG_OBJENTER(); //####
     OD_LOG_L4("nVA.x = ", newVisibleArea.getX(), "nVA.y = ", newVisibleArea.getY(), //####
               "nVA.w = ", newVisibleArea.getWidth(), "nVA.h = ", newVisibleArea.getHeight()); //####

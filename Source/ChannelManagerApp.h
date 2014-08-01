@@ -52,7 +52,6 @@
 #  pragma clang diagnostic ignored "-Wweak-vtables"
 # endif // defined(__APPLE__)
 # include <yarp/os/Network.h>
-
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
@@ -88,31 +87,31 @@ namespace ChannelManager
         
         /*! @brief Called when an attempt was made to launch another instance of the application.
          @param commandLine The arguments passed to the new instance. */
-        void anotherInstanceStarted(const String & commandLine) override;
+        void anotherInstanceStarted(const String & commandLine);
         
         /*! @brief Return the application name.
          @returns The application's name. */
-        const String getApplicationName(void) override;
+        virtual const String getApplicationName(void);
         
         /*! @brief Return the application version number.
          @returns The application's version number. */
-        const String getApplicationVersion(void) override;
+        virtual const String getApplicationVersion(void);
         
         /*! @brief Called when the application starts.
          @param commandLine The parameters passed to the application. */
-        void initialise(const String & commandLine) override;
+        virtual void initialise(const String & commandLine);
         
         /*! @brief Return @c true if multiple instances of the application are allowed and @c false
          otherwise.
          @returns @c true if multiple instanaces of the application are allowed and @c false
          otherwise. */
-        bool moreThanOneInstanceAllowed(void) override;
+        virtual bool moreThanOneInstanceAllowed(void);
         
         /*! @brief Called to allow the application to clear up before exiting. */
-        void shutdown(void) override;
+        virtual void shutdown(void);
         
         /*! @brief Called when the operating system is trying to close the application. */
-        void systemRequestedQuit(void) override;
+        virtual void systemRequestedQuit(void);
         
     protected:
         

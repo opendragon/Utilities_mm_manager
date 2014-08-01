@@ -103,6 +103,9 @@ ChannelManagerApplication::~ChannelManagerApplication(void)
 
 void ChannelManagerApplication::anotherInstanceStarted(const String & commandLine)
 {
+#if MAC_OR_LINUX_
+# pragma unused(commandLine)
+#endif // MAC_OR_LINUX_
     OD_LOG_OBJENTER(); //####
     // When another instance of the app is launched while this one is running,
     // this method is invoked, and the commandLine parameter tells you what
@@ -126,11 +129,15 @@ const String ChannelManagerApplication::getApplicationVersion(void)
 
 void ChannelManagerApplication::initialise(const String & commandLine)
 {
+#if MAC_OR_LINUX_
+# pragma unused(commandLine)
+#endif // MAC_OR_LINUX_
     OD_LOG_OBJENTER(); //####
 #if MAC_OR_LINUX_
     MplusM::Common::SetUpLogger(ProjectInfo::projectName);
 #endif // MAC_OR_LINUX_
     MplusM::Common::Initialize(ProjectInfo::projectName);
+    MplusM::Utilities::SetUpGlobalStatusReporter();
 #if CheckNetworkWorks_
     if (yarp::os::Network::checkNetwork())
 #endif // CheckNetworkWorks_
@@ -152,7 +159,7 @@ void ChannelManagerApplication::initialise(const String & commandLine)
     _mainWindow = new ChannelManagerWindow(ProjectInfo::projectName);
     if (_yarp)
     {
-        _scanner = new ScannerThread(ProjectInfo::projectName, _mainWindow);
+        _scanner = new ScannerThread(ProjectInfo::projectName, *_mainWindow);
         _scanner->startThread();
     }
     OD_LOG_OBJEXIT(); //####
@@ -174,6 +181,7 @@ void ChannelManagerApplication::shutdown(void)
     _mainWindow = nullptr; // (deletes our window)
     yarp::os::Network::fini();
     _yarp = nullptr;
+    MplusM::Utilities::ShutDownGlobalStatusReporter();
     OD_LOG_OBJEXIT(); //####
 } // ChannelManagerApplication::shutdown
 
@@ -196,6 +204,9 @@ void ChannelManagerApplication::systemRequestedQuit(void)
 
 bool CheckForExit(void * stuff)
 {
+#if MAC_OR_LINUX_
+# pragma unused(stuff)
+#endif // MAC_OR_LINUX_
     OD_LOG_ENTER(); //####
     OD_LOG_EXIT_B(lExitRequested); //####
     return lExitRequested;
