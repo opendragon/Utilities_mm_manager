@@ -317,9 +317,6 @@ namespace ChannelManager
         /*! @brief The class that this class is derived from. */
         typedef Component inherited;
 
-        /*! @brief A mutual-exclusion lock to protect the data structures. */
-        juce::CriticalSection _lock;
-        
         /*! @brief The connections to the port. */
         Connections _inputConnections;
         

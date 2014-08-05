@@ -56,6 +56,7 @@ namespace ChannelManager
 {
     class ContentPanel;
     class EntitiesPanel;
+    class ScannerThread;
     
     /*! @brief The main window of the application. */
     class ChannelManagerWindow : public DocumentWindow
@@ -76,7 +77,21 @@ namespace ChannelManager
          @returns The entities panel. */
         EntitiesPanel & getEntitiesPanel(void)
         const;
+        
+        /*! @brief Return the reference to the background scanning thread.
+         @returns The reference to the background scanning thread. */
+        inline ScannerThread * getScannerThread(void)
+        const
+        {
+            return _scannerThread;
+        } // getScannerThread
                 
+        /*! @brief Set up the reference to the background scanning thread. */
+        inline void setScannerThread(ScannerThread * theScanner)
+        {
+            _scannerThread = theScanner;
+        } // setScannerThread
+        
     protected:
         
     private:
@@ -89,6 +104,9 @@ namespace ChannelManager
         
         /*! @brief The content area of the window. */
         ScopedPointer<ContentPanel> _contentPanel;
+        
+        /*! @brief A reference to the background scanning thread. */
+        ScannerThread * _scannerThread;
         
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ChannelManagerWindow)
         

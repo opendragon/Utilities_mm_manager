@@ -38,11 +38,17 @@
 //--------------------------------------------------------------------------------------------------
 
 #include "ContentPanel.h"
+#include "ChannelContainer.h"
+#include "ChannelEntry.h"
 #include "ChannelManagerWindow.h"
 #include "EntitiesPanel.h"
+#include "ScannerThread.h"
 
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
+
+#include <ogdf/basic/GraphAttributes.h>
+#include <ogdf/energybased/FMMMLayout.h>
 
 #if defined(__APPLE__)
 # pragma clang diagnostic push
@@ -121,6 +127,31 @@ void ContentPanel::paint(Graphics & gg)
     
     gg.setFillType(theBackgroundFill);
     gg.fillAll();
+    ScannerThread * scanner = _containingWindow->getScannerThread();
+    
+    if (scanner)
+    {
+        // Check if there is some 'fresh' data.
+        for (bool locked = scanner->conditionallyAcquireForRead(); ! locked;
+             locked = scanner->conditionallyAcquireForRead())
+        {
+            sleep(SHORT_SLEEP);
+        }
+        bool scanDataReady = scanner->scanIsComplete();
+        
+        scanner->relinquishFromRead();
+        if (scanDataReady)
+        {
+            // At this point the background scanning thread is, basically, idle, and we can use its
+            // data.
+            setEntityPositions(*scanner);
+            updatePanels(*scanner);
+            // Indicate that the scan data has been processed.
+            scanner->unconditionallyAcquireForWrite();
+            scanner->scanCanProceed();
+            scanner->relinquishFromWrite();
+        }
+    }
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::paint
 
@@ -130,6 +161,229 @@ void ContentPanel::resized(void)
     _entitiesPanel->setSize(getWidth(), getHeight());
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::resized
+
+void ContentPanel::setEntityPositions(ScannerThread & scanner)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("scanner = ", &scanner); //####
+    EntitiesPanel &       workingPanel(scanner.getScannedEntities());
+    Random                randomizer(Time::currentTimeMillis());
+    bool                  positionsNeedUpdate = false;
+    float                 fullHeight = _entitiesPanel->getHeight();
+    float                 fullWidth = _entitiesPanel->getWidth();
+    ogdf::Graph           gg;
+    ogdf::GraphAttributes ga(gg);
+    ogdf::node            phantomNode = gg.newNode();
+    
+    ga.directed(true);
+    // If nodes are not connected, OGDF will pile them all at the origin; by adding a 'phantom' node
+    // that is connected to every other node, we force OGDF to spread the nodes out.
+    ga.width(phantomNode) = 1;
+    ga.height(phantomNode) = 1;
+    ga.x(phantomNode) = (randomizer.nextFloat() * fullWidth);
+    ga.y(phantomNode) = (randomizer.nextFloat() * fullHeight);
+    for (size_t ii = 0, mm = workingPanel.getNumberOfEntities(); mm > ii; ++ii)
+    {
+        ChannelContainer * anEntity = workingPanel.getEntity(ii);
+        
+        if (anEntity)
+        {
+            float                  newX;
+            float                  newY;
+            juce::Rectangle<float> entityShape(anEntity->getLocalBounds().toFloat());
+            ogdf::node             aNode = gg.newNode();
+            ChannelEntry *         firstPort = anEntity->getPort(0);
+            ChannelContainer *     olderVersion = NULL;
+            
+            if (firstPort)
+            {
+                olderVersion = _entitiesPanel->findKnownEntityForPort(firstPort->getPortName());
+            }
+            else
+            {
+                olderVersion = _entitiesPanel->findKnownEntity(anEntity->getName());
+            }
+            ga.width(aNode) = entityShape.getWidth();
+            ga.height(aNode) = entityShape.getHeight();
+            anEntity->setNode(aNode);
+            if (olderVersion)
+            {
+                juce::Rectangle<float> oldShape(olderVersion->getLocalBounds().toFloat());
+                
+                newX = oldShape.getX();
+                newY = oldShape.getY();
+            }
+            else
+            {
+                newX = (randomizer.nextFloat() * (fullWidth - entityShape.getWidth()));
+                newY = (randomizer.nextFloat() * (fullHeight - entityShape.getHeight()));
+                positionsNeedUpdate = true;
+            }
+            ga.x(aNode) = newX;
+            ga.y(aNode) = newY;
+            anEntity->setTopLeftPosition(static_cast<int>(newX), static_cast<int>(newY));
+        }
+    }
+    if (positionsNeedUpdate)
+    {
+        // Set up the edges (connections)
+        for (size_t ii = 0, mm = workingPanel.getNumberOfEntities(); mm > ii; ++ii)
+        {
+            ChannelContainer * anEntity = workingPanel.getEntity(ii);
+            
+            if (anEntity)
+            {
+                bool       wasConnected = false;
+                ogdf::node thisNode = anEntity->getNode();
+                
+                // Add edges between entities that are connected via their entries
+                for (int jj = 0, nn = anEntity->getNumPorts(); nn > jj; ++jj)
+                {
+                    ChannelEntry * aPort = anEntity->getPort(jj);
+                    
+                    if (aPort)
+                    {
+                        const Connections & outputs(aPort->getOutputConnections());
+                        
+                        for (size_t kk = 0, ll = outputs.size(); ll > kk; ++kk)
+                        {
+                            ChannelEntry * otherPort = outputs[kk]._otherPort;
+                            
+                            if (otherPort)
+                            {
+                                ChannelContainer * otherEntity = otherPort->getParent();
+                                
+                                if (otherEntity)
+                                {
+                                    ogdf::node otherNode = otherEntity->getNode();
+                                    /*ogdf::edge ee =*/ gg.newEdge(thisNode, otherNode);
+                                    
+                                    wasConnected = true;
+                                }
+                            }
+                        }
+                        const Connections & inputs(aPort->getInputConnections());
+                        
+                        if (0 < inputs.size())
+                        {
+                            wasConnected = true;
+                        }
+                    }
+                }
+                if (! wasConnected)
+                {
+                    /*ogdf::edge phantomNodeToThis =*/ gg.newEdge(phantomNode, thisNode);
+                    
+                }
+            }
+        }
+        // Apply an energy-based layout
+        ogdf::FMMMLayout fmmm;
+        
+        fmmm.useHighLevelOptions(true);
+        fmmm.newInitialPlacement(false); //true);
+        fmmm.qualityVersusSpeed(ogdf::FMMMLayout::qvsGorgeousAndEfficient);
+        fmmm.allowedPositions(ogdf::FMMMLayout::apAll);
+        fmmm.initialPlacementMult(ogdf::FMMMLayout::ipmAdvanced);
+        fmmm.initialPlacementForces(ogdf::FMMMLayout::ipfKeepPositions);
+        fmmm.repForcesStrength(2.0);
+        fmmm.call(ga);
+        for (size_t ii = 0, mm = workingPanel.getNumberOfEntities(); mm > ii; ++ii)
+        {
+            ChannelContainer * anEntity = workingPanel.getEntity(ii);
+            
+            if (anEntity)
+            {
+                ogdf::node aNode = anEntity->getNode();
+                
+                if (aNode)
+                {
+                    anEntity->setTopLeftPosition(static_cast<int>(ga.x(aNode)),
+                                                 static_cast<int>(ga.y(aNode)));
+                }
+            }
+        }
+    }
+    gg.clear();
+    OD_LOG_OBJEXIT(); //####
+} // ContentPanel::setEntityPositions
+
+void ContentPanel::updatePanels(ScannerThread & scanner)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("scanner = ", &scanner); //####
+    EntitiesPanel & workingPanel(scanner.getScannedEntities());
+    
+    _entitiesPanel->clearAllVisitedFlags();
+    workingPanel.clearAllVisitedFlags();
+    // Retrieve each entity from our new list; if it is known already, ignore it but mark the
+    // old entity as known.
+    for (size_t ii = 0, mm = workingPanel.getNumberOfEntities(); mm > ii; ++ii)
+    {
+        ChannelContainer * anEntity = workingPanel.getEntity(ii);
+        
+        if (anEntity)
+        {
+            ChannelContainer * oldEntity = _entitiesPanel->findKnownEntity(anEntity->getName());
+            
+            if (oldEntity)
+            {
+                oldEntity->setVisited();
+            }
+            else
+            {
+                // Make a copy of the newly discovered entity, and add it to the active panel.
+                ChannelContainer * newEntity = new ChannelContainer(anEntity->getKind(),
+                                                                    anEntity->getName(),
+                                                                    anEntity->getBehaviour(),
+                                                                    anEntity->getDescription(),
+                                                                    *_entitiesPanel);
+                
+                newEntity->setVisited();
+                newEntity->setTopLeftPosition(anEntity->getPosition());
+                // Make copies of the ports of the entity, and add them to the new entity.
+                for (int jj = 0, nn = anEntity->getNumPorts(); nn > jj; ++jj)
+                {
+                    ChannelEntry * aPort = anEntity->getPort(jj);
+                    
+                    if (aPort)
+                    {
+                        ChannelEntry * newPort = newEntity->addPort(aPort->getPortName(),
+                                                                    aPort->getProtocol(),
+                                                                    aPort->getUsage(),
+                                                                    aPort->getDirection());
+                        
+                        _entitiesPanel->rememberPort(newPort);
+                    }
+                }
+                _entitiesPanel->addEntity(newEntity);
+            }
+        }
+    }
+    // Convert the detected connections into visible connections.
+    ConnectionList & connections(scanner.getConnections());
+    
+    for (ConnectionList::const_iterator walker(connections.begin()); connections.end() != walker;
+         ++walker)
+    {
+        ChannelEntry * thisPort = _entitiesPanel->findKnownPort(walker->_outPortName);
+        ChannelEntry * otherPort = _entitiesPanel->findKnownPort(walker->_inPortName);
+        
+        OD_LOG_P2("thisPort <- ", thisPort, "otherPort <- ", otherPort); //####
+        if (thisPort && otherPort)
+        {
+            OD_LOG_S2s("thisPort.name = ", thisPort->getPortName().toStdString(), //####
+                       "otherPort.name = ", otherPort->getPortName().toStdString()); //####
+            thisPort->addOutputConnection(otherPort, walker->_mode);
+            otherPort->addInputConnection(thisPort, walker->_mode);
+        }
+    }
+    _entitiesPanel->removeUnvisitedEntities();
+    _entitiesPanel->removeInvalidConnections();
+    OD_LOG("about to call adjustSize()"); //####
+    _entitiesPanel->adjustSize(false);
+    OD_LOG_OBJEXIT(); //####
+} // ContentPanel::updatePanels
 
 void ContentPanel::visibleAreaChanged(const juce::Rectangle<int> & newVisibleArea)
 {

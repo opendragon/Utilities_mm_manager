@@ -521,28 +521,24 @@ void ChannelEntry::addInputConnection(ChannelEntry *              other,
     OD_LOG_P1("other = ", other); //####
     if (other)
     {
-        GenericScopedLock<CriticalSection> locker(_lock);
-        bool                               canAdd = true;
+        bool canAdd = true;
         
-        if (0 < _inputConnections.size())
+        for (Connections::iterator walker(_inputConnections.begin());
+             _inputConnections.end() != walker; ++walker)
         {
-            for (Connections::iterator walker(_inputConnections.begin());
-                 _inputConnections.end() != walker; ++walker)
+            PortConnection * candidate(&*walker);
+            
+            if (candidate)
             {
-                PortConnection * candidate(&*walker);
-                
-                if (candidate)
+                if ((candidate->_otherPort == other) ||
+                    (candidate->_otherPort->getPortName() == other->getPortName()))
                 {
-                    if ((candidate->_otherPort == other) ||
-                        (candidate->_otherPort->getPortName() == other->getPortName()))
-                    {
-                        OD_LOG("already present"); //####
-                        candidate->_valid = true;
-                        canAdd = false;
-                        break;
-                    }
-                    
+                    OD_LOG("already present"); //####
+                    candidate->_valid = true;
+                    canAdd = false;
+                    break;
                 }
+                
             }
         }
         if (canAdd)
@@ -567,28 +563,24 @@ void ChannelEntry::addOutputConnection(ChannelEntry *              other,
     OD_LOG_P1("other = ", other); //####
     if (other)
     {
-        GenericScopedLock<CriticalSection> locker(_lock);
-        bool                               canAdd = true;
+        bool canAdd = true;
         
-        if (0 < _outputConnections.size())
+        for (Connections::iterator walker(_outputConnections.begin());
+             _outputConnections.end() != walker; ++walker)
         {
-            for (Connections::iterator walker(_outputConnections.begin());
-                 _outputConnections.end() != walker; ++walker)
+            PortConnection * candidate(&*walker);
+            
+            if (candidate)
             {
-                PortConnection * candidate(&*walker);
-                
-                if (candidate)
+                if ((candidate->_otherPort == other) ||
+                    (candidate->_otherPort->getPortName() == other->getPortName()))
                 {
-                    if ((candidate->_otherPort == other) ||
-                        (candidate->_otherPort->getPortName() == other->getPortName()))
-                    {
-                        OD_LOG("already present"); //####
-                        candidate->_valid = true;
-                        canAdd = false;
-                        break;
-                    }
-                    
+                    OD_LOG("already present"); //####
+                    candidate->_valid = true;
+                    canAdd = false;
+                    break;
                 }
+                
             }
         }
         if (canAdd)
@@ -721,19 +713,14 @@ void ChannelEntry::drawOutgoingConnections(Graphics & gg)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("gg = ", &gg); //####
-    GenericScopedLock<CriticalSection> locker(_lock);
-
-    if (0 < _outputConnections.size())
+    for (Connections::const_iterator walker(_outputConnections.begin());
+         _outputConnections.end() != walker; ++walker)
     {
-        for (Connections::const_iterator walker(_outputConnections.begin());
-             _outputConnections.end() != walker; ++walker)
+        const PortConnection * candidate(&*walker);
+        
+        if (candidate)
         {
-            const PortConnection * candidate(&*walker);
-            
-            if (candidate)
-            {
-                drawConnection(gg, this, candidate->_otherPort, candidate->_connectionMode);
-            }
+            drawConnection(gg, this, candidate->_otherPort, candidate->_connectionMode);
         }
     }
     OD_LOG_OBJEXIT(); //####
@@ -763,24 +750,20 @@ bool ChannelEntry::hasOutgoingConnectionTo(const String & otherPort)
 const
 {
     OD_LOG_OBJENTER(); //####
-    GenericScopedLock<CriticalSection> locker(_lock);
-    bool                               result = false;
+    bool result = false;
     
-    if (0 < _outputConnections.size())
+    for (Connections::const_iterator walker(_outputConnections.begin());
+         _outputConnections.end() != walker; ++walker)
     {
-        for (Connections::const_iterator walker(_outputConnections.begin());
-             _outputConnections.end() != walker; ++walker)
+        const PortConnection * candidate(&*walker);
+        
+        if (candidate && candidate->_otherPort &&
+            (candidate->_otherPort->getPortName() == otherPort))
         {
-            const PortConnection * candidate(&*walker);
-            
-            if (candidate && candidate->_otherPort &&
-                (candidate->_otherPort->getPortName() == otherPort))
-            {
-                result = true;
-                break;
-            }
-                
+            result = true;
+            break;
         }
+        
     }
     OD_LOG_EXIT_B(result); //####
     return result;
@@ -789,32 +772,24 @@ const
 void ChannelEntry::invalidateConnections(void)
 {
     OD_LOG_OBJENTER(); //####
-    GenericScopedLock<CriticalSection> locker(_lock);
-
-    if (0 < _inputConnections.size())
+    for (Connections::iterator walker(_inputConnections.begin());
+         _inputConnections.end() != walker; ++walker)
     {
-        for (Connections::iterator walker(_inputConnections.begin());
-             _inputConnections.end() != walker; ++walker)
+        PortConnection * candidate(&*walker);
+        
+        if (candidate)
         {
-            PortConnection * candidate(&*walker);
-            
-            if (candidate)
-            {
-                candidate->_valid = false;
-            }
+            candidate->_valid = false;
         }
     }
-    if (0 < _outputConnections.size())
+    for (Connections::iterator walker(_outputConnections.begin());
+         _outputConnections.end() != walker; ++walker)
     {
-        for (Connections::iterator walker(_outputConnections.begin());
-             _outputConnections.end() != walker; ++walker)
+        PortConnection * candidate(&*walker);
+        
+        if (candidate)
         {
-            PortConnection * candidate(&*walker);
-            
-            if (candidate)
-            {
-                candidate->_valid = false;
-            }
+            candidate->_valid = false;
         }
     }
     OD_LOG_EXIT(); //####
@@ -838,8 +813,7 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
         if (firstRemovePort != this)
         {
             // Check if we can end here.
-            GenericScopedLock<CriticalSection> locker(_lock);
-            String                             firstName(firstRemovePort->getPortName());
+            String firstName(firstRemovePort->getPortName());
             
             // Check if we can end here.
             firstRemovePort->clearDisconnectMarker();
@@ -867,9 +841,8 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
         if (firstAddPort != this)
         {
             // Check if we can end here.
-            GenericScopedLock<CriticalSection> locker(_lock);
-            String                             firstName(firstAddPort->getPortName());
-            String                             firstProtocol(firstAddPort->getProtocol());
+            String firstName(firstAddPort->getPortName());
+            String firstProtocol(firstAddPort->getProtocol());
             
             // Check if we can end here.
             firstAddPort->clearConnectMarker();
@@ -915,8 +888,6 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
         else if (ee.mods.isCommandDown())
         {
             // Check if Remove is OK for this entry.
-            GenericScopedLock<CriticalSection> locker(_lock);
-
             if ((kPortDirectionInput != _direction) && (kPortUsageClient != _usage) &&
                 (0 < _outputConnections.size()))
             {
@@ -928,29 +899,48 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
         }
         else if (ee.mods.isCtrlDown())
         {
+            String dirText;
             String prefix;
             String suffix;
-
+            
+            switch (_direction)
+            {
+                case kPortDirectionInput :
+                    dirText = " input";
+                    break;
+                    
+                case kPortDirectionOutput :
+                    dirText = " output";
+                    break;
+                    
+                case kPortDirectionInputOutput :
+                    dirText = " input/ouput";
+                    break;
+                    
+                default :
+                    break;
+                    
+            }
             switch (MplusM::Utilities::GetPortKind(getPortName().toStdString().c_str()))
             {
                 case MplusM::Utilities::kPortKindAdapter :
-                    prefix = "Adapter port ";
+                    prefix = "Adapter";
                     break;
                     
                 case MplusM::Utilities::kPortKindClient :
-                    prefix = "Client port ";
+                    prefix = "Client";
                     break;
                     
                 case MplusM::Utilities::kPortKindService :
-                    prefix = "Service port ";
+                    prefix = "Service";
                     break;
                     
                 case MplusM::Utilities::kPortKindServiceRegistry :
-                    prefix = "Service Registry port ";
+                    prefix = "Service Registry";
                     break;
                     
                 case MplusM::Utilities::kPortKindStandard :
-                    prefix = "Standard port ";
+                    prefix = "Standard";
                     break;
                     
                 case MplusM::Utilities::kPortKindUnknown :
@@ -961,8 +951,8 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
             {
                 suffix = "\nProtocol = '" + getProtocol() + "'";
             }
-            AlertWindow::showMessageBox(AlertWindow::NoIcon, getPortName(), prefix + suffix, "OK",
-                                        this);
+            AlertWindow::showMessageBox(AlertWindow::NoIcon, getPortName(),
+                                        prefix + dirText + " port" + suffix, "OK", this);
             passOn = false;
         }
     }
@@ -1014,9 +1004,8 @@ void ChannelEntry::mouseUp(const MouseEvent & ee)
         OD_LOG_D2("x = ", ee.position.getX(), "y = ", ee.position.getY()); //####
         if (owningPanel.isDragActive())
         {
-            GenericScopedLock<CriticalSection> locker(_lock);
-            Point<float>                       newLocation(getPositionInPanel() + ee.position);
-            ChannelEntry *                     endEntry = owningPanel.locateEntry(newLocation);
+            Point<float>   newLocation(getPositionInPanel() + ee.position);
+            ChannelEntry * endEntry = owningPanel.locateEntry(newLocation);
             
             clearConnectMarker();
             repaint();
@@ -1026,7 +1015,8 @@ void ChannelEntry::mouseUp(const MouseEvent & ee)
                 String secondName(endEntry->getPortName());
                 String secondProtocol(endEntry->getProtocol());
 
-                if (protocolsMatch(getProtocol(), secondProtocol) &&
+                if ((kPortDirectionOutput != endEntry->getDirection()) &&
+                    protocolsMatch(getProtocol(), secondProtocol) &&
                     (! hasOutgoingConnectionTo(secondName)))
                 {
                     if (MplusM::Utilities::AddConnection(getPortName().toStdString().c_str(),
@@ -1099,26 +1089,21 @@ void ChannelEntry::removeInputConnection(ChannelEntry * other)
     OD_LOG_P1("other = ", other); //####
     if (other)
     {
-        GenericScopedLock<CriticalSection> locker(_lock);
-
-        if (0 < _inputConnections.size())
+        Connections::iterator walker(_inputConnections.begin());
+        
+        for ( ; _inputConnections.end() != walker; ++walker)
         {
-            Connections::iterator walker(_inputConnections.begin());
+            PortConnection * candidate(&*walker);
             
-            for ( ; _inputConnections.end() != walker; ++walker)
+            if (candidate && (candidate->_otherPort == other))
             {
-                PortConnection * candidate(&*walker);
-                
-                if (candidate && (candidate->_otherPort == other))
-                {
-                    break;
-                }
-                
+                break;
             }
-            if (_inputConnections.end() != walker)
-            {
-                _inputConnections.erase(walker);
-            }
+            
+        }
+        if (_inputConnections.end() != walker)
+        {
+            _inputConnections.erase(walker);
         }
     }
     OD_LOG_OBJEXIT(); //####
@@ -1127,56 +1112,49 @@ void ChannelEntry::removeInputConnection(ChannelEntry * other)
 void ChannelEntry::removeInvalidConnections(void)
 {
     OD_LOG_OBJENTER(); //####
-    GenericScopedLock<CriticalSection> locker(_lock);
-    bool                               keepGoing;
+    bool keepGoing;
     
     do
     {
         keepGoing = false;
-        if (0 < _inputConnections.size())
+        Connections::iterator walker(_inputConnections.begin());
+        
+        for ( ; _inputConnections.end() != walker; ++walker)
         {
-            Connections::iterator walker(_inputConnections.begin());
+            PortConnection * candidate(&*walker);
             
-            for ( ; _inputConnections.end() != walker; ++walker)
+            if (candidate && (! candidate->_valid))
             {
-                PortConnection * candidate(&*walker);
-                
-                if (candidate && (! candidate->_valid))
-                {
-                    break;
-                }
-                    
+                break;
             }
-            if (_inputConnections.end() != walker)
-            {
-                _inputConnections.erase(walker);
-                keepGoing = true;
-            }
+            
+        }
+        if (_inputConnections.end() != walker)
+        {
+            _inputConnections.erase(walker);
+            keepGoing = true;
         }
     }
     while (keepGoing);
     do
     {
         keepGoing = false;
-        if (0 < _outputConnections.size())
+        Connections::iterator walker(_outputConnections.begin());
+        
+        for ( ; _outputConnections.end() != walker; ++walker)
         {
-            Connections::iterator walker(_outputConnections.begin());
+            PortConnection * candidate(&*walker);
             
-            for ( ; _outputConnections.end() != walker; ++walker)
+            if (candidate && (! candidate->_valid))
             {
-                PortConnection * candidate(&*walker);
-                
-                if (candidate && (! candidate->_valid))
-                {
-                    break;
-                }
-                    
+                break;
             }
-            if (_outputConnections.end() != walker)
-            {
-                _outputConnections.erase(walker);
-                keepGoing = true;
-            }
+            
+        }
+        if (_outputConnections.end() != walker)
+        {
+            _outputConnections.erase(walker);
+            keepGoing = true;
         }
     }
     while (keepGoing);
@@ -1189,26 +1167,21 @@ void ChannelEntry::removeOutputConnection(ChannelEntry * other)
     OD_LOG_P1("other = ", other); //####
     if (other)
     {
-        GenericScopedLock<CriticalSection> locker(_lock);
-
-        if (0 < _outputConnections.size())
+        Connections::iterator walker(_outputConnections.begin());
+        
+        for ( ; _outputConnections.end() != walker; ++walker)
         {
-            Connections::iterator walker(_outputConnections.begin());
+            const PortConnection * candidate(&*walker);
             
-            for ( ; _outputConnections.end() != walker; ++walker)
+            if (candidate && (candidate->_otherPort == other))
             {
-                const PortConnection * candidate(&*walker);
-                
-                if (candidate && (candidate->_otherPort == other))
-                {
-                    break;
-                }
-                    
+                break;
             }
-            if (_outputConnections.end() != walker)
-            {
-                _outputConnections.erase(walker);
-            }
+            
+        }
+        if (_outputConnections.end() != walker)
+        {
+            _outputConnections.erase(walker);
         }
     }
     OD_LOG_OBJEXIT(); //####

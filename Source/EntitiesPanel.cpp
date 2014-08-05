@@ -140,8 +140,6 @@ void EntitiesPanel::addEntity(ChannelContainer * anEntity)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("anEntity = ", anEntity); //####
-    GenericScopedLock<CriticalSection> locker(_lock);
-
     _knownEntities.push_back(anEntity);
     addChildComponent(anEntity);
     OD_LOG_OBJEXIT(); //####
@@ -171,41 +169,36 @@ void EntitiesPanel::adjustSize(const bool andRepaint)
                   outerB); //####
         OD_LOG_L4("outerW = ", outerW, "outerH = ", outerH, "outerW2 = ", outerW2, //####
                   "outerH2 = ", outerH2); //####
-        GenericScopedLock<CriticalSection> locker(_lock);
-
-        if (0 < _knownEntities.size())
+        for (ContainerList::const_iterator it(_knownEntities.begin());
+             _knownEntities.end() != it; ++it)
         {
-            for (ContainerList::const_iterator it(_knownEntities.begin());
-                 _knownEntities.end() != it; ++it)
+            ChannelContainer * anEntity = *it;
+            
+            if (anEntity)
             {
-                ChannelContainer * anEntity = *it;
+                juce::Rectangle<int> entityBounds(anEntity->getBounds());
+                OD_LOG_L4("eB.x = ", entityBounds.getX(), "eB.y = ", entityBounds.getY(), //####
+                          "eB.w = ", entityBounds.getWidth(), "eB.h = ", //####
+                          entityBounds.getHeight()); //####
+                int                  entityLeft = entityBounds.getX();
+                int                  entityTop = entityBounds.getY();
+                int                  entityRight = entityLeft + entityBounds.getWidth();
+                int                  entityBottom = entityTop + entityBounds.getHeight();
                 
-                if (anEntity)
+                if (haveValues)
                 {
-                    juce::Rectangle<int> entityBounds(anEntity->getBounds());
-                    OD_LOG_L4("eB.x = ", entityBounds.getX(), "eB.y = ", entityBounds.getY(), //####
-                              "eB.w = ", entityBounds.getWidth(), "eB.h = ", //####
-                              entityBounds.getHeight()); //####
-                    int                  entityLeft = entityBounds.getX();
-                    int                  entityTop = entityBounds.getY();
-                    int                  entityRight = entityLeft + entityBounds.getWidth();
-                    int                  entityBottom = entityTop + entityBounds.getHeight();
-                    
-                    if (haveValues)
-                    {
-                        minX = min(minX, entityLeft);
-                        maxX = max(maxX, entityRight);
-                        minY = min(minY, entityTop);
-                        maxY = max(maxY, entityBottom);
-                    }
-                    else
-                    {
-                        minX = entityLeft;
-                        maxX = entityRight;
-                        minY = entityTop;
-                        maxY = entityBottom;
-                        haveValues = true;
-                    }
+                    minX = min(minX, entityLeft);
+                    maxX = max(maxX, entityRight);
+                    minY = min(minY, entityTop);
+                    maxY = max(maxY, entityBottom);
+                }
+                else
+                {
+                    minX = entityLeft;
+                    maxX = entityRight;
+                    minY = entityTop;
+                    maxY = entityBottom;
+                    haveValues = true;
                 }
             }
         }
@@ -284,20 +277,14 @@ void EntitiesPanel::adjustSize(const bool andRepaint)
 void EntitiesPanel::clearAllVisitedFlags(void)
 {
     OD_LOG_OBJENTER(); //####
-    GenericScopedLock<CriticalSection> locker(_lock);
-
-    if (0 < _knownEntities.size())
+    for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
     {
-        for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it;
-             ++it)
+        ChannelContainer * anEntity = *it;
+        
+        if (anEntity)
         {
-            ChannelContainer * anEntity = *it;
-            
-            if (anEntity)
-            {
-                anEntity->clearVisited();
-                anEntity->invalidateConnections();
-            }
+            anEntity->clearVisited();
+            anEntity->invalidateConnections();
         }
     }
     OD_LOG_OBJEXIT(); //####
@@ -313,22 +300,16 @@ void EntitiesPanel::clearDragInfo(void)
 void EntitiesPanel::clearMarkers(void)
 {
     OD_LOG_OBJENTER(); //####
-    GenericScopedLock<CriticalSection> locker(_lock);
-
-    if (0 < _knownEntities.size())
+    for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
     {
-        for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it;
-             ++it)
+        ChannelContainer * anEntity = *it;
+        
+        if (anEntity)
         {
-            ChannelContainer * anEntity = *it;
-            
-            if (anEntity)
+            if (anEntity->isMarked())
             {
-                if (anEntity->isMarked())
-                {
-                    anEntity->clearMarkers();
-                    anEntity->repaint();
-                }
+                anEntity->clearMarkers();
+                anEntity->repaint();
             }
         }
     }
@@ -338,19 +319,13 @@ void EntitiesPanel::clearMarkers(void)
 void EntitiesPanel::clearOutData(void)
 {
     OD_LOG_OBJENTER(); //####
-    GenericScopedLock<CriticalSection> locker(_lock);
-
-    if (0 < _knownEntities.size())
+    for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
     {
-        for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it;
-             ++it)
+        ChannelContainer * anEntity = *it;
+        
+        if (anEntity)
         {
-            ChannelContainer * anEntity = *it;
-            
-            if (anEntity)
-            {
-                delete anEntity;
-            }
+            delete anEntity;
         }
     }
     removeAllChildren();
@@ -363,19 +338,13 @@ void EntitiesPanel::drawConnections(Graphics & gg)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("gg = ", &gg); //####
-    GenericScopedLock<CriticalSection> locker(_lock);
-
-    if (0 < _knownEntities.size())
+    for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
     {
-        for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it;
-             ++it)
+        ChannelContainer * anEntity = *it;
+        
+        if (anEntity)
         {
-            ChannelContainer * anEntity = *it;
-            
-            if (anEntity)
-            {
-                anEntity->drawOutgoingConnections(gg);
-            }
+            anEntity->drawOutgoingConnections(gg);
         }
     }
     if (_dragConnectionActive && _firstAddPoint)
@@ -389,23 +358,18 @@ ChannelContainer * EntitiesPanel::findKnownEntity(const String & name)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("name = ", name.toStdString()); //####
-    GenericScopedLock<CriticalSection> locker(_lock);
-    ChannelContainer *                 result = NULL;
+    ChannelContainer * result = NULL;
     
-    if (0 < _knownEntities.size())
+    for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
     {
-        for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it;
-             ++it)
+        ChannelContainer * anEntity = *it;
+        
+        if (anEntity && (name == anEntity->getName()))
         {
-            ChannelContainer * anEntity = *it;
-            
-            if (anEntity && (name == anEntity->getName()))
-            {
-                result = anEntity;
-                break;
-            }
-            
+            result = anEntity;
+            break;
         }
+        
     }
     OD_LOG_OBJEXIT_P(result); //####
     return result;
@@ -415,26 +379,22 @@ ChannelContainer * EntitiesPanel::findKnownEntityForPort(const String & name)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("name = ", name.toStdString()); //####
-    GenericScopedLock<CriticalSection> locker(_lock);
-    PortEntryMap::const_iterator       match(_knownPorts.find(name));
-    ChannelContainer *                 result = NULL;
+    PortEntryMap::const_iterator match(_knownPorts.find(name));
+    ChannelContainer *           result = NULL;
     
     if (_knownPorts.end() != match)
     {
-        if (0 < _knownEntities.size())
+        for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it;
+             ++it)
         {
-            for (ContainerList::const_iterator it(_knownEntities.begin());
-                 _knownEntities.end() != it; ++it)
+            ChannelContainer * anEntity = *it;
+            
+            if (anEntity && anEntity->hasPort(match->second))
             {
-                ChannelContainer * anEntity = *it;
-                
-                if (anEntity && anEntity->hasPort(match->second))
-                {
-                    result = anEntity;
-                    break;
-                }
-                
+                result = anEntity;
+                break;
             }
+            
         }
     }
     OD_LOG_OBJEXIT_P(result); //####
@@ -445,23 +405,18 @@ ChannelContainer * EntitiesPanel::findKnownEntityForPort(const ChannelEntry * aP
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("aPort = ", aPort); //####
-    GenericScopedLock<CriticalSection> locker(_lock);
-    ChannelContainer *                 result = NULL;
+    ChannelContainer * result = NULL;
     
-    if (0 < _knownEntities.size())
+    for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
     {
-        for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it;
-             ++it)
+        ChannelContainer * anEntity = *it;
+        
+        if (anEntity && anEntity->hasPort(aPort))
         {
-            ChannelContainer * anEntity = *it;
-            
-            if (anEntity && anEntity->hasPort(aPort))
-            {
-                result = anEntity;
-                break;
-            }
-            
+            result = anEntity;
+            break;
         }
+        
     }
     OD_LOG_OBJEXIT_P(result); //####
     return result;
@@ -471,9 +426,8 @@ ChannelEntry * EntitiesPanel::findKnownPort(const String & name)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("name = ", name.toStdString()); //####
-    GenericScopedLock<CriticalSection> locker(_lock);
-    ChannelEntry *                     result = NULL;
-    PortEntryMap::const_iterator       match(_knownPorts.find(name));
+    ChannelEntry *               result = NULL;
+    PortEntryMap::const_iterator match(_knownPorts.find(name));
     
     if (_knownPorts.end() == match)
     {
@@ -491,13 +445,24 @@ void EntitiesPanel::forgetPort(ChannelEntry * aPort)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("aPort = ", aPort); //####
-    GenericScopedLock<CriticalSection> locker(_lock);
-
     if (aPort)
     {
         PortEntryMap::iterator match(_knownPorts.find(aPort->getName()));
         
-        if (_knownPorts.end() != match)
+        if (_knownPorts.end() == match)
+        {
+            // We couldn't find a match by the key, so instead search by value
+            for (match = _knownPorts.begin(); _knownPorts.end() != match; ++match)
+            {
+                if (match->second == aPort)
+                {
+                    _knownPorts.erase(match);
+                    break;
+                }
+                
+            }
+        }
+        else
         {
             _knownPorts.erase(match);
         }
@@ -509,8 +474,7 @@ ChannelContainer * EntitiesPanel::getEntity(const size_t index)
 const
 {
     OD_LOG_OBJENTER(); //####
-    GenericScopedLock<CriticalSection> locker(_lock);
-    ChannelContainer *                 result;
+    ChannelContainer * result;
     
     if (_knownEntities.size() > index)
     {
@@ -528,8 +492,7 @@ size_t EntitiesPanel::getNumberOfEntities(void)
 const
 {
     OD_LOG_OBJENTER(); //####
-    GenericScopedLock<CriticalSection> locker(_lock);
-    size_t                             result = _knownEntities.size();
+    size_t result = _knownEntities.size();
     
     OD_LOG_OBJEXIT_L(result); //####
     return result;
@@ -539,37 +502,25 @@ ChannelEntry * EntitiesPanel::locateEntry(const Point<float> & location)
 const
 {
     OD_LOG_OBJENTER(); //####
-    GenericScopedLock<CriticalSection> locker(_lock);
-    ChannelEntry *                     result = NULL;
+    ChannelEntry * result = NULL;
     
-    if (0 < _knownEntities.size())
+    for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
     {
-        for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it;
-             ++it)
+        ChannelContainer * anEntity = *it;
+        
+        if (anEntity)
         {
-            ChannelContainer * anEntity = *it;
-            
-            if (anEntity)
+            result = anEntity->locateEntry(location);
+            if (result)
             {
-                result = anEntity->locateEntry(location);
-                if (result)
-                {
-                    break;
-                }
-                
+                break;
             }
+            
         }
     }
     OD_LOG_OBJEXIT_P(result); //####
     return result;
 } // EntitiesPanel::locateEntry
-
-void EntitiesPanel::lock(void)
-{
-    OD_LOG_OBJENTER(); //####
-    _lock.enter();
-    OD_LOG_OBJEXIT(); //####
-} // EntitiesPanel::lock
 
 void EntitiesPanel::mouseDown(const MouseEvent & ee)
 {
@@ -598,8 +549,6 @@ void EntitiesPanel::paint(Graphics & gg)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("gg = ", &gg); //####
-    GenericScopedLock<CriticalSection> locker(_lock);
-
     drawConnections(gg);
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::paint
@@ -627,8 +576,6 @@ void EntitiesPanel::rememberPort(ChannelEntry * aPort)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("aPort = ", aPort); //####
-    GenericScopedLock<CriticalSection> locker(_lock);
-
     if (aPort)
     {
         _knownPorts.insert(PortEntryMap::value_type(aPort->getPortName(), aPort));
@@ -639,18 +586,13 @@ void EntitiesPanel::rememberPort(ChannelEntry * aPort)
 void EntitiesPanel::removeInvalidConnections(void)
 {
     OD_LOG_OBJENTER(); //####
-    GenericScopedLock<CriticalSection> locker(_lock);
-
-    if (0 < _knownEntities.size())
+    for (ContainerList::iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
     {
-        for (ContainerList::iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
+        ChannelContainer * anEntity = *it;
+        
+        if (anEntity)
         {
-            ChannelContainer * anEntity = *it;
-            
-            if (anEntity)
-            {
-                anEntity->removeInvalidConnections();
-            }
+            anEntity->removeInvalidConnections();
         }
     }
     OD_LOG_OBJEXIT(); //####
@@ -659,22 +601,32 @@ void EntitiesPanel::removeInvalidConnections(void)
 void EntitiesPanel::removeUnvisitedEntities(void)
 {
     OD_LOG_OBJENTER(); //####
-    GenericScopedLock<CriticalSection> locker(_lock);
+    bool keepGoing;
     
-    if (0 < _knownEntities.size())
+    do
     {
-        for (ContainerList::iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
+        keepGoing = false;
+        ContainerList::iterator walker(_knownEntities.begin());
+        ChannelContainer *      anEntity = NULL;
+        
+        for ( ; _knownEntities.end() != walker; ++walker)
         {
-            ChannelContainer * anEntity = *it;
-            
+            anEntity = *walker;
             if (anEntity && (! anEntity->wasVisited()))
             {
-                removeChildComponent(anEntity);
-                *it = NULL;
-                delete anEntity;
+                break;
             }
+            
+        }
+        if ((_knownEntities.end() != walker) && anEntity)
+        {
+            removeChildComponent(anEntity);
+            delete anEntity;
+            _knownEntities.erase(walker);
+            keepGoing = true;
         }
     }
+    while (keepGoing);
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::removeUnvisitedEntities
 
@@ -696,13 +648,6 @@ void EntitiesPanel::setDragInfo(const Point<float> position)
     }
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::setDragInfo
-
-void EntitiesPanel::unlock(void)
-{
-    OD_LOG_OBJENTER(); //####
-    _lock.exit();
-    OD_LOG_OBJEXIT(); //####
-} // EntitiesPanel::unlock
 
 #if defined(__APPLE__)
 # pragma mark Accessors

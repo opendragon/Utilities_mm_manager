@@ -58,6 +58,7 @@ namespace ChannelManager
 {
     class ChannelManagerWindow;
     class EntitiesPanel;
+    class ScannerThread;
     
     /*! @brief The content area of the main window of the application. */
     class ContentPanel : public Viewport
@@ -96,6 +97,14 @@ namespace ChannelManager
         
         /*! @brief The class that this class is derived from. */
         typedef Viewport inherited;
+        
+        /*! @brief Set the entity positions, based on the scanned entities.
+        @param scanner The background scanning thread. */
+        void setEntityPositions(ScannerThread & scanner);
+
+        /*! @brief Refresh the displayed entities and connections, based on the scanned entities.
+         @param scanner The background scanning thread. */
+        void updatePanels(ScannerThread & scanner);
         
         /*! @brief The entities panel. */
         ScopedPointer<EntitiesPanel> _entitiesPanel;

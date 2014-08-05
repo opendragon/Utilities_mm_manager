@@ -39,7 +39,7 @@
 #if (! defined(ScannerThread_H_))
 # define ScannerThread_H_ /* Header guard */
 
-# include "ChannelsDataTypes.h"
+# include "EntitiesPanel.h"
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -71,8 +71,56 @@ namespace ChannelManager
         /*! @brief The destructor. */
         virtual ~ScannerThread(void);
         
+        /*! @brief Request access for reading from shared resources.
+         @returns @c true if the read lock has been acquired and @c false otherwise. */
+        bool conditionallyAcquireForRead(void);
+        
+        /*! @brief Request access for writing to shared resources.
+         @returns @c true if the write lock has been acquired and @c false otherwise. */
+        bool conditionallyAcquireForWrite(void);
+        
+        /*! @brief Return the list of detected connections.
+         @returns The list of detected connections. */
+        ConnectionList & getConnections(void)
+        {
+            return _connections;
+        } // getConnections
+        
+        /*! @brief Return the list of detected entities.
+         @returns The list of detected entities. */
+        EntitiesPanel & getScannedEntities(void)
+        {
+            return _workingPanel;
+        } // getScannedEntities
+
+        /*! @brief Release access from reading from the shared resources. */
+        void relinquishFromRead(void);
+        
+        /*! @brief Release access from writing to the shared resources. */
+        void relinquishFromWrite(void);
+        
         /*! @brief Perform the background scan. */
         virtual void run(void);
+        
+        /*! @brief Indicate that the scan data has been processed and the scan can proceed. */
+        inline void scanCanProceed(void)
+        {
+            _scanCanProceed = true;
+        } // scanCanProceed
+        
+        /*! @brief Returns @c true if the scan data is available and @c false otherwise.
+         @returns @c true if the scan data is available and @c false otherwise. */
+        inline bool scanIsComplete(void)
+        const
+        {
+            return _scanIsComplete;
+        } // scanIsComplete
+        
+        /*! @brief Request access for reading from shared resources. */
+        void unconditionallyAcquireForRead(void);
+        
+        /*! @brief Request access for writing to shared resources. */
+        void unconditionallyAcquireForWrite(void);
         
     protected:
         
@@ -81,9 +129,8 @@ namespace ChannelManager
         /*! @brief The class that this class is derived from. */
         typedef Thread inherited;
         
-        /*! @brief Add the detected entities and connections to panels.
-         @param newEntitiesPanel The entities panel to be updated. */
-        void addEntitiesToPanels(EntitiesPanel & newEntitiesPanel);
+        /*! @brief Add the detected entities and connections to panels. */
+        void addEntitiesToPanels(void);
         
         /*! @brief Add connections between detected ports in the to-be-displayed list.
          @param detectedPorts The set of detected YARP ports.
@@ -134,13 +181,8 @@ namespace ChannelManager
         void gatherEntities(MplusM::Common::CheckFunction checker,
                             void *                        checkStuff);
         
-        /*! @brief Set the entity positions. */
-        void setEntityPositions(void);
-        
-        /*! @brief Refresh the displayed entities and connections, based on the scanned entities.
-         @param newPanel The panel containing the scanned entities.
-         @returns @c true if the thread should leave and @c false otherwise. */
-        bool updatePanels(EntitiesPanel & newPanel);
+        /*! @brief Tell the displayed panel to do a repaint. */
+        void triggerRepaint(void);
         
         /*! @brief The window to be updated. */
         ChannelManagerWindow & _window;
@@ -160,8 +202,11 @@ namespace ChannelManager
         /*! @brief A set of connections. */
         ConnectionList _connections;
         
-        /*! @brief A set of entities. */
-        ContainerList _entitiesSeen;
+        /*! @brief The working set of entities. */
+        EntitiesPanel _workingPanel;
+        
+        /*! @brief A lock to manage access to shared resources. */
+        ReadWriteLock _lock;
         
         /*! @brief The name of the port used to determine if a port being checked can be used as an
          output. */
@@ -179,6 +224,13 @@ namespace ChannelManager
         
         /*! @brief @c true if the port direction resources are available. */
         bool _portsValid;
+        
+        /*! @brief @c true if the scan can proceed and @c false otherwise. */
+        bool _scanCanProceed;
+        
+        /*! @brief @c true if the scan has been finished and the data is available, @c false
+         otherwise. */
+        bool _scanIsComplete;
         
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ScannerThread)
         

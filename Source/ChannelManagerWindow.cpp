@@ -74,7 +74,7 @@ using namespace std;
 
 ChannelManagerWindow::ChannelManagerWindow(const String & title)  :
     inherited(title, Colours::lightgrey, inherited::allButtons),
-    _contentPanel(new ContentPanel(this))
+    _contentPanel(new ContentPanel(this)), _scannerThread(NULL)
 {
     OD_LOG_ENTER(); //####
     setOpaque(true);
