@@ -40,7 +40,7 @@
 #include "ChannelContainer.h"
 #include "ScannerThread.h"
 
-//#include <odl/ODEnableLogging.h>
+#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
 
 #if defined(__APPLE__)
@@ -103,10 +103,13 @@ ChannelManagerApplication::~ChannelManagerApplication(void)
 
 void ChannelManagerApplication::anotherInstanceStarted(const String & commandLine)
 {
-#if MAC_OR_LINUX_
-# pragma unused(commandLine)
-#endif // MAC_OR_LINUX_
+#if (! defined(OD_ENABLE_LOGGING))
+# if MAC_OR_LINUX_
+#  pragma unused(commandLine)
+# endif // MAC_OR_LINUX_
+#endif // ! defined(OD_ENABLE_LOGGING)
     OD_LOG_OBJENTER(); //####
+    OD_LOG_S1s("commandLine = ", commandLine.toStdString()); //####
     // When another instance of the app is launched while this one is running,
     // this method is invoked, and the commandLine parameter tells you what
     // the other instance's command-line arguments were.
@@ -129,10 +132,13 @@ const String ChannelManagerApplication::getApplicationVersion(void)
 
 void ChannelManagerApplication::initialise(const String & commandLine)
 {
-#if MAC_OR_LINUX_
-# pragma unused(commandLine)
-#endif // MAC_OR_LINUX_
+#if (! defined(OD_ENABLE_LOGGING))
+# if MAC_OR_LINUX_
+#  pragma unused(commandLine)
+# endif // MAC_OR_LINUX_
+#endif // ! defined(OD_ENABLE_LOGGING)
     OD_LOG_OBJENTER(); //####
+    OD_LOG_S1s("commandLine = ", commandLine.toStdString()); //####
 #if MAC_OR_LINUX_
     MplusM::Common::SetUpLogger(ProjectInfo::projectName);
 #endif // MAC_OR_LINUX_
@@ -202,15 +208,22 @@ void ChannelManagerApplication::systemRequestedQuit(void)
 # pragma mark Global functions
 #endif // defined(__APPLE__)
 
+#include <odl/ODDisableLogging.h>
+#include <odl/ODLogging.h>
 bool CheckForExit(void * stuff)
 {
-#if MAC_OR_LINUX_
-# pragma unused(stuff)
-#endif // MAC_OR_LINUX_
+#if (! defined(OD_ENABLE_LOGGING))
+# if MAC_OR_LINUX_
+#  pragma unused(stuff)
+# endif // MAC_OR_LINUX_
+#endif // ! defined(OD_ENABLE_LOGGING)
     OD_LOG_ENTER(); //####
+    OD_LOG_P1("stuff = ", stuff); //####
     OD_LOG_EXIT_B(lExitRequested); //####
     return lExitRequested;
 } // CheckForExit
+#include <odl/ODEnableLogging.h>
+#include <odl/ODLogging.h>
 
 void SetExitRequest(void)
 {

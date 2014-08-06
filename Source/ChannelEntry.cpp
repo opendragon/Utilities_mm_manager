@@ -41,7 +41,7 @@
 #include "ChannelManagerApp.h"
 #include "EntitiesPanel.h"
 
-//#include <odl/ODEnableLogging.h>
+#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
 
 #if defined(__APPLE__)
@@ -99,6 +99,8 @@ static const Colour & kUdpConnectionColour(Colours::purple);
 # pragma mark Local functions
 #endif // defined(__APPLE__)
 
+#include <odl/ODDisableLogging.h>
+#include <odl/ODLogging.h>
 /*! @brief Determine if a new point is closer to a reference point than the previous point.
  @param distanceSoFar On input, the closest distance so far and on output, the new closest distance.
  @param refPoint The point to measure distance from.
@@ -424,6 +426,8 @@ static void drawConnection(Graphics &                  gg,
     }
     OD_LOG_EXIT(); //####
 } // drawConnection
+#include <odl/ODEnableLogging.h>
+#include <odl/ODLogging.h>
 
 /*! @brief Determine whether a connection can be made, based on the port protocols.
  @param sourceProtocol The protocol of the source port.
@@ -505,6 +509,7 @@ ChannelEntry::ChannelEntry(ChannelContainer *  parent,
 ChannelEntry::~ChannelEntry(void)
 {
     OD_LOG_OBJENTER(); //####
+    OD_LOG_S1s("getPortName() = ", getPortName().toStdString()); //####
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::~ChannelEntry
 
@@ -512,8 +517,6 @@ ChannelEntry::~ChannelEntry(void)
 # pragma mark Actions
 #endif // defined(__APPLE__)
 
-/*! @brief Add an input connection to the port.
- @param other The port that is to be connected. */
 void ChannelEntry::addInputConnection(ChannelEntry *              other,
                                       MplusM::Common::ChannelMode mode)
 {
@@ -523,15 +526,15 @@ void ChannelEntry::addInputConnection(ChannelEntry *              other,
     {
         bool canAdd = true;
         
-        for (Connections::iterator walker(_inputConnections.begin());
+        for (Channels::iterator walker(_inputConnections.begin());
              _inputConnections.end() != walker; ++walker)
         {
-            PortConnection * candidate(&*walker);
+            Channel * candidate(&*walker);
             
             if (candidate)
             {
-                if ((candidate->_otherPort == other) ||
-                    (candidate->_otherPort->getPortName() == other->getPortName()))
+                if ((candidate->_otherChannel == other) ||
+                    (candidate->_otherChannel->getPortName() == other->getPortName()))
                 {
                     OD_LOG("already present"); //####
                     candidate->_valid = true;
@@ -543,9 +546,9 @@ void ChannelEntry::addInputConnection(ChannelEntry *              other,
         }
         if (canAdd)
         {
-            PortConnection newConnection;
+            Channel newConnection;
             
-            newConnection._otherPort = other;
+            newConnection._otherChannel = other;
             newConnection._connectionMode = mode;
             newConnection._valid = true;
             _inputConnections.push_back(newConnection);
@@ -554,8 +557,6 @@ void ChannelEntry::addInputConnection(ChannelEntry *              other,
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::addInputConnection
 
-/*! @brief Add an output connection to the port.
- @param other The port that is to be connected. */
 void ChannelEntry::addOutputConnection(ChannelEntry *              other,
                                        MplusM::Common::ChannelMode mode)
 {
@@ -565,15 +566,15 @@ void ChannelEntry::addOutputConnection(ChannelEntry *              other,
     {
         bool canAdd = true;
         
-        for (Connections::iterator walker(_outputConnections.begin());
+        for (Channels::iterator walker(_outputConnections.begin());
              _outputConnections.end() != walker; ++walker)
         {
-            PortConnection * candidate(&*walker);
+            Channel * candidate(&*walker);
             
             if (candidate)
             {
-                if ((candidate->_otherPort == other) ||
-                    (candidate->_otherPort->getPortName() == other->getPortName()))
+                if ((candidate->_otherChannel == other) ||
+                    (candidate->_otherChannel->getPortName() == other->getPortName()))
                 {
                     OD_LOG("already present"); //####
                     candidate->_valid = true;
@@ -585,9 +586,9 @@ void ChannelEntry::addOutputConnection(ChannelEntry *              other,
         }
         if (canAdd)
         {
-            PortConnection newConnection;
+            Channel newConnection;
             
-            newConnection._otherPort = other;
+            newConnection._otherChannel = other;
             newConnection._connectionMode = mode;
             newConnection._valid = true;
             _outputConnections.push_back(newConnection);
@@ -596,6 +597,8 @@ void ChannelEntry::addOutputConnection(ChannelEntry *              other,
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::addOutputConnection
 
+#include <odl/ODDisableLogging.h>
+#include <odl/ODLogging.h>
 AnchorSide ChannelEntry::calculateClosestAnchor(Point<float> &       result,
                                                 const bool           isSource,
                                                 const bool           disallowBottom,
@@ -648,6 +651,8 @@ const
     OD_LOG_OBJEXIT_L(static_cast<int>(anchor)); //####
     return anchor;
 } // ChannelEntry::calculateClosestAnchor
+#include <odl/ODEnableLogging.h>
+#include <odl/ODLogging.h>
 
 void ChannelEntry::clearConnectMarker(void)
 {
@@ -709,23 +714,29 @@ void ChannelEntry::drawDragLine(Graphics &           gg,
     OD_LOG_EXIT(); //####
 } // ChannelEntry::drawDragLine
 
+#include <odl/ODDisableLogging.h>
+#include <odl/ODLogging.h>
 void ChannelEntry::drawOutgoingConnections(Graphics & gg)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("gg = ", &gg); //####
-    for (Connections::const_iterator walker(_outputConnections.begin());
+    for (Channels::const_iterator walker(_outputConnections.begin());
          _outputConnections.end() != walker; ++walker)
     {
-        const PortConnection * candidate(&*walker);
+        const Channel * candidate(&*walker);
         
         if (candidate)
         {
-            drawConnection(gg, this, candidate->_otherPort, candidate->_connectionMode);
+            drawConnection(gg, this, candidate->_otherChannel, candidate->_connectionMode);
         }
     }
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::drawOutgoingConnections
+#include <odl/ODEnableLogging.h>
+#include <odl/ODLogging.h>
 
+#include <odl/ODDisableLogging.h>
+#include <odl/ODLogging.h>
 EntitiesPanel & ChannelEntry::getOwningPanel(void)
 const
 {
@@ -735,7 +746,11 @@ const
     OD_LOG_OBJEXIT_P(&result); //####
     return result;
 } // ChannelEntry::getOwningPanel
+#include <odl/ODEnableLogging.h>
+#include <odl/ODLogging.h>
 
+#include <odl/ODDisableLogging.h>
+#include <odl/ODLogging.h>
 Point<float> ChannelEntry::getPositionInPanel(void)
 const
 {
@@ -745,6 +760,8 @@ const
     OD_LOG_OBJEXIT(); //####
     return result;
 } // ChannelEntry::getPositionInPanel
+#include <odl/ODEnableLogging.h>
+#include <odl/ODLogging.h>
 
 bool ChannelEntry::hasOutgoingConnectionTo(const String & otherPort)
 const
@@ -752,13 +769,13 @@ const
     OD_LOG_OBJENTER(); //####
     bool result = false;
     
-    for (Connections::const_iterator walker(_outputConnections.begin());
+    for (Channels::const_iterator walker(_outputConnections.begin());
          _outputConnections.end() != walker; ++walker)
     {
-        const PortConnection * candidate(&*walker);
+        const Channel * candidate(&*walker);
         
-        if (candidate && candidate->_otherPort &&
-            (candidate->_otherPort->getPortName() == otherPort))
+        if (candidate && candidate->_otherChannel &&
+            (candidate->_otherChannel->getPortName() == otherPort))
         {
             result = true;
             break;
@@ -772,20 +789,20 @@ const
 void ChannelEntry::invalidateConnections(void)
 {
     OD_LOG_OBJENTER(); //####
-    for (Connections::iterator walker(_inputConnections.begin());
-         _inputConnections.end() != walker; ++walker)
+    for (Channels::iterator walker(_inputConnections.begin()); _inputConnections.end() != walker;
+         ++walker)
     {
-        PortConnection * candidate(&*walker);
+        Channel * candidate(&*walker);
         
         if (candidate)
         {
             candidate->_valid = false;
         }
     }
-    for (Connections::iterator walker(_outputConnections.begin());
-         _outputConnections.end() != walker; ++walker)
+    for (Channels::iterator walker(_outputConnections.begin()); _outputConnections.end() != walker;
+         ++walker)
     {
-        PortConnection * candidate(&*walker);
+        Channel * candidate(&*walker);
         
         if (candidate)
         {
@@ -1050,6 +1067,8 @@ void ChannelEntry::mouseUp(const MouseEvent & ee)
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::mouseUp
 
+#include <odl/ODDisableLogging.h>
+#include <odl/ODLogging.h>
 void ChannelEntry::paint(Graphics & gg)
 {
     OD_LOG_OBJENTER(); //####
@@ -1082,6 +1101,8 @@ void ChannelEntry::paint(Graphics & gg)
     }
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::paint
+#include <odl/ODEnableLogging.h>
+#include <odl/ODLogging.h>
 
 void ChannelEntry::removeInputConnection(ChannelEntry * other)
 {
@@ -1089,13 +1110,13 @@ void ChannelEntry::removeInputConnection(ChannelEntry * other)
     OD_LOG_P1("other = ", other); //####
     if (other)
     {
-        Connections::iterator walker(_inputConnections.begin());
+        Channels::iterator walker(_inputConnections.begin());
         
         for ( ; _inputConnections.end() != walker; ++walker)
         {
-            PortConnection * candidate(&*walker);
+            Channel * candidate(&*walker);
             
-            if (candidate && (candidate->_otherPort == other))
+            if (candidate && (candidate->_otherChannel == other))
             {
                 break;
             }
@@ -1117,11 +1138,11 @@ void ChannelEntry::removeInvalidConnections(void)
     do
     {
         keepGoing = false;
-        Connections::iterator walker(_inputConnections.begin());
+        Channels::iterator walker(_inputConnections.begin());
         
         for ( ; _inputConnections.end() != walker; ++walker)
         {
-            PortConnection * candidate(&*walker);
+            Channel * candidate(&*walker);
             
             if (candidate && (! candidate->_valid))
             {
@@ -1139,11 +1160,11 @@ void ChannelEntry::removeInvalidConnections(void)
     do
     {
         keepGoing = false;
-        Connections::iterator walker(_outputConnections.begin());
+        Channels::iterator walker(_outputConnections.begin());
         
         for ( ; _outputConnections.end() != walker; ++walker)
         {
-            PortConnection * candidate(&*walker);
+            Channel * candidate(&*walker);
             
             if (candidate && (! candidate->_valid))
             {
@@ -1167,13 +1188,13 @@ void ChannelEntry::removeOutputConnection(ChannelEntry * other)
     OD_LOG_P1("other = ", other); //####
     if (other)
     {
-        Connections::iterator walker(_outputConnections.begin());
+        Channels::iterator walker(_outputConnections.begin());
         
         for ( ; _outputConnections.end() != walker; ++walker)
         {
-            const PortConnection * candidate(&*walker);
+            const Channel * candidate(&*walker);
             
-            if (candidate && (candidate->_otherPort == other))
+            if (candidate && (candidate->_otherChannel == other))
             {
                 break;
             }
@@ -1191,6 +1212,8 @@ void ChannelEntry::removeOutputConnection(ChannelEntry * other)
 # pragma mark Accessors
 #endif // defined(__APPLE__)
 
+#include <odl/ODDisableLogging.h>
+#include <odl/ODLogging.h>
 Point<float> ChannelEntry::getCentre(void)
 const
 {
@@ -1200,6 +1223,8 @@ const
     OD_LOG_OBJEXIT(); //####
     return outer.getCentre();
 } // ChannelEntry::getCentre
+#include <odl/ODEnableLogging.h>
+#include <odl/ODLogging.h>
 
 #if defined(__APPLE__)
 # pragma mark Global functions

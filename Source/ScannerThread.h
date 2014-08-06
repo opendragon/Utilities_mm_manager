@@ -39,6 +39,7 @@
 #if (! defined(ScannerThread_H_))
 # define ScannerThread_H_ /* Header guard */
 
+# include "EntitiesData.h"
 # include "EntitiesPanel.h"
 
 # if defined(__APPLE__)
@@ -55,7 +56,6 @@
 namespace ChannelManager
 {
     class ChannelManagerWindow;
-    class EntitiesPanel;
     
     /*! @brief A background scanner thread. */
     class ScannerThread : public Thread
@@ -71,6 +71,13 @@ namespace ChannelManager
         /*! @brief The destructor. */
         virtual ~ScannerThread(void);
         
+        /*! @brief Returns @c true if the scan data is available and @c false otherwise.
+         
+         Note that what is returned is the value prior to the call; the flag is cleared so that the
+         next call will return @c false.
+         @returns @c true if the scan data is available and @c false otherwise. */
+        bool checkAndClearIfScanIsComplete(void);
+        
         /*! @brief Request access for reading from shared resources.
          @returns @c true if the read lock has been acquired and @c false otherwise. */
         bool conditionallyAcquireForRead(void);
@@ -79,20 +86,13 @@ namespace ChannelManager
          @returns @c true if the write lock has been acquired and @c false otherwise. */
         bool conditionallyAcquireForWrite(void);
         
-        /*! @brief Return the list of detected connections.
-         @returns The list of detected connections. */
-        ConnectionList & getConnections(void)
+        /*! @brief Return the collected entities data.
+         @returns The collected entities data. */
+        inline EntitiesData & getEntitiesData(void)
         {
-            return _connections;
-        } // getConnections
+            return _workingData;
+        } // getEntitiesData
         
-        /*! @brief Return the list of detected entities.
-         @returns The list of detected entities. */
-        EntitiesPanel & getScannedEntities(void)
-        {
-            return _workingPanel;
-        } // getScannedEntities
-
         /*! @brief Release access from reading from the shared resources. */
         void relinquishFromRead(void);
         
@@ -103,18 +103,7 @@ namespace ChannelManager
         virtual void run(void);
         
         /*! @brief Indicate that the scan data has been processed and the scan can proceed. */
-        inline void scanCanProceed(void)
-        {
-            _scanCanProceed = true;
-        } // scanCanProceed
-        
-        /*! @brief Returns @c true if the scan data is available and @c false otherwise.
-         @returns @c true if the scan data is available and @c false otherwise. */
-        inline bool scanIsComplete(void)
-        const
-        {
-            return _scanIsComplete;
-        } // scanIsComplete
+        void scanCanProceed(void);
         
         /*! @brief Request access for reading from shared resources. */
         void unconditionallyAcquireForRead(void);
@@ -129,8 +118,8 @@ namespace ChannelManager
         /*! @brief The class that this class is derived from. */
         typedef Thread inherited;
         
-        /*! @brief Add the detected entities and connections to panels. */
-        void addEntitiesToPanels(void);
+        /*! @brief Add the detected entities and connections. */
+        void addEntities(void);
         
         /*! @brief Add connections between detected ports in the to-be-displayed list.
          @param detectedPorts The set of detected YARP ports.
@@ -197,13 +186,10 @@ namespace ChannelManager
         AssociatesMap _associatedPorts;
         
         /*! @brief A set of standalone ports. */
-        PortMap _standalonePorts;
-        
-        /*! @brief A set of connections. */
-        ConnectionList _connections;
+        SingularPortMap _standalonePorts;
         
         /*! @brief The working set of entities. */
-        EntitiesPanel _workingPanel;
+        EntitiesData _workingData;
         
         /*! @brief A lock to manage access to shared resources. */
         ReadWriteLock _lock;

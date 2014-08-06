@@ -31,6 +31,9 @@
 		BC56C45521A083DFABDFB7B2 /* juce_gui_basics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 157BEB9CE1D161D7972470B8 /* juce_gui_basics.mm */; };
 		CE92E43C53FC0C70850250AD /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA8B245630FFD64DF900345D /* QuickTime.framework */; };
 		DEEF248165B3103CD7681805 /* juce_gui_extra.mm in Sources */ = {isa = PBXBuildFile; fileRef = 01BE58DF625AAE46E21A507C /* juce_gui_extra.mm */; };
+		DF03EDD519926CDB004C5161 /* EntitiesData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF03EDD319926CDB004C5161 /* EntitiesData.cpp */; };
+		DF03EDD819927734004C5161 /* EntityData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF03EDD619927734004C5161 /* EntityData.cpp */; };
+		DF03EDDB19927B3E004C5161 /* PortData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF03EDD919927B3E004C5161 /* PortData.cpp */; };
 		DF1470F0197D80A000E182D6 /* ChannelManagerWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF1470E8197D80A000E182D6 /* ChannelManagerWindow.cpp */; };
 		DF1470F3197D80A000E182D6 /* EntitiesPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF1470EE197D80A000E182D6 /* EntitiesPanel.cpp */; };
 		DF332FF7198988FC0089004E /* libOGDFDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF1470A51979833900E182D6 /* libOGDFDebug.a */; };
@@ -805,6 +808,12 @@
 		DE997DC94637DAF87BA4A4FE /* juce_ios_Audio.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_ios_Audio.cpp; path = ../../JuceLibraryCode/modules/juce_audio_devices/native/juce_ios_Audio.cpp; sourceTree = SOURCE_ROOT; };
 		DED798D95F292C6200817C4B /* juce_TreeView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_TreeView.h; path = ../../JuceLibraryCode/modules/juce_gui_basics/widgets/juce_TreeView.h; sourceTree = SOURCE_ROOT; };
 		DEE123C22DE88328C8D6C046 /* juce_AsyncUpdater.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_AsyncUpdater.h; path = ../../JuceLibraryCode/modules/juce_events/broadcasters/juce_AsyncUpdater.h; sourceTree = SOURCE_ROOT; };
+		DF03EDD319926CDB004C5161 /* EntitiesData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EntitiesData.cpp; path = ../../Source/EntitiesData.cpp; sourceTree = "<group>"; };
+		DF03EDD419926CDB004C5161 /* EntitiesData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EntitiesData.h; path = ../../Source/EntitiesData.h; sourceTree = "<group>"; };
+		DF03EDD619927734004C5161 /* EntityData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EntityData.cpp; path = ../../Source/EntityData.cpp; sourceTree = "<group>"; };
+		DF03EDD719927734004C5161 /* EntityData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EntityData.h; path = ../../Source/EntityData.h; sourceTree = "<group>"; };
+		DF03EDD919927B3E004C5161 /* PortData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PortData.cpp; path = ../../Source/PortData.cpp; sourceTree = "<group>"; };
+		DF03EDDA19927B3E004C5161 /* PortData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PortData.h; path = ../../Source/PortData.h; sourceTree = "<group>"; };
 		DF1470A51979833900E182D6 /* libOGDFDebug.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOGDFDebug.a; path = ../../../../../../../usr/local/lib/libOGDFDebug.a; sourceTree = "<group>"; };
 		DF1470AC19798BC000E182D6 /* ChannelsDataTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ChannelsDataTypes.h; path = ../../Source/ChannelsDataTypes.h; sourceTree = "<group>"; };
 		DF1470E8197D80A000E182D6 /* ChannelManagerWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ChannelManagerWindow.cpp; path = ../../Source/ChannelManagerWindow.cpp; sourceTree = "<group>"; };
@@ -1247,8 +1256,14 @@
 				DF1470AC19798BC000E182D6 /* ChannelsDataTypes.h */,
 				DF355A5619819B89008D71DD /* ContentPanel.cpp */,
 				DF355A5719819B89008D71DD /* ContentPanel.h */,
+				DF03EDD319926CDB004C5161 /* EntitiesData.cpp */,
+				DF03EDD419926CDB004C5161 /* EntitiesData.h */,
 				DF1470EE197D80A000E182D6 /* EntitiesPanel.cpp */,
 				DF1470EF197D80A000E182D6 /* EntitiesPanel.h */,
+				DF03EDD619927734004C5161 /* EntityData.cpp */,
+				DF03EDD719927734004C5161 /* EntityData.h */,
+				DF03EDD919927B3E004C5161 /* PortData.cpp */,
+				DF03EDDA19927B3E004C5161 /* PortData.h */,
 				DF74B674197851F600A6ECD3 /* ScannerThread.cpp */,
 				DF74B675197851F600A6ECD3 /* ScannerThread.h */,
 			);
@@ -2785,12 +2800,15 @@
 				DF74B65919747BE800A6ECD3 /* ChannelManagerApp.cpp in Sources */,
 				3AFA49CB7058B71E8867F68C /* juce_cryptography.mm in Sources */,
 				DF74B6731976D8F000A6ECD3 /* ChannelEntry.cpp in Sources */,
+				DF03EDD819927734004C5161 /* EntityData.cpp in Sources */,
+				DF03EDD519926CDB004C5161 /* EntitiesData.cpp in Sources */,
 				DF74B66E19759B8100A6ECD3 /* ChannelContainer.cpp in Sources */,
 				8293E78EF60A5024CA9EB2B7 /* juce_data_structures.mm in Sources */,
 				DF74B676197851F600A6ECD3 /* ScannerThread.cpp in Sources */,
 				50F1CB5B2A0C22454AF41833 /* juce_events.mm in Sources */,
 				81E02713982BA5A1CFDA27C2 /* juce_graphics.mm in Sources */,
 				BC56C45521A083DFABDFB7B2 /* juce_gui_basics.mm in Sources */,
+				DF03EDDB19927B3E004C5161 /* PortData.cpp in Sources */,
 				DEEF248165B3103CD7681805 /* juce_gui_extra.mm in Sources */,
 				472D029701BE23C4F109BE04 /* juce_opengl.mm in Sources */,
 				FC05A001CFB727F29DBDA646 /* juce_video.mm in Sources */,

@@ -1,10 +1,10 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       ChannelManagerMain.cpp
+//  File:       EntityData.cpp
 //
 //  Project:    M+M
 //
-//  Contains:   A utility application to YARP ports and M+M channels.
+//  Contains:   The class definition for an entity detected by the background scanner.
 //
 //  Written by: Norman Jaffe
 //
@@ -32,11 +32,12 @@
 //              ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 //              DAMAGE.
 //
-//  Created:    2014-07-14
+//  Created:    2014-08-06
 //
 //--------------------------------------------------------------------------------------------------
 
-#include "ChannelManagerApp.h"
+#include "EntityData.h"
+#include "PortData.h"
 
 #include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
@@ -47,13 +48,12 @@
 #endif // defined(__APPLE__)
 /*! @file
  
- @brief A utility application to YARP ports and M+M channels. */
+ @brief The class definition for an entity detected by the background scanner. */
 #if defined(__APPLE__)
 # pragma clang diagnostic pop
 #endif // defined(__APPLE__)
 
 using namespace ChannelManager;
-using namespace std;
 
 #if defined(__APPLE__)
 # pragma mark Private structures, constants and variables
@@ -71,9 +71,81 @@ using namespace std;
 # pragma mark Constructors and destructors
 #endif // defined(__APPLE__)
 
+EntityData::EntityData(const ContainerKind kind,
+                       const String &      name,
+                       const String &      behaviour,
+                       const String &      description) :
+    _behaviour(behaviour), _description(description), _name(name), _kind(kind)
+{
+    OD_LOG_ENTER(); //####
+    OD_LOG_S3s("name = ", name.toStdString(), "behaviour = ", behaviour.toStdString(), //####
+               "description = ", description.toStdString()); //####
+    OD_LOG_EXIT_P(this); //####
+} // EntityData::EntityData
+
+EntityData::~EntityData(void)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_S1s("getName() = ", getName().toStdString()); //####
+    for (Ports::iterator walker(_ports.begin()); _ports.end() != walker; ++walker)
+    {
+        PortData * aPort = *walker;
+        
+        if (aPort)
+        {
+            delete aPort;
+        }
+    }
+    _ports.clear();
+    OD_LOG_OBJEXIT(); //####
+} // EntityData::~EntityData
+
 #if defined(__APPLE__)
 # pragma mark Actions
 #endif // defined(__APPLE__)
+
+PortData * EntityData::addPort(const String &      portName,
+                               const String &      portProtocol,
+                               const PortUsage     portKind,
+                               const PortDirection direction)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_S2s("portName = ", portName.toStdString(), "portProtocol = ", //####
+               portProtocol.toStdString()); //####
+    PortData * aPort = new PortData(portName, portProtocol, portKind, direction);
+    
+    _ports.push_back(aPort);
+    OD_LOG_OBJEXIT_P(aPort); //####
+    return aPort;
+} // EntityData::addPort
+
+int EntityData::getNumPorts(void)
+const
+{
+    OD_LOG_OBJENTER(); //####
+    int result = _ports.size();
+    
+    OD_LOG_OBJEXIT_L(result); //####
+    return result;
+} // EntityData::getNumPorts
+
+PortData * EntityData::getPort(const int num)
+const
+{
+    OD_LOG_OBJENTER(); //####
+    PortData * result;
+    
+    if ((0 <= num) && (static_cast<int>(_ports.size()) > num))
+    {
+        result = _ports.at(num);
+    }
+    else
+    {
+        result = NULL;
+    }
+    OD_LOG_OBJEXIT_P(result);
+    return result;
+} // EntityData::getPort
 
 #if defined(__APPLE__)
 # pragma mark Accessors
@@ -82,7 +154,3 @@ using namespace std;
 #if defined(__APPLE__)
 # pragma mark Global functions
 #endif // defined(__APPLE__)
-
-//==============================================================================
-// This macro generates the main() routine that launches the app.
-START_JUCE_APPLICATION(ChannelManagerApplication)

@@ -84,6 +84,9 @@ namespace ChannelManager
          @param andRepaint @c true if a repaint should be performed as well, and @c false if not. */
         void adjustSize(const bool andRepaint);
         
+        /*! @brief Call the newly-created flags for all entities. */
+        void clearAllNewlyCreatedFlags(void);
+        
         /*! @brief Call the visited flags for all entities. */
         void clearAllVisitedFlags(void);
         
@@ -93,6 +96,9 @@ namespace ChannelManager
         /*! @brief Clear any connect / disconnect markers. */
         void clearMarkers(void);
         
+        /*! @brief Clear any node values. */
+        void clearNodeValues(void);
+        
         /*! @brief Release all data held by the panel. */
         void clearOutData(void);
         
@@ -100,16 +106,6 @@ namespace ChannelManager
          @param name The name of the entity.
          @returns @c NULL if the entity cannot be found and non-@c NULL if it is found. */
         ChannelContainer * findKnownEntity(const String & name);
-        
-        /*! @brief Find an entity by the name of a port within it.
-         @param name The name of the port.
-         @returns @c NULL if the entity cannot be found and non-@c NULL if it is found. */
-        ChannelContainer * findKnownEntityForPort(const String & name);
-        
-        /*! @brief Find an entity by a port within it.
-         @param aPort The port of interest.
-         @returns @c NULL if the entity cannot be found and non-@c NULL if it is found. */
-        ChannelContainer * findKnownEntityForPort(const ChannelEntry * aPort);
         
         /*! @brief Find a port in the to-be-displayed list by name.
          @param name The name of the port.
@@ -231,7 +227,7 @@ namespace ChannelManager
         void drawConnections(Graphics & gg);
         
         /*! @brief The set of known ports. */
-        PortEntryMap _knownPorts;
+        ChannelEntryMap _knownPorts;
         
         /*! @brief A collection of known services and ports. */
         ContainerList _knownEntities;

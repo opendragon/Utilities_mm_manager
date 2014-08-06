@@ -40,7 +40,7 @@
 #include "ChannelEntry.h"
 #include "EntitiesPanel.h"
 
-//#include <odl/ODEnableLogging.h>
+#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
 
 #if defined(__APPLE__)
@@ -85,7 +85,7 @@ ChannelContainer::ChannelContainer(const ContainerKind kind,
                                    const String &      description,
                                    EntitiesPanel &     owner) :
     inherited(title), _behaviour(behaviour), _description(description), _node(NULL), _owner(owner),
-    _kind(kind), _selected(false), _visited(false)
+    _kind(kind), _selected(false), _visited(false), _newlyCreated(true)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_S3s("title = ", title.toStdString(), "behaviour = ", behaviour.toStdString(), //####
@@ -104,6 +104,7 @@ ChannelContainer::ChannelContainer(const ContainerKind kind,
 ChannelContainer::~ChannelContainer(void)
 {
     OD_LOG_OBJENTER(); //####
+    OD_LOG_S1s("getName() = ", getName().toStdString()); //####
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
     {
         ChannelEntry * aPort = getPort(ii);
@@ -176,6 +177,8 @@ void ChannelContainer::clearMarkers(void)
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::clearMarkers
 
+#include <odl/ODDisableLogging.h>
+#include <odl/ODLogging.h>
 void ChannelContainer::drawOutgoingConnections(Graphics & gg)
 {
     OD_LOG_OBJENTER(); //####
@@ -191,7 +194,19 @@ void ChannelContainer::drawOutgoingConnections(Graphics & gg)
     }
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::drawOutgoingConnections
+#include <odl/ODEnableLogging.h>
+#include <odl/ODLogging.h>
 
+ogdf::node ChannelContainer::getNode(void)
+const
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_OBJEXIT_P(_node); //####
+    return _node;
+} // ChannelContainer::getNode
+
+#include <odl/ODDisableLogging.h>
+#include <odl/ODLogging.h>
 ChannelEntry * ChannelContainer::getPort(const int num)
 const
 {
@@ -199,7 +214,7 @@ const
     OD_LOG_L1("num = ", num); //####
     ChannelEntry * result;
     
-    if (0 <= num)
+    if ((0 <= num) && (getNumPorts() > num))
     {
         result = reinterpret_cast<ChannelEntry *>(getChildComponent(num));
     }
@@ -210,7 +225,11 @@ const
     OD_LOG_OBJEXIT_P(result); //####
     return result;
 } // ChannelContainer::getPort
+#include <odl/ODEnableLogging.h>
+#include <odl/ODLogging.h>
 
+#include <odl/ODDisableLogging.h>
+#include <odl/ODLogging.h>
 Point<float> ChannelContainer::getPositionInPanel(void)
 const
 {
@@ -220,6 +239,8 @@ const
     OD_LOG_OBJEXIT(); //####
     return result;
 } // ChannelContainer::getPositionInPanel
+#include <odl/ODEnableLogging.h>
+#include <odl/ODLogging.h>
 
 bool ChannelContainer::hasPort(const ChannelEntry * aPort)
 {
@@ -365,6 +386,8 @@ void ChannelContainer::mouseDrag(const MouseEvent & ee)
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::mouseDrag
 
+#include <odl/ODDisableLogging.h>
+#include <odl/ODLogging.h>
 void ChannelContainer::paint(Graphics & gg)
 {
     OD_LOG_OBJENTER(); //####
@@ -386,6 +409,8 @@ void ChannelContainer::paint(Graphics & gg)
     gg.fillRect(area2);
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::paint
+#include <odl/ODEnableLogging.h>
+#include <odl/ODLogging.h>
 
 void ChannelContainer::removeInvalidConnections(void)
 {
@@ -416,6 +441,8 @@ void ChannelContainer::resized(void)
 # pragma mark Accessors
 #endif // defined(__APPLE__)
 
+#include <odl/ODDisableLogging.h>
+#include <odl/ODLogging.h>
 float ChannelContainer::getTextInset(void)
 const
 {
@@ -423,6 +450,8 @@ const
     OD_LOG_OBJEXIT_D(lTextInset); //####
     return lTextInset;
 } // ChannelContainer::getTextInset
+#include <odl/ODEnableLogging.h>
+#include <odl/ODLogging.h>
 
 #if defined(__APPLE__)
 # pragma mark Global functions

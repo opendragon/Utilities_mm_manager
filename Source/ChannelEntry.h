@@ -151,7 +151,7 @@ namespace ChannelManager
         
         /*! @brief Return the set of input connections to the port.
          @returns The set of input connections to the port. */
-        inline const Connections & getInputConnections(void)
+        inline const Channels & getInputConnections(void)
         const
         {
             return _inputConnections;
@@ -159,7 +159,7 @@ namespace ChannelManager
         
         /*! @brief Return the set of output connections to the port.
          @returns The set of output connections to the port. */
-        inline const Connections & getOutputConnections(void)
+        inline const Channels & getOutputConnections(void)
         const
         {
             return _outputConnections;
@@ -170,6 +170,8 @@ namespace ChannelManager
         EntitiesPanel & getOwningPanel(void)
         const;
         
+        /*! @brief Return the container holding this entry.
+         @returns The container holding this entry. */
         inline ChannelContainer * getParent(void)
         const
         {
@@ -318,10 +320,10 @@ namespace ChannelManager
         typedef Component inherited;
 
         /*! @brief The connections to the port. */
-        Connections _inputConnections;
+        Channels _inputConnections;
         
         /*! @brief The connections to the port. */
-        Connections _outputConnections;
+        Channels _outputConnections;
         
         /*! @brief The name of the associated port. */
         String _portName;

@@ -41,16 +41,14 @@
 #include "ChannelEntry.h"
 #include "ChannelManagerApp.h"
 #include "ContentPanel.h"
+#include "EntitiesData.h"
 #include "EntitiesPanel.h"
+#include "EntityData.h"
+#include "PortData.h"
 
-//#include <mpm/M+MAdapterChannel.h>
-
-//#include <odl/ODEnableLogging.h>
+#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
 
-//#include <ogdf/basic/GraphAttributes.h>
-//#include <ogdf/energybased/FMMMLayout.h>
-//
 #if defined(__APPLE__)
 # pragma clang diagnostic push
 # pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
@@ -76,22 +74,6 @@ static const int64 kMinScanInterval = 5000;
 # pragma mark Local functions
 #endif // defined(__APPLE__)
 
-/*! @brief Record a port in a port map.
- @param portsSeen The map to be updated.
- @param aPort The port to be recorded. */
-static void recordPort(PortEntryMap & portsSeen,
-                       ChannelEntry * aPort)
-{
-    OD_LOG_ENTER(); //####
-    OD_LOG_P2("portsSeen = ", &portsSeen, "aPort = ", aPort); //####
-    
-    if (aPort)
-    {
-        portsSeen.insert(PortEntryMap::value_type(aPort->getPortName(), aPort));
-    }
-    OD_LOG_EXIT(); //####
-} // recordPort
-
 #if defined(__APPLE__)
 # pragma mark Class methods
 #endif // defined(__APPLE__)
@@ -103,12 +85,12 @@ static void recordPort(PortEntryMap & portsSeen,
 ScannerThread::ScannerThread(const String &         name,
                              ChannelManagerWindow & window) :
     inherited(name), _window(window), _rememberedPorts(), _detectedServices(), _associatedPorts(),
-    _standalonePorts(), _connections(), _workingPanel(NULL, 100, 100), _inputOnlyPort(NULL),
-    _outputOnlyPort(NULL), _portsValid(false), _scanCanProceed(true), _scanIsComplete(false)
+    _standalonePorts(), _inputOnlyPort(NULL), _outputOnlyPort(NULL), _portsValid(false),
+    _scanCanProceed(true), _scanIsComplete(false)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_S1s("name = ", name.toStdString()); //####
-    OD_LOG_P1("window = ", window); //####
+    OD_LOG_P1("window = ", &window); //####
     _inputOnlyPortName = MplusM::Common::GetRandomChannelName(HIDDEN_CHANNEL_PREFIX
                                                               "checkdirection/channel_");
     _outputOnlyPortName = MplusM::Common::GetRandomChannelName(HIDDEN_CHANNEL_PREFIX
@@ -157,7 +139,6 @@ ScannerThread::~ScannerThread(void)
     _rememberedPorts.clear();
     _associatedPorts.clear();
     _standalonePorts.clear();
-    _connections.clear();
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::~ScannerThread
 
@@ -165,28 +146,26 @@ ScannerThread::~ScannerThread(void)
 # pragma mark Actions
 #endif // defined(__APPLE__)
 
-void ScannerThread::addEntitiesToPanels(void)
+void ScannerThread::addEntities(void)
 {
     OD_LOG_OBJENTER(); //####
-    PortEntryMap portsSeen;
+    PortDataMap portsSeen;
     
     for (ServiceMap::const_iterator outer(_detectedServices.begin());
          _detectedServices.end() != outer; ++outer)
     {
         MplusM::Utilities::ServiceDescriptor descriptor(outer->second);
-        ChannelContainer *                   anEntity = new ChannelContainer(kContainerKindService,
+        EntityData *                         anEntity = new EntityData(kContainerKindService,
                                                                  descriptor._canonicalName.c_str(),
-                                                                         descriptor._kind.c_str(),
-                                                                 descriptor._description.c_str(),
-                                                                             _workingPanel);
-        ChannelEntry *                       aPort =
+                                                                       descriptor._kind.c_str(),
+                                                                   descriptor._description.c_str());
+        PortData *                           aPort =
                                                 anEntity->addPort(descriptor._channelName.c_str(),
                                                                   "", kPortUsageService,
                                                                   kPortDirectionInput);
         MplusM::Common::ChannelVector &      inChannels = descriptor._inputChannels;
         MplusM::Common::ChannelVector &      outChannels = descriptor._outputChannels;
         
-        recordPort(portsSeen, aPort);
         for (MplusM::Common::ChannelVector::const_iterator inner = inChannels.begin();
              inChannels.end() != inner; ++inner)
         {
@@ -194,7 +173,6 @@ void ScannerThread::addEntitiesToPanels(void)
             
             aPort = anEntity->addPort(aChannel._portName.c_str(), aChannel._portProtocol.c_str(),
                                       kPortUsageInputOutput, kPortDirectionInput);
-            recordPort(portsSeen, aPort);
         }
         for (MplusM::Common::ChannelVector::const_iterator inner = outChannels.begin();
              outChannels.end() != inner; ++inner)
@@ -203,19 +181,17 @@ void ScannerThread::addEntitiesToPanels(void)
             
             aPort = anEntity->addPort(aChannel._portName.c_str(), aChannel._portProtocol.c_str(),
                                       kPortUsageInputOutput, kPortDirectionOutput);
-            recordPort(portsSeen, aPort);
         }
-        _workingPanel.addEntity(anEntity);
+        _workingData.addEntity(anEntity);
     }
     // Convert the detected ports with associates into entities in the background list.
     for (AssociatesMap::const_iterator outer(_associatedPorts.begin());
          _associatedPorts.end() != outer; ++outer)
     {
-        ChannelEntry *                             aPort;
-        ChannelContainer *                         anEntity =
-                                                new ChannelContainer(kContainerKindClientOrAdapter,
-                                                                     outer->first, "", "",
-                                                                     _workingPanel);
+        PortData *                                 aPort;
+        EntityData *                               anEntity =
+                                                    new EntityData(kContainerKindClientOrAdapter,
+                                                                   outer->first, "", "");
         const MplusM::Utilities::PortAssociation & associates = outer->second._associates;
         const MplusM::Common::StringVector &       assocInputs = associates._inputs;
         const MplusM::Common::StringVector &       assocOutputs = associates._outputs;
@@ -224,26 +200,22 @@ void ScannerThread::addEntitiesToPanels(void)
              assocInputs.end() != inner; ++inner)
         {
             aPort = anEntity->addPort(inner->c_str(), "", kPortUsageOther, kPortDirectionInput);
-            recordPort(portsSeen, aPort);
         }
         for (MplusM::Common::StringVector::const_iterator inner = assocOutputs.begin();
              assocOutputs.end() != inner; ++inner)
         {
             aPort = anEntity->addPort(inner->c_str(), "", kPortUsageOther, kPortDirectionOutput);
-            recordPort(portsSeen, aPort);
         }
         aPort = anEntity->addPort(outer->second._name, "", kPortUsageClient,
                                   kPortDirectionInputOutput);
-        recordPort(portsSeen, aPort);
-        _workingPanel.addEntity(anEntity);
+        _workingData.addEntity(anEntity);
     }
     // Convert the detected standalone ports into entities in the background list.
-    for (PortMap::const_iterator walker(_standalonePorts.begin());
+    for (SingularPortMap::const_iterator walker(_standalonePorts.begin());
          _standalonePorts.end() != walker; ++walker)
     {
-        ChannelContainer * anEntity = new ChannelContainer(kContainerKindOther, walker->first, "",
-                                                           "", _workingPanel);
-        PortUsage          usage;
+        EntityData * anEntity = new EntityData(kContainerKindOther, walker->first, "", "");
+        PortUsage    usage;
         
         switch (MplusM::Utilities::GetPortKind(walker->second._name.toStdString().c_str()))
         {
@@ -261,14 +233,13 @@ void ScannerThread::addEntitiesToPanels(void)
                 break;
                 
         }
-        ChannelEntry * aPort = anEntity->addPort(walker->second._name, "", usage,
-                                                 walker->second._direction);
+        PortData * aPort = anEntity->addPort(walker->second._name, "", usage,
+                                             walker->second._direction);
         
-        recordPort(portsSeen, aPort);
-        _workingPanel.addEntity(anEntity);
+        _workingData.addEntity(anEntity);
     }
     OD_LOG_OBJEXIT(); //####
-} // ScannerThread::addEntitiesToPanel
+} // ScannerThread::addEntities
 
 void ScannerThread::addPortConnections(const MplusM::Utilities::PortVector & detectedPorts,
                                        MplusM::Common::CheckFunction         checker,
@@ -276,7 +247,7 @@ void ScannerThread::addPortConnections(const MplusM::Utilities::PortVector & det
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P2("detectedPorts = ", &detectedPorts, "checkStuff = ", checkStuff); //####
-    _connections.clear();
+    _workingData.clearConnections();
     for (MplusM::Utilities::PortVector::const_iterator outer(detectedPorts.begin());
          detectedPorts.end() != outer; ++outer)
     {
@@ -284,11 +255,9 @@ void ScannerThread::addPortConnections(const MplusM::Utilities::PortVector & det
         
         if (_rememberedPorts.end() != _rememberedPorts.find(outerName))
         {
-            ConnectionDetails             details;
             MplusM::Common::ChannelVector inputs;
             MplusM::Common::ChannelVector outputs;
             
-            details._outPortName = outerName;
             MplusM::Utilities::GatherPortConnections(outer->_portName, inputs, outputs,
                                                      MplusM::Utilities::kInputAndOutputOutput, true,
                                                      checker, checkStuff);
@@ -299,9 +268,7 @@ void ScannerThread::addPortConnections(const MplusM::Utilities::PortVector & det
                 
                 if (_rememberedPorts.end() != _rememberedPorts.find(innerName))
                 {
-                    details._inPortName = innerName;
-                    details._mode = inner->_portMode;
-                    _connections.push_back(details);
+                    _workingData.addConnection(innerName, outerName, inner->_portMode);
                 }
                 yield();
             }
@@ -383,7 +350,7 @@ void ScannerThread::addRegularPortEntities(const MplusM::Utilities::PortVector &
             _rememberedPorts.insert(walkerName);
             info._name = walkerName;
             info._direction = determineDirection(oldEntry, walker->_portName, checker, checkStuff);
-            _standalonePorts.insert(PortMap::value_type(caption, info));
+            _standalonePorts.insert(SingularPortMap::value_type(caption, info));
         }
         yield();
     }
@@ -437,6 +404,17 @@ void ScannerThread::addServices(const MplusM::Common::StringVector & services,
     }
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::addServices
+
+bool ScannerThread::checkAndClearIfScanIsComplete(void)
+{
+    OD_LOG_OBJENTER(); //####
+    bool result = _scanIsComplete;
+    
+    _scanIsComplete = false;
+    OD_LOG_B1("_scanIsComplete <- ", _scanIsComplete); //####
+    OD_LOG_OBJEXIT_B(result); //####
+    return result;
+} // ScannerThread::checkAndClearIfScanIsComplete
 
 bool ScannerThread::conditionallyAcquireForRead(void)
 {
@@ -592,17 +570,16 @@ void ScannerThread::run(void)
     OD_LOG_OBJENTER(); //####
     while (! threadShouldExit())
     {
-        // Create a new panel to add entities to.
-        EntitiesPanel & activePanel(_window.getEntitiesPanel());
-        int64           loopStartTime = Time::currentTimeMillis();
+        int64 loopStartTime = Time::currentTimeMillis();
         
         gatherEntities(CheckForExit, NULL);
-        _workingPanel.setSize(activePanel.getWidth(), activePanel.getHeight());
-        addEntitiesToPanels();
+        addEntities();
         // Indicate that the scan data is available.
         unconditionallyAcquireForWrite();
         _scanIsComplete = true;
         _scanCanProceed = false;
+        OD_LOG_B2("_scanIsComplete <- ", _scanIsComplete, "_scanCanProceed <- ", //####
+                  _scanCanProceed); //####
         relinquishFromWrite();
         // The data has been gathered, so it's safe for the foreground thread to process it - force
         // a repaint of the displayed panel, which will retrieve our data.
@@ -612,72 +589,90 @@ void ScannerThread::run(void)
         
         do
         {
-            sleep(MIDDLE_SLEEP);
-            // Wait for the scan data to be processed, and then continue with the next scan.
-            for (bool locked = conditionallyAcquireForRead(); ! locked;
-                 conditionallyAcquireForRead())
+            for (int ii = 0, mm = (MIDDLE_SLEEP / VERY_SHORT_SLEEP); (mm > ii) && (! needToLeave);
+                 ++ii)
             {
                 if (threadShouldExit())
                 {
                     needToLeave = true;
-                    break;
                 }
-                
-                sleep(SHORT_SLEEP);
+                sleep(VERY_SHORT_SLEEP);
             }
-            if (needToLeave)
+            // Wait for the scan data to be processed, and then continue with the next scan.
+            bool locked = conditionallyAcquireForRead();
+            for ( ; (! locked) && (! needToLeave); locked = conditionallyAcquireForRead())
             {
-                break;
+                for (int ii = 0, mm = (MIDDLE_SLEEP / VERY_SHORT_SLEEP);
+                     (mm > ii) && (! needToLeave); ++ii)
+                {
+                    if (threadShouldExit())
+                    {
+                        needToLeave = true;
+                    }
+                }
+                sleep(VERY_SHORT_SLEEP);
             }
-            
             canProceed = _scanCanProceed;
-            relinquishFromRead();
+            if (locked)
+            {
+                relinquishFromRead();
+            }
         }
-        while (! canProceed);
+        while ((! canProceed) && (! needToLeave));
         if (needToLeave)
         {
             break;
         }
         
-        _workingPanel.clearOutData();
-        // Indicate that the scan data is no longer available.
-        unconditionallyAcquireForWrite();
-        _scanIsComplete = false;
-        relinquishFromWrite();
-        if (! threadShouldExit())
+        if (canProceed)
         {
-            int64 loopEndTime = Time::currentTimeMillis();
-            int64 delayAmount = (loopStartTime + kMinScanInterval) - loopEndTime;
-            
-            if (kMinScanInterval < delayAmount)
+            OD_LOG("(canProceed)"); //####
+            _workingData.clearOutData();
+            if (! threadShouldExit())
             {
-                delayAmount = kMinScanInterval;
-            }
-            if (0 < delayAmount)
-            {
-                wait(delayAmount);
-            }
-            else
-            {
-                char numBuff[30];
+                int64 loopEndTime = Time::currentTimeMillis();
+                int64 delayAmount = (loopStartTime + kMinScanInterval) - loopEndTime;
                 
+                if (kMinScanInterval < delayAmount)
+                {
+                    delayAmount = kMinScanInterval;
+                }
+                if (0 < delayAmount)
+                {
+                    wait(delayAmount);
+                }
+                else
+                {
+                    char numBuff[30];
+                    
 #if MAC_OR_LINUX_
-                snprintf(numBuff, sizeof(numBuff), "%g", (loopEndTime - loopStartTime) / 1000.0);
-                yarp::os::impl::Logger & theLogger = MplusM::Common::GetLogger();
-                
-                theLogger.info(yarp::os::ConstString("actual interval = ") + numBuff +
-                               yarp::os::ConstString(" seconds"));
+                    snprintf(numBuff, sizeof(numBuff), "%g",
+                             (loopEndTime - loopStartTime) / 1000.0);
+                    yarp::os::impl::Logger & theLogger = MplusM::Common::GetLogger();
+                    
+                    theLogger.info(yarp::os::ConstString("actual interval = ") + numBuff +
+                                   yarp::os::ConstString(" seconds"));
 #else // ! MAC_OR_LINUX_
-//            _snprintf(numBuff, sizeof(numBuff) - 1, "%g", (loopEndTime - loopStartTime) / 1000.0);
-//            // Correct for the weird behaviour of _snprintf
-//            numBuff[sizeof(numBuff) - 1] = '\0';
+//                    _snprintf(numBuff, sizeof(numBuff) - 1, "%g",
+//                              (loopEndTime - loopStartTime) / 1000.0);
+//                    // Correct for the weird behaviour of _snprintf
+//                    numBuff[sizeof(numBuff) - 1] = '\0';
 #endif // ! MAC_OR_LINUX_
-                yield();
+                    yield();
+                }
             }
         }
     }
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::run
+
+void ScannerThread::scanCanProceed(void)
+{
+    OD_LOG_OBJENTER(); //####
+    _scanCanProceed = true;
+    OD_LOG_B1("_scanCanProceed <- ", _scanCanProceed); //####
+    OD_LOG_OBJEXIT(); //####
+} // ScannerThread::scanCanProceed
 
 void ScannerThread::triggerRepaint(void)
 {

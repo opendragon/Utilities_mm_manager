@@ -53,7 +53,7 @@ public:
     //==============================================================================
     /** Creates a connection.
 
-        Connections are created manually, connecting them with the connectToSocket()
+        Channels are created manually, connecting them with the connectToSocket()
         or connectToPipe() methods, or they are created automatically by a InterprocessConnectionServer
         when a client wants to connect.
 

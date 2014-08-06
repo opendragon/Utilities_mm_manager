@@ -41,10 +41,13 @@
 #include "ChannelContainer.h"
 #include "ChannelEntry.h"
 #include "ChannelManagerWindow.h"
+#include "EntitiesData.h"
 #include "EntitiesPanel.h"
+#include "EntityData.h"
+#include "PortData.h"
 #include "ScannerThread.h"
 
-//#include <odl/ODEnableLogging.h>
+#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
 
 #include <ogdf/basic/GraphAttributes.h>
@@ -113,6 +116,8 @@ ContentPanel::~ContentPanel(void)
 # pragma mark Actions
 #endif // defined(__APPLE__)
 
+#include <odl/ODDisableLogging.h>
+#include <odl/ODLogging.h>
 void ContentPanel::paint(Graphics & gg)
 {
     OD_LOG_OBJENTER(); //####
@@ -132,20 +137,21 @@ void ContentPanel::paint(Graphics & gg)
     if (scanner)
     {
         // Check if there is some 'fresh' data.
-        for (bool locked = scanner->conditionallyAcquireForRead(); ! locked;
-             locked = scanner->conditionallyAcquireForRead())
+        bool locked = scanner->conditionallyAcquireForRead();
+        for ( ; ! locked; locked = scanner->conditionallyAcquireForRead())
         {
             sleep(SHORT_SLEEP);
         }
-        bool scanDataReady = scanner->scanIsComplete();
+        bool scanDataReady = scanner->checkAndClearIfScanIsComplete();
         
         scanner->relinquishFromRead();
         if (scanDataReady)
         {
+            OD_LOG("(scanDataReady)"); //####
             // At this point the background scanning thread is, basically, idle, and we can use its
             // data.
-            setEntityPositions(*scanner);
             updatePanels(*scanner);
+            setEntityPositions(*scanner);
             // Indicate that the scan data has been processed.
             scanner->unconditionallyAcquireForWrite();
             scanner->scanCanProceed();
@@ -154,6 +160,8 @@ void ContentPanel::paint(Graphics & gg)
     }
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::paint
+#include <odl/ODEnableLogging.h>
+#include <odl/ODLogging.h>
 
 void ContentPanel::resized(void)
 {
@@ -166,145 +174,160 @@ void ContentPanel::setEntityPositions(ScannerThread & scanner)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("scanner = ", &scanner); //####
-    EntitiesPanel &       workingPanel(scanner.getScannedEntities());
-    Random                randomizer(Time::currentTimeMillis());
-    bool                  positionsNeedUpdate = false;
-    float                 fullHeight = _entitiesPanel->getHeight();
-    float                 fullWidth = _entitiesPanel->getWidth();
-    ogdf::Graph           gg;
-    ogdf::GraphAttributes ga(gg);
-    ogdf::node            phantomNode = gg.newNode();
+    ScopedPointer<ogdf::Graph> gg(new ogdf::Graph);
     
-    ga.directed(true);
-    // If nodes are not connected, OGDF will pile them all at the origin; by adding a 'phantom' node
-    // that is connected to every other node, we force OGDF to spread the nodes out.
-    ga.width(phantomNode) = 1;
-    ga.height(phantomNode) = 1;
-    ga.x(phantomNode) = (randomizer.nextFloat() * fullWidth);
-    ga.y(phantomNode) = (randomizer.nextFloat() * fullHeight);
-    for (size_t ii = 0, mm = workingPanel.getNumberOfEntities(); mm > ii; ++ii)
+    if (gg)
     {
-        ChannelContainer * anEntity = workingPanel.getEntity(ii);
-        
-        if (anEntity)
+        ScopedPointer<ogdf::GraphAttributes> ga(new ogdf::GraphAttributes(*gg));
+
+        if (ga)
         {
-            float                  newX;
-            float                  newY;
-            juce::Rectangle<float> entityShape(anEntity->getLocalBounds().toFloat());
-            ogdf::node             aNode = gg.newNode();
-            ChannelEntry *         firstPort = anEntity->getPort(0);
-            ChannelContainer *     olderVersion = NULL;
+            Random     randomizer(Time::currentTimeMillis());
+            bool       positionsNeedUpdate = false;
+            float      fullHeight = _entitiesPanel->getHeight();
+            float      fullWidth = _entitiesPanel->getWidth();
+            ogdf::node phantomNode = gg->newNode();
             
-            if (firstPort)
+            ga->directed(true);
+            // If nodes are not connected, OGDF will pile them all at the origin; by adding a
+            // 'phantom' node that is connected to every other node, we force OGDF to spread the
+            // nodes out.
+            ga->width(phantomNode) = 1;
+            ga->height(phantomNode) = 1;
+            ga->x(phantomNode) = (randomizer.nextFloat() * fullWidth);
+            ga->y(phantomNode) = (randomizer.nextFloat() * fullHeight);
+            _entitiesPanel->clearNodeValues();
+            for (size_t ii = 0, mm = _entitiesPanel->getNumberOfEntities(); mm > ii; ++ii)
             {
-                olderVersion = _entitiesPanel->findKnownEntityForPort(firstPort->getPortName());
-            }
-            else
-            {
-                olderVersion = _entitiesPanel->findKnownEntity(anEntity->getName());
-            }
-            ga.width(aNode) = entityShape.getWidth();
-            ga.height(aNode) = entityShape.getHeight();
-            anEntity->setNode(aNode);
-            if (olderVersion)
-            {
-                juce::Rectangle<float> oldShape(olderVersion->getLocalBounds().toFloat());
+                ChannelContainer * aContainer = _entitiesPanel->getEntity(ii);
                 
-                newX = oldShape.getX();
-                newY = oldShape.getY();
-            }
-            else
-            {
-                newX = (randomizer.nextFloat() * (fullWidth - entityShape.getWidth()));
-                newY = (randomizer.nextFloat() * (fullHeight - entityShape.getHeight()));
-                positionsNeedUpdate = true;
-            }
-            ga.x(aNode) = newX;
-            ga.y(aNode) = newY;
-            anEntity->setTopLeftPosition(static_cast<int>(newX), static_cast<int>(newY));
-        }
-    }
-    if (positionsNeedUpdate)
-    {
-        // Set up the edges (connections)
-        for (size_t ii = 0, mm = workingPanel.getNumberOfEntities(); mm > ii; ++ii)
-        {
-            ChannelContainer * anEntity = workingPanel.getEntity(ii);
-            
-            if (anEntity)
-            {
-                bool       wasConnected = false;
-                ogdf::node thisNode = anEntity->getNode();
-                
-                // Add edges between entities that are connected via their entries
-                for (int jj = 0, nn = anEntity->getNumPorts(); nn > jj; ++jj)
+                if (aContainer)
                 {
-                    ChannelEntry * aPort = anEntity->getPort(jj);
+                    float                  newX;
+                    float                  newY;
+                    juce::Rectangle<float> entityShape(aContainer->getLocalBounds().toFloat());
+                    ogdf::node             aNode = gg->newNode();
+                    float                  hh = entityShape.getHeight();
+                    float                  ww = entityShape.getWidth();
                     
-                    if (aPort)
+                    ga->width(aNode) = ww;
+                    ga->height(aNode) = hh;
+                    aContainer->setNode(aNode);
+                    if (aContainer->isNew())
                     {
-                        const Connections & outputs(aPort->getOutputConnections());
+                        OD_LOG("(aContainer->isNew())"); //####
+                        newX = (randomizer.nextFloat() * (fullWidth - ww));
+                        newY = (randomizer.nextFloat() * (fullHeight - hh));
+                        aContainer->setTopLeftPosition(static_cast<int>(newX),
+                                                       static_cast<int>(newY));
+                        positionsNeedUpdate = true;
+                    }
+                    else
+                    {
+                        newX = entityShape.getX();
+                        newY = entityShape.getY();
+                    }
+                    ga->x(aNode) = newX;
+                    ga->y(aNode) = newY;
+                }
+            }
+            if (positionsNeedUpdate)
+            {
+                OD_LOG("(positionsNeedUpdate)"); //####
+                // Set up the edges (connections)
+                for (size_t ii = 0, mm = _entitiesPanel->getNumberOfEntities(); mm > ii; ++ii)
+                {
+                    ChannelContainer * aContainer = _entitiesPanel->getEntity(ii);
+                    
+                    if (aContainer)
+                    {
+                        ogdf::node thisNode = aContainer->getNode();
                         
-                        for (size_t kk = 0, ll = outputs.size(); ll > kk; ++kk)
+                        if (thisNode)
                         {
-                            ChannelEntry * otherPort = outputs[kk]._otherPort;
+                            bool wasConnected = false;
                             
-                            if (otherPort)
+                            // Add edges between entities that are connected via their entries
+                            for (int jj = 0, nn = aContainer->getNumPorts(); nn > jj; ++jj)
                             {
-                                ChannelContainer * otherEntity = otherPort->getParent();
+                                ChannelEntry * aChannel = aContainer->getPort(jj);
                                 
-                                if (otherEntity)
+                                if (aChannel)
                                 {
-                                    ogdf::node otherNode = otherEntity->getNode();
-                                    /*ogdf::edge ee =*/ gg.newEdge(thisNode, otherNode);
+                                    const Channels & outputs(aChannel->getOutputConnections());
                                     
-                                    wasConnected = true;
+                                    for (size_t kk = 0, ll = outputs.size(); ll > kk; ++kk)
+                                    {
+                                        ChannelEntry * otherChannel = outputs[kk]._otherChannel;
+                                        
+                                        if (otherChannel)
+                                        {
+                                            ChannelContainer * otherEntity =
+                                                                        otherChannel->getParent();
+                                            
+                                            if (otherEntity)
+                                            {
+                                                ogdf::node otherNode = otherEntity->getNode();
+                                                
+                                                if (otherNode && (thisNode != otherNode))
+                                                {
+                                                    /*ogdf::edge ee =*/ gg->newEdge(thisNode,
+                                                                                    otherNode);
+                                                    
+                                                    wasConnected = true;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    const Channels & inputs(aChannel->getInputConnections());
+                                    
+                                    if (0 < inputs.size())
+                                    {
+                                        wasConnected = true;
+                                    }
                                 }
                             }
-                        }
-                        const Connections & inputs(aPort->getInputConnections());
-                        
-                        if (0 < inputs.size())
-                        {
-                            wasConnected = true;
+                            if (! wasConnected)
+                            {
+                                /*ogdf::edge phantomNodeToThis =*/ gg->newEdge(phantomNode,
+                                                                               thisNode);
+                                
+                            }
                         }
                     }
                 }
-                if (! wasConnected)
-                {
-                    /*ogdf::edge phantomNodeToThis =*/ gg.newEdge(phantomNode, thisNode);
-                    
-                }
-            }
-        }
-        // Apply an energy-based layout
-        ogdf::FMMMLayout fmmm;
-        
-        fmmm.useHighLevelOptions(true);
-        fmmm.newInitialPlacement(false); //true);
-        fmmm.qualityVersusSpeed(ogdf::FMMMLayout::qvsGorgeousAndEfficient);
-        fmmm.allowedPositions(ogdf::FMMMLayout::apAll);
-        fmmm.initialPlacementMult(ogdf::FMMMLayout::ipmAdvanced);
-        fmmm.initialPlacementForces(ogdf::FMMMLayout::ipfKeepPositions);
-        fmmm.repForcesStrength(2.0);
-        fmmm.call(ga);
-        for (size_t ii = 0, mm = workingPanel.getNumberOfEntities(); mm > ii; ++ii)
-        {
-            ChannelContainer * anEntity = workingPanel.getEntity(ii);
-            
-            if (anEntity)
-            {
-                ogdf::node aNode = anEntity->getNode();
+                // Apply an energy-based layout
+                ScopedPointer<ogdf::FMMMLayout> fmmm(new ogdf::FMMMLayout);
                 
-                if (aNode)
+                if (fmmm)
                 {
-                    anEntity->setTopLeftPosition(static_cast<int>(ga.x(aNode)),
-                                                 static_cast<int>(ga.y(aNode)));
+                    fmmm->useHighLevelOptions(true);
+                    fmmm->newInitialPlacement(false); //true);
+                    fmmm->qualityVersusSpeed(ogdf::FMMMLayout::qvsGorgeousAndEfficient);
+                    fmmm->allowedPositions(ogdf::FMMMLayout::apAll);
+                    fmmm->initialPlacementMult(ogdf::FMMMLayout::ipmAdvanced);
+                    fmmm->initialPlacementForces(ogdf::FMMMLayout::ipfKeepPositions);
+                    fmmm->repForcesStrength(2.0);
+                    fmmm->call(*ga);
+                    for (size_t ii = 0, mm = _entitiesPanel->getNumberOfEntities(); mm > ii; ++ii)
+                    {
+                        ChannelContainer * aContainer = _entitiesPanel->getEntity(ii);
+                        
+                        if (aContainer && aContainer->isNew())
+                        {
+                            ogdf::node aNode = aContainer->getNode();
+                            
+                            if (aNode)
+                            {
+                                aContainer->setTopLeftPosition(static_cast<int>(ga->x(aNode)),
+                                                               static_cast<int>(ga->y(aNode)));
+                            }
+                        }
+                    }
                 }
             }
         }
     }
-    gg.clear();
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::setEntityPositions
 
@@ -312,22 +335,24 @@ void ContentPanel::updatePanels(ScannerThread & scanner)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("scanner = ", &scanner); //####
-    EntitiesPanel & workingPanel(scanner.getScannedEntities());
+    const EntitiesData & workingData(scanner.getEntitiesData());
     
-    _entitiesPanel->clearAllVisitedFlags();
-    workingPanel.clearAllVisitedFlags();
     // Retrieve each entity from our new list; if it is known already, ignore it but mark the
     // old entity as known.
-    for (size_t ii = 0, mm = workingPanel.getNumberOfEntities(); mm > ii; ++ii)
+    _entitiesPanel->clearAllVisitedFlags();
+    _entitiesPanel->clearAllNewlyCreatedFlags();
+    for (size_t ii = 0, mm = workingData.getNumberOfEntities(); mm > ii; ++ii)
     {
-        ChannelContainer * anEntity = workingPanel.getEntity(ii);
+        EntityData * anEntity = workingData.getEntity(ii);
         
+        OD_LOG_P1("anEntity <- ", anEntity); //####
         if (anEntity)
         {
             ChannelContainer * oldEntity = _entitiesPanel->findKnownEntity(anEntity->getName());
             
             if (oldEntity)
             {
+                OD_LOG("(oldEntity)"); //####
                 oldEntity->setVisited();
             }
             else
@@ -340,11 +365,10 @@ void ContentPanel::updatePanels(ScannerThread & scanner)
                                                                     *_entitiesPanel);
                 
                 newEntity->setVisited();
-                newEntity->setTopLeftPosition(anEntity->getPosition());
                 // Make copies of the ports of the entity, and add them to the new entity.
                 for (int jj = 0, nn = anEntity->getNumPorts(); nn > jj; ++jj)
                 {
-                    ChannelEntry * aPort = anEntity->getPort(jj);
+                    PortData * aPort = anEntity->getPort(jj);
                     
                     if (aPort)
                     {
@@ -361,7 +385,7 @@ void ContentPanel::updatePanels(ScannerThread & scanner)
         }
     }
     // Convert the detected connections into visible connections.
-    ConnectionList & connections(scanner.getConnections());
+    const ConnectionList & connections(workingData.getConnections());
     
     for (ConnectionList::const_iterator walker(connections.begin()); connections.end() != walker;
          ++walker)
@@ -387,11 +411,21 @@ void ContentPanel::updatePanels(ScannerThread & scanner)
 
 void ContentPanel::visibleAreaChanged(const juce::Rectangle<int> & newVisibleArea)
 {
-#if MAC_OR_LINUX_
-# pragma unused(newVisibleArea)
-#endif // MAC_OR_LINUX_
+#if (! defined(OD_ENABLE_LOGGING))
+# if MAC_OR_LINUX_
+#  pragma unused(newVisibleArea)
+# endif // MAC_OR_LINUX_
+#endif // ! defined(OD_ENABLE_LOGGING)
     OD_LOG_OBJENTER(); //####
     OD_LOG_L4("nVA.x = ", newVisibleArea.getX(), "nVA.y = ", newVisibleArea.getY(), //####
               "nVA.w = ", newVisibleArea.getWidth(), "nVA.h = ", newVisibleArea.getHeight()); //####
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::visibleAreaChanged
+
+#if defined(__APPLE__)
+# pragma mark Accessors
+#endif // defined(__APPLE__)
+
+#if defined(__APPLE__)
+# pragma mark Global functions
+#endif // defined(__APPLE__)

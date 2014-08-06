@@ -143,11 +143,8 @@ namespace ChannelManager
 
         /*! @brief Return the node corresponding to the entity.
          @returns The node corresponding to the entity. */
-        inline ogdf::node getNode(void)
-        const
-        {
-            return _node;
-        } // getNode
+        ogdf::node getNode(void)
+        const;
         
         /*! @brief Returns the number of ports in this panel.
          @returns The number of ports in this panel. */
@@ -186,6 +183,14 @@ namespace ChannelManager
          @returns @c true if one of the port entries is marked and @c false otherwise. */
         bool isMarked(void)
         const;
+        
+        /*! @brief Return @c true is the entity is newly created.
+         @returns @c true if the entity is newly created and @c false otherwise. */
+        inline bool isNew(void)
+        const
+        {
+            return _newlyCreated;
+        } // isNew
         
         /*! @brief Return @c true is the entity is selected.
          @returns @c true if the entity is selected and @c false otherwise. */
@@ -231,6 +236,12 @@ namespace ChannelManager
         {
             _node = newNode;
         } // setNode
+        
+        /*! @brief Marks the entity as not newly created. */
+        inline void setOld(void)
+        {
+            _newlyCreated = false;
+        } // setOld
         
         /*! @brief Sets the visited flag for the entity. */
         inline void setVisited(void)
@@ -283,12 +294,15 @@ namespace ChannelManager
         /*! @brief @c true if the container was visited and @c false otherwise. */
         bool _visited;
         
+        /*! @brief @c true if the container has just been created and @c false otherwise. */
+        bool _newlyCreated;
+        
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
 #  pragma clang diagnostic ignored "-Wunused-private-field"
 # endif // defined(__APPLE__)
         /*! @brief Filler to pad to alignment boundary */
-        char _filler[6];
+        char _filler[5];
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)

@@ -42,7 +42,7 @@
 #include "ChannelEntry.h"
 #include "ContentPanel.h"
 
-//#include <odl/ODEnableLogging.h>
+#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
 
 #if defined(__APPLE__)
@@ -145,6 +145,8 @@ void EntitiesPanel::addEntity(ChannelContainer * anEntity)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::addEntity
 
+#include <odl/ODDisableLogging.h>
+#include <odl/ODLogging.h>
 void EntitiesPanel::adjustSize(const bool andRepaint)
 {
     OD_LOG_OBJENTER(); //####
@@ -165,10 +167,8 @@ void EntitiesPanel::adjustSize(const bool andRepaint)
         int  maxY = -1;
         bool haveValues = false;
         
-        OD_LOG_L4("outerL = ", outerL, "outerT = ", outerT, "outerR = ", outerR, "outerB = ", //####
-                  outerB); //####
-        OD_LOG_L4("outerW = ", outerW, "outerH = ", outerH, "outerW2 = ", outerW2, //####
-                  "outerH2 = ", outerH2); //####
+        OD_LOG_L4("outerL = ", outerL, "outerT = ", outerT, "outerW = ", outerW, //####
+                  "outerH = ", outerH); //####
         for (ContainerList::const_iterator it(_knownEntities.begin());
              _knownEntities.end() != it; ++it)
         {
@@ -273,6 +273,23 @@ void EntitiesPanel::adjustSize(const bool andRepaint)
     }
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::adjustSize
+#include <odl/ODEnableLogging.h>
+#include <odl/ODLogging.h>
+
+void EntitiesPanel::clearAllNewlyCreatedFlags(void)
+{
+    OD_LOG_OBJENTER(); //####
+    for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
+    {
+        ChannelContainer * anEntity = *it;
+        
+        if (anEntity)
+        {
+            anEntity->setOld();
+        }
+    }
+    OD_LOG_OBJEXIT(); //####
+} // EntitiesPanel::clearAllNewlyCreatedFlags
 
 void EntitiesPanel::clearAllVisitedFlags(void)
 {
@@ -316,6 +333,22 @@ void EntitiesPanel::clearMarkers(void)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::clearMarkers
 
+void EntitiesPanel::clearNodeValues(void)
+{
+    OD_LOG_OBJENTER(); //####
+    for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
+    {
+        ChannelContainer * anEntity = *it;
+        
+        if (anEntity)
+        {
+            anEntity->setNode(NULL);
+        }
+    }
+    
+    OD_LOG_OBJEXIT(); //####
+} // EntitiesPanel::clearNodeValues
+
 void EntitiesPanel::clearOutData(void)
 {
     OD_LOG_OBJENTER(); //####
@@ -334,6 +367,8 @@ void EntitiesPanel::clearOutData(void)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::clearOutData
 
+#include <odl/ODDisableLogging.h>
+#include <odl/ODLogging.h>
 void EntitiesPanel::drawConnections(Graphics & gg)
 {
     OD_LOG_OBJENTER(); //####
@@ -353,6 +388,8 @@ void EntitiesPanel::drawConnections(Graphics & gg)
     }
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::drawConnections
+#include <odl/ODEnableLogging.h>
+#include <odl/ODLogging.h>
 
 ChannelContainer * EntitiesPanel::findKnownEntity(const String & name)
 {
@@ -375,59 +412,12 @@ ChannelContainer * EntitiesPanel::findKnownEntity(const String & name)
     return result;
 } // EntitiesPanel::findKnownEntity
 
-ChannelContainer * EntitiesPanel::findKnownEntityForPort(const String & name)
-{
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_S1s("name = ", name.toStdString()); //####
-    PortEntryMap::const_iterator match(_knownPorts.find(name));
-    ChannelContainer *           result = NULL;
-    
-    if (_knownPorts.end() != match)
-    {
-        for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it;
-             ++it)
-        {
-            ChannelContainer * anEntity = *it;
-            
-            if (anEntity && anEntity->hasPort(match->second))
-            {
-                result = anEntity;
-                break;
-            }
-            
-        }
-    }
-    OD_LOG_OBJEXIT_P(result); //####
-    return result;
-} // EntitiesPanel::findKnownEntityForPort
-
-ChannelContainer * EntitiesPanel::findKnownEntityForPort(const ChannelEntry * aPort)
-{
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("aPort = ", aPort); //####
-    ChannelContainer * result = NULL;
-    
-    for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
-    {
-        ChannelContainer * anEntity = *it;
-        
-        if (anEntity && anEntity->hasPort(aPort))
-        {
-            result = anEntity;
-            break;
-        }
-        
-    }
-    OD_LOG_OBJEXIT_P(result); //####
-    return result;
-} // EntitiesPanel::findKnownEntityForPort
-
 ChannelEntry * EntitiesPanel::findKnownPort(const String & name)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("name = ", name.toStdString()); //####
-    ChannelEntry *               result = NULL;
-    PortEntryMap::const_iterator match(_knownPorts.find(name));
+    ChannelEntry *                  result = NULL;
+    ChannelEntryMap::const_iterator match(_knownPorts.find(name));
     
     if (_knownPorts.end() == match)
     {
@@ -447,7 +437,7 @@ void EntitiesPanel::forgetPort(ChannelEntry * aPort)
     OD_LOG_P1("aPort = ", aPort); //####
     if (aPort)
     {
-        PortEntryMap::iterator match(_knownPorts.find(aPort->getName()));
+        ChannelEntryMap::iterator match(_knownPorts.find(aPort->getName()));
         
         if (_knownPorts.end() == match)
         {
@@ -474,6 +464,7 @@ ChannelContainer * EntitiesPanel::getEntity(const size_t index)
 const
 {
     OD_LOG_OBJENTER(); //####
+    OD_LOG_L1("index = ", index); //####
     ChannelContainer * result;
     
     if (_knownEntities.size() > index)
@@ -524,10 +515,13 @@ const
 
 void EntitiesPanel::mouseDown(const MouseEvent & ee)
 {
-#if MAC_OR_LINUX_
-# pragma unused(ee)
-#endif // MAC_OR_LINUX_
+#if (! defined(OD_ENABLE_LOGGING))
+# if MAC_OR_LINUX_
+#  pragma unused(ee)
+# endif // MAC_OR_LINUX_
+#endif // ! defined(OD_ENABLE_LOGGING)
     OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("ee = ", &ee); //####
     rememberConnectionStartPoint();
     clearMarkers();
     repaint();
@@ -536,15 +530,20 @@ void EntitiesPanel::mouseDown(const MouseEvent & ee)
 
 void EntitiesPanel::mouseUp(const MouseEvent & ee)
 {
-#if MAC_OR_LINUX_
-# pragma unused(ee)
-#endif // MAC_OR_LINUX_
+#if (! defined(OD_ENABLE_LOGGING))
+# if MAC_OR_LINUX_
+#  pragma unused(ee)
+# endif // MAC_OR_LINUX_
+#endif // ! defined(OD_ENABLE_LOGGING)
     OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("ee = ", &ee); //####
     rememberConnectionStartPoint();
     clearMarkers();
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::mouseUp
 
+#include <odl/ODDisableLogging.h>
+#include <odl/ODLogging.h>
 void EntitiesPanel::paint(Graphics & gg)
 {
     OD_LOG_OBJENTER(); //####
@@ -552,6 +551,8 @@ void EntitiesPanel::paint(Graphics & gg)
     drawConnections(gg);
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::paint
+#include <odl/ODEnableLogging.h>
+#include <odl/ODLogging.h>
 
 void EntitiesPanel::rememberConnectionStartPoint(ChannelEntry * aPort,
                                                  const bool     beingAdded)
@@ -578,7 +579,7 @@ void EntitiesPanel::rememberPort(ChannelEntry * aPort)
     OD_LOG_P1("aPort = ", aPort); //####
     if (aPort)
     {
-        _knownPorts.insert(PortEntryMap::value_type(aPort->getPortName(), aPort));
+        _knownPorts.insert(ChannelEntryMap::value_type(aPort->getPortName(), aPort));
     }
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::rememberPort

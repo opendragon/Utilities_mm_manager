@@ -63,15 +63,20 @@
 # endif // defined(__APPLE__)
 
 /*! @brief A slightly longer sleep, in milliseconds. */
-# define MIDDLE_SLEEP 35
+# define MIDDLE_SLEEP (VERY_SHORT_SLEEP * 7)
 
 /*! @brief The minimum time for a thread to sleep, in milliseconds. */
-# define SHORT_SLEEP  20
+# define SHORT_SLEEP (VERY_SHORT_SLEEP * 4)
+
+/*! @brief A very short sleep, in milliseconds. */
+# define VERY_SHORT_SLEEP 5
 
 namespace ChannelManager
 {
     class ChannelContainer;
     class ChannelEntry;
+    class EntityData;
+    class PortData;
     
     /*! @brief The anchor position for a connection between ports. */
     enum AnchorSide
@@ -147,6 +152,27 @@ namespace ChannelManager
         
     }; // PortUsage
     
+    /*! @brief The form of a connection. */
+    struct Channel
+    {
+        union
+        {
+            /*! @brief The 'other-end' of a connection, as a ChannelEntry. */
+            ChannelEntry * _otherChannel;
+            
+            /*! @brief The 'other-end' of a connection, as PortData. */
+            PortData * _otherPort;
+
+        };
+        
+        /*! @brief The kind of connection. */
+        MplusM::Common::ChannelMode _connectionMode;
+        
+        /*! @brief @c true if the connection is valid and @c false otherwise. */
+        bool _valid;
+        
+    }; // Channel
+    
     /*! @brief The information for a connection. */
     struct ConnectionDetails
     {
@@ -183,43 +209,38 @@ namespace ChannelManager
         
     }; // PortAndAssociates
     
-    /*! @brief The form of a connection. */
-    struct PortConnection
-    {
-        /*! @brief The 'other-end' of a connection. */
-        ChannelEntry * _otherPort;
-        
-        /*! @brief The kind of connection. */
-        MplusM::Common::ChannelMode _connectionMode;
-        
-        /*! @brief @c true if the connection is valid and @c false otherwise. */
-        bool _valid;
-        
-    }; // PortConnection
-    
     /*! @brief A mapping from port names to associates. */
     typedef std::map<String, PortAndAssociates> AssociatesMap;
+    
+    /*! @brief The set of connections to the port. */
+    typedef std::vector<Channel> Channels;
     
     /*! @brief A collection of connections. */
     typedef std::vector<ConnectionDetails> ConnectionList;
     
-    /*! @brief The set of connections to the port. */
-    typedef std::vector<PortConnection> Connections;
-    
     /*! @brief A collection of services and ports. */
     typedef std::vector<ChannelContainer *> ContainerList;
     
-    /*! @brief A mapping from strings to ports. */
-    typedef std::map<String, ChannelEntry *> PortEntryMap;
+    /*! @brief A collection of entities (services, standalone ports, et cetera). */
+    typedef std::vector<EntityData *> EntitiesList;
     
-    /*! @brief A collection of port names. */
-    typedef std::map<String, NameAndDirection> PortMap;
+    /*! @brief A mapping from strings to channels. */
+    typedef std::map<String, ChannelEntry *> ChannelEntryMap;
+    
+    /*! @brief A mapping from strings to ports. */
+    typedef std::map<String, PortData *> PortDataMap;
+    
+    /*! @brief A collection of ports. */
+    typedef std::vector<PortData *> Ports;
     
     /*! @brief A collection of port names. */
     typedef std::set<String> PortSet;
     
     /*! @brief A mapping from strings to service descriptions. */
     typedef std::map<String, MplusM::Utilities::ServiceDescriptor> ServiceMap;
+    
+    /*! @brief A collection of singular port names. */
+    typedef std::map<String, NameAndDirection> SingularPortMap;
     
 } // ChannelManager
 

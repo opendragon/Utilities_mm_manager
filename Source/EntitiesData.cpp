@@ -1,10 +1,10 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       ChannelManagerMain.cpp
+//  File:       EntitiesData.cpp
 //
 //  Project:    M+M
 //
-//  Contains:   A utility application to YARP ports and M+M channels.
+//  Contains:   The class definition for the data collected by the background scanner.
 //
 //  Written by: Norman Jaffe
 //
@@ -32,11 +32,12 @@
 //              ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 //              DAMAGE.
 //
-//  Created:    2014-07-14
+//  Created:    2014-08-06
 //
 //--------------------------------------------------------------------------------------------------
 
-#include "ChannelManagerApp.h"
+#include "EntitiesData.h"
+#include "EntityData.h"
 
 #include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
@@ -47,13 +48,12 @@
 #endif // defined(__APPLE__)
 /*! @file
  
- @brief A utility application to YARP ports and M+M channels. */
+ @brief The class definition for the data collected by the background scanner. */
 #if defined(__APPLE__)
 # pragma clang diagnostic pop
 #endif // defined(__APPLE__)
 
 using namespace ChannelManager;
-using namespace std;
 
 #if defined(__APPLE__)
 # pragma mark Private structures, constants and variables
@@ -71,9 +71,98 @@ using namespace std;
 # pragma mark Constructors and destructors
 #endif // defined(__APPLE__)
 
+EntitiesData::EntitiesData(void)
+{
+    OD_LOG_ENTER(); //####
+    OD_LOG_EXIT_P(this); //####
+} // EntitiesData::EntitiesData
+
+EntitiesData::~EntitiesData(void)
+{
+    OD_LOG_OBJENTER(); //####
+    clearOutData();
+    OD_LOG_OBJEXIT(); //####
+} // EntitiesData::~EntitiesData
+
 #if defined(__APPLE__)
 # pragma mark Actions
 #endif // defined(__APPLE__)
+
+void EntitiesData::addConnection(const String &              inName,
+                                 const String &              outName,
+                                 MplusM::Common::ChannelMode mode)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_S2s("inName = ", inName.toStdString(), "outName = ", outName.toStdString()); //####
+    ConnectionDetails details;
+    
+    details._inPortName = inName;
+    details._outPortName = outName;
+    details._mode = mode;
+    _connections.push_back(details);
+    OD_LOG_OBJEXIT(); //####
+} // EntitiesData::addConnection
+
+void EntitiesData::addEntity(EntityData * anEntity)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("anEntity = ", anEntity); //####
+    _entities.push_back(anEntity);
+    OD_LOG_OBJEXIT(); //####
+} // EntitiesData::addEntity
+
+void EntitiesData::clearConnections(void)
+{
+    OD_LOG_OBJENTER(); //####
+    _connections.clear();
+    OD_LOG_OBJEXIT(); //####
+} // EntitiesData::clearConnections
+
+void EntitiesData::clearOutData(void)
+{
+    OD_LOG_OBJENTER(); //####
+    clearConnections();
+    for (EntitiesList::const_iterator it(_entities.begin()); _entities.end() != it; ++it)
+    {
+        EntityData * anEntity = *it;
+        
+        if (anEntity)
+        {
+            delete anEntity;
+        }
+    }
+    _entities.clear();
+    OD_LOG_OBJEXIT(); //####
+} // EntitiesData::clearOutData
+
+EntityData * EntitiesData::getEntity(const size_t index)
+const
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_L1("index = ", index); //####
+    EntityData * result;
+    
+    if (_entities.size() > index)
+    {
+        result = _entities.at(index);
+    }
+    else
+    {
+        result = NULL;
+    }
+    OD_LOG_OBJEXIT_P(result); //####
+    return result;
+} // EntitiesData::getEntity
+
+size_t EntitiesData::getNumberOfEntities(void)
+const
+{
+    OD_LOG_OBJENTER(); //####
+    size_t result = _entities.size();
+    
+    OD_LOG_OBJEXIT_L(result); //####
+    return result;
+} // EntitiesData::getNumberOfEntities
 
 #if defined(__APPLE__)
 # pragma mark Accessors
@@ -82,7 +171,3 @@ using namespace std;
 #if defined(__APPLE__)
 # pragma mark Global functions
 #endif // defined(__APPLE__)
-
-//==============================================================================
-// This macro generates the main() routine that launches the app.
-START_JUCE_APPLICATION(ChannelManagerApplication)
