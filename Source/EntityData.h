@@ -66,10 +66,10 @@ namespace ChannelManager
          @param name The name of the entity.
          @param behaviour The behavioural model if a service.
          @param description The description, if this is a service. */
-        EntityData(const ContainerKind kind,
-                   const String &      name,
-                   const String &      behaviour,
-                   const String &      description);
+        EntityData(const ContainerKind           kind,
+                   const yarp::os::ConstString & name,
+                   const yarp::os::ConstString & behaviour,
+                   const yarp::os::ConstString & description);
         
         /*! @brief The destructor. */
         virtual ~EntityData(void);
@@ -80,14 +80,14 @@ namespace ChannelManager
          @param portKind What the port will be used for.
          @param direction The primary direction of the port.
          @returns The newly-created port. */
-        PortData * addPort(const String &      portName,
-                           const String &      portProtocol = "",
-                           const PortUsage     portKind = kPortUsageOther,
-                           const PortDirection direction = kPortDirectionInputOutput);
+        PortData * addPort(const yarp::os::ConstString & portName,
+                           const yarp::os::ConstString & portProtocol = "",
+                           const PortUsage               portKind = kPortUsageOther,
+                           const PortDirection           direction = kPortDirectionInputOutput);
         
         /*! @brief Return the behavioural model for the entity.
          @returns The behavioural model for the entity. */
-        inline String getBehaviour(void)
+        inline yarp::os::ConstString getBehaviour(void)
         const
         {
             return _behaviour;
@@ -95,7 +95,7 @@ namespace ChannelManager
         
         /*! @brief Return the description of the entity.
          @returns The description of the entity. */
-        inline String getDescription(void)
+        inline yarp::os::ConstString getDescription(void)
         const
         {
             return _description;
@@ -111,7 +111,7 @@ namespace ChannelManager
         
         /*! @brief Return the description of the entity.
          @returns The description of the entity. */
-        inline String getName(void)
+        inline yarp::os::ConstString getName(void)
         const
         {
             return _name;
@@ -148,13 +148,13 @@ namespace ChannelManager
         Ports _ports;
         
         /*! @brief The behavioural model if a service. */
-        String _behaviour;
+        yarp::os::ConstString _behaviour;
         
         /*! @brief The description of the entity, if it is a service. */
-        String _description;
+        yarp::os::ConstString _description;
         
         /*! @brief The name of the entity. */
-        String _name;
+        yarp::os::ConstString _name;
         
         /*! @brief The kind of entity. */
         ContainerKind _kind;

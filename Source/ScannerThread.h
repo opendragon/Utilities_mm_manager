@@ -65,8 +65,8 @@ namespace ChannelManager
         /*! @brief The constructor.
          @param name The name to give to the thread.
          @param window The window to be updated. */
-        ScannerThread(const String &         name,
-                      ChannelManagerWindow & window);
+        ScannerThread(const yarp::os::ConstString & name,
+                      ChannelManagerWindow &        window);
         
         /*! @brief The destructor. */
         virtual ~ScannerThread(void);
@@ -88,7 +88,7 @@ namespace ChannelManager
         
         /*! @brief Return the collected entities data.
          @returns The collected entities data. */
-        inline EntitiesData & getEntitiesData(void)
+        EntitiesData & getEntitiesData(void)
         {
             return _workingData;
         } // getEntitiesData
@@ -202,6 +202,11 @@ namespace ChannelManager
          input. */
         yarp::os::ConstString _outputOnlyPortName;
         
+# if (defined(CHECK_FOR_STALE_PORTS) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS)))
+        /*! @brief The time when the last stale removal occurred. */
+        int64 _lastStaleTime;
+# endif // defined(CHECK_FOR_STALE_PORTS) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS))
+
         /*! @brief The port used to determine if a port being checked can be used as an output. */
         MplusM::Common::AdapterChannel * _inputOnlyPort;
         
@@ -218,6 +223,11 @@ namespace ChannelManager
          otherwise. */
         bool _scanIsComplete;
         
+# if (defined(CHECK_FOR_STALE_PORTS) && defined(DO_SINGLE_CHECK_FOR_STALE_PORTS))
+        /*! @brief @c true if the initial stale removal occurred and @c false otherwise. */
+        bool _initialStaleCheckDone;
+# endif // defined(CHECK_FOR_STALE_PORTS) && defined(DO_SINGLE_CHECK_FOR_STALE_PORTS)
+
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ScannerThread)
         
     }; // ScannerThread

@@ -65,10 +65,10 @@ namespace ChannelManager
          @param portProtocol The protocol of the port.
          @param portKind What the port will be used for.
          @param direction The primary direction of the port. */
-        PortData(const String &      portName,
-                 const String &      portProtocol,
-                 const PortUsage     portKind,
-                 const PortDirection direction = kPortDirectionInput);
+        PortData(const yarp::os::ConstString & portName,
+                 const yarp::os::ConstString & portProtocol,
+                 const PortUsage               portKind,
+                 const PortDirection           direction = kPortDirectionInput);
         
         /*! @brief The destructor. */
         virtual ~PortData(void);
@@ -111,7 +111,7 @@ namespace ChannelManager
         
         /*! @brief Return the name of the associated port.
          @returns The name of the associated port. */
-        inline String getPortName(void)
+        inline yarp::os::ConstString getPortName(void)
         const
         {
             return _portName;
@@ -119,7 +119,7 @@ namespace ChannelManager
         
         /*! @brief Return the protocol of the associated port.
          @returns The protocol of the associated port. */
-        inline String getProtocol(void)
+        inline yarp::os::ConstString getProtocol(void)
         const
         {
             return _portProtocol;
@@ -136,7 +136,7 @@ namespace ChannelManager
         /*! @brief Returns @c true if there is an outgoing connection to the named port.
          @param otherPort The name of the destination port.
          @returns @c true if there is an outgoing connection to the named port. */
-        bool hasOutgoingConnectionTo(const String & otherPort)
+        bool hasOutgoingConnectionTo(const yarp::os::ConstString & otherPort)
         const;
         
         /*! @brief Mark all the connections as invalid. */
@@ -194,10 +194,10 @@ namespace ChannelManager
         Channels _outputConnections;
         
         /*! @brief The name of the associated port. */
-        String _portName;
+        yarp::os::ConstString _portName;
         
         /*! @brief The protocol of the associated port. */
-        String _portProtocol;
+        yarp::os::ConstString _portProtocol;
         
         /*! @brief The primary direction for connections to the port. */
         PortDirection _direction;

@@ -112,6 +112,10 @@ namespace ChannelManager
         /*! @brief The window in which the panel is embedded. */
         ChannelManagerWindow * _containingWindow;
         
+# if (defined(USE_OGDF_POSITIONING) && defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY))
+        bool _initialPositioningDone;
+# endif // defined(USE_OGDF_POSITIONING) && defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY)
+        
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ContentPanel)
         
     }; // ContentPanel

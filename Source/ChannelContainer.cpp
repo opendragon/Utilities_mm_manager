@@ -76,20 +76,22 @@ static const float lTextInset = 2;
 #endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
-# pragma mark Constructors and destructors
+# pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
-ChannelContainer::ChannelContainer(const ContainerKind kind,
-                                   const String &      title,
-                                   const String &      behaviour,
-                                   const String &      description,
-                                   EntitiesPanel &     owner) :
-    inherited(title), _behaviour(behaviour), _description(description), _node(NULL), _owner(owner),
-    _kind(kind), _selected(false), _visited(false), _newlyCreated(true)
+ChannelContainer::ChannelContainer(const ContainerKind           kind,
+                                   const yarp::os::ConstString & title,
+                                   const yarp::os::ConstString & behaviour,
+                                   const yarp::os::ConstString & description,
+                                   EntitiesPanel &               owner) :
+    inherited(title.c_str()), _behaviour(behaviour), _description(description),
+#if defined(USE_OGDF_POSITIONING)
+    _node(NULL),
+#endif // defined(USE_OGDF_POSITIONING)
+    _owner(owner), _kind(kind), _selected(false), _visited(false), _newlyCreated(true)
 {
     OD_LOG_ENTER(); //####
-    OD_LOG_S3s("title = ", title.toStdString(), "behaviour = ", behaviour.toStdString(), //####
-               "description = ", description.toStdString()); //####
+    OD_LOG_S3s("title = ", title, "behaviour = ", behaviour, "description = ", description); //####
     Font & headerFont = _owner.getNormalFont();
     
     _titleHeight = headerFont.getHeight();
@@ -119,17 +121,16 @@ ChannelContainer::~ChannelContainer(void)
 } // ChannelContainer::~ChannelContainer
 
 #if defined(__APPLE__)
-# pragma mark Actions
+# pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-ChannelEntry * ChannelContainer::addPort(const String &      portName,
-                                         const String &      portProtocol,
-                                         const PortUsage     portKind,
-                                         const PortDirection direction)
+ChannelEntry * ChannelContainer::addPort(const yarp::os::ConstString & portName,
+                                         const yarp::os::ConstString & portProtocol,
+                                         const PortUsage               portKind,
+                                         const PortDirection           direction)
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_S2s("portName = ", portName.toStdString(), "portProtocol = ", //####
-               portProtocol.toStdString()); //####
+    OD_LOG_S2s("portName = ", portName, "portProtocol = ", portProtocol); //####
     int            countBefore = getNumPorts();
     ChannelEntry * aPort = new ChannelEntry(this, portName, portProtocol, portKind, direction);
     float          newWidth = max(aPort->getWidth(), getWidth());
@@ -177,6 +178,20 @@ void ChannelContainer::clearMarkers(void)
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::clearMarkers
 
+void ChannelContainer::clearVisited(void)
+{
+    OD_LOG_OBJENTER(); //####
+    _visited = false;
+    OD_LOG_OBJEXIT(); //####
+} // ChannelContainer::clearVisited
+
+void ChannelContainer::deselect(void)
+{
+    OD_LOG_OBJENTER(); //####
+    _selected = false;
+    OD_LOG_OBJEXIT(); //####
+} // ChannelContainer::deselect
+
 #include <odl/ODDisableLogging.h>
 #include <odl/ODLogging.h>
 void ChannelContainer::drawOutgoingConnections(Graphics & gg)
@@ -197,6 +212,7 @@ void ChannelContainer::drawOutgoingConnections(Graphics & gg)
 #include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
 
+#if defined(USE_OGDF_POSITIONING)
 ogdf::node ChannelContainer::getNode(void)
 const
 {
@@ -204,6 +220,7 @@ const
     OD_LOG_OBJEXIT_P(_node); //####
     return _node;
 } // ChannelContainer::getNode
+#endif // defined(USE_OGDF_POSITIONING)
 
 #include <odl/ODDisableLogging.h>
 #include <odl/ODLogging.h>
@@ -239,6 +256,18 @@ const
     OD_LOG_OBJEXIT(); //####
     return result;
 } // ChannelContainer::getPositionInPanel
+#include <odl/ODEnableLogging.h>
+#include <odl/ODLogging.h>
+
+#include <odl/ODDisableLogging.h>
+#include <odl/ODLogging.h>
+float ChannelContainer::getTextInset(void)
+const
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_OBJEXIT_D(lTextInset); //####
+    return lTextInset;
+} // ChannelContainer::getTextInset
 #include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
 
@@ -337,7 +366,7 @@ void ChannelContainer::mouseDown(const MouseEvent & ee)
     else if (ee.mods.isCtrlDown())
     {
         // Popup of description.
-        String thePanelDescription;
+        yarp::os::ConstString thePanelDescription;
         
         switch (_kind)
         {
@@ -357,8 +386,8 @@ void ChannelContainer::mouseDown(const MouseEvent & ee)
                 break;
                 
         }
-        AlertWindow::showMessageBox(AlertWindow::NoIcon, getName(), thePanelDescription, "OK",
-                                    this);
+        AlertWindow::showMessageBox(AlertWindow::NoIcon, getName(), thePanelDescription.c_str(),
+                                    "OK", this);
         doDrag = false;
     }
     if (doDrag)
@@ -437,21 +466,35 @@ void ChannelContainer::resized(void)
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::resized
 
-#if defined(__APPLE__)
-# pragma mark Accessors
-#endif // defined(__APPLE__)
-
-#include <odl/ODDisableLogging.h>
-#include <odl/ODLogging.h>
-float ChannelContainer::getTextInset(void)
-const
+void ChannelContainer::select(void)
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_OBJEXIT_D(lTextInset); //####
-    return lTextInset;
-} // ChannelContainer::getTextInset
-#include <odl/ODEnableLogging.h>
-#include <odl/ODLogging.h>
+    _selected = true;
+    OD_LOG_OBJEXIT(); //####
+} // ChannelContainer::select
+
+#if defined(USE_OGDF_POSITIONING)
+void ChannelContainer::setNode(ogdf::node newNode)
+{
+    OD_LOG_OBJENTER(); //####
+    _node = newNode;
+    OD_LOG_OBJEXIT(); //####
+} // ChannelContainer::setNode
+#endif // defined(USE_OGDF_POSITIONING)
+
+void ChannelContainer::setOld(void)
+{
+    OD_LOG_OBJENTER(); //####
+    _newlyCreated = false;
+    OD_LOG_OBJEXIT(); //####
+} // ChannelContainer::setOld
+
+void ChannelContainer::setVisited(void)
+{
+    OD_LOG_OBJENTER(); //####
+    _visited = true;
+    OD_LOG_OBJEXIT(); //####
+} // ChannelContainer::setVisited
 
 #if defined(__APPLE__)
 # pragma mark Global functions

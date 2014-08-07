@@ -69,11 +69,11 @@ using namespace std;
 #endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
-# pragma mark Constructors and destructors
+# pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
-ChannelManagerWindow::ChannelManagerWindow(const String & title)  :
-    inherited(title, Colours::lightgrey, inherited::allButtons),
+ChannelManagerWindow::ChannelManagerWindow(const yarp::os::ConstString & title)  :
+    inherited(title.c_str(), Colours::lightgrey, inherited::allButtons),
     _contentPanel(new ContentPanel(this)), _scannerThread(NULL)
 {
     OD_LOG_ENTER(); //####
@@ -92,7 +92,7 @@ ChannelManagerWindow::~ChannelManagerWindow(void)
 } // ChannelManagerWindow::~ChannelManagerWindow
 
 #if defined(__APPLE__)
-# pragma mark Actions
+# pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
 void ChannelManagerWindow::closeButtonPressed(void)
@@ -105,10 +105,6 @@ void ChannelManagerWindow::closeButtonPressed(void)
     OD_LOG_OBJEXIT(); //####
 } // ChannelManagerWindow::closeButtonPressed
 
-#if defined(__APPLE__)
-# pragma mark Accessors
-#endif // defined(__APPLE__)
-
 EntitiesPanel & ChannelManagerWindow::getEntitiesPanel(void)
 const
 {
@@ -118,6 +114,13 @@ const
     OD_LOG_OBJEXIT_P(&thePanel); //####
     return thePanel;
 } // ChannelManagerWindow::getEntitiesPanel
+
+void ChannelManagerWindow::setScannerThread(ScannerThread * theScanner)
+{
+    OD_LOG_OBJENTER(); //####
+    _scannerThread = theScanner;
+    OD_LOG_OBJEXIT(); //####
+} // ChannelManagerWindow::setScannerThread
 
 #if defined(__APPLE__)
 # pragma mark Global functions

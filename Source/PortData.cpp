@@ -67,18 +67,17 @@ using namespace ChannelManager;
 #endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
-# pragma mark Constructors and destructors
+# pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
-PortData::PortData(const String &      portName,
-                   const String &      portProtocol,
-                   const PortUsage     portKind,
-                   const PortDirection direction) :
+PortData::PortData(const yarp::os::ConstString & portName,
+                   const yarp::os::ConstString & portProtocol,
+                   const PortUsage               portKind,
+                   const PortDirection           direction) :
     _portName(portName), _portProtocol(portProtocol), _direction(direction), _usage(portKind)
 {
     OD_LOG_ENTER(); //####
-    OD_LOG_S2s("portName = ", portName.toStdString(), "portProtocol = ", //####
-               portProtocol.toStdString()); //####
+    OD_LOG_S2s("portName = ", portName, "portProtocol = ", portProtocol); //####
     OD_LOG_L2("portKind = ", portKind, "direction = ", direction); //####
     OD_LOG_EXIT_P(this); //####
 } // PortData::PortData
@@ -86,12 +85,12 @@ PortData::PortData(const String &      portName,
 PortData::~PortData(void)
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_S1s("getPortName() = ", getPortName().toStdString()); //####
+    OD_LOG_S1s("getPortName() = ", getPortName()); //####
     OD_LOG_OBJEXIT(); //####
 } // PortData::~PortData
 
 #if defined(__APPLE__)
-# pragma mark Actions
+# pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
 void PortData::addInputConnection(PortData *                  other,
@@ -174,10 +173,11 @@ void PortData::addOutputConnection(PortData *                  other,
     OD_LOG_OBJEXIT(); //####
 } // PortData::addOutputConnection
 
-bool PortData::hasOutgoingConnectionTo(const String & otherPort)
+bool PortData::hasOutgoingConnectionTo(const yarp::os::ConstString & otherPort)
 const
 {
     OD_LOG_OBJENTER(); //####
+    OD_LOG_S1s("otherPort = ", otherPort); //####
     bool result = false;
     
     for (Channels::const_iterator walker(_outputConnections.begin());
@@ -326,10 +326,6 @@ void PortData::removeOutputConnection(PortData * other)
     }
     OD_LOG_OBJEXIT(); //####
 } // PortData::removeOutputConnection
-
-#if defined(__APPLE__)
-# pragma mark Accessors
-#endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
 # pragma mark Global functions

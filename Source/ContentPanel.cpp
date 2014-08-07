@@ -50,8 +50,10 @@
 #include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
 
-#include <ogdf/basic/GraphAttributes.h>
-#include <ogdf/energybased/FMMMLayout.h>
+#if defined(USE_OGDF_POSITIONING)
+# include <ogdf/basic/GraphAttributes.h>
+# include <ogdf/energybased/FMMMLayout.h>
+#endif // defined(USE_OGDF_POSITIONING)
 
 #if defined(__APPLE__)
 # pragma clang diagnostic push
@@ -87,11 +89,14 @@ static const int kDefaultSingleStepSize = 10;
 #endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
-# pragma mark Constructors and destructors
+# pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
 ContentPanel::ContentPanel(ChannelManagerWindow * containingWindow) :
     inherited(), _entitiesPanel(new EntitiesPanel(this)), _containingWindow(containingWindow)
+#if (defined(USE_OGDF_POSITIONING) && defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY))
+    , _initialPositioningDone(false)
+#endif // defined(USE_OGDF_POSITIONING) && defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY)
 {
     OD_LOG_ENTER(); //####
     _entitiesPanel->setSize(_entitiesPanel->getWidth(),
@@ -113,7 +118,7 @@ ContentPanel::~ContentPanel(void)
 } // ContentPanel::~ContentPanel
 
 #if defined(__APPLE__)
-# pragma mark Actions
+# pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
 #include <odl/ODDisableLogging.h>
@@ -174,18 +179,34 @@ void ContentPanel::setEntityPositions(ScannerThread & scanner)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("scanner = ", &scanner); //####
-    ScopedPointer<ogdf::Graph> gg(new ogdf::Graph);
+#if defined(USE_OGDF_POSITIONING)
+    ogdf::Graph * gg;
+#endif // defined(USE_OGDF_POSITIONING)
     
+#if defined(USE_OGDF_POSITIONING)
+# if defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY)
+    if (_initialPositioningDone)
+    {
+        gg = NULL;
+    }
+    else
+    {
+        _initialPositioningDone = true;
+        gg = new ogdf::Graph;
+    }
+# else // ! defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY)
+    gg = new ogdf::Graph;
+# endif // ! defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY)
     if (gg)
     {
         ScopedPointer<ogdf::GraphAttributes> ga(new ogdf::GraphAttributes(*gg));
-
+        
         if (ga)
         {
             Random     randomizer(Time::currentTimeMillis());
-            bool       positionsNeedUpdate = false;
             float      fullHeight = _entitiesPanel->getHeight();
             float      fullWidth = _entitiesPanel->getWidth();
+            bool       positionsNeedUpdate = false;
             ogdf::node phantomNode = gg->newNode();
             
             ga->directed(true);
@@ -234,7 +255,7 @@ void ContentPanel::setEntityPositions(ScannerThread & scanner)
             if (positionsNeedUpdate)
             {
                 OD_LOG("(positionsNeedUpdate)"); //####
-                // Set up the edges (connections)
+                                                 // Set up the edges (connections)
                 for (size_t ii = 0, mm = _entitiesPanel->getNumberOfEntities(); mm > ii; ++ii)
                 {
                     ChannelContainer * aContainer = _entitiesPanel->getEntity(ii);
@@ -263,7 +284,7 @@ void ContentPanel::setEntityPositions(ScannerThread & scanner)
                                         if (otherChannel)
                                         {
                                             ChannelContainer * otherEntity =
-                                                                        otherChannel->getParent();
+                                            otherChannel->getParent();
                                             
                                             if (otherEntity)
                                             {
@@ -327,7 +348,35 @@ void ContentPanel::setEntityPositions(ScannerThread & scanner)
                 }
             }
         }
+        delete gg;
     }
+#else // ! defined(USE_OGDF_POSITIONING)
+    Random randomizer(Time::currentTimeMillis());
+    float  fullHeight = _entitiesPanel->getHeight();
+    float  fullWidth = _entitiesPanel->getWidth();
+    
+    for (size_t ii = 0, mm = _entitiesPanel->getNumberOfEntities(); mm > ii; ++ii)
+    {
+        ChannelContainer * aContainer = _entitiesPanel->getEntity(ii);
+        
+        if (aContainer)
+        {
+            float                  newX;
+            float                  newY;
+            juce::Rectangle<float> entityShape(aContainer->getLocalBounds().toFloat());
+            float                  hh = entityShape.getHeight();
+            float                  ww = entityShape.getWidth();
+            
+            if (aContainer->isNew())
+            {
+                OD_LOG("(aContainer->isNew())"); //####
+                newX = (randomizer.nextFloat() * (fullWidth - ww));
+                newY = (randomizer.nextFloat() * (fullHeight - hh));
+                aContainer->setTopLeftPosition(static_cast<int>(newX), static_cast<int>(newY));
+            }
+        }
+    }
+#endif // ! defined(USE_OGDF_POSITIONING)
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::setEntityPositions
 
@@ -348,6 +397,7 @@ void ContentPanel::updatePanels(ScannerThread & scanner)
         OD_LOG_P1("anEntity <- ", anEntity); //####
         if (anEntity)
         {
+            OD_LOG_S1s("anEntity->getName() = ", anEntity->getName()); //####
             ChannelContainer * oldEntity = _entitiesPanel->findKnownEntity(anEntity->getName());
             
             if (oldEntity)
@@ -396,8 +446,8 @@ void ContentPanel::updatePanels(ScannerThread & scanner)
         OD_LOG_P2("thisPort <- ", thisPort, "otherPort <- ", otherPort); //####
         if (thisPort && otherPort)
         {
-            OD_LOG_S2s("thisPort.name = ", thisPort->getPortName().toStdString(), //####
-                       "otherPort.name = ", otherPort->getPortName().toStdString()); //####
+            OD_LOG_S2s("thisPort.name = ", thisPort->getPortName(), //####
+                       "otherPort.name = ", otherPort->getPortName()); //####
             thisPort->addOutputConnection(otherPort, walker->_mode);
             otherPort->addInputConnection(thisPort, walker->_mode);
         }
@@ -421,10 +471,6 @@ void ContentPanel::visibleAreaChanged(const juce::Rectangle<int> & newVisibleAre
               "nVA.w = ", newVisibleArea.getWidth(), "nVA.h = ", newVisibleArea.getHeight()); //####
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::visibleAreaChanged
-
-#if defined(__APPLE__)
-# pragma mark Accessors
-#endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
 # pragma mark Global functions

@@ -68,25 +68,24 @@ using namespace ChannelManager;
 #endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
-# pragma mark Constructors and destructors
+# pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
-EntityData::EntityData(const ContainerKind kind,
-                       const String &      name,
-                       const String &      behaviour,
-                       const String &      description) :
+EntityData::EntityData(const ContainerKind           kind,
+                       const yarp::os::ConstString & name,
+                       const yarp::os::ConstString & behaviour,
+                       const yarp::os::ConstString & description) :
     _behaviour(behaviour), _description(description), _name(name), _kind(kind)
 {
     OD_LOG_ENTER(); //####
-    OD_LOG_S3s("name = ", name.toStdString(), "behaviour = ", behaviour.toStdString(), //####
-               "description = ", description.toStdString()); //####
+    OD_LOG_S3s("name = ", name, "behaviour = ", behaviour, "description = ", description); //####
     OD_LOG_EXIT_P(this); //####
 } // EntityData::EntityData
 
 EntityData::~EntityData(void)
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_S1s("getName() = ", getName().toStdString()); //####
+    OD_LOG_S1s("getName() = ", getName()); //####
     for (Ports::iterator walker(_ports.begin()); _ports.end() != walker; ++walker)
     {
         PortData * aPort = *walker;
@@ -101,17 +100,16 @@ EntityData::~EntityData(void)
 } // EntityData::~EntityData
 
 #if defined(__APPLE__)
-# pragma mark Actions
+# pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-PortData * EntityData::addPort(const String &      portName,
-                               const String &      portProtocol,
-                               const PortUsage     portKind,
-                               const PortDirection direction)
+PortData * EntityData::addPort(const yarp::os::ConstString & portName,
+                               const yarp::os::ConstString & portProtocol,
+                               const PortUsage               portKind,
+                               const PortDirection           direction)
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_S2s("portName = ", portName.toStdString(), "portProtocol = ", //####
-               portProtocol.toStdString()); //####
+    OD_LOG_S2s("portName = ", portName, "portProtocol = ", portProtocol); //####
     PortData * aPort = new PortData(portName, portProtocol, portKind, direction);
     
     _ports.push_back(aPort);
@@ -146,10 +144,6 @@ const
     OD_LOG_OBJEXIT_P(result);
     return result;
 } // EntityData::getPort
-
-#if defined(__APPLE__)
-# pragma mark Accessors
-#endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
 # pragma mark Global functions

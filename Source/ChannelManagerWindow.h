@@ -65,7 +65,7 @@ namespace ChannelManager
         
         /*! @brief The constructor.
          @param title The window title. */
-        ChannelManagerWindow(const String & title);
+        ChannelManagerWindow(const yarp::os::ConstString & title);
         
         /*! @brief The destructor. */
         virtual ~ChannelManagerWindow(void);
@@ -87,10 +87,7 @@ namespace ChannelManager
         } // getScannerThread
                 
         /*! @brief Set up the reference to the background scanning thread. */
-        inline void setScannerThread(ScannerThread * theScanner)
-        {
-            _scannerThread = theScanner;
-        } // setScannerThread
+        void setScannerThread(ScannerThread * theScanner);
         
     protected:
         

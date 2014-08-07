@@ -73,7 +73,7 @@ static bool lExitRequested = false;
 #endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
-# pragma mark Constructors and destructors
+# pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
 ChannelManagerApplication::ChannelManagerApplication(void) :
@@ -98,7 +98,7 @@ ChannelManagerApplication::~ChannelManagerApplication(void)
 } // ChannelManagerApplication::~ChannelManagerApplication
 
 #if defined(__APPLE__)
-# pragma mark Actions
+# pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
 void ChannelManagerApplication::anotherInstanceStarted(const String & commandLine)
@@ -199,10 +199,6 @@ void ChannelManagerApplication::systemRequestedQuit(void)
     quit();
     OD_LOG_OBJEXIT(); //####
 } // ChannelManagerApplication::systemRequestedQuit
-
-#if defined(__APPLE__)
-# pragma mark Accessors
-#endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
 # pragma mark Global functions

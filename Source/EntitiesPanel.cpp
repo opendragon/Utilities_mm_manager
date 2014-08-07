@@ -104,7 +104,7 @@ static const int kInitialPanelWidth = 1024;
 #endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
-# pragma mark Constructors and destructors
+# pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
 EntitiesPanel::EntitiesPanel(ContentPanel * theContainer,
@@ -133,7 +133,7 @@ EntitiesPanel::~EntitiesPanel(void)
 } // EntitiesPanel::~EntitiesPanel
 
 #if defined(__APPLE__)
-# pragma mark Actions
+# pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
 void EntitiesPanel::addEntity(ChannelContainer * anEntity)
@@ -333,6 +333,7 @@ void EntitiesPanel::clearMarkers(void)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::clearMarkers
 
+#if defined(USE_OGDF_POSITIONING)
 void EntitiesPanel::clearNodeValues(void)
 {
     OD_LOG_OBJENTER(); //####
@@ -348,6 +349,7 @@ void EntitiesPanel::clearNodeValues(void)
     
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::clearNodeValues
+#endif // defined(USE_OGDF_POSITIONING)
 
 void EntitiesPanel::clearOutData(void)
 {
@@ -391,31 +393,36 @@ void EntitiesPanel::drawConnections(Graphics & gg)
 #include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
 
-ChannelContainer * EntitiesPanel::findKnownEntity(const String & name)
+ChannelContainer * EntitiesPanel::findKnownEntity(const yarp::os::ConstString & name)
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_S1s("name = ", name.toStdString()); //####
+    OD_LOG_S1s("name = ", name); //####
     ChannelContainer * result = NULL;
     
     for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
     {
         ChannelContainer * anEntity = *it;
         
-        if (anEntity && (name == anEntity->getName()))
+        if (anEntity)
         {
-            result = anEntity;
-            break;
+            yarp::os::ConstString entityName(anEntity->getName().toStdString().c_str());
+            
+            if (name == entityName)
+            {
+                result = anEntity;
+                break;
+            }
+     
         }
-        
     }
     OD_LOG_OBJEXIT_P(result); //####
     return result;
 } // EntitiesPanel::findKnownEntity
 
-ChannelEntry * EntitiesPanel::findKnownPort(const String & name)
+ChannelEntry * EntitiesPanel::findKnownPort(const yarp::os::ConstString & name)
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_S1s("name = ", name.toStdString()); //####
+    OD_LOG_S1s("name = ", name); //####
     ChannelEntry *                  result = NULL;
     ChannelEntryMap::const_iterator match(_knownPorts.find(name));
     
@@ -437,7 +444,8 @@ void EntitiesPanel::forgetPort(ChannelEntry * aPort)
     OD_LOG_P1("aPort = ", aPort); //####
     if (aPort)
     {
-        ChannelEntryMap::iterator match(_knownPorts.find(aPort->getName()));
+        yarp::os::ConstString     aPortName(aPort->getName().toStdString().c_str());
+        ChannelEntryMap::iterator match(_knownPorts.find(aPortName));
         
         if (_knownPorts.end() == match)
         {
@@ -621,6 +629,7 @@ void EntitiesPanel::removeUnvisitedEntities(void)
         }
         if ((_knownEntities.end() != walker) && anEntity)
         {
+            OD_LOG("((_knownEntities.end() != walker) && anEntity)"); //####
             removeChildComponent(anEntity);
             delete anEntity;
             _knownEntities.erase(walker);
@@ -649,10 +658,6 @@ void EntitiesPanel::setDragInfo(const Point<float> position)
     }
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::setDragInfo
-
-#if defined(__APPLE__)
-# pragma mark Accessors
-#endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
 # pragma mark Global functions

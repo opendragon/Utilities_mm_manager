@@ -434,12 +434,12 @@ static void drawConnection(Graphics &                  gg,
  @param destinationProtocol The protocol of the destination port.
  @returns @c true if the protocols permit a connection to be made and @c false
  otherwise. */
-static bool protocolsMatch(const String & sourceProtocol,
-                           const String & destinationProtocol)
+static bool protocolsMatch(const yarp::os::ConstString & sourceProtocol,
+                           const yarp::os::ConstString & destinationProtocol)
 {
     OD_LOG_ENTER(); //####
-    OD_LOG_S2s("sourceProtocol = ", sourceProtocol.toStdString(), "destinationProtocol = ", //####
-               destinationProtocol.toStdString()); //####
+    OD_LOG_S2s("sourceProtocol = ", sourceProtocol, "destinationProtocol = ", //####
+               destinationProtocol); //####
     bool result = false;
     
     if (0 == destinationProtocol.length())
@@ -459,25 +459,24 @@ static bool protocolsMatch(const String & sourceProtocol,
 #endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
-# pragma mark Constructors and destructors
+# pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
-ChannelEntry::ChannelEntry(ChannelContainer *  parent,
-                           const String &      portName,
-                           const String &      portProtocol,
-                           const PortUsage     portKind,
-                           const PortDirection direction) :
+ChannelEntry::ChannelEntry(ChannelContainer *            parent,
+                           const yarp::os::ConstString & portName,
+                           const yarp::os::ConstString & portProtocol,
+                           const PortUsage               portKind,
+                           const PortDirection           direction) :
     inherited(), _portName(portName), _portProtocol(portProtocol), _parent(parent),
     _direction(direction), _usage(portKind), _drawConnectMarker(false),
     _drawDisconnectMarker(false), _isLastPort(true), _wasUdp(false)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P1("parent = ", parent); //####
-    OD_LOG_S2s("portName = ", portName.toStdString(), "portProtocol = ", //####
-               portProtocol.toStdString()); //####
+    OD_LOG_S2s("portName = ", portName, "portProtocol = ", portProtocol); //####
     OD_LOG_L2("portKind = ", portKind, "direction = ", direction); //####
-    Font & textFont = getOwningPanel().getNormalFont();
-    String prefix;
+    Font &                textFont = getOwningPanel().getNormalFont();
+    yarp::os::ConstString prefix;
     
     switch (_direction)
     {
@@ -499,8 +498,8 @@ ChannelEntry::ChannelEntry(ChannelContainer *  parent,
             
     }
     _title = prefix + _portName;
-    setSize(static_cast<int>(textFont.getStringWidthFloat(_title + " ") + _parent->getTextInset()),
-            static_cast<int>(textFont.getHeight()));
+    setSize(static_cast<int>(textFont.getStringWidthFloat((_title + " ").c_str()) +
+                             _parent->getTextInset()), static_cast<int>(textFont.getHeight()));
     setOpaque(true);
     setVisible(true);
     OD_LOG_EXIT_P(this); //####
@@ -509,12 +508,12 @@ ChannelEntry::ChannelEntry(ChannelContainer *  parent,
 ChannelEntry::~ChannelEntry(void)
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_S1s("getPortName() = ", getPortName().toStdString()); //####
+    OD_LOG_S1s("getPortName() = ", getPortName()); //####
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::~ChannelEntry
 
 #if defined(__APPLE__)
-# pragma mark Actions
+# pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
 void ChannelEntry::addInputConnection(ChannelEntry *              other,
@@ -737,6 +736,20 @@ void ChannelEntry::drawOutgoingConnections(Graphics & gg)
 
 #include <odl/ODDisableLogging.h>
 #include <odl/ODLogging.h>
+Point<float> ChannelEntry::getCentre(void)
+const
+{
+    OD_LOG_OBJENTER(); //####
+    juce::Rectangle<float> outer(getLocalBounds().toFloat());
+    
+    OD_LOG_OBJEXIT(); //####
+    return outer.getCentre();
+} // ChannelEntry::getCentre
+#include <odl/ODEnableLogging.h>
+#include <odl/ODLogging.h>
+
+#include <odl/ODDisableLogging.h>
+#include <odl/ODLogging.h>
 EntitiesPanel & ChannelEntry::getOwningPanel(void)
 const
 {
@@ -763,10 +776,11 @@ const
 #include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
 
-bool ChannelEntry::hasOutgoingConnectionTo(const String & otherPort)
+bool ChannelEntry::hasOutgoingConnectionTo(const yarp::os::ConstString & otherPort)
 const
 {
     OD_LOG_OBJENTER(); //####
+    OD_LOG_S1s("otherPort = ", otherPort); //####
     bool result = false;
     
     for (Channels::const_iterator walker(_outputConnections.begin());
@@ -830,7 +844,7 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
         if (firstRemovePort != this)
         {
             // Check if we can end here.
-            String firstName(firstRemovePort->getPortName());
+            yarp::os::ConstString firstName(firstRemovePort->getPortName());
             
             // Check if we can end here.
             firstRemovePort->clearDisconnectMarker();
@@ -838,9 +852,8 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
             if ((kPortDirectionOutput != _direction) &&
                 firstRemovePort->hasOutgoingConnectionTo(getPortName()))
             {
-                if (MplusM::Utilities::RemoveConnection(firstName.toStdString().c_str(),
-                                                        getPortName().toStdString().c_str(),
-                                                        CheckForExit, NULL))
+                if (MplusM::Utilities::RemoveConnection(firstName, getPortName(), CheckForExit,
+                                                        NULL))
                 {
                     firstRemovePort->removeOutputConnection(this);
                     removeInputConnection(firstRemovePort);
@@ -858,8 +871,8 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
         if (firstAddPort != this)
         {
             // Check if we can end here.
-            String firstName(firstAddPort->getPortName());
-            String firstProtocol(firstAddPort->getProtocol());
+            yarp::os::ConstString firstName(firstAddPort->getPortName());
+            yarp::os::ConstString firstProtocol(firstAddPort->getProtocol());
             
             // Check if we can end here.
             firstAddPort->clearConnectMarker();
@@ -868,10 +881,8 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
                 protocolsMatch(firstProtocol, _portProtocol) &&
                 (! firstAddPort->hasOutgoingConnectionTo(getPortName())))
             {
-                if (MplusM::Utilities::AddConnection(firstName.toStdString().c_str(),
-                                                     getPortName().toStdString().c_str(),
-                                                     STANDARD_WAIT_TIME, firstAddPort->_wasUdp,
-                                                     CheckForExit, NULL))
+                if (MplusM::Utilities::AddConnection(firstName, getPortName(), STANDARD_WAIT_TIME,
+                                                     firstAddPort->_wasUdp, CheckForExit, NULL))
                 {
                     MplusM::Common::ChannelMode mode = (firstAddPort->_wasUdp ?
                                                         MplusM::Common::kChannelModeUDP :
@@ -916,9 +927,9 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
         }
         else if (ee.mods.isCtrlDown())
         {
-            String dirText;
-            String prefix;
-            String suffix;
+            yarp::os::ConstString dirText;
+            yarp::os::ConstString prefix;
+            yarp::os::ConstString suffix;
             
             switch (_direction)
             {
@@ -938,7 +949,7 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
                     break;
                     
             }
-            switch (MplusM::Utilities::GetPortKind(getPortName().toStdString().c_str()))
+            switch (MplusM::Utilities::GetPortKind(getPortName()))
             {
                 case MplusM::Utilities::kPortKindAdapter :
                     prefix = "Adapter";
@@ -968,8 +979,8 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
             {
                 suffix = "\nProtocol = '" + getProtocol() + "'";
             }
-            AlertWindow::showMessageBox(AlertWindow::NoIcon, getPortName(),
-                                        prefix + dirText + " port" + suffix, "OK", this);
+            AlertWindow::showMessageBox(AlertWindow::NoIcon, getPortName().c_str(),
+                                        (prefix + dirText + " port" + suffix).c_str(), "OK", this);
             passOn = false;
         }
     }
@@ -1029,15 +1040,14 @@ void ChannelEntry::mouseUp(const MouseEvent & ee)
             if (endEntry && (endEntry != this))
             {
                 // Check if we can end here.
-                String secondName(endEntry->getPortName());
-                String secondProtocol(endEntry->getProtocol());
+                yarp::os::ConstString secondName(endEntry->getPortName());
+                yarp::os::ConstString secondProtocol(endEntry->getProtocol());
 
                 if ((kPortDirectionOutput != endEntry->getDirection()) &&
                     protocolsMatch(getProtocol(), secondProtocol) &&
                     (! hasOutgoingConnectionTo(secondName)))
                 {
-                    if (MplusM::Utilities::AddConnection(getPortName().toStdString().c_str(),
-                                                         secondName.toStdString().c_str(),
+                    if (MplusM::Utilities::AddConnection(getPortName(), secondName,
                                                          STANDARD_WAIT_TIME, _wasUdp, CheckForExit,
                                                          NULL))
                     {
@@ -1076,7 +1086,7 @@ void ChannelEntry::paint(Graphics & gg)
     AttributedString as;
     
     as.setJustification(Justification::left);
-    as.append(_title, getOwningPanel().getNormalFont(), Colours::white);
+    as.append(_title.c_str(), getOwningPanel().getNormalFont(), Colours::white);
     juce::Rectangle<float> area(getLocalBounds().toFloat());
     
     OD_LOG_D4("x <- ", area.getX(), "y <- ", area.getY(), "w <- ",area.getWidth(), "h <- ", //####
@@ -1208,23 +1218,33 @@ void ChannelEntry::removeOutputConnection(ChannelEntry * other)
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::removeOutputConnection
 
-#if defined(__APPLE__)
-# pragma mark Accessors
-#endif // defined(__APPLE__)
-
-#include <odl/ODDisableLogging.h>
-#include <odl/ODLogging.h>
-Point<float> ChannelEntry::getCentre(void)
-const
+void ChannelEntry::setAsLastPort(void)
 {
     OD_LOG_OBJENTER(); //####
-    juce::Rectangle<float> outer(getLocalBounds().toFloat());
-    
+    _isLastPort = true;
     OD_LOG_OBJEXIT(); //####
-    return outer.getCentre();
-} // ChannelEntry::getCentre
-#include <odl/ODEnableLogging.h>
-#include <odl/ODLogging.h>
+} // ChannelEntry::setAsLastPort
+
+void ChannelEntry::setConnectMarker(void)
+{
+    OD_LOG_OBJENTER(); //####
+    _drawConnectMarker = true;
+    OD_LOG_OBJEXIT(); //####
+} // ChannelEntry::setConnectMarker
+
+void ChannelEntry::setDisconnectMarker(void)
+{
+    OD_LOG_OBJENTER(); //####
+    _drawDisconnectMarker = true;
+    OD_LOG_OBJEXIT(); //####
+} // ChannelEntry::setDisconnectMarker
+
+void ChannelEntry::unsetAsLastPort(void)
+{
+    OD_LOG_OBJENTER(); //####
+    _isLastPort = false;
+    OD_LOG_OBJEXIT(); //####
+} // ChannelEntry::unsetAsLastPort
 
 #if defined(__APPLE__)
 # pragma mark Global functions

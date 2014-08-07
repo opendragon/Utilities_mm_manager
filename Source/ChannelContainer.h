@@ -41,7 +41,9 @@
 
 # include "ChannelsDataTypes.h"
 
-# include <ogdf/basic/Graph.h>
+# if defined(USE_OGDF_POSITIONING)
+#  include <ogdf/basic/Graph.h>
+# endif // defined(USE_OGDF_POSITIONING)
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -73,11 +75,11 @@ namespace ChannelManager
          @param behaviour The behavioural model if a service.
          @param description The description, if this is a service.
          @param owner The owner of the entity. */
-        ChannelContainer(const ContainerKind kind,
-                         const String &      title,
-                         const String &      behaviour,
-                         const String &      description,
-                         EntitiesPanel &     owner);
+        ChannelContainer(const ContainerKind           kind,
+                         const yarp::os::ConstString & title,
+                         const yarp::os::ConstString & behaviour,
+                         const yarp::os::ConstString & description,
+                         EntitiesPanel &               owner);
         
         /*! @brief The destructor. */
         virtual ~ChannelContainer(void);
@@ -88,38 +90,27 @@ namespace ChannelManager
          @param portKind What the port will be used for.
          @param direction The primary direction of the port.
          @returns The newly-created port. */
-        ChannelEntry * addPort(const String &      portName,
-                               const String &      portProtocol = "",
-                               const PortUsage     portKind = kPortUsageOther,
-                               const PortDirection direction = kPortDirectionInputOutput);
+        ChannelEntry * addPort(const yarp::os::ConstString & portName,
+                               const yarp::os::ConstString & portProtocol = "",
+                               const PortUsage               portKind = kPortUsageOther,
+                               const PortDirection           direction = kPortDirectionInputOutput);
         
         /*! @brief Clear any connect / disconnect markers. */
         void clearMarkers(void);
         
         /*! @brief Clears the visited flag for the entity. */
-        inline void clearVisited(void)
-        {
-            _visited = false;
-        } // clearVisited
+        void clearVisited(void);
         
         /*! @brief Deselect the entity. */
-        inline void deselect(void)
-        {
-            _selected = false;
-        } // deselect
+        void deselect(void);
         
         /*! @brief Display the connections between containers.
          @param gg The graphics context in which to draw. */
         void drawOutgoingConnections(Graphics & gg);
         
-        /*! @brief Return the position of the entity within it's containing panel.
-         @returns The position of the entity within it's containing panel. */
-        Point<float> getPositionInPanel(void)
-        const;
-        
         /*! @brief Return the behavioural model for the entity.
          @returns The behavioural model for the entity. */
-        inline String getBehaviour(void)
+        inline yarp::os::ConstString getBehaviour(void)
         const
         {
             return _behaviour;
@@ -127,7 +118,7 @@ namespace ChannelManager
         
         /*! @brief Return the description of the entity.
          @returns The description of the entity. */
-        inline String getDescription(void)
+        inline yarp::os::ConstString getDescription(void)
         const
         {
             return _description;
@@ -141,10 +132,12 @@ namespace ChannelManager
             return _kind;
         } // getKind
 
+# if defined(USE_OGDF_POSITIONING)
         /*! @brief Return the node corresponding to the entity.
          @returns The node corresponding to the entity. */
         ogdf::node getNode(void)
         const;
+# endif // defined(USE_OGDF_POSITIONING)
         
         /*! @brief Returns the number of ports in this panel.
          @returns The number of ports in this panel. */
@@ -164,6 +157,11 @@ namespace ChannelManager
          @param num The zero-origin index of the port.
          @returns A port or @c NULL if the index is out of range. */
         ChannelEntry * getPort(const int num)
+        const;
+        
+        /*! @brief Return the position of the entity within it's containing panel.
+         @returns The position of the entity within it's containing panel. */
+        Point<float> getPositionInPanel(void)
         const;
         
         /*! @brief Return the amount of space to the left of the text being displayed.
@@ -225,29 +223,19 @@ namespace ChannelManager
         virtual void resized(void);
         
         /*! @brief Select the entity. */
-        inline void select(void)
-        {
-            _selected = true;
-        } // select
+        void select(void);
         
+# if defined(USE_OGDF_POSITIONING)
         /*! @brief Sets the node corresponding to the entity.
          @param newNode The new value for the node corresponding to the entity. */
-        inline void setNode(ogdf::node newNode)
-        {
-            _node = newNode;
-        } // setNode
+        void setNode(ogdf::node newNode);
+# endif // defined(USE_OGDF_POSITIONING)
         
         /*! @brief Marks the entity as not newly created. */
-        inline void setOld(void)
-        {
-            _newlyCreated = false;
-        } // setOld
+        void setOld(void);
         
         /*! @brief Sets the visited flag for the entity. */
-        inline void setVisited(void)
-        {
-            _visited = true;
-        } // setVisited
+        void setVisited(void);
         
         /*! @brief Returns the state of the visited flag.
          @returns The state of the visited flag. */
@@ -271,13 +259,15 @@ namespace ChannelManager
         ComponentDragger _dragger;
         
         /*! @brief The behavioural model if a service. */
-        String _behaviour;
+        yarp::os::ConstString _behaviour;
         
         /*! @brief The description of the container, if it is a service. */
-        String _description;
+        yarp::os::ConstString _description;
         
+# if defined(USE_OGDF_POSITIONING)
         /*! @brief The node corresponding to the container. */
         ogdf::node _node;
+# endif // defined(USE_OGDF_POSITIONING)
         
         /*! @brief The owner of the container. */
         EntitiesPanel & _owner;

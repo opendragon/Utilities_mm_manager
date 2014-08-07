@@ -96,8 +96,10 @@ namespace ChannelManager
         /*! @brief Clear any connect / disconnect markers. */
         void clearMarkers(void);
         
+# if defined(USE_OGDF_POSITIONING)
         /*! @brief Clear any node values. */
         void clearNodeValues(void);
+# endif // defined(USE_OGDF_POSITIONING)
         
         /*! @brief Release all data held by the panel. */
         void clearOutData(void);
@@ -105,12 +107,12 @@ namespace ChannelManager
         /*! @brief Find an entity in the currently-displayed list by name.
          @param name The name of the entity.
          @returns @c NULL if the entity cannot be found and non-@c NULL if it is found. */
-        ChannelContainer * findKnownEntity(const String & name);
+        ChannelContainer * findKnownEntity(const yarp::os::ConstString & name);
         
         /*! @brief Find a port in the to-be-displayed list by name.
          @param name The name of the port.
          @returns @c NULL if the port cannot be found and non-@c NULL if it is found. */
-        ChannelEntry * findKnownPort(const String & name);
+        ChannelEntry * findKnownPort(const yarp::os::ConstString & name);
         
         /*! @brief Remove a port from the set of known ports.
          @param aPort The port to be removed. */

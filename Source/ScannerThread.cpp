@@ -70,6 +70,11 @@ using namespace std;
 /*! @brief The minimum time between background scans in milliseconds. */
 static const int64 kMinScanInterval = 5000;
 
+#if (defined(CHECK_FOR_STALE_PORTS) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS)))
+/*! @brief The minimum time between removing stale entries, in milliseconds. */
+static const int64 kMinStaleInterval = 60000;
+#endif // defined(CHECK_FOR_STALE_PORTS) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS))
+
 #if defined(__APPLE__)
 # pragma mark Local functions
 #endif // defined(__APPLE__)
@@ -79,17 +84,24 @@ static const int64 kMinScanInterval = 5000;
 #endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
-# pragma mark Constructors and destructors
+# pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
-ScannerThread::ScannerThread(const String &         name,
-                             ChannelManagerWindow & window) :
-    inherited(name), _window(window), _rememberedPorts(), _detectedServices(), _associatedPorts(),
-    _standalonePorts(), _inputOnlyPort(NULL), _outputOnlyPort(NULL), _portsValid(false),
-    _scanCanProceed(true), _scanIsComplete(false)
+ScannerThread::ScannerThread(const yarp::os::ConstString & name,
+                             ChannelManagerWindow &        window) :
+    inherited(name.c_str()), _window(window), _rememberedPorts(), _detectedServices(),
+    _associatedPorts(), _standalonePorts(),
+#if (defined(CHECK_FOR_STALE_PORTS) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS)))
+    _lastStaleTime(- (2 * kMinStaleInterval)),
+#endif // efined(CHECK_FOR_STALE_PORTS) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS))
+    _inputOnlyPort(NULL), _outputOnlyPort(NULL), _portsValid(false), _scanCanProceed(true),
+    _scanIsComplete(false)
+#if (defined(CHECK_FOR_STALE_PORTS) && defined(DO_SINGLE_CHECK_FOR_STALE_PORTS))
+    , _initialStaleCheckDone(false)
+#endif // defined(CHECK_FOR_STALE_PORTS) && defined(DO_SINGLE_CHECK_FOR_STALE_PORTS)
 {
     OD_LOG_ENTER(); //####
-    OD_LOG_S1s("name = ", name.toStdString()); //####
+    OD_LOG_S1s("name = ", name); //####
     OD_LOG_P1("window = ", &window); //####
     _inputOnlyPortName = MplusM::Common::GetRandomChannelName(HIDDEN_CHANNEL_PREFIX
                                                               "checkdirection/channel_");
@@ -143,7 +155,7 @@ ScannerThread::~ScannerThread(void)
 } // ScannerThread::~ScannerThread
 
 #if defined(__APPLE__)
-# pragma mark Actions
+# pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
 void ScannerThread::addEntities(void)
@@ -156,13 +168,12 @@ void ScannerThread::addEntities(void)
     {
         MplusM::Utilities::ServiceDescriptor descriptor(outer->second);
         EntityData *                         anEntity = new EntityData(kContainerKindService,
-                                                                 descriptor._canonicalName.c_str(),
-                                                                       descriptor._kind.c_str(),
-                                                                   descriptor._description.c_str());
-        PortData *                           aPort =
-                                                anEntity->addPort(descriptor._channelName.c_str(),
-                                                                  "", kPortUsageService,
-                                                                  kPortDirectionInput);
+                                                                       descriptor._canonicalName,
+                                                                       descriptor._kind,
+                                                                       descriptor._description);
+        PortData *                           aPort = anEntity->addPort(descriptor._channelName, "",
+                                                                       kPortUsageService,
+                                                                       kPortDirectionInput);
         MplusM::Common::ChannelVector &      inChannels = descriptor._inputChannels;
         MplusM::Common::ChannelVector &      outChannels = descriptor._outputChannels;
         
@@ -171,7 +182,7 @@ void ScannerThread::addEntities(void)
         {
             MplusM::Common::ChannelDescription aChannel(*inner);
             
-            aPort = anEntity->addPort(aChannel._portName.c_str(), aChannel._portProtocol.c_str(),
+            aPort = anEntity->addPort(aChannel._portName, aChannel._portProtocol,
                                       kPortUsageInputOutput, kPortDirectionInput);
         }
         for (MplusM::Common::ChannelVector::const_iterator inner = outChannels.begin();
@@ -179,7 +190,7 @@ void ScannerThread::addEntities(void)
         {
             MplusM::Common::ChannelDescription aChannel(*inner);
             
-            aPort = anEntity->addPort(aChannel._portName.c_str(), aChannel._portProtocol.c_str(),
+            aPort = anEntity->addPort(aChannel._portName, aChannel._portProtocol,
                                       kPortUsageInputOutput, kPortDirectionOutput);
         }
         _workingData.addEntity(anEntity);
@@ -199,12 +210,12 @@ void ScannerThread::addEntities(void)
         for (MplusM::Common::StringVector::const_iterator inner = assocInputs.begin();
              assocInputs.end() != inner; ++inner)
         {
-            aPort = anEntity->addPort(inner->c_str(), "", kPortUsageOther, kPortDirectionInput);
+            aPort = anEntity->addPort(*inner, "", kPortUsageOther, kPortDirectionInput);
         }
         for (MplusM::Common::StringVector::const_iterator inner = assocOutputs.begin();
              assocOutputs.end() != inner; ++inner)
         {
-            aPort = anEntity->addPort(inner->c_str(), "", kPortUsageOther, kPortDirectionOutput);
+            aPort = anEntity->addPort(*inner, "", kPortUsageOther, kPortDirectionOutput);
         }
         aPort = anEntity->addPort(outer->second._name, "", kPortUsageClient,
                                   kPortDirectionInputOutput);
@@ -217,7 +228,7 @@ void ScannerThread::addEntities(void)
         EntityData * anEntity = new EntityData(kContainerKindOther, walker->first, "", "");
         PortUsage    usage;
         
-        switch (MplusM::Utilities::GetPortKind(walker->second._name.toStdString().c_str()))
+        switch (MplusM::Utilities::GetPortKind(walker->second._name))
         {
             case MplusM::Utilities::kPortKindClient :
                 usage = kPortUsageClient;
@@ -251,7 +262,7 @@ void ScannerThread::addPortConnections(const MplusM::Utilities::PortVector & det
     for (MplusM::Utilities::PortVector::const_iterator outer(detectedPorts.begin());
          detectedPorts.end() != outer; ++outer)
     {
-        String outerName(outer->_portName.c_str());
+        yarp::os::ConstString outerName(outer->_portName);
         
         if (_rememberedPorts.end() != _rememberedPorts.find(outerName))
         {
@@ -264,7 +275,7 @@ void ScannerThread::addPortConnections(const MplusM::Utilities::PortVector & det
             for (MplusM::Common::ChannelVector::const_iterator inner(outputs.begin());
                  outputs.end() != inner; ++inner)
             {
-                String innerName(inner->_portName.c_str());
+                yarp::os::ConstString innerName(inner->_portName);
                 
                 if (_rememberedPorts.end() != _rememberedPorts.find(innerName))
                 {
@@ -288,7 +299,7 @@ void ScannerThread::addPortsWithAssociates(const MplusM::Utilities::PortVector &
     for (MplusM::Utilities::PortVector::const_iterator outer(detectedPorts.begin());
          detectedPorts.end() != outer; ++outer)
     {
-        String outerName(outer->_portName.c_str());
+        yarp::os::ConstString outerName(outer->_portName);
         
         if (_rememberedPorts.end() == _rememberedPorts.find(outerName))
         {
@@ -299,25 +310,25 @@ void ScannerThread::addPortsWithAssociates(const MplusM::Utilities::PortVector &
             {
                 if (associates._associates._primary)
                 {
-                    String caption(outer->_portIpAddress + ":" + outer->_portPortNumber);
+                    yarp::os::ConstString caption(outer->_portIpAddress + ":" +
+                                                  outer->_portPortNumber);
                     
                     associates._name = outerName;
                     _associatedPorts.insert(AssociatesMap::value_type(caption, associates));
                     _rememberedPorts.insert(outerName);
                     MplusM::Common::StringVector & assocInputs = associates._associates._inputs;
-                    MplusM::Common::StringVector & assocOutputs =
-                                                                associates._associates._outputs;
+                    MplusM::Common::StringVector & assocOutputs = associates._associates._outputs;
                     
                     for (MplusM::Common::StringVector::const_iterator inner = assocInputs.begin();
                          assocInputs.end() != inner; ++inner)
                     {
-                        _rememberedPorts.insert(inner->c_str());
+                        _rememberedPorts.insert(*inner);
                         yield();
                     }
                     for (MplusM::Common::StringVector::const_iterator inner = assocOutputs.begin();
                          assocOutputs.end() != inner; ++inner)
                     {
-                        _rememberedPorts.insert(inner->c_str());
+                        _rememberedPorts.insert(*inner);
                         yield();
                     }
                 }
@@ -338,14 +349,14 @@ void ScannerThread::addRegularPortEntities(const MplusM::Utilities::PortVector &
     for (MplusM::Utilities::PortVector::const_iterator walker(detectedPorts.begin());
          detectedPorts.end() != walker; ++walker)
     {
-        String walkerName(walker->_portName.c_str());
+        yarp::os::ConstString walkerName(walker->_portName);
         
         if (_rememberedPorts.end() == _rememberedPorts.find(walkerName))
         {
-            EntitiesPanel &  entitiesPanel(_window.getEntitiesPanel());
-            String           caption(walker->_portIpAddress + ":" + walker->_portPortNumber);
-            NameAndDirection info;
-            ChannelEntry *   oldEntry = entitiesPanel.findKnownPort(walkerName);
+            EntitiesPanel &       entitiesPanel(_window.getEntitiesPanel());
+            yarp::os::ConstString caption(walker->_portIpAddress + ":" + walker->_portPortNumber);
+            NameAndDirection      info;
+            ChannelEntry *        oldEntry = entitiesPanel.findKnownPort(walkerName);
             
             _rememberedPorts.insert(walkerName);
             info._name = walkerName;
@@ -367,7 +378,7 @@ void ScannerThread::addServices(const MplusM::Common::StringVector & services,
     for (MplusM::Common::StringVector::const_iterator outer(services.begin());
          services.end() != outer; ++outer)
     {
-        String outerName(outer->c_str());
+        yarp::os::ConstString outerName(*outer);
         
         if (_detectedServices.end() == _detectedServices.find(outerName))
         {
@@ -378,7 +389,7 @@ void ScannerThread::addServices(const MplusM::Common::StringVector & services,
                                                                    checkStuff))
             {
                 _detectedServices.insert(ServiceMap::value_type(outerName, descriptor));
-                _rememberedPorts.insert(descriptor._channelName.c_str());
+                _rememberedPorts.insert(descriptor._channelName);
                 MplusM::Common::ChannelVector & inChannels = descriptor._inputChannels;
                 MplusM::Common::ChannelVector & outChannels = descriptor._outputChannels;
                 
@@ -387,7 +398,7 @@ void ScannerThread::addServices(const MplusM::Common::StringVector & services,
                 {
                     MplusM::Common::ChannelDescription aChannel(*inner);
                     
-                    _rememberedPorts.insert(aChannel._portName.c_str());
+                    _rememberedPorts.insert(aChannel._portName);
                     yield();
                 }
                 for (MplusM::Common::ChannelVector::const_iterator inner = outChannels.begin();
@@ -395,7 +406,7 @@ void ScannerThread::addServices(const MplusM::Common::StringVector & services,
                 {
                     MplusM::Common::ChannelDescription aChannel(*inner);
                     
-                    _rememberedPorts.insert(aChannel._portName.c_str());
+                    _rememberedPorts.insert(aChannel._portName);
                     yield();
                 }
             }
@@ -529,12 +540,29 @@ void ScannerThread::gatherEntities(MplusM::Common::CheckFunction checker,
     OD_LOG_P1("checkStuff = ", checkStuff); //####
     MplusM::Utilities::PortVector detectedPorts;
     MplusM::Common::StringVector  services;
+#if (defined(CHECK_FOR_STALE_PORTS) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS)))
+    int64                         now = Time::currentTimeMillis();
+#endif //defined(CHECK_FOR_STALE_PORTS) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS))
     
     // Mark our utility ports as known.
     _rememberedPorts.clear();
-    _rememberedPorts.insert(_inputOnlyPortName.c_str());
-    _rememberedPorts.insert(_outputOnlyPortName.c_str());
-    MplusM::Utilities::RemoveStalePorts();
+    _rememberedPorts.insert(_inputOnlyPortName);
+    _rememberedPorts.insert(_outputOnlyPortName);
+#if defined(CHECK_FOR_STALE_PORTS)
+# if defined(DO_SINGLE_CHECK_FOR_STALE_PORTS)
+    if (! _initialStaleCheckDone)
+    {
+        MplusM::Utilities::RemoveStalePorts();
+        _initialStaleCheckDone = true;
+    }
+# else // ! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS)
+    if ((_lastStaleTime + kMinStaleInterval) <= now)
+    {
+        MplusM::Utilities::RemoveStalePorts();
+        _lastStaleTime = now;
+    }
+# endif // ! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS)
+#endif // defined(CHECK_FOR_STALE_PORTS)
     MplusM::Utilities::GetDetectedPortList(detectedPorts);
     MplusM::Utilities::GetServiceNames(services, true, checker, checkStuff);
     // Record the services to be displayed.
@@ -570,6 +598,7 @@ void ScannerThread::run(void)
     OD_LOG_OBJENTER(); //####
     while (! threadShouldExit())
     {
+        OD_LOG("(! threadShouldExit())"); //####
         int64 loopStartTime = Time::currentTimeMillis();
         
         gatherEntities(CheckForExit, NULL);
@@ -584,7 +613,7 @@ void ScannerThread::run(void)
         // The data has been gathered, so it's safe for the foreground thread to process it - force
         // a repaint of the displayed panel, which will retrieve our data.
         triggerRepaint();
-        bool canProceed;
+        bool canProceed = false;
         bool needToLeave = false;
         
         do
@@ -594,12 +623,14 @@ void ScannerThread::run(void)
             {
                 if (threadShouldExit())
                 {
+                    OD_LOG("(threadShouldExit())"); //####
                     needToLeave = true;
                 }
                 sleep(VERY_SHORT_SLEEP);
             }
             // Wait for the scan data to be processed, and then continue with the next scan.
             bool locked = conditionallyAcquireForRead();
+            
             for ( ; (! locked) && (! needToLeave); locked = conditionallyAcquireForRead())
             {
                 for (int ii = 0, mm = (MIDDLE_SLEEP / VERY_SHORT_SLEEP);
@@ -607,20 +638,24 @@ void ScannerThread::run(void)
                 {
                     if (threadShouldExit())
                     {
+                        OD_LOG("(threadShouldExit())"); //####
                         needToLeave = true;
                     }
                 }
                 sleep(VERY_SHORT_SLEEP);
             }
             canProceed = _scanCanProceed;
+            OD_LOG_B1("canProceed <- ", canProceed); //####
             if (locked)
             {
+                OD_LOG("(locked)"); //####
                 relinquishFromRead();
             }
         }
         while ((! canProceed) && (! needToLeave));
         if (needToLeave)
         {
+            OD_LOG("(needToLeave)"); //####
             break;
         }
         
@@ -630,6 +665,7 @@ void ScannerThread::run(void)
             _workingData.clearOutData();
             if (! threadShouldExit())
             {
+                OD_LOG("(! threadShouldExit())"); //####
                 int64 loopEndTime = Time::currentTimeMillis();
                 int64 delayAmount = (loopStartTime + kMinScanInterval) - loopEndTime;
                 
@@ -703,10 +739,6 @@ void ScannerThread::unconditionallyAcquireForWrite(void)
     _lock.enterWrite();
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::unconditionallyAcquireForWrite
-
-#if defined(__APPLE__)
-# pragma mark Accessors
-#endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
 # pragma mark Global functions

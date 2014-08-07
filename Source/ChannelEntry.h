@@ -68,11 +68,11 @@ namespace ChannelManager
          @param portProtocol The protocol of the port.
          @param portKind What the port will be used for.
          @param direction The primary direction of the port. */
-        ChannelEntry(ChannelContainer *  parent,
-                     const String &      portName,
-                     const String &      portProtocol,
-                     const PortUsage     portKind,
-                     const PortDirection direction = kPortDirectionInput);
+        ChannelEntry(ChannelContainer *            parent,
+                     const yarp::os::ConstString & portName,
+                     const yarp::os::ConstString & portProtocol,
+                     const PortUsage               portKind,
+                     const PortDirection           direction = kPortDirectionInput);
         
         /*! @brief The destructor. */
         virtual ~ChannelEntry(void);
@@ -180,7 +180,7 @@ namespace ChannelManager
         
         /*! @brief Return the name of the associated port.
          @returns The name of the associated port. */
-        inline String getPortName(void)
+        inline yarp::os::ConstString getPortName(void)
         const
         {
             return _portName;
@@ -193,7 +193,7 @@ namespace ChannelManager
         
         /*! @brief Return the protocol of the associated port.
          @returns The protocol of the associated port. */
-        inline String getProtocol(void)
+        inline yarp::os::ConstString getProtocol(void)
         const
         {
             return _portProtocol;
@@ -210,7 +210,7 @@ namespace ChannelManager
         /*! @brief Returns @c true if there is an outgoing connection to the named port.
          @param otherPort The name of the destination port.
          @returns @c true if there is an outgoing connection to the named port. */
-        bool hasOutgoingConnectionTo(const String & otherPort)
+        bool hasOutgoingConnectionTo(const yarp::os::ConstString & otherPort)
         const;
         
         /*! @brief Mark all the connections as invalid. */
@@ -280,28 +280,16 @@ namespace ChannelManager
         void removeOutputConnection(ChannelEntry * other);
         
         /*! @brief Mark the port entry as the bottom-most (last) port entry in a panel. */
-        inline void setAsLastPort(void)
-        {
-            _isLastPort = true;
-        } // setAsLastPort
+        void setAsLastPort(void);
         
         /*! @brief Start displaying the connect marker. */
-        inline void setConnectMarker(void)
-        {
-            _drawConnectMarker = true;
-        } // setConnectMarker
+        void setConnectMarker(void);
         
         /*! @brief Start displaying the disconnect marker. */
-        inline void setDisconnectMarker(void)
-        {
-            _drawDisconnectMarker = true;
-        } // setDisconnectMarker
+        void setDisconnectMarker(void);
         
         /*! @brief Mark the port entry as not being the bottom-most port entry in a panel. */
-        inline void unsetAsLastPort(void)
-        {
-            _isLastPort = false;
-        } // unsetAsLastPort
+        void unsetAsLastPort(void);
         
         /*! @brief Return @c true if the current connection request was UDP and @c false
          otherwise.
@@ -326,13 +314,13 @@ namespace ChannelManager
         Channels _outputConnections;
         
         /*! @brief The name of the associated port. */
-        String _portName;
+        yarp::os::ConstString _portName;
         
         /*! @brief The protocol of the associated port. */
-        String _portProtocol;
+        yarp::os::ConstString _portProtocol;
         
         /*! @brief The text to be displayed for the channel entry. */
-        String _title;
+        yarp::os::ConstString _title;
         
         /*! @brief The container in which this is embedded. */
         ChannelContainer * _parent;

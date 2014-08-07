@@ -68,6 +68,14 @@
 /*! @brief The minimum time for a thread to sleep, in milliseconds. */
 # define SHORT_SLEEP (VERY_SHORT_SLEEP * 4)
 
+# define CHECK_FOR_STALE_PORTS /* Check for 'stale' ports in the scanner. */
+
+# define DO_SINGLE_CHECK_FOR_STALE_PORTS /* Perform an initial check for stale ports. */
+
+# define USE_OGDF_FOR_FIRST_POSITIONING_ONLY /* Use OGDF for the initial entity placement. */
+
+# define USE_OGDF_POSITIONING /* Use OGDF for new entity placement.*/
+
 /*! @brief A very short sleep, in milliseconds. */
 # define VERY_SHORT_SLEEP 5
 
@@ -177,10 +185,10 @@ namespace ChannelManager
     struct ConnectionDetails
     {
         /*! @brief The name of the destination port. */
-        String _inPortName;
+        yarp::os::ConstString _inPortName;
         
         /*! @brief The name of the source port. */
-        String _outPortName;
+        yarp::os::ConstString _outPortName;
         
         /*! @brief The mode of the connection. */
         MplusM::Common::ChannelMode _mode;
@@ -191,7 +199,7 @@ namespace ChannelManager
     struct NameAndDirection
     {
         /*! @brief The name of the port. */
-        String _name;
+        yarp::os::ConstString _name;
         
         /*! @brief The direction of the port. */
         PortDirection _direction;
@@ -202,7 +210,7 @@ namespace ChannelManager
     struct PortAndAssociates
     {
         /*! @brief The name of the port. */
-        String _name;
+        yarp::os::ConstString _name;
         
         /*! @brief The associates of the port. */
         MplusM::Utilities::PortAssociation _associates;
@@ -210,7 +218,7 @@ namespace ChannelManager
     }; // PortAndAssociates
     
     /*! @brief A mapping from port names to associates. */
-    typedef std::map<String, PortAndAssociates> AssociatesMap;
+    typedef std::map<yarp::os::ConstString, PortAndAssociates> AssociatesMap;
     
     /*! @brief The set of connections to the port. */
     typedef std::vector<Channel> Channels;
@@ -225,22 +233,22 @@ namespace ChannelManager
     typedef std::vector<EntityData *> EntitiesList;
     
     /*! @brief A mapping from strings to channels. */
-    typedef std::map<String, ChannelEntry *> ChannelEntryMap;
+    typedef std::map<yarp::os::ConstString, ChannelEntry *> ChannelEntryMap;
     
     /*! @brief A mapping from strings to ports. */
-    typedef std::map<String, PortData *> PortDataMap;
+    typedef std::map<yarp::os::ConstString, PortData *> PortDataMap;
     
     /*! @brief A collection of ports. */
     typedef std::vector<PortData *> Ports;
     
     /*! @brief A collection of port names. */
-    typedef std::set<String> PortSet;
+    typedef std::set<yarp::os::ConstString> PortSet;
     
     /*! @brief A mapping from strings to service descriptions. */
-    typedef std::map<String, MplusM::Utilities::ServiceDescriptor> ServiceMap;
+    typedef std::map<yarp::os::ConstString, MplusM::Utilities::ServiceDescriptor> ServiceMap;
     
     /*! @brief A collection of singular port names. */
-    typedef std::map<String, NameAndDirection> SingularPortMap;
+    typedef std::map<yarp::os::ConstString, NameAndDirection> SingularPortMap;
     
 } // ChannelManager
 

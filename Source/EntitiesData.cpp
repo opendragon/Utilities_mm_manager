@@ -68,7 +68,7 @@ using namespace ChannelManager;
 #endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
-# pragma mark Constructors and destructors
+# pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
 EntitiesData::EntitiesData(void)
@@ -85,15 +85,15 @@ EntitiesData::~EntitiesData(void)
 } // EntitiesData::~EntitiesData
 
 #if defined(__APPLE__)
-# pragma mark Actions
+# pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-void EntitiesData::addConnection(const String &              inName,
-                                 const String &              outName,
-                                 MplusM::Common::ChannelMode mode)
+void EntitiesData::addConnection(const yarp::os::ConstString & inName,
+                                 const yarp::os::ConstString & outName,
+                                 MplusM::Common::ChannelMode   mode)
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_S2s("inName = ", inName.toStdString(), "outName = ", outName.toStdString()); //####
+    OD_LOG_S2s("inName = ", inName, "outName = ", outName); //####
     ConnectionDetails details;
     
     details._inPortName = inName;
@@ -163,10 +163,6 @@ const
     OD_LOG_OBJEXIT_L(result); //####
     return result;
 } // EntitiesData::getNumberOfEntities
-
-#if defined(__APPLE__)
-# pragma mark Accessors
-#endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
 # pragma mark Global functions
