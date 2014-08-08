@@ -307,6 +307,9 @@ namespace ChannelManager
         /*! @brief The class that this class is derived from. */
         typedef Component inherited;
 
+        /*! @brief Remove all connections. */
+        void removeAllConnections(void);
+        
         /*! @brief The connections to the port. */
         ChannelConnections _inputConnections;
         

@@ -177,6 +177,9 @@ void ContentPanel::setEntityPositions(ScannerThread & scanner)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("scanner = ", &scanner); //####
+    float         fullHeight = _entitiesPanel->getHeight();
+    float         fullWidth = _entitiesPanel->getWidth();
+    Random        randomizer(Time::currentTimeMillis());
 #if defined(USE_OGDF_POSITIONING)
     ogdf::Graph * gg;
 #endif // defined(USE_OGDF_POSITIONING)
@@ -201,9 +204,6 @@ void ContentPanel::setEntityPositions(ScannerThread & scanner)
         
         if (ga)
         {
-            Random     randomizer(Time::currentTimeMillis());
-            float      fullHeight = _entitiesPanel->getHeight();
-            float      fullWidth = _entitiesPanel->getWidth();
             bool       positionsNeedUpdate = false;
             ogdf::node phantomNode = gg->newNode();
             
@@ -350,11 +350,31 @@ void ContentPanel::setEntityPositions(ScannerThread & scanner)
         }
         delete gg;
     }
+    else
+    {
+        for (size_t ii = 0, mm = _entitiesPanel->getNumberOfEntities(); mm > ii; ++ii)
+        {
+            ChannelContainer * aContainer = _entitiesPanel->getEntity(ii);
+            
+            if (aContainer)
+            {
+                float                  newX;
+                float                  newY;
+                juce::Rectangle<float> entityShape(aContainer->getLocalBounds().toFloat());
+                float                  hh = entityShape.getHeight();
+                float                  ww = entityShape.getWidth();
+                
+                if (aContainer->isNew())
+                {
+                    OD_LOG("(aContainer->isNew())"); //####
+                    newX = (randomizer.nextFloat() * (fullWidth - ww));
+                    newY = (randomizer.nextFloat() * (fullHeight - hh));
+                    aContainer->setTopLeftPosition(static_cast<int>(newX), static_cast<int>(newY));
+                }
+            }
+        }
+    }
 #else // ! defined(USE_OGDF_POSITIONING)
-    Random randomizer(Time::currentTimeMillis());
-    float  fullHeight = _entitiesPanel->getHeight();
-    float  fullWidth = _entitiesPanel->getWidth();
-    
     for (size_t ii = 0, mm = _entitiesPanel->getNumberOfEntities(); mm > ii; ++ii)
     {
         ChannelContainer * aContainer = _entitiesPanel->getEntity(ii);

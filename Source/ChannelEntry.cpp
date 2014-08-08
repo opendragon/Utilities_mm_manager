@@ -509,6 +509,7 @@ ChannelEntry::~ChannelEntry(void)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("getPortName() = ", getPortName()); //####
+    removeAllConnections();
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::~ChannelEntry
 
@@ -542,7 +543,7 @@ void ChannelEntry::addInputConnection(ChannelEntry *              other,
                 }
                 
             }
-        }
+        }            
         if (canAdd)
         {
             ChannelInfo newConnection;
@@ -1113,6 +1114,34 @@ void ChannelEntry::paint(Graphics & gg)
 } // ChannelEntry::paint
 #include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
+
+void ChannelEntry::removeAllConnections(void)
+{
+    OD_LOG_OBJENTER(); //####
+    for (ChannelConnections::iterator walker(_inputConnections.begin());
+         _inputConnections.end() != walker; ++walker)
+    {
+        ChannelInfo * candidate(&*walker);
+        
+        if (candidate && candidate->_otherChannel)
+        {
+            candidate->_otherChannel->removeOutputConnection(this);
+        }
+    }
+    _inputConnections.clear();
+    for (ChannelConnections::iterator walker(_outputConnections.begin());
+         _outputConnections.end() != walker; ++walker)
+    {
+        ChannelInfo * candidate(&*walker);
+        
+        if (candidate && candidate->_otherChannel)
+        {
+            candidate->_otherChannel->removeInputConnection(this);
+        }
+    }
+    _outputConnections.clear();
+    OD_LOG_EXIT(); //####
+} // ChannelEntry::removeAllConnections
 
 void ChannelEntry::removeInputConnection(ChannelEntry * other)
 {
