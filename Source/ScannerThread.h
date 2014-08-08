@@ -166,8 +166,9 @@ namespace ChannelManager
         
         /*! @brief Identify the YARP network entities.
          @param checker A function that provides for early exit from loops.
-         @param checkStuff The private data for the early exit function. */
-        void gatherEntities(MplusM::Common::CheckFunction checker,
+         @param checkStuff The private data for the early exit function.
+         @returns @c true if the network entity information was gathered and @c false otherwise. */
+        bool gatherEntities(MplusM::Common::CheckFunction checker,
                             void *                        checkStuff);
         
         /*! @brief Tell the displayed panel to do a repaint. */

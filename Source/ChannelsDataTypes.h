@@ -62,6 +62,9 @@
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
 
+/*! @brief A longer sleep, in milliseconds. */
+# define LONG_SLEEP (VERY_SHORT_SLEEP * 100)
+
 /*! @brief A slightly longer sleep, in milliseconds. */
 # define MIDDLE_SLEEP (VERY_SHORT_SLEEP * 7)
 

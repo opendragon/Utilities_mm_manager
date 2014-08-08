@@ -531,21 +531,18 @@ PortDirection ScannerThread::determineDirection(ChannelEntry *                ol
     return result;
 } // ScannerThread::determineDirection
 
-void ScannerThread::gatherEntities(MplusM::Common::CheckFunction checker,
+bool ScannerThread::gatherEntities(MplusM::Common::CheckFunction checker,
                                    void *                        checkStuff)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("checkStuff = ", checkStuff); //####
+    bool                          okSoFar = false;
     MplusM::Utilities::PortVector detectedPorts;
-    MplusM::Common::StringVector  services;
 #if (defined(CHECK_FOR_STALE_PORTS) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS)))
     int64                         now = Time::currentTimeMillis();
 #endif //defined(CHECK_FOR_STALE_PORTS) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS))
     
     // Mark our utility ports as known.
-    _rememberedPorts.clear();
-    _rememberedPorts.insert(_inputOnlyPortName);
-    _rememberedPorts.insert(_outputOnlyPortName);
 #if defined(CHECK_FOR_STALE_PORTS)
 # if defined(DO_SINGLE_CHECK_FOR_STALE_PORTS)
     if (! _initialStaleCheckDone)
@@ -561,20 +558,29 @@ void ScannerThread::gatherEntities(MplusM::Common::CheckFunction checker,
     }
 # endif // ! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS)
 #endif // defined(CHECK_FOR_STALE_PORTS)
-    MplusM::Utilities::GetDetectedPortList(detectedPorts);
-    MplusM::Utilities::GetServiceNames(services, true, checker, checkStuff);
-    // Record the services to be displayed.
-    addServices(services, checker, checkStuff);
-    // Record the ports that have associates.
-    if (MplusM::Utilities::CheckForRegistryService(detectedPorts))
+    if (MplusM::Utilities::GetDetectedPortList(detectedPorts))
     {
-        addPortsWithAssociates(detectedPorts, checker, checkStuff);
+        MplusM::Common::StringVector services;
+
+        _rememberedPorts.clear();
+        _rememberedPorts.insert(_inputOnlyPortName);
+        _rememberedPorts.insert(_outputOnlyPortName);
+        MplusM::Utilities::GetServiceNames(services, true, checker, checkStuff);
+        // Record the services to be displayed.
+        addServices(services, checker, checkStuff);
+        // Record the ports that have associates.
+        if (MplusM::Utilities::CheckForRegistryService(detectedPorts))
+        {
+            addPortsWithAssociates(detectedPorts, checker, checkStuff);
+        }
+        // Record the ports that are standalone.
+        addRegularPortEntities(detectedPorts, checker, checkStuff);
+        // Record the port connections.
+        addPortConnections(detectedPorts, checker, checkStuff);
+        okSoFar = true;
     }
-    // Record the ports that are standalone.
-    addRegularPortEntities(detectedPorts, checker, checkStuff);
-    // Record the port connections.
-    addPortConnections(detectedPorts, checker, checkStuff);
-    OD_LOG_OBJEXIT(); //####
+    OD_LOG_OBJEXIT_B(okSoFar); //####
+    return okSoFar;
 } // ScannerThread::gatherEntities
 
 void ScannerThread::relinquishFromRead(void)
@@ -597,39 +603,26 @@ void ScannerThread::run(void)
     while (! threadShouldExit())
     {
         OD_LOG("(! threadShouldExit())"); //####
-        int64 loopStartTime = Time::currentTimeMillis();
-        
-        gatherEntities(CheckForExit, NULL);
-        addEntities();
-        // Indicate that the scan data is available.
-        unconditionallyAcquireForWrite();
-        _scanIsComplete = true;
-        _scanCanProceed = false;
-        OD_LOG_B2("_scanIsComplete <- ", _scanIsComplete, "_scanCanProceed <- ", //####
-                  _scanCanProceed); //####
-        relinquishFromWrite();
-        // The data has been gathered, so it's safe for the foreground thread to process it - force
-        // a repaint of the displayed panel, which will retrieve our data.
-        triggerRepaint();
-        bool canProceed = false;
         bool needToLeave = false;
         
-        do
+        if (gatherEntities(CheckForExit, NULL))
         {
-            for (int ii = 0, mm = (MIDDLE_SLEEP / VERY_SHORT_SLEEP); (mm > ii) && (! needToLeave);
-                 ++ii)
-            {
-                if (threadShouldExit())
-                {
-                    OD_LOG("(threadShouldExit())"); //####
-                    needToLeave = true;
-                }
-                sleep(VERY_SHORT_SLEEP);
-            }
-            // Wait for the scan data to be processed, and then continue with the next scan.
-            bool locked = conditionallyAcquireForRead();
+            int64 loopStartTime = Time::currentTimeMillis();
             
-            for ( ; (! locked) && (! needToLeave); locked = conditionallyAcquireForRead())
+            addEntities();
+            // Indicate that the scan data is available.
+            unconditionallyAcquireForWrite();
+            _scanIsComplete = true;
+            _scanCanProceed = false;
+            OD_LOG_B2("_scanIsComplete <- ", _scanIsComplete, "_scanCanProceed <- ", //####
+                      _scanCanProceed); //####
+            relinquishFromWrite();
+            // The data has been gathered, so it's safe for the foreground thread to process it - force
+            // a repaint of the displayed panel, which will retrieve our data.
+            triggerRepaint();
+            bool canProceed = false;
+            
+            do
             {
                 for (int ii = 0, mm = (MIDDLE_SLEEP / VERY_SHORT_SLEEP);
                      (mm > ii) && (! needToLeave); ++ii)
@@ -639,62 +632,97 @@ void ScannerThread::run(void)
                         OD_LOG("(threadShouldExit())"); //####
                         needToLeave = true;
                     }
+                    sleep(VERY_SHORT_SLEEP);
+                }
+                // Wait for the scan data to be processed, and then continue with the next scan.
+                bool locked = conditionallyAcquireForRead();
+                
+                for ( ; (! locked) && (! needToLeave); locked = conditionallyAcquireForRead())
+                {
+                    for (int ii = 0, mm = (MIDDLE_SLEEP / VERY_SHORT_SLEEP);
+                         (mm > ii) && (! needToLeave); ++ii)
+                    {
+                        if (threadShouldExit())
+                        {
+                            OD_LOG("(threadShouldExit())"); //####
+                            needToLeave = true;
+                        }
+                        sleep(VERY_SHORT_SLEEP);
+                    }
+                }
+                canProceed = _scanCanProceed;
+                OD_LOG_B1("canProceed <- ", canProceed); //####
+                if (locked)
+                {
+                    OD_LOG("(locked)"); //####
+                    relinquishFromRead();
+                }
+            }
+            while ((! canProceed) && (! needToLeave));
+            if (needToLeave)
+            {
+                OD_LOG("(needToLeave)"); //####
+                break;
+            }
+            
+            if (canProceed)
+            {
+                OD_LOG("(canProceed)"); //####
+                _workingData.clearOutData();
+                if (! threadShouldExit())
+                {
+                    OD_LOG("(! threadShouldExit())"); //####
+                    int64 loopEndTime = Time::currentTimeMillis();
+                    int64 delayAmount = (loopStartTime + kMinScanInterval) - loopEndTime;
+                    
+                    if (kMinScanInterval < delayAmount)
+                    {
+                        delayAmount = kMinScanInterval;
+                    }
+                    if (0 < delayAmount)
+                    {
+                        wait(delayAmount);
+                    }
+                    else
+                    {
+                        char numBuff[30];
+                        
+#if MAC_OR_LINUX_
+                        snprintf(numBuff, sizeof(numBuff), "%g",
+                                 (loopEndTime - loopStartTime) / 1000.0);
+                        yarp::os::impl::Logger & theLogger = MplusM::Common::GetLogger();
+                        
+                        theLogger.info(yarp::os::ConstString("actual interval = ") + numBuff +
+                                       yarp::os::ConstString(" seconds"));
+#else // ! MAC_OR_LINUX_
+      //                    _snprintf(numBuff, sizeof(numBuff) - 1, "%g",
+      //                              (loopEndTime - loopStartTime) / 1000.0);
+      //                    // Correct for the weird behaviour of _snprintf
+      //                    numBuff[sizeof(numBuff) - 1] = '\0';
+#endif // ! MAC_OR_LINUX_
+                        yield();
+                    }
+                }
+            }
+        }
+        else
+        {
+            for (int ii = 0, mm = (LONG_SLEEP / VERY_SHORT_SLEEP); (mm > ii) && (! needToLeave);
+                 ++ii)
+            {
+                if (threadShouldExit())
+                {
+                    OD_LOG("(threadShouldExit())"); //####
+                    needToLeave = true;
                 }
                 sleep(VERY_SHORT_SLEEP);
             }
-            canProceed = _scanCanProceed;
-            OD_LOG_B1("canProceed <- ", canProceed); //####
-            if (locked)
+            if (needToLeave)
             {
-                OD_LOG("(locked)"); //####
-                relinquishFromRead();
+                OD_LOG("(needToLeave)"); //####
+                break;
             }
-        }
-        while ((! canProceed) && (! needToLeave));
-        if (needToLeave)
-        {
-            OD_LOG("(needToLeave)"); //####
-            break;
-        }
-        
-        if (canProceed)
-        {
-            OD_LOG("(canProceed)"); //####
-            _workingData.clearOutData();
-            if (! threadShouldExit())
-            {
-                OD_LOG("(! threadShouldExit())"); //####
-                int64 loopEndTime = Time::currentTimeMillis();
-                int64 delayAmount = (loopStartTime + kMinScanInterval) - loopEndTime;
-                
-                if (kMinScanInterval < delayAmount)
-                {
-                    delayAmount = kMinScanInterval;
-                }
-                if (0 < delayAmount)
-                {
-                    wait(delayAmount);
-                }
-                else
-                {
-                    char numBuff[30];
-                    
-#if MAC_OR_LINUX_
-                    snprintf(numBuff, sizeof(numBuff), "%g",
-                             (loopEndTime - loopStartTime) / 1000.0);
-                    yarp::os::impl::Logger & theLogger = MplusM::Common::GetLogger();
-                    
-                    theLogger.info(yarp::os::ConstString("actual interval = ") + numBuff +
-                                   yarp::os::ConstString(" seconds"));
-#else // ! MAC_OR_LINUX_
-//                    _snprintf(numBuff, sizeof(numBuff) - 1, "%g",
-//                              (loopEndTime - loopStartTime) / 1000.0);
-//                    // Correct for the weird behaviour of _snprintf
-//                    numBuff[sizeof(numBuff) - 1] = '\0';
-#endif // ! MAC_OR_LINUX_
-                    yield();
-                }
-            }
+            
         }
     }
     OD_LOG_OBJEXIT(); //####
