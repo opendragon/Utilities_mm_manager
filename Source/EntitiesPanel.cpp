@@ -301,7 +301,6 @@ void EntitiesPanel::clearAllVisitedFlags(void)
         if (anEntity)
         {
             anEntity->clearVisited();
-            anEntity->invalidateConnections();
         }
     }
     OD_LOG_OBJEXIT(); //####
@@ -496,6 +495,21 @@ const
     OD_LOG_OBJEXIT_L(result); //####
     return result;
 } // EntitiesPanel::getNumberOfEntities
+
+void EntitiesPanel::invalidateAllConnections(void)
+{
+    OD_LOG_OBJENTER(); //####
+    for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
+    {
+        ChannelContainer * anEntity = *it;
+        
+        if (anEntity)
+        {
+            anEntity->invalidateConnections();
+        }
+    }
+    OD_LOG_OBJEXIT(); //####
+} // EntitiesPanel::invalidateAllConnections
 
 ChannelEntry * EntitiesPanel::locateEntry(const Point<float> & location)
 const

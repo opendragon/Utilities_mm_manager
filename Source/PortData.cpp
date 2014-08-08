@@ -102,10 +102,10 @@ void PortData::addInputConnection(PortData *                  other,
     {
         bool canAdd = true;
         
-        for (Channels::iterator walker(_inputConnections.begin());
+        for (PortConnections::iterator walker(_inputConnections.begin());
              _inputConnections.end() != walker; ++walker)
         {
-            Channel * candidate(&*walker);
+            PortInfo * candidate(&*walker);
             
             if (candidate)
             {
@@ -122,7 +122,7 @@ void PortData::addInputConnection(PortData *                  other,
         }
         if (canAdd)
         {
-            Channel newConnection;
+            PortInfo newConnection;
             
             newConnection._otherPort = other;
             newConnection._connectionMode = mode;
@@ -142,10 +142,10 @@ void PortData::addOutputConnection(PortData *                  other,
     {
         bool canAdd = true;
         
-        for (Channels::iterator walker(_outputConnections.begin());
+        for (PortConnections::iterator walker(_outputConnections.begin());
              _outputConnections.end() != walker; ++walker)
         {
-            Channel * candidate(&*walker);
+            PortInfo * candidate(&*walker);
             
             if (candidate)
             {
@@ -162,7 +162,7 @@ void PortData::addOutputConnection(PortData *                  other,
         }
         if (canAdd)
         {
-            Channel newConnection;
+            PortInfo newConnection;
             
             newConnection._otherPort = other;
             newConnection._connectionMode = mode;
@@ -180,10 +180,10 @@ const
     OD_LOG_S1s("otherPort = ", otherPort); //####
     bool result = false;
     
-    for (Channels::const_iterator walker(_outputConnections.begin());
+    for (PortConnections::const_iterator walker(_outputConnections.begin());
          _outputConnections.end() != walker; ++walker)
     {
-        const Channel * candidate(&*walker);
+        const PortInfo * candidate(&*walker);
         
         if (candidate && candidate->_otherPort &&
             (candidate->_otherPort->getPortName() == otherPort))
@@ -200,20 +200,20 @@ const
 void PortData::invalidateConnections(void)
 {
     OD_LOG_OBJENTER(); //####
-    for (Channels::iterator walker(_inputConnections.begin()); _inputConnections.end() != walker;
-         ++walker)
+    for (PortConnections::iterator walker(_inputConnections.begin());
+         _inputConnections.end() != walker; ++walker)
     {
-        Channel * candidate(&*walker);
+        PortInfo * candidate(&*walker);
         
         if (candidate)
         {
             candidate->_valid = false;
         }
     }
-    for (Channels::iterator walker(_outputConnections.begin()); _outputConnections.end() != walker;
-         ++walker)
+    for (PortConnections::iterator walker(_outputConnections.begin());
+         _outputConnections.end() != walker; ++walker)
     {
-        Channel * candidate(&*walker);
+        PortInfo * candidate(&*walker);
         
         if (candidate)
         {
@@ -229,11 +229,11 @@ void PortData::removeInputConnection(PortData * other)
     OD_LOG_P1("other = ", other); //####
     if (other)
     {
-        Channels::iterator walker(_inputConnections.begin());
+        PortConnections::iterator walker(_inputConnections.begin());
         
         for ( ; _inputConnections.end() != walker; ++walker)
         {
-            Channel * candidate(&*walker);
+            PortInfo * candidate(&*walker);
             
             if (candidate && (candidate->_otherPort == other))
             {
@@ -257,11 +257,11 @@ void PortData::removeInvalidConnections(void)
     do
     {
         keepGoing = false;
-        Channels::iterator walker(_inputConnections.begin());
+        PortConnections::iterator walker(_inputConnections.begin());
         
         for ( ; _inputConnections.end() != walker; ++walker)
         {
-            Channel * candidate(&*walker);
+            PortInfo * candidate(&*walker);
             
             if (candidate && (! candidate->_valid))
             {
@@ -279,11 +279,11 @@ void PortData::removeInvalidConnections(void)
     do
     {
         keepGoing = false;
-        Channels::iterator walker(_outputConnections.begin());
+        PortConnections::iterator walker(_outputConnections.begin());
         
         for ( ; _outputConnections.end() != walker; ++walker)
         {
-            Channel * candidate(&*walker);
+            PortInfo * candidate(&*walker);
             
             if (candidate && (! candidate->_valid))
             {
@@ -307,11 +307,11 @@ void PortData::removeOutputConnection(PortData * other)
     OD_LOG_P1("other = ", other); //####
     if (other)
     {
-        Channels::iterator walker(_outputConnections.begin());
+        PortConnections::iterator walker(_outputConnections.begin());
         
         for ( ; _outputConnections.end() != walker; ++walker)
         {
-            const Channel * candidate(&*walker);
+            const PortInfo * candidate(&*walker);
             
             if (candidate && (candidate->_otherPort == other))
             {

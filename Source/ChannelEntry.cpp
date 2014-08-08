@@ -525,10 +525,10 @@ void ChannelEntry::addInputConnection(ChannelEntry *              other,
     {
         bool canAdd = true;
         
-        for (Channels::iterator walker(_inputConnections.begin());
+        for (ChannelConnections::iterator walker(_inputConnections.begin());
              _inputConnections.end() != walker; ++walker)
         {
-            Channel * candidate(&*walker);
+            ChannelInfo * candidate(&*walker);
             
             if (candidate)
             {
@@ -545,7 +545,7 @@ void ChannelEntry::addInputConnection(ChannelEntry *              other,
         }
         if (canAdd)
         {
-            Channel newConnection;
+            ChannelInfo newConnection;
             
             newConnection._otherChannel = other;
             newConnection._connectionMode = mode;
@@ -565,10 +565,10 @@ void ChannelEntry::addOutputConnection(ChannelEntry *              other,
     {
         bool canAdd = true;
         
-        for (Channels::iterator walker(_outputConnections.begin());
+        for (ChannelConnections::iterator walker(_outputConnections.begin());
              _outputConnections.end() != walker; ++walker)
         {
-            Channel * candidate(&*walker);
+            ChannelInfo * candidate(&*walker);
             
             if (candidate)
             {
@@ -585,7 +585,7 @@ void ChannelEntry::addOutputConnection(ChannelEntry *              other,
         }
         if (canAdd)
         {
-            Channel newConnection;
+            ChannelInfo newConnection;
             
             newConnection._otherChannel = other;
             newConnection._connectionMode = mode;
@@ -719,10 +719,10 @@ void ChannelEntry::drawOutgoingConnections(Graphics & gg)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("gg = ", &gg); //####
-    for (Channels::const_iterator walker(_outputConnections.begin());
+    for (ChannelConnections::const_iterator walker(_outputConnections.begin());
          _outputConnections.end() != walker; ++walker)
     {
-        const Channel * candidate(&*walker);
+        const ChannelInfo * candidate(&*walker);
         
         if (candidate)
         {
@@ -783,10 +783,10 @@ const
     OD_LOG_S1s("otherPort = ", otherPort); //####
     bool result = false;
     
-    for (Channels::const_iterator walker(_outputConnections.begin());
+    for (ChannelConnections::const_iterator walker(_outputConnections.begin());
          _outputConnections.end() != walker; ++walker)
     {
-        const Channel * candidate(&*walker);
+        const ChannelInfo * candidate(&*walker);
         
         if (candidate && candidate->_otherChannel &&
             (candidate->_otherChannel->getPortName() == otherPort))
@@ -803,20 +803,20 @@ const
 void ChannelEntry::invalidateConnections(void)
 {
     OD_LOG_OBJENTER(); //####
-    for (Channels::iterator walker(_inputConnections.begin()); _inputConnections.end() != walker;
-         ++walker)
+    for (ChannelConnections::iterator walker(_inputConnections.begin());
+         _inputConnections.end() != walker; ++walker)
     {
-        Channel * candidate(&*walker);
+        ChannelInfo * candidate(&*walker);
         
         if (candidate)
         {
             candidate->_valid = false;
         }
     }
-    for (Channels::iterator walker(_outputConnections.begin()); _outputConnections.end() != walker;
-         ++walker)
+    for (ChannelConnections::iterator walker(_outputConnections.begin());
+         _outputConnections.end() != walker; ++walker)
     {
-        Channel * candidate(&*walker);
+        ChannelInfo * candidate(&*walker);
         
         if (candidate)
         {
@@ -1120,11 +1120,11 @@ void ChannelEntry::removeInputConnection(ChannelEntry * other)
     OD_LOG_P1("other = ", other); //####
     if (other)
     {
-        Channels::iterator walker(_inputConnections.begin());
+        ChannelConnections::iterator walker(_inputConnections.begin());
         
         for ( ; _inputConnections.end() != walker; ++walker)
         {
-            Channel * candidate(&*walker);
+            ChannelInfo * candidate(&*walker);
             
             if (candidate && (candidate->_otherChannel == other))
             {
@@ -1148,11 +1148,11 @@ void ChannelEntry::removeInvalidConnections(void)
     do
     {
         keepGoing = false;
-        Channels::iterator walker(_inputConnections.begin());
+        ChannelConnections::iterator walker(_inputConnections.begin());
         
         for ( ; _inputConnections.end() != walker; ++walker)
         {
-            Channel * candidate(&*walker);
+            ChannelInfo * candidate(&*walker);
             
             if (candidate && (! candidate->_valid))
             {
@@ -1170,11 +1170,11 @@ void ChannelEntry::removeInvalidConnections(void)
     do
     {
         keepGoing = false;
-        Channels::iterator walker(_outputConnections.begin());
+        ChannelConnections::iterator walker(_outputConnections.begin());
         
         for ( ; _outputConnections.end() != walker; ++walker)
         {
-            Channel * candidate(&*walker);
+            ChannelInfo * candidate(&*walker);
             
             if (candidate && (! candidate->_valid))
             {
@@ -1198,11 +1198,11 @@ void ChannelEntry::removeOutputConnection(ChannelEntry * other)
     OD_LOG_P1("other = ", other); //####
     if (other)
     {
-        Channels::iterator walker(_outputConnections.begin());
+        ChannelConnections::iterator walker(_outputConnections.begin());
         
         for ( ; _outputConnections.end() != walker; ++walker)
         {
-            const Channel * candidate(&*walker);
+            const ChannelInfo * candidate(&*walker);
             
             if (candidate && (candidate->_otherChannel == other))
             {

@@ -167,6 +167,9 @@ namespace ChannelManager
         size_t getNumberOfEntities(void)
         const;
         
+        /*! @brief Mark all connections as invalid. */
+        void invalidateAllConnections(void);
+        
         /*! @brief Return @c true if dragging a connection and @c false otherwise.
          @returns @c true if dragging a connection and @c false otherwise. */
         inline bool isDragActive(void)

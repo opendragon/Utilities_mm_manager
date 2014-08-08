@@ -41,8 +41,6 @@
 #include "ChannelContainer.h"
 #include "ChannelEntry.h"
 #include "ChannelManagerWindow.h"
-#include "EntitiesData.h"
-#include "EntitiesPanel.h"
 #include "EntityData.h"
 #include "PortData.h"
 #include "ScannerThread.h"
@@ -255,7 +253,7 @@ void ContentPanel::setEntityPositions(ScannerThread & scanner)
             if (positionsNeedUpdate)
             {
                 OD_LOG("(positionsNeedUpdate)"); //####
-                                                 // Set up the edges (connections)
+                // Set up the edges (connections)
                 for (size_t ii = 0, mm = _entitiesPanel->getNumberOfEntities(); mm > ii; ++ii)
                 {
                     ChannelContainer * aContainer = _entitiesPanel->getEntity(ii);
@@ -275,7 +273,8 @@ void ContentPanel::setEntityPositions(ScannerThread & scanner)
                                 
                                 if (aChannel)
                                 {
-                                    const Channels & outputs(aChannel->getOutputConnections());
+                                    const ChannelConnections & outputs =
+                                                                aChannel->getOutputConnections();
                                     
                                     for (size_t kk = 0, ll = outputs.size(); ll > kk; ++kk)
                                     {
@@ -300,7 +299,8 @@ void ContentPanel::setEntityPositions(ScannerThread & scanner)
                                             }
                                         }
                                     }
-                                    const Channels & inputs(aChannel->getInputConnections());
+                                    const ChannelConnections & inputs =
+                                                                    aChannel->getInputConnections();
                                     
                                     if (0 < inputs.size())
                                     {
@@ -390,6 +390,7 @@ void ContentPanel::updatePanels(ScannerThread & scanner)
     // old entity as known.
     _entitiesPanel->clearAllVisitedFlags();
     _entitiesPanel->clearAllNewlyCreatedFlags();
+    _entitiesPanel->invalidateAllConnections();
     for (size_t ii = 0, mm = workingData.getNumberOfEntities(); mm > ii; ++ii)
     {
         EntityData * anEntity = workingData.getEntity(ii);

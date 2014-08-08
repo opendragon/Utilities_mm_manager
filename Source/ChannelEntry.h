@@ -151,7 +151,7 @@ namespace ChannelManager
         
         /*! @brief Return the set of input connections to the port.
          @returns The set of input connections to the port. */
-        inline const Channels & getInputConnections(void)
+        inline const ChannelConnections & getInputConnections(void)
         const
         {
             return _inputConnections;
@@ -159,7 +159,7 @@ namespace ChannelManager
         
         /*! @brief Return the set of output connections to the port.
          @returns The set of output connections to the port. */
-        inline const Channels & getOutputConnections(void)
+        inline const ChannelConnections & getOutputConnections(void)
         const
         {
             return _outputConnections;
@@ -308,10 +308,10 @@ namespace ChannelManager
         typedef Component inherited;
 
         /*! @brief The connections to the port. */
-        Channels _inputConnections;
+        ChannelConnections _inputConnections;
         
         /*! @brief The connections to the port. */
-        Channels _outputConnections;
+        ChannelConnections _outputConnections;
         
         /*! @brief The name of the associated port. */
         yarp::os::ConstString _portName;

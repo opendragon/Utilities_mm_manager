@@ -160,26 +160,19 @@ namespace ChannelManager
         
     }; // PortUsage
     
-    /*! @brief The form of a connection. */
-    struct Channel
+    /*! @brief The form of a channel connection. */
+    struct ChannelInfo
     {
-        union
-        {
-            /*! @brief The 'other-end' of a connection, as a ChannelEntry. */
-            ChannelEntry * _otherChannel;
+        /*! @brief The 'other-end' of a channel connection, as a ChannelEntry. */
+        ChannelEntry * _otherChannel;
             
-            /*! @brief The 'other-end' of a connection, as PortData. */
-            PortData * _otherPort;
-
-        };
-        
-        /*! @brief The kind of connection. */
+        /*! @brief The kind of channel connection. */
         MplusM::Common::ChannelMode _connectionMode;
         
-        /*! @brief @c true if the connection is valid and @c false otherwise. */
+        /*! @brief @c true if the channel connection is valid and @c false otherwise. */
         bool _valid;
         
-    }; // Channel
+    }; // ChannelInfo
     
     /*! @brief The information for a connection. */
     struct ConnectionDetails
@@ -217,11 +210,25 @@ namespace ChannelManager
         
     }; // PortAndAssociates
     
+    /*! @brief The form of a port connection. */
+    struct PortInfo
+    {
+        /*! @brief The 'other-end' of a connection, as PortData. */
+        PortData * _otherPort;
+        
+        /*! @brief The kind of connection. */
+        MplusM::Common::ChannelMode _connectionMode;
+        
+        /*! @brief @c true if the port connection is valid and @c false otherwise. */
+        bool _valid;
+        
+    }; // PortInfo
+    
     /*! @brief A mapping from port names to associates. */
     typedef std::map<yarp::os::ConstString, PortAndAssociates> AssociatesMap;
     
-    /*! @brief The set of connections to the port. */
-    typedef std::vector<Channel> Channels;
+    /*! @brief The set of connections to the channel. */
+    typedef std::vector<ChannelInfo> ChannelConnections;
     
     /*! @brief A collection of connections. */
     typedef std::vector<ConnectionDetails> ConnectionList;
@@ -240,6 +247,9 @@ namespace ChannelManager
     
     /*! @brief A collection of ports. */
     typedef std::vector<PortData *> Ports;
+    
+    /*! @brief The set of connections to the port. */
+    typedef std::vector<PortInfo> PortConnections;
     
     /*! @brief A collection of port names. */
     typedef std::set<yarp::os::ConstString> PortSet;
