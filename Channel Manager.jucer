@@ -27,36 +27,45 @@
       <FILE id="BcwaEb" name="ContentPanel.cpp" compile="1" resource="0"
             file="Source/ContentPanel.cpp"/>
       <FILE id="N8yfyG" name="ContentPanel.h" compile="0" resource="0" file="Source/ContentPanel.h"/>
+      <FILE id="mNC2dm" name="EntitiesData.cpp" compile="1" resource="0"
+            file="Source/EntitiesData.cpp"/>
+      <FILE id="GnLhhw" name="EntitiesData.h" compile="0" resource="0" file="Source/EntitiesData.h"/>
       <FILE id="Nr7TgF" name="EntitiesPanel.cpp" compile="1" resource="0"
             file="Source/EntitiesPanel.cpp"/>
       <FILE id="n9ESXv" name="EntitiesPanel.h" compile="0" resource="0" file="Source/EntitiesPanel.h"/>
+      <FILE id="FXL1dR" name="EntityData.cpp" compile="1" resource="0" file="Source/EntityData.cpp"/>
+      <FILE id="NSCSdA" name="EntityData.h" compile="0" resource="0" file="Source/EntityData.h"/>
+      <FILE id="RRfNdd" name="PortData.cpp" compile="1" resource="0" file="Source/PortData.cpp"/>
+      <FILE id="SpsF1a" name="PortData.h" compile="0" resource="0" file="Source/PortData.h"/>
       <FILE id="jDwYaF" name="ScannerThread.cpp" compile="1" resource="0"
             file="Source/ScannerThread.cpp"/>
       <FILE id="WNpmUm" name="ScannerThread.h" compile="0" resource="0" file="Source/ScannerThread.h"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <XCODE_MAC targetFolder="Builds/MacOSX">
+    <XCODE_MAC targetFolder="Builds/MacOSX" externalLibraries="YARP_OS&#10;YARP_init&#10;mpmCommon&#10;odLogging&#10;OGDF">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" osxSDK="default" osxCompatibility="default" osxArchitecture="default"
-                       isDebug="1" optimisation="1" targetName="Channel Manager"/>
+                       isDebug="1" optimisation="1" targetName="Channel Manager" headerPath="/Users/johnty/yarp/src/libYARP_OS/include&#10;/Users/johnty/yarp/generated_include&#10;/Users/johnty/Downloads/OGDF&#10;/Users/johnty/Documents/MPlusM&#10;/Users/johnty/Documents/ACE_wrappers"
+                       libraryPath="/Users/johnty/Downloads/OGDF/_release&#10;/Users/johnty/yarp/lib&#10;/Users/johnty/Documents/MPlusM/mpm&#10;/Users/johnty/Documents/MPlusM/odl"/>
         <CONFIGURATION name="Release" osxSDK="default" osxCompatibility="default" osxArchitecture="default"
-                       isDebug="0" optimisation="2" targetName="Channel Manager"/>
+                       isDebug="0" optimisation="2" targetName="Channel Manager" libraryPath="/Users/johnty/Downloads/OGDF/_release&#10;/Users/johnty/yarp/lib&#10;/Users/johnty/Documents/MPlusM/mpm&#10;/Users/johnty/Documents/MPlusM/odl"
+                       headerPath="/Users/johnty/yarp/src/libYARP_OS/include&#10;/Users/johnty/yarp/generated_include&#10;/Users/johnty/Downloads/OGDF&#10;/Users/johnty/Documents/MPlusM&#10;/Users/johnty/Documents/ACE_wrappers"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
-        <MODULEPATH id="juce_core" path="JUCE/modules"/>
-        <MODULEPATH id="juce_events" path="JUCE/modules"/>
-        <MODULEPATH id="juce_graphics" path="JUCE/modules"/>
-        <MODULEPATH id="juce_data_structures" path="JUCE/modules"/>
-        <MODULEPATH id="juce_gui_basics" path="JUCE/modules"/>
-        <MODULEPATH id="juce_gui_extra" path="JUCE/modules"/>
-        <MODULEPATH id="juce_cryptography" path="JUCE/modules"/>
-        <MODULEPATH id="juce_video" path="JUCE/modules"/>
-        <MODULEPATH id="juce_opengl" path="JUCE/modules"/>
-        <MODULEPATH id="juce_audio_basics" path="JUCE/modules"/>
-        <MODULEPATH id="juce_audio_devices" path="JUCE/modules"/>
-        <MODULEPATH id="juce_audio_formats" path="JUCE/modules"/>
-        <MODULEPATH id="juce_audio_processors" path="JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="/Users/johnty/Documents/JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="/Users/johnty/Documents/JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="/Users/johnty/Documents/JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="/Users/johnty/Documents/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="/Users/johnty/Documents/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="/Users/johnty/Documents/JUCE/modules"/>
+        <MODULEPATH id="juce_cryptography" path="/Users/johnty/Documents/JUCE/modules"/>
+        <MODULEPATH id="juce_video" path="/Users/johnty/Documents/JUCE/modules"/>
+        <MODULEPATH id="juce_opengl" path="/Users/johnty/Documents/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="/Users/johnty/Documents/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="/Users/johnty/Documents/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="/Users/johnty/Documents/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="/Users/johnty/Documents/JUCE/modules"/>
       </MODULEPATHS>
     </XCODE_MAC>
     <VS2012 targetFolder="Builds/VisualStudio2012" externalLibraries="ACE.lib&#10;YARP_OS.lib&#10;YARP_init.lib&#10;odLogging.lib&#10;mpmCommon.lib&#10;ogdf.lib">
