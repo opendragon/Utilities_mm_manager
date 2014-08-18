@@ -49,7 +49,7 @@
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
       <PathRunnable
-         FilePath = "/Users/M_M/Documents/git.repositories/Channel Manager/Builds/MacOSX/build/Release/Channel Manager.app">
+         FilePath = "/Users/M_M/Documents/git.repositories/Utilities_Channel Manager/Builds/MacOSX/build/Release/Channel Manager.app">
       </PathRunnable>
       <MacroExpansion>
          <BuildableReference
@@ -70,7 +70,7 @@
       buildConfiguration = "Release"
       debugDocumentVersioning = "YES">
       <PathRunnable
-         FilePath = "/Users/M_M/Documents/git.repositories/Channel Manager/Builds/MacOSX/build/Release/Channel Manager.app">
+         FilePath = "/Users/M_M/Documents/git.repositories/Utilities_Channel Manager/Builds/MacOSX/build/Release/Channel Manager.app">
       </PathRunnable>
    </ProfileAction>
    <AnalyzeAction

@@ -27,7 +27,6 @@
 		8C60B5DE1234394A1166E6D8 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A176FBDE54D68D804E8D64DA /* OpenGL.framework */; };
 		95BF45868C951D1794103889 /* juce_audio_devices.mm in Sources */ = {isa = PBXBuildFile; fileRef = F50F2D1AB5CADEAB237AC249 /* juce_audio_devices.mm */; };
 		A5B6B98F0DF3641F3957E174 /* juce_audio_processors.mm in Sources */ = {isa = PBXBuildFile; fileRef = F854B4ED823FD26786D0CCDA /* juce_audio_processors.mm */; };
-		AC0B31A7568CF7F7DB722904 /* RecentFilesMenuTemplate.nib in Resources */ = {isa = PBXBuildFile; fileRef = 7A9A7921175D2E89D0783CFE /* RecentFilesMenuTemplate.nib */; };
 		BC56C45521A083DFABDFB7B2 /* juce_gui_basics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 157BEB9CE1D161D7972470B8 /* juce_gui_basics.mm */; };
 		CE92E43C53FC0C70850250AD /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA8B245630FFD64DF900345D /* QuickTime.framework */; };
 		DEEF248165B3103CD7681805 /* juce_gui_extra.mm in Sources */ = {isa = PBXBuildFile; fileRef = 01BE58DF625AAE46E21A507C /* juce_gui_extra.mm */; };
@@ -38,6 +37,7 @@
 		DF1470F3197D80A000E182D6 /* EntitiesPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF1470EE197D80A000E182D6 /* EntitiesPanel.cpp */; };
 		DF332FF7198988FC0089004E /* libOGDFDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF1470A51979833900E182D6 /* libOGDFDebug.a */; };
 		DF355A5819819B89008D71DD /* ContentPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF355A5619819B89008D71DD /* ContentPanel.cpp */; };
+		DF36AE5A19A24F7F0083B63F /* RecentFilesMenuTemplate.nib in Resources */ = {isa = PBXBuildFile; fileRef = 7A9A7921175D2E89D0783CFE /* RecentFilesMenuTemplate.nib */; };
 		DF385125198AD99400A0414E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DF385124198AD99400A0414E /* Images.xcassets */; };
 		DF4C6E1C19797ABD006CFB14 /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF74B66F1976D2BF00A6ECD3 /* libc++.dylib */; };
 		DF74B65919747BE800A6ECD3 /* ChannelManagerApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF74B65719747BE800A6ECD3 /* ChannelManagerApp.cpp */; };
@@ -2753,7 +2753,7 @@
 		A14AE462CB1A56EE6EDB70AB /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0440;
+				LastUpgradeCheck = 0510;
 			};
 			buildConfigurationList = E5E6C3EB8F2E58F5F28BDE5E /* Build configuration list for PBXProject "Channel Manager" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -2776,7 +2776,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AC0B31A7568CF7F7DB722904 /* RecentFilesMenuTemplate.nib in Resources */,
+				DF36AE5A19A24F7F0083B63F /* RecentFilesMenuTemplate.nib in Resources */,
 				DF385125198AD99400A0414E /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2821,7 +2821,6 @@
 		83047DF2773F8F8C0DC653C2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LIBRARY = "compiler-default";
 				COMBINE_HIDPI_IMAGES = YES;
@@ -2854,7 +2853,6 @@
 				);
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "Channel Manager Debug";
-				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -2886,6 +2884,7 @@
 				HEADER_SEARCH_PATHS = /usr/local/include;
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = (
 					"-fsanitize=null",
 					"-fsanitize-undefined-trap-on-error",
@@ -2900,7 +2899,6 @@
 		B6F284AC52D9E9009DC2F2DE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LIBRARY = "compiler-default";
 				COMBINE_HIDPI_IMAGES = YES;
@@ -2932,7 +2930,6 @@
 					"-mtune=native",
 				);
 				OTHER_LDFLAGS = "";
-				SDKROOT = macosx;
 			};
 			name = Release;
 		};
@@ -2962,6 +2959,7 @@
 				HEADER_SEARCH_PATHS = /usr/local/include;
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = (
 					"-fsanitize=null",
 					"-fsanitize-undefined-trap-on-error",

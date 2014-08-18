@@ -48,10 +48,7 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
-      <PathRunnable
-         FilePath = "/Users/M_M/Documents/git.repositories/Channel Manager/Builds/MacOSX/build/Debug/Channel Manager Debug.app">
-      </PathRunnable>
-      <MacroExpansion>
+      <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "3D401AEA48F74668882D2486"
@@ -59,7 +56,7 @@
             BlueprintName = "Channel Manager"
             ReferencedContainer = "container:Channel Manager.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>

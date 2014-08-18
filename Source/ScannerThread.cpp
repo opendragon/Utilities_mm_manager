@@ -695,10 +695,10 @@ void ScannerThread::run(void)
                         theLogger.info(yarp::os::ConstString("actual interval = ") + numBuff +
                                        yarp::os::ConstString(" seconds"));
 #else // ! MAC_OR_LINUX_
-      //                    _snprintf(numBuff, sizeof(numBuff) - 1, "%g",
-      //                              (loopEndTime - loopStartTime) / 1000.0);
-      //                    // Correct for the weird behaviour of _snprintf
-      //                    numBuff[sizeof(numBuff) - 1] = '\0';
+//                    _snprintf(numBuff, sizeof(numBuff) - 1, "%g",
+//                              (loopEndTime - loopStartTime) / 1000.0);
+//                    // Correct for the weird behaviour of _snprintf
+//                    numBuff[sizeof(numBuff) - 1] = '\0';
 #endif // ! MAC_OR_LINUX_
                         yield();
                     }
