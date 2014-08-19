@@ -40,7 +40,7 @@
 #include "ChannelEntry.h"
 #include "EntitiesPanel.h"
 
-#include <odl/ODEnableLogging.h>
+//#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
 
 #if defined(__APPLE__)
@@ -192,8 +192,6 @@ void ChannelContainer::deselect(void)
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::deselect
 
-#include <odl/ODDisableLogging.h>
-#include <odl/ODLogging.h>
 void ChannelContainer::drawOutgoingConnections(Graphics & gg)
 {
     OD_LOG_OBJENTER(); //####
@@ -209,8 +207,6 @@ void ChannelContainer::drawOutgoingConnections(Graphics & gg)
     }
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::drawOutgoingConnections
-#include <odl/ODEnableLogging.h>
-#include <odl/ODLogging.h>
 
 #if defined(USE_OGDF_POSITIONING)
 ogdf::node ChannelContainer::getNode(void)
@@ -222,8 +218,6 @@ const
 } // ChannelContainer::getNode
 #endif // defined(USE_OGDF_POSITIONING)
 
-#include <odl/ODDisableLogging.h>
-#include <odl/ODLogging.h>
 ChannelEntry * ChannelContainer::getPort(const int num)
 const
 {
@@ -242,11 +236,7 @@ const
     OD_LOG_OBJEXIT_P(result); //####
     return result;
 } // ChannelContainer::getPort
-#include <odl/ODEnableLogging.h>
-#include <odl/ODLogging.h>
 
-#include <odl/ODDisableLogging.h>
-#include <odl/ODLogging.h>
 Point<float> ChannelContainer::getPositionInPanel(void)
 const
 {
@@ -256,11 +246,7 @@ const
     OD_LOG_OBJEXIT(); //####
     return result;
 } // ChannelContainer::getPositionInPanel
-#include <odl/ODEnableLogging.h>
-#include <odl/ODLogging.h>
 
-#include <odl/ODDisableLogging.h>
-#include <odl/ODLogging.h>
 float ChannelContainer::getTextInset(void)
 const
 {
@@ -268,8 +254,6 @@ const
     OD_LOG_OBJEXIT_D(lTextInset); //####
     return lTextInset;
 } // ChannelContainer::getTextInset
-#include <odl/ODEnableLogging.h>
-#include <odl/ODLogging.h>
 
 bool ChannelContainer::hasPort(const ChannelEntry * aPort)
 {
@@ -415,8 +399,6 @@ void ChannelContainer::mouseDrag(const MouseEvent & ee)
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::mouseDrag
 
-#include <odl/ODDisableLogging.h>
-#include <odl/ODLogging.h>
 void ChannelContainer::paint(Graphics & gg)
 {
     OD_LOG_OBJENTER(); //####
@@ -438,8 +420,6 @@ void ChannelContainer::paint(Graphics & gg)
     gg.fillRect(area2);
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::paint
-#include <odl/ODEnableLogging.h>
-#include <odl/ODLogging.h>
 
 void ChannelContainer::removeInvalidConnections(void)
 {

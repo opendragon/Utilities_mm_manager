@@ -41,7 +41,7 @@
 #include "ChannelManagerApp.h"
 #include "EntitiesPanel.h"
 
-#include <odl/ODEnableLogging.h>
+//#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
 
 #if defined(__APPLE__)
@@ -99,8 +99,6 @@ static const Colour & kUdpConnectionColour(Colours::purple);
 # pragma mark Local functions
 #endif // defined(__APPLE__)
 
-#include <odl/ODDisableLogging.h>
-#include <odl/ODLogging.h>
 /*! @brief Determine if a new point is closer to a reference point than the previous point.
  @param distanceSoFar On input, the closest distance so far and on output, the new closest distance.
  @param refPoint The point to measure distance from.
@@ -337,7 +335,7 @@ static void drawBezier(Graphics &           gg,
     bPath.cubicTo(startPoint + controlPoint1, endPoint + controlPoint2, endPoint);
     gg.strokePath(bPath, PathStrokeType(thickness));
     OD_LOG_EXIT();//####
-} // DrawBezier
+} // drawBezier
 
 /*! @brief Draw a connection between entries.
  @param gg The graphics context in which to draw.
@@ -426,8 +424,6 @@ static void drawConnection(Graphics &                  gg,
     }
     OD_LOG_EXIT(); //####
 } // drawConnection
-#include <odl/ODEnableLogging.h>
-#include <odl/ODLogging.h>
 
 /*! @brief Determine whether a connection can be made, based on the port protocols.
  @param sourceProtocol The protocol of the source port.
@@ -597,8 +593,6 @@ void ChannelEntry::addOutputConnection(ChannelEntry *              other,
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::addOutputConnection
 
-#include <odl/ODDisableLogging.h>
-#include <odl/ODLogging.h>
 AnchorSide ChannelEntry::calculateClosestAnchor(Point<float> &       result,
                                                 const bool           isSource,
                                                 const bool           disallowBottom,
@@ -651,8 +645,6 @@ const
     OD_LOG_OBJEXIT_L(static_cast<int>(anchor)); //####
     return anchor;
 } // ChannelEntry::calculateClosestAnchor
-#include <odl/ODEnableLogging.h>
-#include <odl/ODLogging.h>
 
 void ChannelEntry::clearConnectMarker(void)
 {
@@ -714,8 +706,6 @@ void ChannelEntry::drawDragLine(Graphics &           gg,
     OD_LOG_EXIT(); //####
 } // ChannelEntry::drawDragLine
 
-#include <odl/ODDisableLogging.h>
-#include <odl/ODLogging.h>
 void ChannelEntry::drawOutgoingConnections(Graphics & gg)
 {
     OD_LOG_OBJENTER(); //####
@@ -732,11 +722,7 @@ void ChannelEntry::drawOutgoingConnections(Graphics & gg)
     }
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::drawOutgoingConnections
-#include <odl/ODEnableLogging.h>
-#include <odl/ODLogging.h>
 
-#include <odl/ODDisableLogging.h>
-#include <odl/ODLogging.h>
 Point<float> ChannelEntry::getCentre(void)
 const
 {
@@ -746,11 +732,7 @@ const
     OD_LOG_OBJEXIT(); //####
     return outer.getCentre();
 } // ChannelEntry::getCentre
-#include <odl/ODEnableLogging.h>
-#include <odl/ODLogging.h>
 
-#include <odl/ODDisableLogging.h>
-#include <odl/ODLogging.h>
 EntitiesPanel & ChannelEntry::getOwningPanel(void)
 const
 {
@@ -760,11 +742,7 @@ const
     OD_LOG_OBJEXIT_P(&result); //####
     return result;
 } // ChannelEntry::getOwningPanel
-#include <odl/ODEnableLogging.h>
-#include <odl/ODLogging.h>
 
-#include <odl/ODDisableLogging.h>
-#include <odl/ODLogging.h>
 Point<float> ChannelEntry::getPositionInPanel(void)
 const
 {
@@ -774,8 +752,6 @@ const
     OD_LOG_OBJEXIT(); //####
     return result;
 } // ChannelEntry::getPositionInPanel
-#include <odl/ODEnableLogging.h>
-#include <odl/ODLogging.h>
 
 bool ChannelEntry::hasOutgoingConnectionTo(const yarp::os::ConstString & otherPort)
 const
@@ -1078,8 +1054,6 @@ void ChannelEntry::mouseUp(const MouseEvent & ee)
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::mouseUp
 
-#include <odl/ODDisableLogging.h>
-#include <odl/ODLogging.h>
 void ChannelEntry::paint(Graphics & gg)
 {
     OD_LOG_OBJENTER(); //####
@@ -1112,8 +1086,6 @@ void ChannelEntry::paint(Graphics & gg)
     }
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::paint
-#include <odl/ODEnableLogging.h>
-#include <odl/ODLogging.h>
 
 void ChannelEntry::removeAllConnections(void)
 {

@@ -45,7 +45,7 @@
 #include "PortData.h"
 #include "ScannerThread.h"
 
-#include <odl/ODEnableLogging.h>
+//#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
 
 #if defined(USE_OGDF_POSITIONING)
@@ -119,8 +119,6 @@ ContentPanel::~ContentPanel(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-#include <odl/ODDisableLogging.h>
-#include <odl/ODLogging.h>
 void ContentPanel::paint(Graphics & gg)
 {
     OD_LOG_OBJENTER(); //####
@@ -163,8 +161,6 @@ void ContentPanel::paint(Graphics & gg)
     }
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::paint
-#include <odl/ODEnableLogging.h>
-#include <odl/ODLogging.h>
 
 void ContentPanel::resized(void)
 {

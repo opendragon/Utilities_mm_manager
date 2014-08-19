@@ -39,7 +39,7 @@
 #include "EntitiesData.h"
 #include "EntityData.h"
 
-#include <odl/ODEnableLogging.h>
+//#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
 
 #if defined(__APPLE__)

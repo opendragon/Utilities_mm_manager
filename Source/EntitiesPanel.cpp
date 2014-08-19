@@ -42,7 +42,7 @@
 #include "ChannelEntry.h"
 #include "ContentPanel.h"
 
-#include <odl/ODEnableLogging.h>
+//#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
 
 #if defined(__APPLE__)
@@ -145,8 +145,6 @@ void EntitiesPanel::addEntity(ChannelContainer * anEntity)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::addEntity
 
-#include <odl/ODDisableLogging.h>
-#include <odl/ODLogging.h>
 void EntitiesPanel::adjustSize(const bool andRepaint)
 {
     OD_LOG_OBJENTER(); //####
@@ -273,8 +271,6 @@ void EntitiesPanel::adjustSize(const bool andRepaint)
     }
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::adjustSize
-#include <odl/ODEnableLogging.h>
-#include <odl/ODLogging.h>
 
 void EntitiesPanel::clearAllNewlyCreatedFlags(void)
 {
@@ -368,8 +364,6 @@ void EntitiesPanel::clearOutData(void)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::clearOutData
 
-#include <odl/ODDisableLogging.h>
-#include <odl/ODLogging.h>
 void EntitiesPanel::drawConnections(Graphics & gg)
 {
     OD_LOG_OBJENTER(); //####
@@ -389,8 +383,6 @@ void EntitiesPanel::drawConnections(Graphics & gg)
     }
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::drawConnections
-#include <odl/ODEnableLogging.h>
-#include <odl/ODLogging.h>
 
 ChannelContainer * EntitiesPanel::findKnownEntity(const yarp::os::ConstString & name)
 {
@@ -564,8 +556,6 @@ void EntitiesPanel::mouseUp(const MouseEvent & ee)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::mouseUp
 
-#include <odl/ODDisableLogging.h>
-#include <odl/ODLogging.h>
 void EntitiesPanel::paint(Graphics & gg)
 {
     OD_LOG_OBJENTER(); //####
@@ -573,8 +563,6 @@ void EntitiesPanel::paint(Graphics & gg)
     drawConnections(gg);
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::paint
-#include <odl/ODEnableLogging.h>
-#include <odl/ODLogging.h>
 
 void EntitiesPanel::rememberConnectionStartPoint(ChannelEntry * aPort,
                                                  const bool     beingAdded)
