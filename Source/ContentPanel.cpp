@@ -139,6 +139,7 @@ void ContentPanel::paint(Graphics & gg)
     {
         // Check if there is some 'fresh' data.
         bool locked = scanner->conditionallyAcquireForRead();
+        
         for ( ; ! locked; locked = scanner->conditionallyAcquireForRead())
         {
             sleep(SHORT_SLEEP);

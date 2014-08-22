@@ -617,8 +617,8 @@ void ScannerThread::run(void)
             OD_LOG_B2("_scanIsComplete <- ", _scanIsComplete, "_scanCanProceed <- ", //####
                       _scanCanProceed); //####
             relinquishFromWrite();
-            // The data has been gathered, so it's safe for the foreground thread to process it - force
-            // a repaint of the displayed panel, which will retrieve our data.
+            // The data has been gathered, so it's safe for the foreground thread to process it -
+            // force a repaint of the displayed panel, which will retrieve our data.
             triggerRepaint();
             bool canProceed = false;
             
@@ -634,6 +634,12 @@ void ScannerThread::run(void)
                     }
                     sleep(VERY_SHORT_SLEEP);
                 }
+                if (needToLeave)
+                {
+                    OD_LOG("(needToLeave)"); //####
+                    break;
+                }
+                
                 // Wait for the scan data to be processed, and then continue with the next scan.
                 bool locked = conditionallyAcquireForRead();
                 
