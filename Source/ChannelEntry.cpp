@@ -826,7 +826,7 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
             // Check if we can end here.
             firstRemovePort->clearDisconnectMarker();
             firstRemovePort->repaint();
-            if ((kPortDirectionOutput != _direction) &&
+            if ((kPortDirectionOutput != _direction) && (kPortUsageService != _usage) &&
                 firstRemovePort->hasOutgoingConnectionTo(getPortName()))
             {
                 if (MplusM::Utilities::RemoveConnection(firstName, getPortName(), CheckForExit,
@@ -855,7 +855,7 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
             firstAddPort->clearConnectMarker();
             firstAddPort->repaint();
             if ((kPortDirectionOutput != _direction) &&
-                protocolsMatch(firstProtocol, _portProtocol) &&
+                (kPortUsageService != _usage) && protocolsMatch(firstProtocol, _portProtocol) &&
                 (! firstAddPort->hasOutgoingConnectionTo(getPortName())))
             {
                 if (MplusM::Utilities::AddConnection(firstName, getPortName(), STANDARD_WAIT_TIME,
@@ -1021,6 +1021,7 @@ void ChannelEntry::mouseUp(const MouseEvent & ee)
                 yarp::os::ConstString secondProtocol(endEntry->getProtocol());
 
                 if ((kPortDirectionOutput != endEntry->getDirection()) &&
+                    (kPortUsageService != endEntry->getUsage()) &&
                     protocolsMatch(getProtocol(), secondProtocol) &&
                     (! hasOutgoingConnectionTo(secondName)))
                 {
