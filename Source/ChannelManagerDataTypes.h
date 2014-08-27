@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       ChannelsDataTypes.h
+//  File:       ChannelManagerDataTypes.h
 //
 //  Project:    M+M
 //
@@ -36,8 +36,8 @@
 //
 //--------------------------------------------------------------------------------------------------
 
-#if (! defined(ChannelsDataTypes_H_))
-# define ChannelsDataTypes_H_ /* Header guard */
+#if (! defined(ChannelManagerDataTypes_H_))
+# define ChannelManagerDataTypes_H_ /* Header guard */
 
 # if (! defined(DOXYGEN))
 #  include "../JuceLibraryCode/JuceHeader.h"
@@ -62,6 +62,10 @@
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
 
+# define CHECK_FOR_STALE_PORTS /* Check for 'stale' ports in the scanner. */
+
+# define DO_SINGLE_CHECK_FOR_STALE_PORTS /* Perform an initial check for stale ports. */
+
 /*! @brief A longer sleep, in milliseconds. */
 # define LONG_SLEEP (VERY_SHORT_SLEEP * 100)
 
@@ -70,10 +74,6 @@
 
 /*! @brief The minimum time for a thread to sleep, in milliseconds. */
 # define SHORT_SLEEP (VERY_SHORT_SLEEP * 4)
-
-# define CHECK_FOR_STALE_PORTS /* Check for 'stale' ports in the scanner. */
-
-# define DO_SINGLE_CHECK_FOR_STALE_PORTS /* Perform an initial check for stale ports. */
 
 # define USE_OGDF_FOR_FIRST_POSITIONING_ONLY /* Use OGDF for the initial entity placement. */
 
@@ -265,4 +265,4 @@ namespace ChannelManager
     
 } // ChannelManager
 
-#endif // ! defined(ChannelsDataTypes_H_)
+#endif // ! defined(ChannelManagerDataTypes_H_)

@@ -40,7 +40,7 @@
 #if (! defined(ContentPanel_H_))
 # define ContentPanel_H_ /* Header guard */
 
-# include "ChannelsDataTypes.h"
+# include "ChannelManagerDataTypes.h"
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push

@@ -39,7 +39,7 @@
 #if (! defined(ChannelContainer_H_))
 # define ChannelContainer_H_ /* Header guard */
 
-# include "ChannelsDataTypes.h"
+# include "ChannelManagerDataTypes.h"
 
 # if defined(USE_OGDF_POSITIONING)
 #  include <ogdf/basic/Graph.h>

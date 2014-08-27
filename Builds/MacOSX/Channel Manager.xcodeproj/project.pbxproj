@@ -815,7 +815,7 @@
 		DF03EDD919927B3E004C5161 /* PortData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PortData.cpp; path = ../../Source/PortData.cpp; sourceTree = "<group>"; };
 		DF03EDDA19927B3E004C5161 /* PortData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PortData.h; path = ../../Source/PortData.h; sourceTree = "<group>"; };
 		DF1470A51979833900E182D6 /* libOGDFDebug.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOGDFDebug.a; path = ../../../../../../../usr/local/lib/libOGDFDebug.a; sourceTree = "<group>"; };
-		DF1470AC19798BC000E182D6 /* ChannelsDataTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ChannelsDataTypes.h; path = ../../Source/ChannelsDataTypes.h; sourceTree = "<group>"; };
+		DF1470AC19798BC000E182D6 /* ChannelManagerDataTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ChannelManagerDataTypes.h; path = ../../Source/ChannelManagerDataTypes.h; sourceTree = "<group>"; };
 		DF1470E8197D80A000E182D6 /* ChannelManagerWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ChannelManagerWindow.cpp; path = ../../Source/ChannelManagerWindow.cpp; sourceTree = "<group>"; };
 		DF1470E9197D80A000E182D6 /* ChannelManagerWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChannelManagerWindow.h; path = ../../Source/ChannelManagerWindow.h; sourceTree = "<group>"; };
 		DF1470EE197D80A000E182D6 /* EntitiesPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EntitiesPanel.cpp; path = ../../Source/EntitiesPanel.cpp; sourceTree = "<group>"; };
@@ -1253,7 +1253,7 @@
 				C787E5217B7752421DB83C5A /* ChannelManagerMain.cpp */,
 				DF1470E8197D80A000E182D6 /* ChannelManagerWindow.cpp */,
 				DF1470E9197D80A000E182D6 /* ChannelManagerWindow.h */,
-				DF1470AC19798BC000E182D6 /* ChannelsDataTypes.h */,
+				DF1470AC19798BC000E182D6 /* ChannelManagerDataTypes.h */,
 				DF355A5619819B89008D71DD /* ContentPanel.cpp */,
 				DF355A5719819B89008D71DD /* ContentPanel.h */,
 				DF03EDD319926CDB004C5161 /* EntitiesData.cpp */,

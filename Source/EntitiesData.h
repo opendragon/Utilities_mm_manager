@@ -39,7 +39,7 @@
 #if (! defined(EntitiesData_H_))
 # define EntitiesData_H_ /* Header guard */
 
-# include "ChannelsDataTypes.h"
+# include "ChannelManagerDataTypes.h"
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
