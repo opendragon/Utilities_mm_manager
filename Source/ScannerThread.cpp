@@ -536,7 +536,7 @@ bool ScannerThread::gatherEntities(MplusM::Common::CheckFunction checker,
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("checkStuff = ", checkStuff); //####
-    bool                          okSoFar = false;
+    bool                          okSoFar;
     MplusM::Utilities::PortVector detectedPorts;
 #if (defined(CHECK_FOR_STALE_PORTS) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS)))
     int64                         now = Time::currentTimeMillis();
@@ -560,24 +560,39 @@ bool ScannerThread::gatherEntities(MplusM::Common::CheckFunction checker,
 #endif // defined(CHECK_FOR_STALE_PORTS)
     if (MplusM::Utilities::GetDetectedPortList(detectedPorts))
     {
+        okSoFar = true;
+    }
+    else
+    {
+        // Try again.
+        okSoFar = MplusM::Utilities::GetDetectedPortList(detectedPorts);
+    }
+    if (okSoFar)
+    {
         MplusM::Common::StringVector services;
 
         _rememberedPorts.clear();
         _rememberedPorts.insert(_inputOnlyPortName);
         _rememberedPorts.insert(_outputOnlyPortName);
-        MplusM::Utilities::GetServiceNames(services, true, checker, checkStuff);
-        // Record the services to be displayed.
-        addServices(services, checker, checkStuff);
-        // Record the ports that have associates.
-        if (MplusM::Utilities::CheckForRegistryService(detectedPorts))
+        if (! MplusM::Utilities::GetServiceNames(services, true, checker, checkStuff))
         {
-            addPortsWithAssociates(detectedPorts, checker, checkStuff);
+            // Try again.
+            okSoFar = MplusM::Utilities::GetServiceNames(services, true, checker, checkStuff);
         }
-        // Record the ports that are standalone.
-        addRegularPortEntities(detectedPorts, checker, checkStuff);
-        // Record the port connections.
-        addPortConnections(detectedPorts, checker, checkStuff);
-        okSoFar = true;
+        if (okSoFar)
+        {
+            // Record the services to be displayed.
+            addServices(services, checker, checkStuff);
+            // Record the ports that have associates.
+            if (MplusM::Utilities::CheckForRegistryService(detectedPorts))
+            {
+                addPortsWithAssociates(detectedPorts, checker, checkStuff);
+            }
+            // Record the ports that are standalone.
+            addRegularPortEntities(detectedPorts, checker, checkStuff);
+            // Record the port connections.
+            addPortConnections(detectedPorts, checker, checkStuff);
+        }
     }
     OD_LOG_OBJEXIT_B(okSoFar); //####
     return okSoFar;

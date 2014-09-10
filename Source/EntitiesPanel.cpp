@@ -140,6 +140,11 @@ void EntitiesPanel::addEntity(ChannelContainer * anEntity)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("anEntity = ", anEntity); //####
+    char buffer1[DATE_TIME_BUFFER_SIZE];
+    char buffer2[DATE_TIME_BUFFER_SIZE];
+    
+    MplusM::Utilities::GetDateAndTime(buffer1, sizeof(buffer1), buffer2, sizeof(buffer2));
+    std::cerr << buffer1 << " " << buffer2 << " Adding entity " << anEntity->getName() << std::endl;
     _knownEntities.push_back(anEntity);
     addChildComponent(anEntity);
     OD_LOG_OBJEXIT(); //####
@@ -503,7 +508,7 @@ void EntitiesPanel::invalidateAllConnections(void)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::invalidateAllConnections
 
-ChannelEntry * EntitiesPanel::locateEntry(const Point<float> & location)
+ChannelEntry * EntitiesPanel::locateEntry(const Position & location)
 const
 {
     OD_LOG_OBJENTER(); //####
@@ -625,6 +630,13 @@ void EntitiesPanel::removeUnvisitedEntities(void)
             anEntity = *walker;
             if (anEntity && (! anEntity->wasVisited()))
             {
+                char buffer1[DATE_TIME_BUFFER_SIZE];
+                char buffer2[DATE_TIME_BUFFER_SIZE];
+                
+                MplusM::Utilities::GetDateAndTime(buffer1, sizeof(buffer1), buffer2,
+                                                  sizeof(buffer2));
+                std::cerr << buffer1 << " " << buffer2 << " Removing unvisited entity " <<
+                            anEntity->getName() << std::endl;
                 break;
             }
             
@@ -632,6 +644,8 @@ void EntitiesPanel::removeUnvisitedEntities(void)
         if ((_knownEntities.end() != walker) && anEntity)
         {
             OD_LOG("((_knownEntities.end() != walker) && anEntity)"); //####
+            Position whereItWas = anEntity->getPositionInPanel();
+            
             removeChildComponent(anEntity);
             delete anEntity;
             _knownEntities.erase(walker);
@@ -650,7 +664,7 @@ void EntitiesPanel::resized(void)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::resized
 
-void EntitiesPanel::setDragInfo(const Point<float> position)
+void EntitiesPanel::setDragInfo(const Position position)
 {
     OD_LOG_OBJENTER(); //####
     if (_firstAddPoint)

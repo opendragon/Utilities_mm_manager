@@ -237,11 +237,11 @@ const
     return result;
 } // ChannelContainer::getPort
 
-Point<float> ChannelContainer::getPositionInPanel(void)
+Position ChannelContainer::getPositionInPanel(void)
 const
 {
     OD_LOG_OBJENTER(); //####
-    Point<float> result(getPosition().toFloat());
+    Position result(getPosition().toFloat());
     
     OD_LOG_OBJEXIT(); //####
     return result;
@@ -311,7 +311,7 @@ const
     return marked;
 } // ChannelContainer::isMarked
 
-ChannelEntry * ChannelContainer::locateEntry(const Point<float> & location)
+ChannelEntry * ChannelContainer::locateEntry(const Position & location)
 const
 {
     OD_LOG_OBJENTER(); //####
@@ -323,7 +323,7 @@ const
         
         if (aPort)
         {
-            Point<float> where = aPort->getPositionInPanel();
+            Position where = aPort->getPositionInPanel();
             
             if (aPort->reallyContains((location - where).toInt(), true))
             {

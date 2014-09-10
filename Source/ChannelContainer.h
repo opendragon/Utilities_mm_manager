@@ -161,7 +161,7 @@ namespace ChannelManager
         
         /*! @brief Return the position of the entity within it's containing panel.
          @returns The position of the entity within it's containing panel. */
-        Point<float> getPositionInPanel(void)
+        Position getPositionInPanel(void)
         const;
         
         /*! @brief Return the amount of space to the left of the text being displayed.
@@ -201,7 +201,7 @@ namespace ChannelManager
         /*! @brief Returns an entry at the given location, if it exists.
          @param location The coordinates to check.
          @returns A pointer to the entry at the given location, or @c NULL if there is none. */
-        ChannelEntry * locateEntry(const Point<float> & location)
+        ChannelEntry * locateEntry(const Position & location)
         const;
         
         /*! @brief Called when a mouse button is pressed.

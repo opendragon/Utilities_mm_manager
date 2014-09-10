@@ -181,7 +181,7 @@ namespace ChannelManager
         /*! @brief Returns an entry at the given location, if it exists.
          @param location The coordinates to check.
          @returns A pointer to the entry at the given location, or @c NULL if there is none. */
-        ChannelEntry * locateEntry(const Point<float> & location)
+        ChannelEntry * locateEntry(const Position & location)
         const;
         
         /*! @brief Called when a mouse button is pressed.
@@ -218,7 +218,7 @@ namespace ChannelManager
         
         /*! @brief Update the dragging information.
          @param position The location of the dragging connection. */
-        void setDragInfo(const Point<float> position);
+        void setDragInfo(const Position position);
         
     protected:
         
@@ -244,7 +244,7 @@ namespace ChannelManager
         ScopedPointer<Font> _defaultNormalFont;
         
         /*! @brief The coordinates of the drag-connection operation. */
-        Point<float> _dragPosition;
+        Position _dragPosition;
         
         /*! @brief The starting port for a connection being added. */
         ChannelEntry * _firstAddPoint;

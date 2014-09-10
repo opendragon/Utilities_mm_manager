@@ -96,14 +96,14 @@ namespace ChannelManager
          @param xx The horizontal coordinate for the point of interest.
          @param yy The vertical coordinate for the point of interest.
          @returns The side to which the anchor is attached. */
-        inline AnchorSide calculateClosestAnchor(Point<float> & result,
-                                                 const bool     isSource,
-                                                 const bool     disallowBottom,
-                                                 const float    xx,
-                                                 const float    yy)
+        inline AnchorSide calculateClosestAnchor(Position &  result,
+                                                 const bool  isSource,
+                                                 const bool  disallowBottom,
+                                                 const float xx,
+                                                 const float yy)
         const
         {
-            return calculateClosestAnchor(result, isSource, disallowBottom, Point<float>(xx, yy));
+            return calculateClosestAnchor(result, isSource, disallowBottom, Position(xx, yy));
         } // calculateClosestAnchor
         
         /*! @brief Determine the anchor point that is the minimum distance from a given point.
@@ -112,10 +112,10 @@ namespace ChannelManager
          @param disallowBottom @c true if the anchor cannot be bottom-centre.
          @param pp The point of interest.
          @returns The side to which the anchor is attached. */
-        AnchorSide calculateClosestAnchor(Point<float> &       result,
-                                          const bool           isSource,
-                                          const bool           disallowBottom,
-                                          const Point<float> & pp)
+        AnchorSide calculateClosestAnchor(Position &       result,
+                                          const bool       isSource,
+                                          const bool       disallowBottom,
+                                          const Position & pp)
         const;
         
         /*! @brief Stop displaying the connect marker. */
@@ -128,9 +128,9 @@ namespace ChannelManager
          @param gg The graphics context in which to draw.
          @param position The coordinates of the drag line endpoint.
          @param isUDP @c true if the connection is UDP and @c false otherwise. */
-        void drawDragLine(Graphics &           gg,
-                          const Point<float> & position,
-                          const bool           isUDP);
+        void drawDragLine(Graphics &       gg,
+                          const Position & position,
+                          const bool       isUDP);
         
         /*! @brief Display the connections between containers.
          @param gg The graphics context in which to draw. */
@@ -138,7 +138,7 @@ namespace ChannelManager
         
         /*! @brief Return the location of the centre of the port entry.
          @returns The location of the centre of the port entry. */
-        Point<float> getCentre(void)
+        Position getCentre(void)
         const;
         
         /*! @brief Return the direction of the port entry.
@@ -188,7 +188,7 @@ namespace ChannelManager
         
         /*! @brief Return the position of the entity within it's containing panel.
          @returns The position of the entity within it's containing panel. */
-        Point<float> getPositionInPanel(void)
+        Position getPositionInPanel(void)
         const;
         
         /*! @brief Return the protocol of the associated port.

@@ -105,10 +105,10 @@ static const Colour & kUdpConnectionColour(Colours::purple);
  @param testPoint The point being checked.
  @param bestSoFar On input, the current closest point and output, the new closest point.
  @returns @c true if the new point is closer than the previous closest point. */
-static bool calculateMinDistance(float &              distanceSoFar,
-                                 const Point<float> & refPoint,
-                                 const Point<float> & testPoint,
-                                 Point<float> &       bestSoFar)
+static bool calculateMinDistance(float &          distanceSoFar,
+                                 const Position & refPoint,
+                                 const Position & testPoint,
+                                 Position &       bestSoFar)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P4("distanceSoFar = ", &distanceSoFar, "refPoint = ", &refPoint, "testPoint = ", //####
@@ -137,13 +137,13 @@ static bool calculateMinDistance(float &              distanceSoFar,
  @param testY The vertical coordinate for the point being checked.
  @param bestSoFar On input, the current closest point and output, the new closest point.
  @returns @c true if the new point is closer than the previous closest point. */
-inline static bool calculateMinDistance(float &              distanceSoFar,
-                                        const Point<float> & refPoint,
-                                        const float          testX,
-                                        const float          testY,
-                                        Point<float> &       bestSoFar)
+inline static bool calculateMinDistance(float &          distanceSoFar,
+                                        const Position & refPoint,
+                                        const float      testX,
+                                        const float      testY,
+                                        Position &       bestSoFar)
 {
-    return calculateMinDistance(distanceSoFar, refPoint, Point<float>(testX, testY), bestSoFar);
+    return calculateMinDistance(distanceSoFar, refPoint, Position(testX, testY), bestSoFar);
 } // calculateMinDistance
 
 /*! @brief Determine the anchor point that is the minimum distance from a given point.
@@ -152,10 +152,10 @@ inline static bool calculateMinDistance(float &              distanceSoFar,
  @param targetPoint The target point.
  @param refCentre The reference point.
  @returns The side to which the anchor is attached. */
-static AnchorSide calculateAnchorForPoint(Point<float> &       newCentre,
-                                          const bool           disallowBottom,
-                                          const Point<float> & targetPoint,
-                                          const Point<float> & refCentre)
+static AnchorSide calculateAnchorForPoint(Position &       newCentre,
+                                          const bool       disallowBottom,
+                                          const Position & targetPoint,
+                                          const Position & refCentre)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P3("newCentre = ", &newCentre, "targetPoint = ", &targetPoint, //####
@@ -163,31 +163,31 @@ static AnchorSide calculateAnchorForPoint(Point<float> &       newCentre,
     AnchorSide             anchor = kAnchorUnknown;
     float                  boxSize = (refCentre.getDistanceFrom(targetPoint) * kTargetBoxScale);
     float                  soFar = static_cast<float>(1e23); // Ridiculously big, just in case.
-    Point<float>           tempPoint;
+    Position               tempPoint;
     juce::Rectangle<float> box(targetPoint.getX() - (boxSize / 2),
                                targetPoint.getY() - (boxSize / 2), boxSize, boxSize);
     
     if (calculateMinDistance(soFar, refCentre, box.getX(), box.getY() + (boxSize / 2), tempPoint))
     {
         anchor = kAnchorLeft;
-        newCentre = targetPoint + Point<float>(boxSize, 0);
+        newCentre = targetPoint + Position(boxSize, 0);
     }
     if (calculateMinDistance(soFar, refCentre, box.getX() + boxSize, box.getY() + (boxSize / 2),
                              tempPoint))
     {
         anchor = kAnchorRight;
-        newCentre = targetPoint + Point<float>(-boxSize, 0);
+        newCentre = targetPoint + Position(-boxSize, 0);
     }
     if ((! disallowBottom) && calculateMinDistance(soFar, refCentre, box.getX() + (boxSize / 2),
                                                    box.getY() + boxSize, tempPoint))
     {
         anchor = kAnchorBottomCentre;
-        newCentre = targetPoint + Point<float>(0, -boxSize);
+        newCentre = targetPoint + Position(0, -boxSize);
     }
     if (calculateMinDistance(soFar, refCentre, box.getX() + (boxSize / 2), box.getY(), tempPoint))
     {
         anchor = kAnchorTopCentre;
-        newCentre = targetPoint + Point<float>(0, boxSize);
+        newCentre = targetPoint + Position(0, boxSize);
     }
     OD_LOG_EXIT_L(static_cast<int>(anchor)); //####
     return anchor;
@@ -198,38 +198,38 @@ static AnchorSide calculateAnchorForPoint(Point<float> &       newCentre,
  @param anchor The side to which the anchor is attached.
  @param anchorPos The coordinates of the anchor point.
  @param thickness The line thickness to be used. */
-static void drawSourceAnchor(Graphics &           gg,
-                             const AnchorSide     anchor,
-                             const Point<float> & anchorPos,
-                             const float          thickness)
+static void drawSourceAnchor(Graphics &       gg,
+                             const AnchorSide anchor,
+                             const Position & anchorPos,
+                             const float      thickness)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P2("gg = ", &gg, "anchorPos = ", &anchorPos); //####
     OD_LOG_L1("anchor = ", static_cast<int>(anchor)); //####
     OD_LOG_D1("thickness = ", thickness); //####
-    Point<float> first;
-    Point<float> second;
+    Position first;
+    Position second;
     
     switch (anchor)
     {
 	    case kAnchorLeft :
-            first = anchorPos + Point<float>(kArrowSize, -kArrowSize);
-            second = anchorPos + Point<float>(kArrowSize, kArrowSize);
+            first = anchorPos + Position(kArrowSize, -kArrowSize);
+            second = anchorPos + Position(kArrowSize, kArrowSize);
             break;
             
 	    case kAnchorRight :
-            first = anchorPos + Point<float>(-kArrowSize, -kArrowSize);
-            second = anchorPos + Point<float>(-kArrowSize, kArrowSize);
+            first = anchorPos + Position(-kArrowSize, -kArrowSize);
+            second = anchorPos + Position(-kArrowSize, kArrowSize);
             break;
             
 	    case kAnchorBottomCentre :
-            first = anchorPos + Point<float>(-kArrowSize, -kArrowSize);
-            second = anchorPos + Point<float>(kArrowSize, -kArrowSize);
+            first = anchorPos + Position(-kArrowSize, -kArrowSize);
+            second = anchorPos + Position(kArrowSize, -kArrowSize);
             break;
             
 	    case kAnchorTopCentre :
-            first = anchorPos + Point<float>(-kArrowSize, kArrowSize);
-            second = anchorPos + Point<float>(kArrowSize, kArrowSize);
+            first = anchorPos + Position(-kArrowSize, kArrowSize);
+            second = anchorPos + Position(kArrowSize, kArrowSize);
             break;
             
 	    default :
@@ -252,38 +252,38 @@ static void drawSourceAnchor(Graphics &           gg,
  @param anchor The side to which the anchor is attached.
  @param anchorPos The coordinates of the anchor point.
  @param thickness The line thickness to be used. */
-static void drawTargetAnchor(Graphics &           gg,
-                             const AnchorSide     anchor,
-                             const Point<float> & anchorPos,
-                             const float          thickness)
+static void drawTargetAnchor(Graphics &       gg,
+                             const AnchorSide anchor,
+                             const Position & anchorPos,
+                             const float      thickness)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P2("gg = ", &gg, "anchorPos = ", &anchorPos); //####
     OD_LOG_L1("anchor = ", static_cast<int>(anchor)); //####
     OD_LOG_D1("thickness = ", thickness); //####
-    Point<float> first;
-    Point<float> second;
+    Position first;
+    Position second;
     
     switch (anchor)
     {
 	    case kAnchorLeft :
-            first = anchorPos + Point<float>(-kArrowSize, -kArrowSize);
-            second = anchorPos + Point<float>(-kArrowSize, kArrowSize);
+            first = anchorPos + Position(-kArrowSize, -kArrowSize);
+            second = anchorPos + Position(-kArrowSize, kArrowSize);
             break;
             
 	    case kAnchorRight :
-            first = anchorPos + Point<float>(kArrowSize, -kArrowSize);
-            second = anchorPos + Point<float>(kArrowSize, kArrowSize);
+            first = anchorPos + Position(kArrowSize, -kArrowSize);
+            second = anchorPos + Position(kArrowSize, kArrowSize);
             break;
             
 	    case kAnchorBottomCentre :
-            first = anchorPos + Point<float>(-kArrowSize, kArrowSize);
-            second = anchorPos + Point<float>(kArrowSize, kArrowSize);
+            first = anchorPos + Position(-kArrowSize, kArrowSize);
+            second = anchorPos + Position(kArrowSize, kArrowSize);
             break;
             
 	    case kAnchorTopCentre :
-            first = anchorPos + Point<float>(-kArrowSize, -kArrowSize);
-            second = anchorPos + Point<float>(kArrowSize, -kArrowSize);
+            first = anchorPos + Position(-kArrowSize, -kArrowSize);
+            second = anchorPos + Position(kArrowSize, -kArrowSize);
             break;
             
 	    default :
@@ -310,26 +310,26 @@ static void drawTargetAnchor(Graphics &           gg,
  @param endCentre A reference point for the end of the curve, used to calculate the ending
  tangent.
  @param thickness The line thickness to be used. */
-static void drawBezier(Graphics &           gg,
-                       const Point<float> & startPoint,
-                       const Point<float> & endPoint,
-                       const Point<float> & startCentre,
-                       const Point<float> & endCentre,
-                       const float          thickness)
+static void drawBezier(Graphics &       gg,
+                       const Position & startPoint,
+                       const Position & endPoint,
+                       const Position & startCentre,
+                       const Position & endCentre,
+                       const float      thickness)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P4("gg = ", &gg, "startPoint = ", &startPoint, "endPoint = ", &endPoint, //####
               "startCentre = ", &startCentre); //####
     OD_LOG_P1("endCentre = ", &endCentre); //####
     OD_LOG_D1("thickness = ", thickness); //####
-    Path         bPath;
-    float        controlLength = (startPoint.getDistanceFrom(endPoint) * kControlLengthScale);
-    float        startAngle = atan2(startPoint.getY() - startCentre.getY(),
-                                    startPoint.getX() - startCentre.getX());
-    float        endAngle = atan2(endPoint.getY() - endCentre.getY(),
-                                  endPoint.getX() - endCentre.getX());
-    Point<float> controlPoint1(controlLength * cos(startAngle), controlLength * sin(startAngle));
-    Point<float> controlPoint2(controlLength * cos(endAngle), controlLength * sin(endAngle));
+    Path     bPath;
+    float    controlLength = (startPoint.getDistanceFrom(endPoint) * kControlLengthScale);
+    float    startAngle = atan2(startPoint.getY() - startCentre.getY(),
+                                startPoint.getX() - startCentre.getX());
+    float    endAngle = atan2(endPoint.getY() - endCentre.getY(),
+                              endPoint.getX() - endCentre.getX());
+    Position controlPoint1(controlLength * cos(startAngle), controlLength * sin(startAngle));
+    Position controlPoint2(controlLength * cos(endAngle), controlLength * sin(endAngle));
     
     bPath.startNewSubPath(startPoint);
     bPath.cubicTo(startPoint + controlPoint1, endPoint + controlPoint2, endPoint);
@@ -352,15 +352,15 @@ static void drawConnection(Graphics &                  gg,
     OD_LOG_L1("mode = ", static_cast<int>(mode)); //####
     if (source && destination)
     {
-        AnchorSide   sourceAnchor;
-        AnchorSide   destinationAnchor;
-        Point<float> sourcePosition(source->getPositionInPanel());
-        Point<float> destinationPosition(destination->getPositionInPanel());
-        Point<float> sourceCentre(source->getCentre() + sourcePosition);
-        Point<float> destinationCentre(destination->getCentre() + destinationPosition);
-        Point<float> startPoint;
-        Point<float> endPoint;
-        float        thickness;
+        AnchorSide sourceAnchor;
+        AnchorSide destinationAnchor;
+        Position   sourcePosition(source->getPositionInPanel());
+        Position   destinationPosition(destination->getPositionInPanel());
+        Position   sourceCentre(source->getCentre() + sourcePosition);
+        Position   destinationCentre(destination->getCentre() + destinationPosition);
+        Position   startPoint;
+        Position   endPoint;
+        float      thickness;
         
         OD_LOG_D4("sourcePosition.x = ", sourcePosition.getX(), "sourcePosition.y = ", //####
                   sourcePosition.getY(), "destinationPosition.x = ", //####
@@ -593,10 +593,10 @@ void ChannelEntry::addOutputConnection(ChannelEntry *              other,
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::addOutputConnection
 
-AnchorSide ChannelEntry::calculateClosestAnchor(Point<float> &       result,
-                                                const bool           isSource,
-                                                const bool           disallowBottom,
-                                                const Point<float> & pp)
+AnchorSide ChannelEntry::calculateClosestAnchor(Position &       result,
+                                                const bool       isSource,
+                                                const bool       disallowBottom,
+                                                const Position & pp)
 const
 {
     OD_LOG_OBJENTER(); //####
@@ -604,9 +604,9 @@ const
     OD_LOG_B1("isSource = ", isSource); //####
     // Check each anchor point - the two side centres and optionally the bottom - to find the
     // shortest distance.
-    AnchorSide   anchor = kAnchorUnknown;
-    float        soFar = static_cast<float>(1e23); // Ridiculously big, just in case.
-    Point<float> location(getPositionInPanel());
+    AnchorSide anchor = kAnchorUnknown;
+    float      soFar = static_cast<float>(1e23); // Ridiculously big, just in case.
+    Position   location(getPositionInPanel());
     
     if (calculateMinDistance(soFar, pp, location.getX(), location.getY() + (getHeight() / 2),
                              result))
@@ -660,17 +660,17 @@ void ChannelEntry::clearDisconnectMarker(void)
     OD_LOG_EXIT(); //####
 } // ChannelEntry::clearDisconnectMarker
 
-void ChannelEntry::drawDragLine(Graphics &           gg,
-                                const Point<float> & position,
-                                const bool           isUDP)
+void ChannelEntry::drawDragLine(Graphics &       gg,
+                                const Position & position,
+                                const bool       isUDP)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_B1("isUDP = ", isUDP); //####
-    AnchorSide   sourceAnchor;
-    AnchorSide   destinationAnchor;
-    Point<float> sourceCentre(getCentre() + getPositionInPanel());
-    Point<float> startPoint;
-    Point<float> destinationCentre;
+    AnchorSide sourceAnchor;
+    AnchorSide destinationAnchor;
+    Position   sourceCentre(getCentre() + getPositionInPanel());
+    Position   startPoint;
+    Position   destinationCentre;
     
     // Check if the destination is above the source, in which case we determine the anchors in
     // the reverse order.
@@ -723,7 +723,7 @@ void ChannelEntry::drawOutgoingConnections(Graphics & gg)
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::drawOutgoingConnections
 
-Point<float> ChannelEntry::getCentre(void)
+Position ChannelEntry::getCentre(void)
 const
 {
     OD_LOG_OBJENTER(); //####
@@ -743,11 +743,11 @@ const
     return result;
 } // ChannelEntry::getOwningPanel
 
-Point<float> ChannelEntry::getPositionInPanel(void)
+Position ChannelEntry::getPositionInPanel(void)
 const
 {
     OD_LOG_OBJENTER(); //####
-    Point<float> result(getPosition().toFloat() + _parent->getPositionInPanel());
+    Position result(getPosition().toFloat() + _parent->getPositionInPanel());
     
     OD_LOG_OBJEXIT(); //####
     return result;
@@ -1009,7 +1009,7 @@ void ChannelEntry::mouseUp(const MouseEvent & ee)
         OD_LOG_D2("x = ", ee.position.getX(), "y = ", ee.position.getY()); //####
         if (owningPanel.isDragActive())
         {
-            Point<float>   newLocation(getPositionInPanel() + ee.position);
+            Position       newLocation(getPositionInPanel() + ee.position);
             ChannelEntry * endEntry = owningPanel.locateEntry(newLocation);
             
             clearConnectMarker();
@@ -1073,14 +1073,14 @@ void ChannelEntry::paint(Graphics & gg)
     as.draw(gg, area);
     if (_drawConnectMarker)
     {
-        Point<float> markerPos(getCentre() - Point<float>(kMarkerSide / 2, kMarkerSide / 2));
+        Position markerPos(getCentre() - Position(kMarkerSide / 2, kMarkerSide / 2));
         
         gg.setColour(kMarkerColour);
         gg.fillEllipse(markerPos.getX(), markerPos.getY(), kMarkerSide, kMarkerSide);
     }
     else if (_drawDisconnectMarker)
     {
-        Point<float> markerPos(getCentre() - Point<float>(kMarkerSide / 2, kMarkerSide / 2));
+        Position markerPos(getCentre() - Position(kMarkerSide / 2, kMarkerSide / 2));
         
         gg.setColour(kMarkerColour);
         gg.drawEllipse(markerPos.getX(), markerPos.getY(), kMarkerSide, kMarkerSide, 2);

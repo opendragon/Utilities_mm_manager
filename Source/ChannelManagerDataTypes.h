@@ -227,6 +227,9 @@ namespace ChannelManager
         
     }; // PortInfo
     
+    /*! @brief Coordinates on the display. */
+    typedef Point<float> Position;
+    
     /*! @brief A mapping from port names to associates. */
     typedef std::map<yarp::os::ConstString, PortAndAssociates> AssociatesMap;
     
