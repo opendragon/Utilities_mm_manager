@@ -312,7 +312,7 @@ void ScannerThread::addPortsWithAssociates(const MplusM::Utilities::PortVector &
                                                   outer->_portPortNumber);
                     
                     associates._name = outerName;
-                    _associatedPorts.insert(AssociatesMap::value_type(caption, associates));
+                    _associatedPorts[caption] = associates;
                     _rememberedPorts.insert(outerName);
                     MplusM::Common::StringVector & assocInputs = associates._associates._inputs;
                     MplusM::Common::StringVector & assocOutputs = associates._associates._outputs;
@@ -359,7 +359,7 @@ void ScannerThread::addRegularPortEntities(const MplusM::Utilities::PortVector &
             _rememberedPorts.insert(walkerName);
             info._name = walkerName;
             info._direction = determineDirection(oldEntry, walker->_portName, checker, checkStuff);
-            _standalonePorts.insert(SingularPortMap::value_type(caption, info));
+            _standalonePorts[caption] = info;
         }
         yield();
     }
@@ -386,7 +386,7 @@ void ScannerThread::addServices(const MplusM::Common::StringVector & services,
                                                                    STANDARD_WAIT_TIME, checker,
                                                                    checkStuff))
             {
-                _detectedServices.insert(ServiceMap::value_type(outerName, descriptor));
+                _detectedServices[outerName] = descriptor;
                 _rememberedPorts.insert(descriptor._channelName);
                 MplusM::Common::ChannelVector & inChannels = descriptor._inputChannels;
                 MplusM::Common::ChannelVector & outChannels = descriptor._outputChannels;

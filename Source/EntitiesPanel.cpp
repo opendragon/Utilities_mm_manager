@@ -569,6 +569,13 @@ void EntitiesPanel::paint(Graphics & gg)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::paint
 
+void EntitiesPanel::recallPositions(void)
+{
+    OD_LOG_OBJENTER(); //####
+    _container->recallEntityPositions();
+    OD_LOG_OBJEXIT(); //####
+} // EntitiesPanel::recallPositions
+
 void EntitiesPanel::rememberConnectionStartPoint(ChannelEntry * aPort,
                                                  const bool     beingAdded)
 {
@@ -598,6 +605,22 @@ void EntitiesPanel::rememberPort(ChannelEntry * aPort)
     }
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::rememberPort
+
+void EntitiesPanel::rememberPositions(void)
+{
+    OD_LOG_OBJENTER(); //####
+    for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
+    {
+        ChannelContainer * anEntity = *it;
+        
+        if (anEntity)
+        {
+            _container->rememberPositionOfEntity(anEntity);
+        }
+    }
+    _container->saveEntityPositions();
+    OD_LOG_OBJEXIT(); //####
+} // EntitiesPanel::rememberPositions
 
 void EntitiesPanel::removeInvalidConnections(void)
 {
@@ -644,8 +667,7 @@ void EntitiesPanel::removeUnvisitedEntities(void)
         if ((_knownEntities.end() != walker) && anEntity)
         {
             OD_LOG("((_knownEntities.end() != walker) && anEntity)"); //####
-            Position whereItWas = anEntity->getPositionInPanel();
-            
+            _container->rememberPositionOfEntity(anEntity);
             removeChildComponent(anEntity);
             delete anEntity;
             _knownEntities.erase(walker);

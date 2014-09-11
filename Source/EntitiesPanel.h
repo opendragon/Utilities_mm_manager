@@ -167,6 +167,7 @@ namespace ChannelManager
         size_t getNumberOfEntities(void)
         const;
         
+        
         /*! @brief Mark all connections as invalid. */
         void invalidateAllConnections(void);
         
@@ -196,6 +197,9 @@ namespace ChannelManager
          @param gg The graphics context in which to draw. */
         void paint(Graphics & gg);
         
+        /*! @brief Restore the positions of all the entities in the panel. */
+        void recallPositions(void);
+        
         /*! @brief Record the initial entry when adding or removing a connection.
          @param aPort The first entry selected.
          @param beingAdded @c true if the connection is being added and @c false if it is being
@@ -206,6 +210,9 @@ namespace ChannelManager
         /*! @brief Record a newly added port.
          @param aPort The port to be recorded. */
         void rememberPort(ChannelEntry * aPort);
+        
+        /*! @brief Record the positions of all the entities in the panel. */
+        void rememberPositions(void);
         
         /*! @brief Remove connections that are invalid. */
         void removeInvalidConnections(void);

@@ -83,9 +83,18 @@ namespace ChannelManager
         /*! @brief Draw the content of the component.
          @param gg The graphics context in which to draw. */
         void paint(Graphics & gg);
-                
+        
+        /*! @brief Restore the positions of all the entities in the panel. */
+        void recallEntityPositions(void);
+        
+        /*! @brief Record the position of an entity before it is removed from the panel. */
+        void rememberPositionOfEntity(ChannelContainer * anEntity);
+        
         /*! @brief Called when the component size has been changed. */
         void resized(void);
+        
+        /*! @brief Record the positions of all the entities in the panel. */
+        void saveEntityPositions(void);
         
         /*! @brief Called when the visible area changes.
          @param newVisibleArea The new visible area. */
@@ -105,6 +114,9 @@ namespace ChannelManager
         /*! @brief Refresh the displayed entities and connections, based on the scanned entities.
          @param scanner The background scanning thread. */
         void updatePanels(ScannerThread & scanner);
+        
+        /*! @brief The positions that entities were last seen at. */
+        PositionMap _rememberedPositions;
         
         /*! @brief The entities panel. */
         ScopedPointer<EntitiesPanel> _entitiesPanel;

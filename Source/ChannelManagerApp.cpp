@@ -165,6 +165,9 @@ void ChannelManagerApplication::initialise(const String & commandLine)
     _mainWindow = new ChannelManagerWindow(ProjectInfo::projectName);
     if (_yarp)
     {
+        EntitiesPanel & entities = _mainWindow->getEntitiesPanel();
+        
+        entities.recallPositions();
         _scanner = new ScannerThread(ProjectInfo::projectName, *_mainWindow);
         _scanner->startThread();
     }
@@ -183,6 +186,9 @@ void ChannelManagerApplication::shutdown(void)
     OD_LOG_OBJENTER(); //####
     SetExitRequest();
     _scanner->stopThread(5000);
+    EntitiesPanel & entities = _mainWindow->getEntitiesPanel();
+
+    entities.rememberPositions();
     _scanner = nullptr; // shuts down thread
     _mainWindow = nullptr; // (deletes our window)
     yarp::os::Network::fini();

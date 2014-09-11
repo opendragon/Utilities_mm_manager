@@ -260,6 +260,9 @@ namespace ChannelManager
     /*! @brief A collection of port names. */
     typedef std::set<yarp::os::ConstString> PortSet;
     
+    /*! @brief A mapping from entity names to positions. */
+    typedef std::map<yarp::os::ConstString, Position> PositionMap;
+    
     /*! @brief A mapping from strings to service descriptions. */
     typedef std::map<yarp::os::ConstString, MplusM::Utilities::ServiceDescriptor> ServiceMap;
     

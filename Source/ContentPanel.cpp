@@ -82,6 +82,17 @@ static const int kDefaultSingleStepSize = 10;
 # pragma mark Local functions
 #endif // defined(__APPLE__)
 
+/*! @brief Returns the absolute path to the settings file.
+ @returns The absolute path to the settings file. */
+static String getPathToSettingsFile(void)
+{
+    File   baseDir = File::getSpecialLocation(File::userApplicationDataDirectory);
+    String baseDirAsString = File::addTrailingSeparator(baseDir.getFullPathName());
+    String settingsDir = File::addTrailingSeparator(baseDirAsString + "ChannelManager");
+    
+    return settingsDir + "settings.txt";
+} // getPathToSettingsFile
+
 #if defined(__APPLE__)
 # pragma mark Class methods
 #endif // defined(__APPLE__)
@@ -163,12 +174,91 @@ void ContentPanel::paint(Graphics & gg)
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::paint
 
+void ContentPanel::recallEntityPositions(void)
+{
+    OD_LOG_OBJENTER(); //####
+    String filePath = getPathToSettingsFile();
+    File   settingsFile(filePath);
+    
+    if (settingsFile.existsAsFile())
+    {
+        OD_LOG("(settingsFile.existsAsFile())"); //####
+        StringArray stuffFromFile;
+        
+        settingsFile.readLines(stuffFromFile);
+        for (int ii = 0, max = stuffFromFile.size(); max > ii; ++ii)
+        {
+            String aLine = stuffFromFile[ii];
+            
+            if (0 < aLine.length())
+            {
+                StringArray asPieces;
+                
+                asPieces.addTokens(aLine, "\t", "");
+                if (3 == asPieces.size())
+                {
+                    String tag = asPieces[0];
+                    String xPosString = asPieces[1];
+                    String yPosString = asPieces[2];
+                    
+                    _rememberedPositions[tag.toStdString()] = Position(xPosString.getFloatValue(),
+                                                                       yPosString.getFloatValue());
+                }
+            }
+        }
+    }
+    OD_LOG_OBJEXIT(); //####
+} // ContentPanel::recallEntityPositions
+
+void ContentPanel::rememberPositionOfEntity(ChannelContainer * anEntity)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("anEntity = ", anEntity); //####
+    yarp::os::ConstString entityName(anEntity->getName().toStdString());
+
+    _rememberedPositions[entityName] = anEntity->getPositionInPanel();
+    OD_LOG_OBJEXIT(); //####
+} // ContentPanel::rememberPositionOfEntity
+
 void ContentPanel::resized(void)
 {
     OD_LOG_OBJENTER(); //####
     _entitiesPanel->setSize(getWidth(), getHeight());
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::resized
+
+void ContentPanel::saveEntityPositions(void)
+{
+    OD_LOG_OBJENTER(); //####
+    String filePath = getPathToSettingsFile();
+    File   settingsFile(filePath);
+    
+    if (settingsFile.create().wasOk())
+    {
+        OD_LOG("(settingsFile.create().wasOk())"); //####
+        char xyBuff[40];
+
+        // Make sure that the file is empty before adding lines to it!
+        settingsFile.replaceWithText("");
+        for (PositionMap::const_iterator walker(_rememberedPositions.begin());
+             _rememberedPositions.end() != walker; ++walker)
+        {
+            yarp::os::ConstString tag = walker->first;
+            Position              where = walker->second;
+
+#if MAC_OR_LINUX_
+            snprintf(xyBuff, sizeof(xyBuff), "\t%g\t%g\n", where.x, where.y);
+#else // ! MAC_OR_LINUX_
+            _snprintf(xyBuff, sizeof(xyBuff) - 1, "\t%g\t%g\n", where.x, where.y);
+            // Correct for the weird behaviour of _snprintf
+            buff[sizeof(xyBuff) - 1] = '\0';
+#endif // ! MAC_OR_LINUX_
+            settingsFile.appendText(tag.c_str());
+            settingsFile.appendText(xyBuff);
+        }
+    }
+    OD_LOG_OBJEXIT(); //####
+} // ContentPanel::saveEntityPositions
 
 void ContentPanel::setEntityPositions(ScannerThread & scanner)
 {
@@ -232,11 +322,23 @@ void ContentPanel::setEntityPositions(ScannerThread & scanner)
                     if (aContainer->isNew())
                     {
                         OD_LOG("(aContainer->isNew())"); //####
-                        newX = (randomizer.nextFloat() * (fullWidth - ww));
-                        newY = (randomizer.nextFloat() * (fullHeight - hh));
+                        // Check if the position was already known
+                        yarp::os::ConstString       entityName(aContainer->getName().toStdString());
+                        PositionMap::const_iterator match(_rememberedPositions.find(entityName));
+                        
+                        if (_rememberedPositions.end() == match)
+                        {
+                            newX = (randomizer.nextFloat() * (fullWidth - ww));
+                            newY = (randomizer.nextFloat() * (fullHeight - hh));
+                            positionsNeedUpdate = true;
+                        }
+                        else
+                        {
+                            newX = match->second.x;
+                            newY = match->second.y;
+                        }
                         aContainer->setTopLeftPosition(static_cast<int>(newX),
                                                        static_cast<int>(newY));
-                        positionsNeedUpdate = true;
                     }
                     else
                     {
@@ -337,8 +439,16 @@ void ContentPanel::setEntityPositions(ScannerThread & scanner)
                             
                             if (aNode)
                             {
-                                aContainer->setTopLeftPosition(static_cast<int>(ga->x(aNode)),
-                                                               static_cast<int>(ga->y(aNode)));
+                                // Check if the position was already known
+                                yarp::os::ConstString entityName =
+                                                                aContainer->getName().toStdString();
+                                
+                                if (_rememberedPositions.end() ==
+                                                            _rememberedPositions.find(entityName))
+                                {
+                                    aContainer->setTopLeftPosition(static_cast<int>(ga->x(aNode)),
+                                                                   static_cast<int>(ga->y(aNode)));
+                                }
                             }
                         }
                     }
@@ -353,21 +463,28 @@ void ContentPanel::setEntityPositions(ScannerThread & scanner)
         {
             ChannelContainer * aContainer = _entitiesPanel->getEntity(ii);
             
-            if (aContainer)
+            if (aContainer && aContainer->isNew())
             {
-                float                  newX;
-                float                  newY;
-                juce::Rectangle<float> entityShape(aContainer->getLocalBounds().toFloat());
-                float                  hh = entityShape.getHeight();
-                float                  ww = entityShape.getWidth();
-                
-                if (aContainer->isNew())
+                OD_LOG("(aContainer->isNew())"); //####
+                float                       newX;
+                float                       newY;
+                juce::Rectangle<float>      entityShape(aContainer->getLocalBounds().toFloat());
+                float                       hh = entityShape.getHeight();
+                float                       ww = entityShape.getWidth();
+                yarp::os::ConstString       entityName(aContainer->getName().toStdString());
+                PositionMap::const_iterator match(_rememberedPositions.find(entityName));
+
+                if (_rememberedPositions.end() == match)
                 {
-                    OD_LOG("(aContainer->isNew())"); //####
                     newX = (randomizer.nextFloat() * (fullWidth - ww));
                     newY = (randomizer.nextFloat() * (fullHeight - hh));
-                    aContainer->setTopLeftPosition(static_cast<int>(newX), static_cast<int>(newY));
                 }
+                else
+                {
+                    newX = match->second.x;
+                    newY = match->second.y;
+                }
+                aContainer->setTopLeftPosition(static_cast<int>(newX), static_cast<int>(newY));
             }
         }
     }
@@ -376,21 +493,28 @@ void ContentPanel::setEntityPositions(ScannerThread & scanner)
     {
         ChannelContainer * aContainer = _entitiesPanel->getEntity(ii);
         
-        if (aContainer)
+        if (aContainer && aContainer->isNew())
         {
-            float                  newX;
-            float                  newY;
-            juce::Rectangle<float> entityShape(aContainer->getLocalBounds().toFloat());
-            float                  hh = entityShape.getHeight();
-            float                  ww = entityShape.getWidth();
+            OD_LOG("(aContainer->isNew())"); //####
+            float                       newX;
+            float                       newY;
+            juce::Rectangle<float>      entityShape(aContainer->getLocalBounds().toFloat());
+            float                       hh = entityShape.getHeight();
+            float                       ww = entityShape.getWidth();
+            yarp::os::ConstString       entityName(aContainer->getName().toStdString());
+            PositionMap::const_iterator match(_rememberedPositions.find(entityName));
             
-            if (aContainer->isNew())
+            if (_rememberedPositions.end() == match)
             {
-                OD_LOG("(aContainer->isNew())"); //####
                 newX = (randomizer.nextFloat() * (fullWidth - ww));
                 newY = (randomizer.nextFloat() * (fullHeight - hh));
-                aContainer->setTopLeftPosition(static_cast<int>(newX), static_cast<int>(newY));
             }
+            else
+            {
+                newX = match->second.x;
+                newY = match->second.y;
+            }
+            aContainer->setTopLeftPosition(static_cast<int>(newX), static_cast<int>(newY));
         }
     }
 #endif // ! defined(USE_OGDF_POSITIONING)
