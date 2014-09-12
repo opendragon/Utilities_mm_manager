@@ -166,7 +166,7 @@ void ScannerThread::addEntities(void)
     {
         MplusM::Utilities::ServiceDescriptor descriptor(outer->second);
         EntityData *                         anEntity = new EntityData(kContainerKindService,
-                                                                       descriptor._canonicalName,
+                                                                       descriptor._serviceName,
                                                                        descriptor._kind,
                                                                        descriptor._description);
         PortData *                           aPort = anEntity->addPort(descriptor._channelName, "",
