@@ -217,8 +217,9 @@ namespace ChannelManager
         /*! @brief Remove connections that are invalid. */
         void removeInvalidConnections(void);
         
-        /*! @brief Remove any entities that were not visited. */
-        void removeUnvisitedEntities(void);
+        /*! @brief Remove any entities that were not visited.
+         @returns @c true if an entity was removed and @c false otherwise. */
+        bool removeUnvisitedEntities(void);
         
         /*! @brief Called when the component size has been changed. */
         void resized(void);

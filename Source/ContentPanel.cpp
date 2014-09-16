@@ -525,6 +525,7 @@ void ContentPanel::updatePanels(ScannerThread & scanner)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("scanner = ", &scanner); //####
+    bool                 changeSeen = false;
     const EntitiesData & workingData(scanner.getEntitiesData());
     
     // Retrieve each entity from our new list; if it is known already, ignore it but mark the
@@ -573,6 +574,7 @@ void ContentPanel::updatePanels(ScannerThread & scanner)
                     }
                 }
                 _entitiesPanel->addEntity(newEntity);
+                changeSeen = true;
             }
         }
     }
@@ -594,10 +596,17 @@ void ContentPanel::updatePanels(ScannerThread & scanner)
             otherPort->addInputConnection(thisPort, walker->_mode);
         }
     }
-    _entitiesPanel->removeUnvisitedEntities();
+    if (_entitiesPanel->removeUnvisitedEntities())
+    {
+        changeSeen = true;
+    }
     _entitiesPanel->removeInvalidConnections();
     OD_LOG("about to call adjustSize()"); //####
     _entitiesPanel->adjustSize(false);
+    if (changeSeen)
+    {
+        scanner.doScanSoon();
+    }
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::updatePanels
 

@@ -119,16 +119,6 @@ void ChannelManagerApplication::anotherInstanceStarted(const String & commandLin
     OD_LOG_OBJEXIT(); //####
 } // ChannelManagerApplication::anotherInstanceStarted
 
-void ChannelManagerApplication::doScanSoon(void)
-{
-    OD_LOG_OBJENTER(); //####
-    if (_scanner)
-    {
-        _scanner->doScanSoon();
-    }
-    OD_LOG_OBJEXIT(); //####
-} // ChannelManagerApplication::doScanSoon
-
 void ChannelManagerApplication::connectPeekChannel(void)
 {
     OD_LOG_OBJENTER(); //####
@@ -145,6 +135,16 @@ void ChannelManagerApplication::connectPeekChannel(void)
     }
     OD_LOG_OBJEXIT(); //####
 } // ChannelManagerApplication::connectPeekChannel
+
+void ChannelManagerApplication::doScanSoon(void)
+{
+    OD_LOG_OBJENTER(); //####
+    if (_scanner)
+    {
+        _scanner->doScanSoon();
+    }
+    OD_LOG_OBJEXIT(); //####
+} // ChannelManagerApplication::doScanSoon
 
 const String ChannelManagerApplication::getApplicationName(void)
 {

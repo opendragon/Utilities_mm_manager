@@ -637,9 +637,10 @@ void EntitiesPanel::removeInvalidConnections(void)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::removeInvalidConnections
 
-void EntitiesPanel::removeUnvisitedEntities(void)
+bool EntitiesPanel::removeUnvisitedEntities(void)
 {
     OD_LOG_OBJENTER(); //####
+    bool didRemove = false;
     bool keepGoing;
     
     do
@@ -671,11 +672,12 @@ void EntitiesPanel::removeUnvisitedEntities(void)
             removeChildComponent(anEntity);
             delete anEntity;
             _knownEntities.erase(walker);
-            keepGoing = true;
+            keepGoing = didRemove = true;
         }
     }
     while (keepGoing);
-    OD_LOG_OBJEXIT(); //####
+    OD_LOG_OBJEXIT_B(didRemove); //####
+    return didRemove;
 } // EntitiesPanel::removeUnvisitedEntities
 
 void EntitiesPanel::resized(void)
