@@ -86,6 +86,9 @@ namespace ChannelManager
          @returns @c true if the write lock has been acquired and @c false otherwise. */
         bool conditionallyAcquireForWrite(void);
         
+        /*! @brief Indicate that a scan should be performed as soon as possible. */
+        void doScanSoon(void);
+        
         /*! @brief Return the collected entities data.
          @returns The collected entities data. */
         EntitiesData & getEntitiesData(void)
@@ -214,6 +217,11 @@ namespace ChannelManager
         /*! @brief The port used to determine if a port being checked can be used as an input. */
         MplusM::Common::AdapterChannel * _outputOnlyPort;
         
+# if (defined(CHECK_FOR_STALE_PORTS) && defined(DO_SINGLE_CHECK_FOR_STALE_PORTS))
+        /*! @brief @c true if the initial stale removal occurred and @c false otherwise. */
+        bool _initialStaleCheckDone;
+# endif // defined(CHECK_FOR_STALE_PORTS) && defined(DO_SINGLE_CHECK_FOR_STALE_PORTS)
+        
         /*! @brief @c true if the port direction resources are available. */
         bool _portsValid;
         
@@ -224,11 +232,9 @@ namespace ChannelManager
          otherwise. */
         bool _scanIsComplete;
         
-# if (defined(CHECK_FOR_STALE_PORTS) && defined(DO_SINGLE_CHECK_FOR_STALE_PORTS))
-        /*! @brief @c true if the initial stale removal occurred and @c false otherwise. */
-        bool _initialStaleCheckDone;
-# endif // defined(CHECK_FOR_STALE_PORTS) && defined(DO_SINGLE_CHECK_FOR_STALE_PORTS)
-
+        /*! @brief @c true if the scan should be done as soon as possible and @c false otherwise. */
+        bool _scanSoon;
+        
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ScannerThread)
         
     }; // ScannerThread

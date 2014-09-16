@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       ChannelManagerApp.h
+//  File:       ChannelManagerApplication.h
 //
 //  Project:    M+M
 //
@@ -36,8 +36,8 @@
 //
 //--------------------------------------------------------------------------------------------------
 
-#if (! defined(ChannelManagerApp_H_))
-# define ChannelManagerApp_H_ /* Header guard */
+#if (! defined(ChannelManagerApplication_H_))
+# define ChannelManagerApplication_H_ /* Header guard */
 
 # include "ChannelManagerWindow.h"
 
@@ -72,6 +72,7 @@
 
 namespace ChannelManager
 {
+    class PeekInputHandler;
     class ScannerThread;
     
     /*! @brief The application object of the application. */
@@ -88,6 +89,12 @@ namespace ChannelManager
         /*! @brief Called when an attempt was made to launch another instance of the application.
          @param commandLine The arguments passed to the new instance. */
         void anotherInstanceStarted(const String & commandLine);
+        
+        /*! @brief Connect (or reconnect) the peek channel to the Service Registry. */
+        void connectPeekChannel(void);
+        
+        /*! @brief Indicate that a scan should be performed as soon as possible. */
+        void doScanSoon(void);
         
         /*! @brief Return the application name.
          @returns The application's name. */
@@ -129,6 +136,12 @@ namespace ChannelManager
         /*! @brief The background scanner thread. */
         ScopedPointer<ScannerThread> _scanner;
         
+        /*! @brief A channel to watch the Service Registry status. */
+        MplusM::Common::AdapterChannel * _peeker;
+        
+        /*! @brief The input handler for the 'peek' channel. */
+        PeekInputHandler * _peekHandler;
+        
     }; // ChannelManagerApplication
     
 } // ChannelManager
@@ -141,4 +154,4 @@ bool CheckForExit(void * stuff);
 /*! @brief Indicate that an exit has been requested. */
 void SetExitRequest(void);
 
-#endif // ! defined(ChannelManagerApp_H_)
+#endif // ! defined(ChannelManagerApplication_H_)

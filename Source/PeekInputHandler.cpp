@@ -1,10 +1,11 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       ChannelManagerMain.cpp
+//  File:       PeekInputHandler.cpp
 //
 //  Project:    M+M
 //
-//  Contains:   A utility application to YARP ports and M+M channels.
+//  Contains:   The class definition for the custom data channel input handler used to watch the
+//              Service Registry.
 //
 //  Written by: Norman Jaffe
 //
@@ -32,11 +33,14 @@
 //              ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 //              DAMAGE.
 //
-//  Created:    2014-07-14
+//  Created:    2014-09-16
 //
 //--------------------------------------------------------------------------------------------------
 
+#include "PeekInputHandler.h"
 #include "ChannelManagerApplication.h"
+
+#include <mpm/M+MRequests.h>
 
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
@@ -47,13 +51,13 @@
 #endif // defined(__APPLE__)
 /*! @file
  
- @brief A utility application to YARP ports and M+M channels. */
+ @brief The class definition for the custom data channel input handler used to watch the Service
+ Registry. */
 #if defined(__APPLE__)
 # pragma clang diagnostic pop
 #endif // defined(__APPLE__)
 
 using namespace ChannelManager;
-using namespace std;
 
 #if defined(__APPLE__)
 # pragma mark Private structures, constants and variables
@@ -68,21 +72,77 @@ using namespace std;
 #endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
-# pragma mark Constructors and destructors
+# pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
-#if defined(__APPLE__)
-# pragma mark Actions
-#endif // defined(__APPLE__)
+PeekInputHandler::PeekInputHandler(void) :
+    inherited()
+{
+    OD_LOG_ENTER(); //####
+    OD_LOG_EXIT_P(this); //####
+} // PeekInputHandler::PeekInputHandler
+
+PeekInputHandler::~PeekInputHandler(void)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_OBJEXIT(); //####
+} // PeekInputHandler::~PeekInputHandler
 
 #if defined(__APPLE__)
-# pragma mark Accessors
+# pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
+
+bool PeekInputHandler::handleInput(const yarp::os::Bottle &      input,
+                                   const yarp::os::ConstString & senderChannel,
+                                   yarp::os::ConnectionWriter *  replyMechanism)
+{
+#if (! defined(OD_ENABLE_LOGGING))
+# if MAC_OR_LINUX_
+#  pragma unused(senderChannel,replyMechanism)
+# endif // MAC_OR_LINUX_
+#endif // ! defined(OD_ENABLE_LOGGING)
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_S2s("senderChannel = ", senderChannel, "got ", input.toString()); //####
+    OD_LOG_P1("replyMechanism = ", replyMechanism); //####
+    bool result = true;
+    
+    try
+    {
+        // The status output of the Service Registry is in the form:
+        // "Date" "Time" "Registry" "operation" ....
+        if (4 <= input.size())
+        {
+            yarp::os::Value argValue(input.get(3));
+            
+            if (argValue.isString())
+            {
+                ChannelManagerApplication * ourApp =
+                        static_cast<ChannelManagerApplication *>(JUCEApplication::getInstance());
+                yarp::os::ConstString       argAsString(argValue.toString());
+                
+                if (ourApp)
+                {
+                    if (argAsString == MpM_REGISTRY_STATUS_ADDING)
+                    {
+                        ourApp->doScanSoon();
+                    }
+                    else if (argAsString == MpM_REGISTRY_STATUS_REMOVING)
+                    {
+                        ourApp->doScanSoon();
+                    }
+                }                
+            }
+        }
+    }
+    catch (...)
+    {
+        OD_LOG("Exception caught"); //####
+        throw;
+    }
+    OD_LOG_OBJEXIT_B(result); //####
+    return result;
+} // PeekInputHandler::handleInput
 
 #if defined(__APPLE__)
 # pragma mark Global functions
 #endif // defined(__APPLE__)
-
-//==============================================================================
-// This macro generates the main() routine that launches the app.
-START_JUCE_APPLICATION(ChannelManagerApplication)

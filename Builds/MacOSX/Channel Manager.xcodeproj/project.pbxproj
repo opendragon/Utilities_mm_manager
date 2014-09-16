@@ -40,10 +40,11 @@
 		DF36AE5A19A24F7F0083B63F /* RecentFilesMenuTemplate.nib in Resources */ = {isa = PBXBuildFile; fileRef = 7A9A7921175D2E89D0783CFE /* RecentFilesMenuTemplate.nib */; };
 		DF385125198AD99400A0414E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DF385124198AD99400A0414E /* Images.xcassets */; };
 		DF4C6E1C19797ABD006CFB14 /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF74B66F1976D2BF00A6ECD3 /* libc++.dylib */; };
-		DF74B65919747BE800A6ECD3 /* ChannelManagerApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF74B65719747BE800A6ECD3 /* ChannelManagerApp.cpp */; };
+		DF74B65919747BE800A6ECD3 /* ChannelManagerApplication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF74B65719747BE800A6ECD3 /* ChannelManagerApplication.cpp */; };
 		DF74B66E19759B8100A6ECD3 /* ChannelContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF74B66C19759B8100A6ECD3 /* ChannelContainer.cpp */; };
 		DF74B6731976D8F000A6ECD3 /* ChannelEntry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF74B6711976D8F000A6ECD3 /* ChannelEntry.cpp */; };
 		DF74B676197851F600A6ECD3 /* ScannerThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF74B674197851F600A6ECD3 /* ScannerThread.cpp */; };
+		DF824BB919C88888004D13AC /* PeekInputHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF824BB719C88888004D13AC /* PeekInputHandler.cpp */; };
 		DF845F6C1988649300A57B53 /* libmpmCommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF74B662197583D800A6ECD3 /* libmpmCommon.a */; };
 		DF845F6D1988649700A57B53 /* libodLogging.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF74B664197583DD00A6ECD3 /* libodLogging.a */; };
 		DF845F6E1988649A00A57B53 /* libYARP_init.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF74B666197583E700A6ECD3 /* libYARP_init.a */; };
@@ -827,8 +828,8 @@
 		DF385124198AD99400A0414E /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = "Channel Manager/Images.xcassets"; sourceTree = "<group>"; };
 		DF4C6E1A19797AA2006CFB14 /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
 		DF4C6E1D19797AC9006CFB14 /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
-		DF74B65719747BE800A6ECD3 /* ChannelManagerApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ChannelManagerApp.cpp; path = ../../Source/ChannelManagerApp.cpp; sourceTree = SOURCE_ROOT; };
-		DF74B65819747BE800A6ECD3 /* ChannelManagerApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChannelManagerApp.h; path = ../../Source/ChannelManagerApp.h; sourceTree = SOURCE_ROOT; };
+		DF74B65719747BE800A6ECD3 /* ChannelManagerApplication.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ChannelManagerApplication.cpp; path = ../../Source/ChannelManagerApplication.cpp; sourceTree = SOURCE_ROOT; };
+		DF74B65819747BE800A6ECD3 /* ChannelManagerApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChannelManagerApplication.h; path = ../../Source/ChannelManagerApplication.h; sourceTree = SOURCE_ROOT; };
 		DF74B660197583CD00A6ECD3 /* libOGDF.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOGDF.a; path = ../../../../../../../usr/local/lib/libOGDF.a; sourceTree = "<group>"; };
 		DF74B662197583D800A6ECD3 /* libmpmCommon.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmpmCommon.a; path = ../../../../../../../usr/local/lib/libmpmCommon.a; sourceTree = "<group>"; };
 		DF74B664197583DD00A6ECD3 /* libodLogging.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libodLogging.a; path = ../../../../../../../usr/local/lib/libodLogging.a; sourceTree = "<group>"; };
@@ -848,6 +849,8 @@
 		DF7A3D9319884574008FA4CA /* libYARP_init.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libYARP_init.a; path = ../../../../../../../opt/MnM/lib/libYARP_init.a; sourceTree = "<group>"; };
 		DF7A3D9519884577008FA4CA /* libYARP_OS.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libYARP_OS.a; path = ../../../../../../../opt/MnM/lib/libYARP_OS.a; sourceTree = "<group>"; };
 		DF7A3D971988457B008FA4CA /* libACE.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libACE.dylib; path = ../../../../../../../opt/MnM/lib/libACE.dylib; sourceTree = "<group>"; };
+		DF824BB719C88888004D13AC /* PeekInputHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PeekInputHandler.cpp; path = ../../Source/PeekInputHandler.cpp; sourceTree = "<group>"; };
+		DF824BB819C88888004D13AC /* PeekInputHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PeekInputHandler.h; path = ../../Source/PeekInputHandler.h; sourceTree = "<group>"; };
 		DF845F72198864BA00A57B53 /* libmpmCommon.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmpmCommon.a; path = ../../../../../../../usr/local/lib/libmpmCommon.a; sourceTree = "<group>"; };
 		DF845F73198864BA00A57B53 /* libodLogging.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libodLogging.a; path = ../../../../../../../usr/local/lib/libodLogging.a; sourceTree = "<group>"; };
 		DF845F74198864BA00A57B53 /* libYARP_init.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libYARP_init.a; path = ../../../../../../../usr/local/lib/libYARP_init.a; sourceTree = "<group>"; };
@@ -1248,8 +1251,8 @@
 				DF74B66D19759B8100A6ECD3 /* ChannelContainer.h */,
 				DF74B6711976D8F000A6ECD3 /* ChannelEntry.cpp */,
 				DF74B6721976D8F000A6ECD3 /* ChannelEntry.h */,
-				DF74B65719747BE800A6ECD3 /* ChannelManagerApp.cpp */,
-				DF74B65819747BE800A6ECD3 /* ChannelManagerApp.h */,
+				DF74B65719747BE800A6ECD3 /* ChannelManagerApplication.cpp */,
+				DF74B65819747BE800A6ECD3 /* ChannelManagerApplication.h */,
 				C787E5217B7752421DB83C5A /* ChannelManagerMain.cpp */,
 				DF1470E8197D80A000E182D6 /* ChannelManagerWindow.cpp */,
 				DF1470E9197D80A000E182D6 /* ChannelManagerWindow.h */,
@@ -1262,6 +1265,8 @@
 				DF1470EF197D80A000E182D6 /* EntitiesPanel.h */,
 				DF03EDD619927734004C5161 /* EntityData.cpp */,
 				DF03EDD719927734004C5161 /* EntityData.h */,
+				DF824BB719C88888004D13AC /* PeekInputHandler.cpp */,
+				DF824BB819C88888004D13AC /* PeekInputHandler.h */,
 				DF03EDD919927B3E004C5161 /* PortData.cpp */,
 				DF03EDDA19927B3E004C5161 /* PortData.h */,
 				DF74B674197851F600A6ECD3 /* ScannerThread.cpp */,
@@ -2797,9 +2802,10 @@
 				A5B6B98F0DF3641F3957E174 /* juce_audio_processors.mm in Sources */,
 				DF1470F0197D80A000E182D6 /* ChannelManagerWindow.cpp in Sources */,
 				E2FED85FB76A3966795E8416 /* juce_core.mm in Sources */,
-				DF74B65919747BE800A6ECD3 /* ChannelManagerApp.cpp in Sources */,
+				DF74B65919747BE800A6ECD3 /* ChannelManagerApplication.cpp in Sources */,
 				3AFA49CB7058B71E8867F68C /* juce_cryptography.mm in Sources */,
 				DF74B6731976D8F000A6ECD3 /* ChannelEntry.cpp in Sources */,
+				DF824BB919C88888004D13AC /* PeekInputHandler.cpp in Sources */,
 				DF03EDD819927734004C5161 /* EntityData.cpp in Sources */,
 				DF03EDD519926CDB004C5161 /* EntitiesData.cpp in Sources */,
 				DF74B66E19759B8100A6ECD3 /* ChannelContainer.cpp in Sources */,

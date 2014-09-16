@@ -39,7 +39,7 @@
 #include "ScannerThread.h"
 #include "ChannelContainer.h"
 #include "ChannelEntry.h"
-#include "ChannelManagerApp.h"
+#include "ChannelManagerApplication.h"
 #include "ContentPanel.h"
 #include "EntityData.h"
 #include "PortData.h"
@@ -92,11 +92,11 @@ ScannerThread::ScannerThread(const yarp::os::ConstString & name,
 #if (defined(CHECK_FOR_STALE_PORTS) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS)))
     _lastStaleTime(- (2 * kMinStaleInterval)),
 #endif // efined(CHECK_FOR_STALE_PORTS) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS))
-    _inputOnlyPort(NULL), _outputOnlyPort(NULL), _portsValid(false), _scanCanProceed(true),
-    _scanIsComplete(false)
+    _inputOnlyPort(NULL), _outputOnlyPort(NULL),
 #if (defined(CHECK_FOR_STALE_PORTS) && defined(DO_SINGLE_CHECK_FOR_STALE_PORTS))
-    , _initialStaleCheckDone(false)
+    _initialStaleCheckDone(false),
 #endif // defined(CHECK_FOR_STALE_PORTS) && defined(DO_SINGLE_CHECK_FOR_STALE_PORTS)
+    _portsValid(false), _scanCanProceed(true), _scanIsComplete(false), _scanSoon(false)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_S1s("name = ", name); //####
@@ -478,32 +478,33 @@ PortDirection ScannerThread::determineDirection(ChannelEntry *                ol
                 
             default :
                 // Determine by doing a test connection.
-                if (MplusM::Common::NetworkConnectWithRetries(_outputOnlyPortName, portName,
-                                                              STANDARD_WAIT_TIME, false, checker,
-                                                              checkStuff))
+                if (MplusM::Utilities::NetworkConnectWithRetries(_outputOnlyPortName, portName,
+                                                                 STANDARD_WAIT_TIME, false, checker,
+                                                                 checkStuff))
                 {
                     canDoInput = true;
-                    if (! MplusM::Common::NetworkDisconnectWithRetries(_outputOnlyPortName,
-                                                                       portName,
-                                                                       STANDARD_WAIT_TIME, checker,
-                                                                       checkStuff))
+                    if (! MplusM::Utilities::NetworkDisconnectWithRetries(_outputOnlyPortName,
+                                                                          portName,
+                                                                          STANDARD_WAIT_TIME,
+                                                                          checker, checkStuff))
                     {
-                        OD_LOG("(! MplusM::Common::NetworkDisconnectWithRetries(" //####
+                        OD_LOG("(! MplusM::Utilities::NetworkDisconnectWithRetries(" //####
                                "lOutputOnlyPortName, portName, STANDARD_WAIT_TIME, " //####
                                "checker, checkStuff))"); //####
                     }
                 }
-                if (MplusM::Common::NetworkConnectWithRetries(portName, _inputOnlyPortName,
-                                                              STANDARD_WAIT_TIME, false, checker,
-                                                              checkStuff))
+                if (MplusM::Utilities::NetworkConnectWithRetries(portName, _inputOnlyPortName,
+                                                                 STANDARD_WAIT_TIME, false, checker,
+                                                                 checkStuff))
                 {
                     canDoOutput = true;
-                    if (! MplusM::Common::NetworkDisconnectWithRetries(portName, _inputOnlyPortName,
-                                                                       STANDARD_WAIT_TIME, checker,
-                                                                       checkStuff))
+                    if (! MplusM::Utilities::NetworkDisconnectWithRetries(portName,
+                                                                          _inputOnlyPortName,
+                                                                          STANDARD_WAIT_TIME,
+                                                                          checker, checkStuff))
                     {
-                        OD_LOG("(! MplusM::Common::NetworkDisconnectWithRetries(portName, " //####
-                               "lInputOnlyPortName, STANDARD_WAIT_TIME, checker, " //####
+                        OD_LOG("(! MplusM::Utilities::NetworkDisconnectWithRetries(" //####
+                               "portName, lInputOnlyPortName, STANDARD_WAIT_TIME, checker, " //####
                                "checkStuff))"); //####
                     }
                 }
@@ -530,6 +531,13 @@ PortDirection ScannerThread::determineDirection(ChannelEntry *                ol
     OD_LOG_OBJEXIT_L(static_cast<long>(result)); //####
     return result;
 } // ScannerThread::determineDirection
+
+void ScannerThread::doScanSoon(void)
+{
+    OD_LOG_OBJENTER(); //####
+    _scanSoon = true;
+    OD_LOG_OBJEXIT(); //####
+} // ScannerThread::doScanSoon
 
 bool ScannerThread::gatherEntities(MplusM::Common::CheckFunction checker,
                                    void *                        checkStuff)
@@ -593,6 +601,13 @@ bool ScannerThread::gatherEntities(MplusM::Common::CheckFunction checker,
             // Record the port connections.
             addPortConnections(detectedPorts, checker, checkStuff);
         }
+        ChannelManagerApplication * ourApp =
+                        static_cast<ChannelManagerApplication *>(JUCEApplication::getInstance());
+        
+        if (ourApp)
+        {
+            ourApp->connectPeekChannel();
+        }
     }
     OD_LOG_OBJEXIT_B(okSoFar); //####
     return okSoFar;
@@ -624,6 +639,7 @@ void ScannerThread::run(void)
         {
             int64 loopStartTime = Time::currentTimeMillis();
             
+            _scanSoon = false;
             addEntities();
             // Indicate that the scan data is available.
             unconditionallyAcquireForWrite();
@@ -702,7 +718,21 @@ void ScannerThread::run(void)
                     }
                     if (0 < delayAmount)
                     {
-                        wait(delayAmount);
+                        for (int ii = 0, mm = (delayAmount / VERY_SHORT_SLEEP);
+                             (mm > ii) && (! needToLeave) && (! _scanSoon); ++ii)
+                        {
+                            if (threadShouldExit())
+                            {
+                                OD_LOG("(threadShouldExit())"); //####
+                                needToLeave = true;
+                            }
+                            sleep(VERY_SHORT_SLEEP);
+                        }
+                        if (needToLeave)
+                        {
+                            OD_LOG("(needToLeave)"); //####
+                            break;
+                        }
                     }
                     else
                     {
@@ -728,8 +758,8 @@ void ScannerThread::run(void)
         }
         else
         {
-            for (int ii = 0, mm = (LONG_SLEEP / VERY_SHORT_SLEEP); (mm > ii) && (! needToLeave);
-                 ++ii)
+            for (int ii = 0, mm = (LONG_SLEEP / VERY_SHORT_SLEEP);
+                 (mm > ii) && (! needToLeave) && (! _scanSoon); ++ii)
             {
                 if (threadShouldExit())
                 {
