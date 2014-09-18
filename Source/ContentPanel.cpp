@@ -102,7 +102,8 @@ static String getPathToSettingsFile(void)
 #endif // defined(__APPLE__)
 
 ContentPanel::ContentPanel(ChannelManagerWindow * containingWindow) :
-    inherited(), _entitiesPanel(new EntitiesPanel(this)), _containingWindow(containingWindow),
+    inherited1(), inherited2(), _entitiesPanel(new EntitiesPanel(this)),
+    _containingWindow(containingWindow),
 #if (defined(USE_OGDF_POSITIONING) && defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY))
     _initialPositioningDone(false),
 #endif // defined(USE_OGDF_POSITIONING) && defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY)
@@ -130,6 +131,45 @@ ContentPanel::~ContentPanel(void)
 #if defined(__APPLE__)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
+
+void ContentPanel::getAllCommands(Array<CommandID> & commands)
+{
+    OD_LOG_OBJENTER(); //####
+    static const CommandID ids[] =
+        {
+            ChannelManagerWindow::kCommandDoRepaint
+        };
+    
+    commands.addArray(ids, numElementsInArray(ids));
+    OD_LOG_OBJEXIT(); //####
+} // ContentPanel::getAllCommands
+
+void ContentPanel::getCommandInfo(CommandID                commandID,
+                                  ApplicationCommandInfo & result)
+{
+    OD_LOG_OBJENTER(); //####
+    switch (commandID)
+    {
+        case ChannelManagerWindow::kCommandDoRepaint :
+            result.setInfo("Repaint", "Trigger a repaint of the window", "View", 0);
+            result.addDefaultKeypress('R', ModifierKeys::commandModifier);
+            break;
+            
+        default :
+            break;
+            
+    }
+    OD_LOG_OBJEXIT(); //####
+} // ContentPanel::getCommandInfo
+
+ApplicationCommandTarget * ContentPanel::getNextCommandTarget(void)
+{
+    OD_LOG_OBJENTER(); //####
+    ApplicationCommandTarget * nextOne = findFirstTargetParentComponent();
+    
+    OD_LOG_OBJEXIT_P(nextOne); //####
+    return nextOne;
+} // ContentPanel::getNextCommandTarget
 
 void ContentPanel::paint(Graphics & gg)
 {
@@ -182,6 +222,26 @@ void ContentPanel::paint(Graphics & gg)
     }
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::paint
+
+bool ContentPanel::perform(const InvocationInfo & info)
+{
+    OD_LOG_OBJENTER(); //####
+    bool wasProcessed = false;
+    
+    switch (info.commandID)
+    {
+        case ChannelManagerWindow::kCommandDoRepaint :
+            _containingWindow->repaint();
+            wasProcessed = true;
+            break;
+            
+        default :
+            break;
+            
+    }
+    OD_LOG_OBJEXIT_B(wasProcessed); //####
+    return wasProcessed;
+} // ContentPanel::perform
 
 void ContentPanel::recallEntityPositions(void)
 {

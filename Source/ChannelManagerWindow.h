@@ -59,10 +59,18 @@ namespace ChannelManager
     class ScannerThread;
     
     /*! @brief The main window of the application. */
-    class ChannelManagerWindow : public DocumentWindow
+    class ChannelManagerWindow : public DocumentWindow,
+                                 private AsyncUpdater
     {
     public:
         
+        /*! @brief The commands that we respond to. */
+        enum CommandIDs
+        {
+            /*! @brief The command to trigger a repaint. */
+            kCommandDoRepaint = 0x2000
+        }; // CommandIDs
+
         /*! @brief The constructor.
          @param title The window title. */
         ChannelManagerWindow(const yarp::os::ConstString & title);
@@ -72,6 +80,10 @@ namespace ChannelManager
         
         /*! @brief This method is called when the user tries to close the window. */
         void closeButtonPressed(void);
+        
+        /*! @brief Returns the command manager object used to dispatch command events.
+         @returns The command manager object used to dispatch command events. */
+        static ApplicationCommandManager & getApplicationCommandManager(void);
         
         /*! @brief Returns the entities panel.
          @returns The entities panel. */
@@ -85,7 +97,10 @@ namespace ChannelManager
         {
             return _scannerThread;
         } // getScannerThread
-                
+        
+        /*! @brief Called back to perform operations. */
+        virtual void handleAsyncUpdate(void);
+
         /*! @brief Set up the reference to the background scanning thread. */
         void setScannerThread(ScannerThread * theScanner);
         
@@ -93,8 +108,11 @@ namespace ChannelManager
         
     private:
         
-        /*! @brief The class that this class is derived from. */
-        typedef DocumentWindow inherited;
+        /*! @brief The first class that this class is derived from. */
+        typedef DocumentWindow inherited1;
+        
+        /*! @brief The second class that this class is derived from. */
+        typedef AsyncUpdater inherited2;
         
         /*! @brief The connections panel. */
         ScopedPointer<Component> _connectionsPanel;

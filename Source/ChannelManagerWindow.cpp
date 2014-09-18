@@ -60,6 +60,9 @@ using namespace std;
 # pragma mark Private structures, constants and variables
 #endif // defined(__APPLE__)
 
+/*! @brief The command manager object used to dispatch command events. */
+static ScopedPointer<ApplicationCommandManager> lApplicationCommandManager;
+
 #if defined(__APPLE__)
 # pragma mark Local functions
 #endif // defined(__APPLE__)
@@ -73,7 +76,7 @@ using namespace std;
 #endif // defined(__APPLE__)
 
 ChannelManagerWindow::ChannelManagerWindow(const yarp::os::ConstString & title)  :
-    inherited(title.c_str(), Colours::lightgrey, inherited::allButtons),
+    inherited1(title.c_str(), Colours::lightgrey, inherited1::allButtons), inherited2(),
     _contentPanel(new ContentPanel(this)), _scannerThread(NULL)
 {
     OD_LOG_ENTER(); //####
@@ -82,12 +85,15 @@ ChannelManagerWindow::ChannelManagerWindow(const yarp::os::ConstString & title) 
     setContentOwned(_contentPanel, true);
     centreWithSize(getWidth(), getHeight());
     setVisible(true);
+    addKeyListener(getApplicationCommandManager().getKeyMappings());
+    triggerAsyncUpdate();
     OD_LOG_EXIT_P(this); //####
 } // ChannelManagerWindow::ChannelManagerWindow
 
 ChannelManagerWindow::~ChannelManagerWindow(void)
 {
     OD_LOG_OBJENTER(); //####
+    lApplicationCommandManager = nullptr;
     OD_LOG_OBJEXIT(); //####
 } // ChannelManagerWindow::~ChannelManagerWindow
 
@@ -105,6 +111,17 @@ void ChannelManagerWindow::closeButtonPressed(void)
     OD_LOG_OBJEXIT(); //####
 } // ChannelManagerWindow::closeButtonPressed
 
+ApplicationCommandManager & ChannelManagerWindow::getApplicationCommandManager(void)
+{
+    OD_LOG_ENTER(); //####
+    if (! lApplicationCommandManager)
+    {
+        lApplicationCommandManager = new ApplicationCommandManager;
+    }
+    OD_LOG_EXIT_P(lApplicationCommandManager); //####
+    return *lApplicationCommandManager;
+} // ChannelManagerWindow::getApplicationCommandManager
+
 EntitiesPanel & ChannelManagerWindow::getEntitiesPanel(void)
 const
 {
@@ -114,6 +131,16 @@ const
     OD_LOG_OBJEXIT_P(&thePanel); //####
     return thePanel;
 } // ChannelManagerWindow::getEntitiesPanel
+
+void ChannelManagerWindow::handleAsyncUpdate(void)
+{
+    OD_LOG_OBJENTER(); //####
+    ApplicationCommandManager & commandManager = getApplicationCommandManager();
+
+    commandManager.registerAllCommandsForTarget(_contentPanel);
+    commandManager.registerAllCommandsForTarget(JUCEApplication::getInstance());
+    OD_LOG_OBJEXIT(); //####
+} // ChannelManagerWindow::handleAsyncUpdate
 
 void ChannelManagerWindow::setScannerThread(ScannerThread * theScanner)
 {

@@ -61,7 +61,8 @@ namespace ChannelManager
     class ScannerThread;
     
     /*! @brief The content area of the main window of the application. */
-    class ContentPanel : public Viewport
+    class ContentPanel : public Viewport,
+                         public ApplicationCommandTarget
     {
     public:
         
@@ -107,8 +108,30 @@ namespace ChannelManager
         
     private:
         
-        /*! @brief The class that this class is derived from. */
-        typedef Viewport inherited;
+        /*! @brief The first class that this class is derived from. */
+        typedef Viewport inherited1;
+        
+        /*! @brief The second class that this class is derived from. */
+        typedef ApplicationCommandTarget inherited2;
+        
+        /*! @brief Return a list of commands that this target can handle.
+         @param commands The list of commands to be added to. */
+        virtual void getAllCommands(Array<CommandID> & commands);
+
+        /*! @brief Provide details about one of the commands that this target can perform.
+         @param commandID The identifier for the command.
+         @param result The details about the command. */
+        virtual void getCommandInfo(CommandID                commandID,
+                                    ApplicationCommandInfo & result);
+        
+        /*! @brief Return the next target to try after this one.
+         @returns The next target to try after this one. */
+        virtual ApplicationCommandTarget * getNextCommandTarget(void);
+
+        /*! @brief Perform the specified command.
+         @param info The details for the command.
+         @returns @c true if the command was handled and @c false if it was not. */
+        virtual bool perform(const InvocationInfo & info);
         
         /*! @brief Set the entity positions, based on the scanned entities.
         @param scanner The background scanning thread. */

@@ -2758,7 +2758,7 @@
 		A14AE462CB1A56EE6EDB70AB /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0510;
+				LastUpgradeCheck = 0600;
 			};
 			buildConfigurationList = E5E6C3EB8F2E58F5F28BDE5E /* Build configuration list for PBXProject "Channel Manager" */;
 			compatibilityVersion = "Xcode 3.2";
