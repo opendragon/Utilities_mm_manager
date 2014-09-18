@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>BA579609-832F-47D9-A828-4F2EC2936C06</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Channel Manager</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>5C6DAAFEC1F38E88DD8C2AD4B19FBFEDF810E4BA</key>
+		<string>https://github.com/MovementAndMeaning/Utilities_ChannelManager.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Builds/MacOSX/Channel Manager.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>5C6DAAFEC1F38E88DD8C2AD4B19FBFEDF810E4BA</key>
+		<string>../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/MovementAndMeaning/Utilities_ChannelManager.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>5C6DAAFEC1F38E88DD8C2AD4B19FBFEDF810E4BA</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>5C6DAAFEC1F38E88DD8C2AD4B19FBFEDF810E4BA</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Utilities_Channel%20Manager</string>
+		</dict>
+	</array>
+</dict>
+</plist>

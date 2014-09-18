@@ -577,17 +577,22 @@ bool ScannerThread::gatherEntities(MplusM::Common::CheckFunction checker,
     }
     if (okSoFar)
     {
+        bool                         servicesSeen;
         MplusM::Common::StringVector services;
 
         _rememberedPorts.clear();
         _rememberedPorts.insert(_inputOnlyPortName);
         _rememberedPorts.insert(_outputOnlyPortName);
-        if (! MplusM::Utilities::GetServiceNames(services, true, checker, checkStuff))
+        if (MplusM::Utilities::GetServiceNames(services, true, checker, checkStuff))
+        {
+            servicesSeen = true;
+        }
+        else
         {
             // Try again.
-            okSoFar = MplusM::Utilities::GetServiceNames(services, true, checker, checkStuff);
+            servicesSeen = MplusM::Utilities::GetServiceNames(services, true, checker, checkStuff);
         }
-        if (okSoFar)
+        if (servicesSeen)
         {
             // Record the services to be displayed.
             addServices(services, checker, checkStuff);
@@ -596,15 +601,15 @@ bool ScannerThread::gatherEntities(MplusM::Common::CheckFunction checker,
             {
                 addPortsWithAssociates(detectedPorts, checker, checkStuff);
             }
-            // Record the ports that are standalone.
-            addRegularPortEntities(detectedPorts, checker, checkStuff);
-            // Record the port connections.
-            addPortConnections(detectedPorts, checker, checkStuff);
         }
+        // Record the ports that are standalone.
+        addRegularPortEntities(detectedPorts, checker, checkStuff);
+        // Record the port connections.
+        addPortConnections(detectedPorts, checker, checkStuff);
         ChannelManagerApplication * ourApp =
                         static_cast<ChannelManagerApplication *>(JUCEApplication::getInstance());
         
-        if (ourApp)
+        if (ourApp && servicesSeen)
         {
             ourApp->connectPeekChannel();
         }
