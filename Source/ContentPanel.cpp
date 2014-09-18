@@ -102,10 +102,11 @@ static String getPathToSettingsFile(void)
 #endif // defined(__APPLE__)
 
 ContentPanel::ContentPanel(ChannelManagerWindow * containingWindow) :
-    inherited(), _entitiesPanel(new EntitiesPanel(this)), _containingWindow(containingWindow)
+    inherited(), _entitiesPanel(new EntitiesPanel(this)), _containingWindow(containingWindow),
 #if (defined(USE_OGDF_POSITIONING) && defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY))
-    , _initialPositioningDone(false)
+    _initialPositioningDone(false),
 #endif // defined(USE_OGDF_POSITIONING) && defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY)
+    _skipNextScan(false)
 {
     OD_LOG_ENTER(); //####
     _entitiesPanel->setSize(_entitiesPanel->getWidth(),
@@ -163,8 +164,16 @@ void ContentPanel::paint(Graphics & gg)
             OD_LOG("(scanDataReady)"); //####
             // At this point the background scanning thread is, basically, idle, and we can use its
             // data.
-            updatePanels(*scanner);
-            setEntityPositions(*scanner);
+            if (_skipNextScan)
+            {
+                _skipNextScan = false;
+                scanner->doScanSoon();
+            }
+            else
+            {
+                updatePanels(*scanner);
+                setEntityPositions(*scanner);
+            }
             // Indicate that the scan data has been processed.
             scanner->unconditionallyAcquireForWrite();
             scanner->scanCanProceed();
@@ -520,6 +529,13 @@ void ContentPanel::setEntityPositions(ScannerThread & scanner)
 #endif // ! defined(USE_OGDF_POSITIONING)
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::setEntityPositions
+
+void ContentPanel::skipScan(void)
+{
+    OD_LOG_OBJENTER(); //####
+    _skipNextScan = true;
+    OD_LOG_OBJEXIT(); //####
+} // ContentPanel::skipScan
 
 void ContentPanel::updatePanels(ScannerThread & scanner)
 {

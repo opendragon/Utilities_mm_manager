@@ -699,6 +699,16 @@ void EntitiesPanel::setDragInfo(const Position position)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::setDragInfo
 
+void EntitiesPanel::skipScan(void)
+{
+    OD_LOG_OBJENTER(); //####
+    if (_container)
+    {
+        _container->skipScan();
+    }
+    OD_LOG_OBJEXIT(); //####
+} // EntitiesPanel::skipScan
+
 #if defined(__APPLE__)
 # pragma mark Global functions
 #endif // defined(__APPLE__)

@@ -834,6 +834,8 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
                 {
                     firstRemovePort->removeOutputConnection(this);
                     removeInputConnection(firstRemovePort);
+                    owningPanel.skipScan();
+                    owningPanel.repaint();
                 }
             }
         }
@@ -867,6 +869,7 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
                     
                     firstAddPort->addOutputConnection(this, mode);
                     addInputConnection(firstAddPort, mode);
+                    owningPanel.skipScan();
                     owningPanel.repaint();
                 }
             }
@@ -1035,6 +1038,7 @@ void ChannelEntry::mouseUp(const MouseEvent & ee)
                         
                         addOutputConnection(endEntry, mode);
                         endEntry->addInputConnection(this, mode);
+                        owningPanel.skipScan();
                     }
                 }
             }

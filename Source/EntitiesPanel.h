@@ -228,6 +228,9 @@ namespace ChannelManager
          @param position The location of the dragging connection. */
         void setDragInfo(const Position position);
         
+        /*! @brief Ignore the result of the next scan. */
+        void skipScan(void);
+        
     protected:
         
     private:

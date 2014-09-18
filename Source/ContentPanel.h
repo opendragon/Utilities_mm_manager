@@ -96,6 +96,9 @@ namespace ChannelManager
         /*! @brief Record the positions of all the entities in the panel. */
         void saveEntityPositions(void);
         
+        /*! @brief Ignore the result of the next scan. */
+        void skipScan(void);
+        
         /*! @brief Called when the visible area changes.
          @param newVisibleArea The new visible area. */
         virtual void visibleAreaChanged(const juce::Rectangle<int> & newVisibleArea);
@@ -127,6 +130,9 @@ namespace ChannelManager
 # if (defined(USE_OGDF_POSITIONING) && defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY))
         bool _initialPositioningDone;
 # endif // defined(USE_OGDF_POSITIONING) && defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY)
+        
+        /*! @brief @c true if the next scan result is to be ignored and @c false otherwise. */
+        bool _skipNextScan;
         
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ContentPanel)
         
