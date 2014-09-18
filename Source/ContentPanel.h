@@ -154,8 +154,14 @@ namespace ChannelManager
         bool _initialPositioningDone;
 # endif // defined(USE_OGDF_POSITIONING) && defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY)
         
+        /*! @brief @c true if the background is inverted and @c false otherwise. */
+        bool _invertBackground;
+        
         /*! @brief @c true if the next scan result is to be ignored and @c false otherwise. */
         bool _skipNextScan;
+        
+        /*! @brief @c true if the background is white and @c false otherwise. */
+        bool _whiteBackground;
         
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ContentPanel)
         

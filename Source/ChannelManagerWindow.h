@@ -68,7 +68,14 @@ namespace ChannelManager
         enum CommandIDs
         {
             /*! @brief The command to trigger a repaint. */
-            kCommandDoRepaint = 0x2000
+            kCommandDoRepaint = 0x2000,
+            
+            /*! @brief The command to invert the background gradient. */
+            kCommandInvertBackground = 0x2001,
+            
+            /*! @brief The command to set the background to white. */
+            kCommandWhiteBackground = 0x2002
+            
         }; // CommandIDs
 
         /*! @brief The constructor.

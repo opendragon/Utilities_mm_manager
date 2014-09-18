@@ -107,11 +107,11 @@ ContentPanel::ContentPanel(ChannelManagerWindow * containingWindow) :
 #if (defined(USE_OGDF_POSITIONING) && defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY))
     _initialPositioningDone(false),
 #endif // defined(USE_OGDF_POSITIONING) && defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY)
-    _skipNextScan(false)
+    _invertBackground(false), _skipNextScan(false), _whiteBackground(false)
 {
     OD_LOG_ENTER(); //####
     _entitiesPanel->setSize(_entitiesPanel->getWidth(),
-                            _entitiesPanel->getHeight() -_containingWindow->getTitleBarHeight());
+                            _entitiesPanel->getHeight() - _containingWindow->getTitleBarHeight());
     //setOpaque(true);
     setSize(_entitiesPanel->getWidth(), _entitiesPanel->getHeight());
     setScrollBarsShown(true, true);
@@ -137,7 +137,9 @@ void ContentPanel::getAllCommands(Array<CommandID> & commands)
     OD_LOG_OBJENTER(); //####
     static const CommandID ids[] =
         {
-            ChannelManagerWindow::kCommandDoRepaint
+            ChannelManagerWindow::kCommandDoRepaint,
+            ChannelManagerWindow::kCommandInvertBackground,
+            ChannelManagerWindow::kCommandWhiteBackground
         };
     
     commands.addArray(ids, numElementsInArray(ids));
@@ -153,6 +155,16 @@ void ContentPanel::getCommandInfo(CommandID                commandID,
         case ChannelManagerWindow::kCommandDoRepaint :
             result.setInfo("Repaint", "Trigger a repaint of the window", "View", 0);
             result.addDefaultKeypress('R', ModifierKeys::commandModifier);
+            break;
+            
+        case ChannelManagerWindow::kCommandInvertBackground :
+            result.setInfo("Invert", "Invert the background gradient", "View", 0);
+            result.addDefaultKeypress('I', ModifierKeys::commandModifier);
+            break;
+            
+        case ChannelManagerWindow::kCommandWhiteBackground :
+            result.setInfo("White", "Use a white background", "View", 0);
+            result.addDefaultKeypress('B', ModifierKeys::commandModifier);
             break;
             
         default :
@@ -176,14 +188,35 @@ void ContentPanel::paint(Graphics & gg)
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("gg = ", &gg); //####
     // Set up a gradient background, using a radial gradient from the centre to the furthest edge.
-    int            hh = getHeight();
-    int            ww = getWidth();
-    ColourGradient theGradient(Colours::white, static_cast<float>(ww / 2.0),
-                               static_cast<float>(hh / 2.0), Colours::grey, (hh > ww) ? 0 : ww,
-                               (hh > ww) ? hh : 0, true);
-    FillType       theBackgroundFill(theGradient);
+    int hh = getHeight();
+    int ww = getWidth();
     
-    gg.setFillType(theBackgroundFill);
+    if (_whiteBackground)
+    {
+        gg.setFillType(_invertBackground ? Colours::black : Colours::white);
+    }
+    else
+    {
+        float halfH = static_cast<float>(hh / 2.0);
+        float halfW = static_cast<float>(ww / 2.0);
+
+        if (_invertBackground)
+        {
+            ColourGradient theGradient2(Colours::grey, halfW, halfH, Colours::white,
+                                        (hh > ww) ? 0 : ww, (hh > ww) ? hh : 0, true);
+            FillType       theBackgroundFill2(theGradient2);
+            
+            gg.setFillType(theBackgroundFill2);
+        }
+        else
+        {
+            ColourGradient theGradient1(Colours::white, halfW, halfH, Colours::grey,
+                                        (hh > ww) ? 0 : ww, (hh > ww) ? hh : 0, true);
+            FillType       theBackgroundFill1(theGradient1);
+            
+            gg.setFillType(theBackgroundFill1);
+        }
+    }
     gg.fillAll();
     ScannerThread * scanner = _containingWindow->getScannerThread();
     
@@ -233,6 +266,16 @@ bool ContentPanel::perform(const InvocationInfo & info)
         case ChannelManagerWindow::kCommandDoRepaint :
             _containingWindow->repaint();
             wasProcessed = true;
+            break;
+            
+        case ChannelManagerWindow::kCommandInvertBackground :
+            _invertBackground = ! _invertBackground;
+            _containingWindow->repaint();
+            break;
+            
+        case ChannelManagerWindow::kCommandWhiteBackground :
+            _whiteBackground = ! _whiteBackground;
+            _containingWindow->repaint();
             break;
             
         default :
