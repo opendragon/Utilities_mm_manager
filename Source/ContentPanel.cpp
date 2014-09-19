@@ -187,22 +187,22 @@ void ContentPanel::paint(Graphics & gg)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("gg = ", &gg); //####
-    // Set up a gradient background, using a radial gradient from the centre to the furthest edge.
-    int hh = getHeight();
-    int ww = getWidth();
-    
     if (_whiteBackground)
     {
-        gg.setFillType(_invertBackground ? Colours::black : Colours::white);
+        gg.setFillType(_invertBackground ? Colours::darkgrey : Colours::lightgrey);
     }
     else
     {
+        // Set up a gradient background, using a radial gradient from the centre to the furthest
+        // edge.
+        int   hh = getHeight();
+        int   ww = getWidth();
         float halfH = static_cast<float>(hh / 2.0);
         float halfW = static_cast<float>(ww / 2.0);
 
         if (_invertBackground)
         {
-            ColourGradient theGradient2(Colours::grey, halfW, halfH, Colours::white,
+            ColourGradient theGradient2(Colours::darkgrey, halfW, halfH, Colours::lightgrey,
                                         (hh > ww) ? 0 : ww, (hh > ww) ? hh : 0, true);
             FillType       theBackgroundFill2(theGradient2);
             
@@ -210,7 +210,7 @@ void ContentPanel::paint(Graphics & gg)
         }
         else
         {
-            ColourGradient theGradient1(Colours::white, halfW, halfH, Colours::grey,
+            ColourGradient theGradient1(Colours::lightgrey, halfW, halfH, Colours::darkgrey,
                                         (hh > ww) ? 0 : ww, (hh > ww) ? hh : 0, true);
             FillType       theBackgroundFill1(theGradient1);
             
