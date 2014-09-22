@@ -121,7 +121,7 @@ int EntityData::getNumPorts(void)
 const
 {
     OD_LOG_OBJENTER(); //####
-    int result = _ports.size();
+    int result = static_cast<int>(_ports.size());
     
     OD_LOG_OBJEXIT_L(result); //####
     return result;
@@ -135,7 +135,7 @@ const
     
     if ((0 <= num) && (static_cast<int>(_ports.size()) > num))
     {
-        result = _ports.at(num);
+        result = _ports.at(static_cast<size_t>(num));
     }
     else
     {

@@ -12,18 +12,18 @@
       <FILE id="xoQ6qa" name="ChannelEntry.cpp" compile="1" resource="0"
             file="Source/ChannelEntry.cpp"/>
       <FILE id="rHBnob" name="ChannelEntry.h" compile="0" resource="0" file="Source/ChannelEntry.h"/>
-      <FILE id="vypYXp" name="ChannelManagerApp.cpp" compile="1" resource="0"
-            file="Source/ChannelManagerApp.cpp"/>
-      <FILE id="M0kKkG" name="ChannelManagerApp.h" compile="0" resource="0"
-            file="Source/ChannelManagerApp.h"/>
+      <FILE id="g2Or1Q" name="ChannelManagerApplication.cpp" compile="1"
+            resource="0" file="Source/ChannelManagerApplication.cpp"/>
+      <FILE id="vlr0G4" name="ChannelManagerApplication.h" compile="0" resource="0"
+            file="Source/ChannelManagerApplication.h"/>
+      <FILE id="yGJjab" name="ChannelManagerDataTypes.h" compile="0" resource="0"
+            file="Source/ChannelManagerDataTypes.h"/>
       <FILE id="j0Tz73" name="ChannelManagerMain.cpp" compile="1" resource="0"
             file="Source/ChannelManagerMain.cpp"/>
       <FILE id="BC2y5e" name="ChannelManagerWindow.cpp" compile="1" resource="0"
             file="Source/ChannelManagerWindow.cpp"/>
       <FILE id="EX1ER4" name="ChannelManagerWindow.h" compile="0" resource="0"
             file="Source/ChannelManagerWindow.h"/>
-      <FILE id="PcGPSM" name="ChannelsDataTypes.h" compile="0" resource="0"
-            file="Source/ChannelsDataTypes.h"/>
       <FILE id="BcwaEb" name="ContentPanel.cpp" compile="1" resource="0"
             file="Source/ContentPanel.cpp"/>
       <FILE id="N8yfyG" name="ContentPanel.h" compile="0" resource="0" file="Source/ContentPanel.h"/>
@@ -32,6 +32,10 @@
       <FILE id="GnLhhw" name="EntitiesData.h" compile="0" resource="0" file="Source/EntitiesData.h"/>
       <FILE id="Nr7TgF" name="EntitiesPanel.cpp" compile="1" resource="0"
             file="Source/EntitiesPanel.cpp"/>
+      <FILE id="TB7CpW" name="PeekInputHandler.cpp" compile="1" resource="0"
+            file="Source/PeekInputHandler.cpp"/>
+      <FILE id="GWjeUw" name="PeekInputHandler.h" compile="0" resource="0"
+            file="Source/PeekInputHandler.h"/>
       <FILE id="n9ESXv" name="EntitiesPanel.h" compile="0" resource="0" file="Source/EntitiesPanel.h"/>
       <FILE id="FXL1dR" name="EntityData.cpp" compile="1" resource="0" file="Source/EntityData.cpp"/>
       <FILE id="NSCSdA" name="EntityData.h" compile="0" resource="0" file="Source/EntityData.h"/>
@@ -53,19 +57,19 @@
                        headerPath="/Users/johnty/yarp/src/libYARP_OS/include&#10;/Users/johnty/yarp/generated_include&#10;/Users/johnty/Downloads/OGDF&#10;/Users/johnty/Documents/MPlusM&#10;/Users/johnty/Documents/ACE_wrappers"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
-        <MODULEPATH id="juce_core" path="/Users/johnty/Documents/JUCE/modules"/>
-        <MODULEPATH id="juce_events" path="/Users/johnty/Documents/JUCE/modules"/>
-        <MODULEPATH id="juce_graphics" path="/Users/johnty/Documents/JUCE/modules"/>
-        <MODULEPATH id="juce_data_structures" path="/Users/johnty/Documents/JUCE/modules"/>
-        <MODULEPATH id="juce_gui_basics" path="/Users/johnty/Documents/JUCE/modules"/>
-        <MODULEPATH id="juce_gui_extra" path="/Users/johnty/Documents/JUCE/modules"/>
-        <MODULEPATH id="juce_cryptography" path="/Users/johnty/Documents/JUCE/modules"/>
-        <MODULEPATH id="juce_video" path="/Users/johnty/Documents/JUCE/modules"/>
-        <MODULEPATH id="juce_opengl" path="/Users/johnty/Documents/JUCE/modules"/>
-        <MODULEPATH id="juce_audio_basics" path="/Users/johnty/Documents/JUCE/modules"/>
-        <MODULEPATH id="juce_audio_devices" path="/Users/johnty/Documents/JUCE/modules"/>
-        <MODULEPATH id="juce_audio_formats" path="/Users/johnty/Documents/JUCE/modules"/>
-        <MODULEPATH id="juce_audio_processors" path="/Users/johnty/Documents/JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="/Users/M_M/Documents/git.repositories/JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="/Users/M_M/Documents/git.repositories/JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="/Users/M_M/Documents/git.repositories/JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="/Users/M_M/Documents/git.repositories/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="/Users/M_M/Documents/git.repositories/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="/Users/M_M/Documents/git.repositories/JUCE/modules"/>
+        <MODULEPATH id="juce_cryptography" path="/Users/M_M/Documents/git.repositories/JUCE/modules"/>
+        <MODULEPATH id="juce_video" path="/Users/M_M/Documents/git.repositories/JUCE/modules"/>
+        <MODULEPATH id="juce_opengl" path="/Users/M_M/Documents/git.repositories/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="/Users/M_M/Documents/git.repositories/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="/Users/M_M/Documents/git.repositories/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="/Users/M_M/Documents/git.repositories/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="/Users/M_M/Documents/git.repositories/JUCE/modules"/>
       </MODULEPATHS>
     </XCODE_MAC>
     <VS2012 targetFolder="Builds/VisualStudio2012" externalLibraries="ACE.lib&#10;YARP_OS.lib&#10;YARP_init.lib&#10;odLogging.lib&#10;mpmCommon.lib&#10;ogdf.lib">

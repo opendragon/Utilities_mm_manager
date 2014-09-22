@@ -53,7 +53,7 @@ public:
     //==============================================================================
     /** Creates a connection.
 
-        Channels are created manually, connecting them with the connectToSocket()
+        Connections are created manually, connecting them with the connectToSocket()
         or connectToPipe() methods, or they are created automatically by a InterprocessConnectionServer
         when a client wants to connect.
 
@@ -201,6 +201,7 @@ private:
     friend struct ContainerDeletePolicy<ConnectionThread>;
     ScopedPointer<ConnectionThread> thread;
     void runThread();
+    int writeData (void*, int);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (InterprocessConnection)
 };

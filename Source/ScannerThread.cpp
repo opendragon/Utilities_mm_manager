@@ -242,8 +242,8 @@ void ScannerThread::addEntities(void)
                 break;
                 
         }
-        PortData * aPort = anEntity->addPort(walker->second._name, "", usage,
-                                             walker->second._direction);
+        /*PortData * aPort =*/ anEntity->addPort(walker->second._name, "", usage,
+                                                 walker->second._direction);
         
         _workingData.addEntity(anEntity);
     }
@@ -723,7 +723,7 @@ void ScannerThread::run(void)
                     }
                     if (0 < delayAmount)
                     {
-                        for (int ii = 0, mm = (delayAmount / VERY_SHORT_SLEEP);
+                        for (int ii = 0, mm = static_cast<int>(delayAmount / VERY_SHORT_SLEEP);
                              (mm > ii) && (! needToLeave) && (! _scanSoon); ++ii)
                         {
                             if (threadShouldExit())

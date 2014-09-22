@@ -245,7 +245,7 @@ void ContentPanel::paint(Graphics & gg)
             else
             {
                 updatePanels(*scanner);
-                setEntityPositions(*scanner);
+                setEntityPositions();
             }
             // Indicate that the scan data has been processed.
             scanner->unconditionallyAcquireForWrite();
@@ -372,10 +372,9 @@ void ContentPanel::saveEntityPositions(void)
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::saveEntityPositions
 
-void ContentPanel::setEntityPositions(ScannerThread & scanner)
+void ContentPanel::setEntityPositions(void)
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("scanner = ", &scanner); //####
     float         fullHeight = _entitiesPanel->getHeight();
     float         fullWidth = _entitiesPanel->getWidth();
     Random        randomizer(Time::currentTimeMillis());

@@ -133,9 +133,8 @@ namespace ChannelManager
          @returns @c true if the command was handled and @c false if it was not. */
         virtual bool perform(const InvocationInfo & info);
         
-        /*! @brief Set the entity positions, based on the scanned entities.
-        @param scanner The background scanning thread. */
-        void setEntityPositions(ScannerThread & scanner);
+        /*! @brief Set the entity positions, based on the scanned entities. */
+        void setEntityPositions(void);
 
         /*! @brief Refresh the displayed entities and connections, based on the scanned entities.
          @param scanner The background scanning thread. */
