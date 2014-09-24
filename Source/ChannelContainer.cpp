@@ -86,7 +86,7 @@ ChannelContainer::ChannelContainer(const ContainerKind           kind,
                                    EntitiesPanel &               owner) :
     inherited(title.c_str()), _behaviour(behaviour), _description(description),
 #if defined(USE_OGDF_POSITIONING)
-    _node(NULL),
+    _node(nullptr),
 #endif // defined(USE_OGDF_POSITIONING)
     _owner(owner), _kind(kind), _selected(false), _visited(false), _newlyCreated(true)
 {
@@ -231,7 +231,7 @@ const
     }
     else
     {
-        result = NULL;
+        result = nullptr;
     }
     OD_LOG_OBJEXIT_P(result); //####
     return result;
@@ -315,7 +315,7 @@ ChannelEntry * ChannelContainer::locateEntry(const Position & location)
 const
 {
     OD_LOG_OBJENTER(); //####
-    ChannelEntry * result = NULL;
+    ChannelEntry * result = nullptr;
     
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
     {
@@ -354,19 +354,16 @@ void ChannelContainer::mouseDown(const MouseEvent & ee)
         
         switch (_kind)
         {
-            case kContainerKindClientOrAdapter :
+            case ContainerKind::kContainerKindClientOrAdapter :
                 thePanelDescription = "A client or adapter";
                 break;
                 
-            case kContainerKindService :
+            case ContainerKind::kContainerKindService :
                 thePanelDescription = _description;
                 break;
                 
-            case kContainerKindOther :
+            case ContainerKind::kContainerKindOther :
                 thePanelDescription = "A standard port";
-                break;
-                
-            case kContainerKindUnknown :
                 break;
                 
         }

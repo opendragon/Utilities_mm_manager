@@ -61,8 +61,8 @@ namespace ChannelManager
     class ScannerThread;
     
     /*! @brief The content area of the main window of the application. */
-    class ContentPanel : public Viewport,
-                         public ApplicationCommandTarget
+    class ContentPanel final : public Viewport,
+                                public ApplicationCommandTarget
     {
     public:
         
@@ -102,7 +102,8 @@ namespace ChannelManager
         
         /*! @brief Called when the visible area changes.
          @param newVisibleArea The new visible area. */
-        virtual void visibleAreaChanged(const juce::Rectangle<int> & newVisibleArea);
+        virtual void visibleAreaChanged(const juce::Rectangle<int> & newVisibleArea)
+        override;
         
     protected:
         
@@ -116,22 +117,26 @@ namespace ChannelManager
         
         /*! @brief Return a list of commands that this target can handle.
          @param commands The list of commands to be added to. */
-        virtual void getAllCommands(Array<CommandID> & commands);
+        virtual void getAllCommands(Array<CommandID> & commands)
+        override;
 
         /*! @brief Provide details about one of the commands that this target can perform.
          @param commandID The identifier for the command.
          @param result The details about the command. */
         virtual void getCommandInfo(CommandID                commandID,
-                                    ApplicationCommandInfo & result);
+                                    ApplicationCommandInfo & result)
+        override;
         
         /*! @brief Return the next target to try after this one.
          @returns The next target to try after this one. */
-        virtual ApplicationCommandTarget * getNextCommandTarget(void);
+        virtual ApplicationCommandTarget * getNextCommandTarget(void)
+        override;
 
         /*! @brief Perform the specified command.
          @param info The details for the command.
          @returns @c true if the command was handled and @c false if it was not. */
-        virtual bool perform(const InvocationInfo & info);
+        virtual bool perform(const InvocationInfo & info)
+        override;
         
         /*! @brief Set the entity positions, based on the scanned entities. */
         void setEntityPositions(void);

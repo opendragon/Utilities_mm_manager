@@ -80,7 +80,8 @@ static bool lExitRequested = false;
 #endif // defined(__APPLE__)
 
 ChannelManagerApplication::ChannelManagerApplication(void) :
-    inherited(), _mainWindow(NULL), _yarp(NULL), _scanner(NULL), _peeker(NULL), _peekHandler(NULL)
+    inherited(), _mainWindow(nullptr), _yarp(nullptr), _scanner(nullptr), _peeker(nullptr),
+    _peekHandler(nullptr)
 {
 #if defined(MpM_ServicesLogToStandardError)
     OD_LOG_INIT(ProjectInfo::projectName, kODLoggingOptionIncludeProcessID | //####
@@ -126,11 +127,12 @@ void ChannelManagerApplication::connectPeekChannel(void)
     {
         if (! MplusM::Utilities::NetworkConnectWithRetries(MpM_REGISTRY_STATUS_NAME,
                                                            _peeker->name(),
-                                                           STANDARD_WAIT_TIME, false, NULL, NULL))
+                                                           STANDARD_WAIT_TIME, false, nullptr,
+                                                           nullptr))
         {
             OD_LOG("(! MplusM::Utilities::NetworkConnectWithRetries(" //####
                    "MpM_REGISTRY_STATUS_NAME, _peeker->name(), STANDARD_WAIT_TIME, false, " //####
-                   "NULL, NULL))"); //####
+                   "nullptr, nullptr))"); //####
         }
     }
     OD_LOG_OBJEXIT(); //####

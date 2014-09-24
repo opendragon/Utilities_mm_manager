@@ -58,7 +58,7 @@ namespace ChannelManager
     class EntitiesPanel;
     
     /*! @brief A port or channel. */
-    class ChannelEntry : public Component
+    class ChannelEntry final : public Component
     {
     public:
         
@@ -72,7 +72,7 @@ namespace ChannelManager
                      const yarp::os::ConstString & portName,
                      const yarp::os::ConstString & portProtocol,
                      const PortUsage               portKind,
-                     const PortDirection           direction = kPortDirectionInput);
+                     const PortDirection           direction = PortDirection::kPortDirectionInput);
         
         /*! @brief The destructor. */
         virtual ~ChannelEntry(void);
@@ -222,7 +222,7 @@ namespace ChannelManager
         inline bool isInputOutput(void)
         const
         {
-            return (kPortUsageInputOutput == _usage);
+            return (PortUsage::kPortUsageInputOutput == _usage);
         } // isInputOutput
         
         /*! @brief Returns @c true if the port entry is the bottom-most (last) port entry in a
@@ -249,24 +249,28 @@ namespace ChannelManager
         inline bool isService(void)
         const
         {
-            return (kPortUsageService == _usage);
+            return (PortUsage::kPortUsageService == _usage);
         } // isService
         
         /*! @brief Called when a mouse button is pressed.
          @param ee Details about the position and status of the mouse event. */
-        virtual void mouseDown(const MouseEvent & ee);
+        virtual void mouseDown(const MouseEvent & ee)
+        override;
         
         /*! @brief Called when the mouse is moved while a button is held down.
          @param ee Details about the position and status of the mouse event. */
-        virtual void mouseDrag(const MouseEvent & ee);
+        virtual void mouseDrag(const MouseEvent & ee)
+        override;
         
         /*! @brief Called when a mouse button is released.
          @param ee Details about the position and status of the mouse event. */
-        virtual void mouseUp(const MouseEvent& ee);
+        virtual void mouseUp(const MouseEvent& ee)
+        override;
         
         /*! @brief Draw the content of the component.
          @param gg The graphics context in which to draw. */
-        virtual void paint(Graphics & gg);
+        virtual void paint(Graphics & gg)
+        override;
         
         /*! @brief Remove an input connection from a port.
          @param other The port that is to be disconnected. */

@@ -65,7 +65,7 @@ namespace ChannelManager
     class EntitiesPanel;
     
     /*! @brief A container for one or more ports or channels. */
-    class ChannelContainer : public Component
+    class ChannelContainer final : public Component
     {
     public:
         
@@ -92,8 +92,9 @@ namespace ChannelManager
          @returns The newly-created port. */
         ChannelEntry * addPort(const yarp::os::ConstString & portName,
                                const yarp::os::ConstString & portProtocol = "",
-                               const PortUsage               portKind = kPortUsageOther,
-                               const PortDirection           direction = kPortDirectionInputOutput);
+                               const PortUsage               portKind = PortUsage::kPortUsageOther,
+                               const PortDirection           direction =
+                                                        PortDirection::kPortDirectionInputOutput);
         
         /*! @brief Clear any connect / disconnect markers. */
         void clearMarkers(void);
@@ -155,7 +156,7 @@ namespace ChannelManager
         
         /*! @brief Returns a port by index.
          @param num The zero-origin index of the port.
-         @returns A port or @c NULL if the index is out of range. */
+         @returns A port or @c nullptr if the index is out of range. */
         ChannelEntry * getPort(const int num)
         const;
         
@@ -200,27 +201,31 @@ namespace ChannelManager
         
         /*! @brief Returns an entry at the given location, if it exists.
          @param location The coordinates to check.
-         @returns A pointer to the entry at the given location, or @c NULL if there is none. */
+         @returns A pointer to the entry at the given location, or @c nullptr if there is none. */
         ChannelEntry * locateEntry(const Position & location)
         const;
         
         /*! @brief Called when a mouse button is pressed.
          @param ee Details about the position and status of the mouse event. */
-        virtual void mouseDown(const MouseEvent & ee);
+        virtual void mouseDown(const MouseEvent & ee)
+        override;
         
         /*! @brief Called when the mouse is moved while a button is held down.
          @param ee Details about the position and status of the mouse event. */
-        virtual void mouseDrag(const MouseEvent & ee);
+        virtual void mouseDrag(const MouseEvent & ee)
+        override;
         
         /*! @brief Draw the content of the component.
          @param gg The graphics context in which to draw. */
-        virtual void paint(Graphics & gg);
+        virtual void paint(Graphics & gg)
+        override;
         
         /*! @brief Remove connections that are invalid. */
         void removeInvalidConnections(void);
         
         /*! @brief Called when the component size has been changed. */
-        virtual void resized(void);
+        virtual void resized(void)
+        override;
         
         /*! @brief Select the entity. */
         void select(void);

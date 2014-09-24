@@ -148,7 +148,7 @@ const
     }
     else
     {
-        result = NULL;
+        result = nullptr;
     }
     OD_LOG_OBJEXIT_P(result); //####
     return result;

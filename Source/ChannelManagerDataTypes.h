@@ -90,7 +90,7 @@ namespace ChannelManager
     class PortData;
     
     /*! @brief The anchor position for a connection between ports. */
-    enum AnchorSide
+    enum class AnchorSide : int
     {
         /*! @brief The connection is to the left edge of the port entry. */
         kAnchorLeft,
@@ -104,13 +104,13 @@ namespace ChannelManager
         /*! @brief The connection is to the top edge of the port entry. */
         kAnchorTopCentre,
         
-        /*! @brief Force the enumeration to be 4 bytes. */
-        kAnchorUnknown = 0x80000000
+        /*! @brief The anchor position is unknown. */
+        kAnchorUnknown
         
     }; // AnchorSide
     
     /*! @brief What kind of container. */
-    enum ContainerKind
+    enum class ContainerKind : int
     {
         /*! @brief The container is a client or adapter. */
         kContainerKindClientOrAdapter,
@@ -119,15 +119,12 @@ namespace ChannelManager
         kContainerKindService,
         
         /*! @brief The container is neither a serice nor a client nor an adapter. */
-        kContainerKindOther,
-        
-        /*! @brief Force the enumeration to be 4 bytes. */
-        kContainerKindUnknown = 0x80000000
+        kContainerKindOther
         
     }; // ContainerKind
     
     /*! @brief The primary direction of the port. */
-    enum PortDirection
+        enum class PortDirection : int
     {
         /*! @brief The port direction is input. */
         kPortDirectionInput,
@@ -138,13 +135,13 @@ namespace ChannelManager
         /*! @brief The port direction is output. */
         kPortDirectionOutput,
         
-        /*! @brief Force the enumeration to be 4 bytes. */
-        kPortDirectionUnknown = 0x80000000
+        /*! @brief The port direction is unknown. */
+        kPortDirectionUnknown
         
     }; // PortDirection
     
     /*! @brief What the port will be used for. */
-    enum PortUsage
+        enum class PortUsage : int
     {
         /*! @brief The port is for a client or adapter. */
         kPortUsageClient,
@@ -156,10 +153,7 @@ namespace ChannelManager
         kPortUsageInputOutput,
         
         /*! @brief The port has no specific characterization. */
-        kPortUsageOther,
-        
-        /*! @brief Force the enumeration to be 4 bytes. */
-        kPortUsageUnknown = 0x80000000
+        kPortUsageOther
         
     }; // PortUsage
     
