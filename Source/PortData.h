@@ -56,7 +56,7 @@ namespace ChannelManager
 {
     
     /*! @brief A port detected by the background scanner. */
-    class PortData final
+    class PortData
     {
     public :
         

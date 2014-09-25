@@ -234,12 +234,12 @@ void ScannerThread::addEntities(void)
         
         switch (MplusM::Utilities::GetPortKind(walker->second._name))
         {
-            case MplusM::Utilities::PortKind::kPortKindClient :
+            case MplusM::Utilities::kPortKindClient :
                 usage = PortUsage::kPortUsageClient;
                 break;
                 
-            case MplusM::Utilities::PortKind::kPortKindService :
-            case MplusM::Utilities::PortKind::kPortKindServiceRegistry :
+            case MplusM::Utilities::kPortKindService :
+            case MplusM::Utilities::kPortKindServiceRegistry :
                 usage = PortUsage::kPortUsageService;
                 break;
                 
@@ -473,12 +473,12 @@ PortDirection ScannerThread::determineDirection(ChannelEntry *                ol
         // treat them as I/O.
         switch (MplusM::Utilities::GetPortKind(portName))
         {
-            case MplusM::Utilities::PortKind::kPortKindClient :
+            case MplusM::Utilities::kPortKindClient :
                 canDoInput = canDoOutput = true;
                 break;
                 
-            case MplusM::Utilities::PortKind::kPortKindService :
-            case MplusM::Utilities::PortKind::kPortKindServiceRegistry :
+            case MplusM::Utilities::kPortKindService :
+            case MplusM::Utilities::kPortKindServiceRegistry :
                 canDoInput = true;
                 break;
                 

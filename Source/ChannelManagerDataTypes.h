@@ -90,7 +90,7 @@ namespace ChannelManager
     class PortData;
     
     /*! @brief The anchor position for a connection between ports. */
-    enum class AnchorSide : int
+    enum AnchorSide
     {
         /*! @brief The connection is to the left edge of the port entry. */
         kAnchorLeft,
@@ -105,12 +105,12 @@ namespace ChannelManager
         kAnchorTopCentre,
         
         /*! @brief The anchor position is unknown. */
-        kAnchorUnknown
+        kAnchorUnknown = 0x7FFFFFF
         
     }; // AnchorSide
     
     /*! @brief What kind of container. */
-    enum class ContainerKind : int
+    enum ContainerKind
     {
         /*! @brief The container is a client or adapter. */
         kContainerKindClientOrAdapter,
@@ -119,12 +119,15 @@ namespace ChannelManager
         kContainerKindService,
         
         /*! @brief The container is neither a serice nor a client nor an adapter. */
-        kContainerKindOther
+        kContainerKindOther,
+        
+        /*! @brief Force the size to be 4 bytes. */
+        kContainerKindUnknown = 0x7FFFFFF
         
     }; // ContainerKind
     
     /*! @brief The primary direction of the port. */
-        enum class PortDirection : int
+    enum PortDirection
     {
         /*! @brief The port direction is input. */
         kPortDirectionInput,
@@ -136,12 +139,12 @@ namespace ChannelManager
         kPortDirectionOutput,
         
         /*! @brief The port direction is unknown. */
-        kPortDirectionUnknown
+        kPortDirectionUnknown = 0x7FFFFFF
         
     }; // PortDirection
     
     /*! @brief What the port will be used for. */
-        enum class PortUsage : int
+    enum PortUsage
     {
         /*! @brief The port is for a client or adapter. */
         kPortUsageClient,
@@ -153,7 +156,10 @@ namespace ChannelManager
         kPortUsageInputOutput,
         
         /*! @brief The port has no specific characterization. */
-        kPortUsageOther
+        kPortUsageOther,
+        
+        /*! @brief Force the size to be 4 bytes. */
+        kPortUsageUnknown = 0x7FFFFFF
         
     }; // PortUsage
     

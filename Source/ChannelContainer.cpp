@@ -37,8 +37,6 @@
 //--------------------------------------------------------------------------------------------------
 
 #include "ChannelContainer.h"
-#include "ChannelEntry.h"
-#include "EntitiesPanel.h"
 
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
@@ -364,6 +362,9 @@ void ChannelContainer::mouseDown(const MouseEvent & ee)
                 
             case ContainerKind::kContainerKindOther :
                 thePanelDescription = "A standard port";
+                break;
+                
+            default :
                 break;
                 
         }

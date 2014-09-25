@@ -40,6 +40,7 @@
 # define EntitiesData_H_ /* Header guard */
 
 # include "ChannelManagerDataTypes.h"
+# include "EntityData.h"
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -54,10 +55,8 @@
 
 namespace ChannelManager
 {
-    class EntityData;
-    
     /*! @brief The data collected by the background scanner. */
-    class EntitiesData final
+    class EntitiesData
     {
     public :
         

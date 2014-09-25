@@ -39,7 +39,9 @@
 #if (! defined(ChannelContainer_H_))
 # define ChannelContainer_H_ /* Header guard */
 
+# include "ChannelEntry.h"
 # include "ChannelManagerDataTypes.h"
+# include "EntitiesPanel.h"
 
 # if defined(USE_OGDF_POSITIONING)
 #  include <ogdf/basic/Graph.h>
@@ -61,11 +63,10 @@
 
 namespace ChannelManager
 {
-    class ChannelEntry;
     class EntitiesPanel;
     
     /*! @brief A container for one or more ports or channels. */
-    class ChannelContainer final : public Component
+    class ChannelContainer : public Component
     {
     public :
         
@@ -207,25 +208,21 @@ namespace ChannelManager
         
         /*! @brief Called when a mouse button is pressed.
          @param ee Details about the position and status of the mouse event. */
-        virtual void mouseDown(const MouseEvent & ee)
-        override;
+        virtual void mouseDown(const MouseEvent & ee);
         
         /*! @brief Called when the mouse is moved while a button is held down.
          @param ee Details about the position and status of the mouse event. */
-        virtual void mouseDrag(const MouseEvent & ee)
-        override;
+        virtual void mouseDrag(const MouseEvent & ee);
         
         /*! @brief Draw the content of the component.
          @param gg The graphics context in which to draw. */
-        virtual void paint(Graphics & gg)
-        override;
+        virtual void paint(Graphics & gg);
         
         /*! @brief Remove connections that are invalid. */
         void removeInvalidConnections(void);
         
         /*! @brief Called when the component size has been changed. */
-        virtual void resized(void)
-        override;
+        virtual void resized(void);
         
         /*! @brief Select the entity. */
         void select(void);

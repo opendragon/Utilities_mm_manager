@@ -58,7 +58,7 @@ namespace ChannelManager
     class ChannelManagerWindow;
     
     /*! @brief A background scanner thread. */
-    class ScannerThread final : public Thread
+    class ScannerThread : public Thread
     {
     public :
         
@@ -103,8 +103,7 @@ namespace ChannelManager
         void relinquishFromWrite(void);
         
         /*! @brief Perform the background scan. */
-        virtual void run(void)
-        override;
+        virtual void run(void);
         
         /*! @brief Indicate that the scan data has been processed and the scan can proceed. */
         void scanCanProceed(void);

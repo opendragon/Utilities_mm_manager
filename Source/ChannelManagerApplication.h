@@ -76,7 +76,7 @@ namespace ChannelManager
     class ScannerThread;
     
     /*! @brief The application object of the application. */
-    class ChannelManagerApplication final : public JUCEApplication
+    class ChannelManagerApplication : public JUCEApplication
     {
     public :
         
@@ -98,33 +98,27 @@ namespace ChannelManager
         
         /*! @brief Return the application name.
          @returns The application's name. */
-        virtual const String getApplicationName(void)
-        override;
+        virtual const String getApplicationName(void);
         
         /*! @brief Return the application version number.
          @returns The application's version number. */
-        virtual const String getApplicationVersion(void)
-        override;
+        virtual const String getApplicationVersion(void);
         
         /*! @brief Called when the application starts.
          @param commandLine The parameters passed to the application. */
-        virtual void initialise(const String & commandLine)
-        override;
+        virtual void initialise(const String & commandLine);
         
         /*! @brief Return @c true if multiple instances of the application are allowed and @c false
          otherwise.
          @returns @c true if multiple instanaces of the application are allowed and @c false
          otherwise. */
-        virtual bool moreThanOneInstanceAllowed(void)
-        override;
+        virtual bool moreThanOneInstanceAllowed(void);
         
         /*! @brief Called to allow the application to clear up before exiting. */
-        virtual void shutdown(void)
-        override;
+        virtual void shutdown(void);
         
         /*! @brief Called when the operating system is trying to close the application. */
-        virtual void systemRequestedQuit(void)
-        override;
+        virtual void systemRequestedQuit(void);
         
     protected :
         

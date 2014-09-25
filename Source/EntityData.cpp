@@ -37,7 +37,6 @@
 //--------------------------------------------------------------------------------------------------
 
 #include "EntityData.h"
-#include "PortData.h"
 
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>

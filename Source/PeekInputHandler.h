@@ -60,7 +60,7 @@ namespace ChannelManager
      
      The data is expected to be in the form of an integer specifying the number of values to
      generate. */
-    class PeekInputHandler final : public MplusM::Common::InputHandler
+    class PeekInputHandler : public MplusM::Common::InputHandler
     {
     public :
         
@@ -77,8 +77,7 @@ namespace ChannelManager
          @returns @c true if the input was correctly structured and successfully processed. */
         virtual bool handleInput(const yarp::os::Bottle &      input,
                                  const yarp::os::ConstString & senderChannel,
-                                 yarp::os::ConnectionWriter *  replyMechanism)
-        override;
+                                 yarp::os::ConnectionWriter *  replyMechanism);
         
     protected :
         

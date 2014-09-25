@@ -39,7 +39,9 @@
 #if (! defined(ChannelEntry_H_))
 # define ChannelEntry_H_ /* Header guard */
 
+# include "ChannelContainer.h"
 # include "ChannelManagerDataTypes.h"
+# include "EntitiesPanel.h"
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -54,11 +56,8 @@
 
 namespace ChannelManager
 {
-    class ChannelContainer;
-    class EntitiesPanel;
-    
     /*! @brief A port or channel. */
-    class ChannelEntry final : public Component
+    class ChannelEntry : public Component
     {
     public :
         
@@ -254,23 +253,19 @@ namespace ChannelManager
         
         /*! @brief Called when a mouse button is pressed.
          @param ee Details about the position and status of the mouse event. */
-        virtual void mouseDown(const MouseEvent & ee)
-        override;
+        virtual void mouseDown(const MouseEvent & ee);
         
         /*! @brief Called when the mouse is moved while a button is held down.
          @param ee Details about the position and status of the mouse event. */
-        virtual void mouseDrag(const MouseEvent & ee)
-        override;
+        virtual void mouseDrag(const MouseEvent & ee);
         
         /*! @brief Called when a mouse button is released.
          @param ee Details about the position and status of the mouse event. */
-        virtual void mouseUp(const MouseEvent& ee)
-        override;
+        virtual void mouseUp(const MouseEvent& ee);
         
         /*! @brief Draw the content of the component.
          @param gg The graphics context in which to draw. */
-        virtual void paint(Graphics & gg)
-        override;
+        virtual void paint(Graphics & gg);
         
         /*! @brief Remove an input connection from a port.
          @param other The port that is to be disconnected. */

@@ -59,7 +59,7 @@ namespace ChannelManager
     class ScannerThread;
     
     /*! @brief The main window of the application. */
-    class ChannelManagerWindow final : public DocumentWindow,
+    class ChannelManagerWindow : public DocumentWindow,
                                         private AsyncUpdater
     {
     public :
@@ -109,8 +109,7 @@ namespace ChannelManager
         } // getScannerThread
         
         /*! @brief Called back to perform operations. */
-        virtual void handleAsyncUpdate(void)
-        override;
+        virtual void handleAsyncUpdate(void);
 
         /*! @brief Set up the reference to the background scanning thread. */
         void setScannerThread(ScannerThread * theScanner);

@@ -37,9 +37,7 @@
 //--------------------------------------------------------------------------------------------------
 
 #include "ChannelEntry.h"
-#include "ChannelContainer.h"
 #include "ChannelManagerApplication.h"
-#include "EntitiesPanel.h"
 
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
@@ -405,11 +403,11 @@ static void drawConnection(Graphics &                  gg,
         OD_LOG_D1("thickness <- ", thickness); //####
         switch (mode)
         {
-            case MplusM::Common::ChannelMode::kChannelModeTCP :
+            case MplusM::Common::kChannelModeTCP :
                 gg.setColour(kTcpConnectionColour);
                 break;
                 
-            case MplusM::Common::ChannelMode::kChannelModeUDP :
+            case MplusM::Common::kChannelModeUDP :
                 gg.setColour(kUdpConnectionColour);
                 break;
                 
@@ -867,8 +865,8 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
                                                      firstAddPort->_wasUdp, CheckForExit, nullptr))
                 {
                     MplusM::Common::ChannelMode mode = (firstAddPort->_wasUdp ?
-                                                    MplusM::Common::ChannelMode::kChannelModeUDP :
-                                                    MplusM::Common::ChannelMode::kChannelModeTCP);
+                                                    MplusM::Common::kChannelModeUDP :
+                                                    MplusM::Common::kChannelModeTCP);
                     
                     firstAddPort->addOutputConnection(this, mode);
                     addInputConnection(firstAddPort, mode);
@@ -935,24 +933,27 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
             }
             switch (MplusM::Utilities::GetPortKind(getPortName()))
             {
-                case MplusM::Utilities::PortKind::kPortKindAdapter :
+                case MplusM::Utilities::kPortKindAdapter :
                     prefix = "Adapter";
                     break;
                     
-                case MplusM::Utilities::PortKind::kPortKindClient :
+                case MplusM::Utilities::kPortKindClient :
                     prefix = "Client";
                     break;
                     
-                case MplusM::Utilities::PortKind::kPortKindService :
+                case MplusM::Utilities::kPortKindService :
                     prefix = "Service";
                     break;
                     
-                case MplusM::Utilities::PortKind::kPortKindServiceRegistry :
+                case MplusM::Utilities::kPortKindServiceRegistry :
                     prefix = "Service Registry";
                     break;
                     
-                case MplusM::Utilities::PortKind::kPortKindStandard :
+                case MplusM::Utilities::kPortKindStandard :
                     prefix = "Standard";
+                    break;
+                    
+                default :
                     break;
                     
             }
@@ -1034,8 +1035,8 @@ void ChannelEntry::mouseUp(const MouseEvent & ee)
                                                          nullptr))
                     {
                         MplusM::Common::ChannelMode mode = (_wasUdp ?
-                                                    MplusM::Common::ChannelMode::kChannelModeUDP :
-                                                    MplusM::Common::ChannelMode::kChannelModeTCP);
+                                                    MplusM::Common::kChannelModeUDP :
+                                                    MplusM::Common::kChannelModeTCP);
                         
                         addOutputConnection(endEntry, mode);
                         endEntry->addInputConnection(this, mode);
