@@ -62,7 +62,7 @@ namespace ChannelManager
     class ChannelManagerWindow : public DocumentWindow,
                                  private AsyncUpdater
     {
-    public:
+    public :
         
         /*! @brief The commands that we respond to. */
         enum CommandIDs
@@ -111,9 +111,15 @@ namespace ChannelManager
         /*! @brief Set up the reference to the background scanning thread. */
         void setScannerThread(ScannerThread * theScanner);
         
-    protected:
+    protected :
         
-    private:
+    private :
+        
+    public :
+    
+    protected :
+    
+    private :
         
         /*! @brief The first class that this class is derived from. */
         typedef DocumentWindow inherited1;

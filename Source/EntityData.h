@@ -59,7 +59,7 @@ namespace ChannelManager
     /*! @brief An entity detected by the background scanner. */
     class EntityData
     {
-    public:
+    public :
         
         /*! @brief The constructor.
          @param kind The kind of entity.
@@ -128,21 +128,17 @@ namespace ChannelManager
         PortData * getPort(const int num)
         const;
         
-    protected:
+    protected :
         
-    private:
+    private :
         
-        /*! @brief Copy constructor.
-         
-         Note - not implemented and private, to prevent unexpected copying.
-         @param other Another object to construct from. */
-        EntityData(const EntityData & other);
+        COPY_AND_ASSIGNMENT_(EntityData);
         
-        /*! @brief Assignment operator.
-         
-         Note - not implemented and private, to prevent unexpected copying.
-         @param other Another object to construct from. */
-        EntityData & operator =(const EntityData & other);
+    public :
+    
+    protected :
+    
+    private :
         
         /*! @brief The collection of ports for the entity. */
         Ports _ports;
@@ -159,7 +155,7 @@ namespace ChannelManager
         /*! @brief The kind of entity. */
         ContainerKind _kind;
         
-    }; // EntitiesData
+    }; // EntityData
     
 } // ChannelManager
 

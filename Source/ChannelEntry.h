@@ -60,7 +60,7 @@ namespace ChannelManager
     /*! @brief A port or channel. */
     class ChannelEntry : public Component
     {
-    public:
+    public :
         
         /*! @brief The constructor.
          @param parent The GUI element containing this element.
@@ -300,16 +300,22 @@ namespace ChannelManager
             return _wasUdp;
         } // wasUdpConnectionRequest
         
-    protected:
+    protected :
         
-    private:
+    private :
+        
+        /*! @brief Remove all connections. */
+        void removeAllConnections(void);
+        
+    public :
+    
+    protected :
+    
+    private :
         
         /*! @brief The class that this class is derived from. */
         typedef Component inherited;
 
-        /*! @brief Remove all connections. */
-        void removeAllConnections(void);
-        
         /*! @brief The connections to the port. */
         ChannelConnections _inputConnections;
         

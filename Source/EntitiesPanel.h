@@ -63,7 +63,7 @@ namespace ChannelManager
     /*! @brief The entities layer of the main window of the application. */
     class EntitiesPanel : public Component
     {
-    public:
+    public :
         
         /*! @brief The constructor.
          @param container The container in which the panel is embedded.
@@ -231,16 +231,22 @@ namespace ChannelManager
         /*! @brief Ignore the result of the next scan. */
         void skipScan(void);
         
-    protected:
+    protected :
         
-    private:
-        
-        /*! @brief The class that this class is derived from. */
-        typedef Component inherited;
-        
+    private :
+
         /*! @brief Display the connections between containers.
          @param gg The graphics context in which to draw. */
         void drawConnections(Graphics & gg);
+        
+    public :
+    
+    protected :
+    
+    private :
+        
+        /*! @brief The class that this class is derived from. */
+        typedef Component inherited;
         
         /*! @brief The set of known ports. */
         ChannelEntryMap _knownPorts;

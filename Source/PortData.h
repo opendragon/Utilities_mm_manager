@@ -58,7 +58,7 @@ namespace ChannelManager
     /*! @brief A port detected by the background scanner. */
     class PortData
     {
-    public:
+    public :
         
         /*! @brief The constructor.
          @param portName The port name for the entry.
@@ -171,21 +171,17 @@ namespace ChannelManager
          @param other The port that is to be disconnected. */
         void removeOutputConnection(PortData * other);
         
-    protected:
+    protected :
         
-    private:
+    private :
         
-        /*! @brief Copy constructor.
-         
-         Note - not implemented and private, to prevent unexpected copying.
-         @param other Another object to construct from. */
-        PortData(const EntityData & other);
+        COPY_AND_ASSIGNMENT_(PortData);
         
-        /*! @brief Assignment operator.
-         
-         Note - not implemented and private, to prevent unexpected copying.
-         @param other Another object to construct from. */
-        PortData & operator =(const PortData & other);
+    public :
+    
+    protected :
+    
+    private :
         
         /*! @brief The connections to the port. */
         PortConnections _inputConnections;

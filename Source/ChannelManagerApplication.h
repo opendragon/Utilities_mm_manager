@@ -78,7 +78,7 @@ namespace ChannelManager
     /*! @brief The application object of the application. */
     class ChannelManagerApplication  : public JUCEApplication
     {
-    public:
+    public :
         
         /*! @brief The constructor. */
         ChannelManagerApplication(void);
@@ -120,9 +120,17 @@ namespace ChannelManager
         /*! @brief Called when the operating system is trying to close the application. */
         virtual void systemRequestedQuit(void);
         
-    protected:
+    protected :
         
-    private:
+    private :
+        
+        COPY_AND_ASSIGNMENT_(ChannelManagerApplication);
+
+    public :
+    
+    protected :
+    
+    private :
         
         /*! @brief The class that this class is derived from. */
         typedef JUCEApplication inherited;

@@ -59,7 +59,7 @@ namespace ChannelManager
     /*! @brief The data collected by the background scanner. */
     class EntitiesData
     {
-    public:
+    public :
         
         /*! @brief The constructor. */
         EntitiesData(void);
@@ -104,21 +104,17 @@ namespace ChannelManager
         size_t getNumberOfEntities(void)
         const;
         
-    protected:
+    protected :
         
-    private:
+    private :
         
-        /*! @brief Copy constructor.
-         
-         Note - not implemented and private, to prevent unexpected copying.
-         @param other Another object to construct from. */
-        EntitiesData(const EntitiesData & other);
+        COPY_AND_ASSIGNMENT_(EntitiesData);
         
-        /*! @brief Assignment operator.
-         
-         Note - not implemented and private, to prevent unexpected copying.
-         @param other Another object to construct from. */
-        EntitiesData & operator =(const EntitiesData & other);
+    public :
+    
+    protected :
+    
+    private :
         
         /*! @brief A set of connections. */
         ConnectionList _connections;

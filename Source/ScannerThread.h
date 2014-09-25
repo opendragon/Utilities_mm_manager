@@ -60,7 +60,7 @@ namespace ChannelManager
     /*! @brief A background scanner thread. */
     class ScannerThread : public Thread
     {
-    public:
+    public :
         
         /*! @brief The constructor.
          @param name The name to give to the thread.
@@ -114,12 +114,9 @@ namespace ChannelManager
         /*! @brief Request access for writing to shared resources. */
         void unconditionallyAcquireForWrite(void);
         
-    protected:
+    protected :
         
-    private:
-        
-        /*! @brief The class that this class is derived from. */
-        typedef Thread inherited;
+    private :
         
         /*! @brief Add the detected entities and connections. */
         void addEntities(void);
@@ -176,6 +173,15 @@ namespace ChannelManager
         
         /*! @brief Tell the displayed panel to do a repaint. */
         void triggerRepaint(void);
+        
+    public :
+    
+    protected :
+    
+    private :
+
+        /*! @brief The class that this class is derived from. */
+        typedef Thread inherited;
         
         /*! @brief The window to be updated. */
         ChannelManagerWindow & _window;

@@ -64,7 +64,7 @@ namespace ChannelManager
     class ContentPanel : public Viewport,
                          public ApplicationCommandTarget
     {
-    public:
+    public :
         
         /*! @brief The constructor.
          @param containingWindow The window in which the panel is embedded. */
@@ -104,20 +104,14 @@ namespace ChannelManager
          @param newVisibleArea The new visible area. */
         virtual void visibleAreaChanged(const juce::Rectangle<int> & newVisibleArea);
         
-    protected:
+    protected :
         
-    private:
-        
-        /*! @brief The first class that this class is derived from. */
-        typedef Viewport inherited1;
-        
-        /*! @brief The second class that this class is derived from. */
-        typedef ApplicationCommandTarget inherited2;
+    private :
         
         /*! @brief Return a list of commands that this target can handle.
          @param commands The list of commands to be added to. */
         virtual void getAllCommands(Array<CommandID> & commands);
-
+        
         /*! @brief Provide details about one of the commands that this target can perform.
          @param commandID The identifier for the command.
          @param result The details about the command. */
@@ -127,7 +121,7 @@ namespace ChannelManager
         /*! @brief Return the next target to try after this one.
          @returns The next target to try after this one. */
         virtual ApplicationCommandTarget * getNextCommandTarget(void);
-
+        
         /*! @brief Perform the specified command.
          @param info The details for the command.
          @returns @c true if the command was handled and @c false if it was not. */
@@ -135,10 +129,22 @@ namespace ChannelManager
         
         /*! @brief Set the entity positions, based on the scanned entities. */
         void setEntityPositions(void);
-
+        
         /*! @brief Refresh the displayed entities and connections, based on the scanned entities.
          @param scanner The background scanning thread. */
         void updatePanels(ScannerThread & scanner);
+        
+    public :
+    
+    protected :
+    
+    private :
+        
+        /*! @brief The first class that this class is derived from. */
+        typedef Viewport inherited1;
+        
+        /*! @brief The second class that this class is derived from. */
+        typedef ApplicationCommandTarget inherited2;
         
         /*! @brief The positions that entities were last seen at. */
         PositionMap _rememberedPositions;

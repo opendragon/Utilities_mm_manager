@@ -67,7 +67,7 @@ namespace ChannelManager
     /*! @brief A container for one or more ports or channels. */
     class ChannelContainer : public Component
     {
-    public:
+    public :
         
         /*! @brief The constructor.
          @param kind The kind of entity.
@@ -245,9 +245,15 @@ namespace ChannelManager
             return _visited;
         } // wasVisited
         
-    protected:
+    protected :
         
-    private:
+    private :
+        
+    public :
+    
+    protected :
+    
+    private :
         
         /*! @brief The class that this class is derived from. */
         typedef Component inherited;
