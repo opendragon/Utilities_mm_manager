@@ -160,7 +160,7 @@ static AnchorSide calculateAnchorForPoint(Position &       newCentre,
     OD_LOG_ENTER(); //####
     OD_LOG_P3("newCentre = ", &newCentre, "targetPoint = ", &targetPoint, //####
               "refCentre = ", &refCentre); //####
-    AnchorSide             anchor = kAnchorUnknown;
+    AnchorSide             anchor = AnchorSide::kAnchorUnknown;
     float                  boxSize = (refCentre.getDistanceFrom(targetPoint) * kTargetBoxScale);
     float                  soFar = static_cast<float>(1e23); // Ridiculously big, just in case.
     Position               tempPoint;
@@ -169,24 +169,24 @@ static AnchorSide calculateAnchorForPoint(Position &       newCentre,
     
     if (calculateMinDistance(soFar, refCentre, box.getX(), box.getY() + (boxSize / 2), tempPoint))
     {
-        anchor = kAnchorLeft;
+        anchor = AnchorSide::kAnchorLeft;
         newCentre = targetPoint + Position(boxSize, 0);
     }
     if (calculateMinDistance(soFar, refCentre, box.getX() + boxSize, box.getY() + (boxSize / 2),
                              tempPoint))
     {
-        anchor = kAnchorRight;
+        anchor = AnchorSide::kAnchorRight;
         newCentre = targetPoint + Position(-boxSize, 0);
     }
     if ((! disallowBottom) && calculateMinDistance(soFar, refCentre, box.getX() + (boxSize / 2),
                                                    box.getY() + boxSize, tempPoint))
     {
-        anchor = kAnchorBottomCentre;
+        anchor = AnchorSide::kAnchorBottomCentre;
         newCentre = targetPoint + Position(0, -boxSize);
     }
     if (calculateMinDistance(soFar, refCentre, box.getX() + (boxSize / 2), box.getY(), tempPoint))
     {
-        anchor = kAnchorTopCentre;
+        anchor = AnchorSide::kAnchorTopCentre;
         newCentre = targetPoint + Position(0, boxSize);
     }
     OD_LOG_EXIT_L(static_cast<int>(anchor)); //####
@@ -212,22 +212,22 @@ static void drawSourceAnchor(Graphics &       gg,
     
     switch (anchor)
     {
-	    case kAnchorLeft :
+        case AnchorSide::kAnchorLeft :
             first = anchorPos + Position(kArrowSize, -kArrowSize);
             second = anchorPos + Position(kArrowSize, kArrowSize);
             break;
             
-	    case kAnchorRight :
+	    case AnchorSide::kAnchorRight :
             first = anchorPos + Position(-kArrowSize, -kArrowSize);
             second = anchorPos + Position(-kArrowSize, kArrowSize);
             break;
             
-	    case kAnchorBottomCentre :
+	    case AnchorSide::kAnchorBottomCentre :
             first = anchorPos + Position(-kArrowSize, -kArrowSize);
             second = anchorPos + Position(kArrowSize, -kArrowSize);
             break;
             
-	    case kAnchorTopCentre :
+	    case AnchorSide::kAnchorTopCentre :
             first = anchorPos + Position(-kArrowSize, kArrowSize);
             second = anchorPos + Position(kArrowSize, kArrowSize);
             break;
@@ -236,7 +236,7 @@ static void drawSourceAnchor(Graphics &       gg,
             break;
             
     }
-    if (kAnchorUnknown != anchor)
+    if (AnchorSide::kAnchorUnknown != anchor)
     {
         OD_LOG_D4("anchor.x = ", anchorPos.getX(), "anchor.y = ", anchorPos.getY(), //####
                   "first.x = ", first.getX(), "first.y = ", first.getY()); //####
@@ -266,22 +266,22 @@ static void drawTargetAnchor(Graphics &       gg,
     
     switch (anchor)
     {
-	    case kAnchorLeft :
+	    case AnchorSide::kAnchorLeft :
             first = anchorPos + Position(-kArrowSize, -kArrowSize);
             second = anchorPos + Position(-kArrowSize, kArrowSize);
             break;
             
-	    case kAnchorRight :
+	    case AnchorSide::kAnchorRight :
             first = anchorPos + Position(kArrowSize, -kArrowSize);
             second = anchorPos + Position(kArrowSize, kArrowSize);
             break;
             
-	    case kAnchorBottomCentre :
+	    case AnchorSide::kAnchorBottomCentre :
             first = anchorPos + Position(-kArrowSize, kArrowSize);
             second = anchorPos + Position(kArrowSize, kArrowSize);
             break;
             
-	    case kAnchorTopCentre :
+	    case AnchorSide::kAnchorTopCentre :
             first = anchorPos + Position(-kArrowSize, -kArrowSize);
             second = anchorPos + Position(kArrowSize, -kArrowSize);
             break;
@@ -290,7 +290,7 @@ static void drawTargetAnchor(Graphics &       gg,
             break;
             
     }
-    if (kAnchorUnknown != anchor)
+    if (AnchorSide::kAnchorUnknown != anchor)
     {
         OD_LOG_D4("anchor.x = ", anchorPos.getX(), "anchor.y = ", anchorPos.getY(), //####
                   "first.x = ", first.getX(), "first.y = ", first.getY()); //####
@@ -376,7 +376,7 @@ static void drawConnection(Graphics &                  gg,
             sourceAnchor = source->calculateClosestAnchor(startPoint, true, false,
                                                           destinationCentre);
             destinationAnchor = destination->calculateClosestAnchor(endPoint, false,
-                                                                kAnchorBottomCentre == sourceAnchor,
+                                                    AnchorSide::kAnchorBottomCentre == sourceAnchor,
                                                                     sourceCentre);
         }
         else
@@ -384,7 +384,7 @@ static void drawConnection(Graphics &                  gg,
             destinationAnchor = destination->calculateClosestAnchor(endPoint, false, false,
                                                                     sourceCentre);
             sourceAnchor = source->calculateClosestAnchor(startPoint, true,
-                                                          kAnchorBottomCentre == destinationAnchor,
+                                              AnchorSide::kAnchorBottomCentre == destinationAnchor,
                                                           destinationCentre);
         }
         OD_LOG_D4("startPoint.x <- ", startPoint.getX(), "startPoint.y <- ", //####
@@ -405,11 +405,11 @@ static void drawConnection(Graphics &                  gg,
         OD_LOG_D1("thickness <- ", thickness); //####
         switch (mode)
         {
-            case MplusM::Common::kChannelModeTCP :
+            case MplusM::Common::ChannelMode::kChannelModeTCP :
                 gg.setColour(kTcpConnectionColour);
                 break;
                 
-            case MplusM::Common::kChannelModeUDP :
+            case MplusM::Common::ChannelMode::kChannelModeUDP :
                 gg.setColour(kUdpConnectionColour);
                 break;
                 
@@ -476,15 +476,15 @@ ChannelEntry::ChannelEntry(ChannelContainer *            parent,
     
     switch (_direction)
     {
-	    case kPortDirectionInput :
-            prefix = ((kPortUsageService == _usage) ? "S " : "In ");
+        case PortDirection::kPortDirectionInput :
+            prefix = ((PortUsage::kPortUsageService == _usage) ? "S " : "In ");
             break;
             
-	    case kPortDirectionInputOutput :
-            prefix = ((kPortUsageClient == _usage) ? "C " : "I/O ");
+	    case PortDirection::kPortDirectionInputOutput :
+            prefix = ((PortUsage::kPortUsageClient == _usage) ? "C " : "I/O ");
             break;
             
-	    case kPortDirectionOutput :
+	    case PortDirection::kPortDirectionOutput :
             prefix = "Out ";
             break;
             
@@ -604,14 +604,14 @@ const
     OD_LOG_B1("isSource = ", isSource); //####
     // Check each anchor point - the two side centres and optionally the bottom - to find the
     // shortest distance.
-    AnchorSide anchor = kAnchorUnknown;
+    AnchorSide anchor = AnchorSide::kAnchorUnknown;
     float      soFar = static_cast<float>(1e23); // Ridiculously big, just in case.
     Position   location(getPositionInPanel());
     
     if (calculateMinDistance(soFar, pp, location.getX(), location.getY() + (getHeight() / 2),
                              result))
     {
-        anchor = kAnchorLeft;
+        anchor = AnchorSide::kAnchorLeft;
         if (isSource)
         {
             // Adjust the anchor position if an output.
@@ -621,7 +621,7 @@ const
     if (calculateMinDistance(soFar, pp, location.getX() + getWidth(),
                              location.getY() + (getHeight() / 2), result))
     {
-        anchor = kAnchorRight;
+        anchor = AnchorSide::kAnchorRight;
         if (isSource)
         {
             // Adjust the anchor position if an output.
@@ -633,7 +633,7 @@ const
         if (calculateMinDistance(soFar, pp, location.getX() + (getWidth() / 2),
                                  location.getY() + getHeight(), result))
         {
-            anchor = kAnchorBottomCentre;
+            anchor = AnchorSide::kAnchorBottomCentre;
             if (isSource)
             {
                 // Adjust the anchor position if an output.
@@ -678,7 +678,7 @@ void ChannelEntry::drawDragLine(Graphics &       gg,
     {
         sourceAnchor = calculateClosestAnchor(startPoint, true, false, position);
         destinationAnchor = calculateAnchorForPoint(destinationCentre,
-                                                    kAnchorBottomCentre == sourceAnchor,
+                                                    AnchorSide::kAnchorBottomCentre == sourceAnchor,
                                                     position, sourceCentre);
     }
     else
@@ -686,7 +686,8 @@ void ChannelEntry::drawDragLine(Graphics &       gg,
         destinationAnchor = calculateAnchorForPoint(destinationCentre, false, position,
                                                     sourceCentre);
         sourceAnchor = calculateClosestAnchor(startPoint, true,
-                                              kAnchorBottomCentre == destinationAnchor, position);
+                                              AnchorSide::kAnchorBottomCentre == destinationAnchor,
+                                              position);
     }
     OD_LOG_D4("startPoint.x <- ", startPoint.getX(), "startPoint.y <- ", //####
               startPoint.getY(), "position.x <- ", position.getX(), "position.y <- ", //####
@@ -826,11 +827,12 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
             // Check if we can end here.
             firstRemovePort->clearDisconnectMarker();
             firstRemovePort->repaint();
-            if ((kPortDirectionOutput != _direction) && (kPortUsageService != _usage) &&
+            if ((PortDirection::kPortDirectionOutput != _direction) &&
+                (PortUsage::kPortUsageService != _usage) &&
                 firstRemovePort->hasOutgoingConnectionTo(getPortName()))
             {
                 if (MplusM::Utilities::RemoveConnection(firstName, getPortName(), CheckForExit,
-                                                        NULL))
+                                                        nullptr))
                 {
                     firstRemovePort->removeOutputConnection(this);
                     removeInputConnection(firstRemovePort);
@@ -856,16 +858,17 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
             // Check if we can end here.
             firstAddPort->clearConnectMarker();
             firstAddPort->repaint();
-            if ((kPortDirectionOutput != _direction) &&
-                (kPortUsageService != _usage) && protocolsMatch(firstProtocol, _portProtocol) &&
+            if ((PortDirection::kPortDirectionOutput != _direction) &&
+                (PortUsage::kPortUsageService != _usage) &&
+                protocolsMatch(firstProtocol, _portProtocol) &&
                 (! firstAddPort->hasOutgoingConnectionTo(getPortName())))
             {
                 if (MplusM::Utilities::AddConnection(firstName, getPortName(), STANDARD_WAIT_TIME,
-                                                     firstAddPort->_wasUdp, CheckForExit, NULL))
+                                                     firstAddPort->_wasUdp, CheckForExit, nullptr))
                 {
                     MplusM::Common::ChannelMode mode = (firstAddPort->_wasUdp ?
-                                                        MplusM::Common::kChannelModeUDP :
-                                                        MplusM::Common::kChannelModeTCP);
+                                                    MplusM::Common::ChannelMode::kChannelModeUDP :
+                                                    MplusM::Common::ChannelMode::kChannelModeTCP);
                     
                     firstAddPort->addOutputConnection(this, mode);
                     addInputConnection(firstAddPort, mode);
@@ -884,7 +887,8 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
                       "eventComponent = ", ee.eventComponent); //####
             OD_LOG_D2("x = ", ee.position.getX(), "y = ", ee.position.getY()); //####
             // Check if Add is OK for this entry.
-            if ((kPortDirectionInput != _direction) && (kPortUsageClient != _usage))
+            if ((PortDirection::kPortDirectionInput != _direction) &&
+                (PortUsage::kPortUsageClient != _usage))
             {
                 _wasUdp = ee.mods.isShiftDown();
                 owningPanel.rememberConnectionStartPoint(this, true);
@@ -896,8 +900,8 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
         else if (ee.mods.isCommandDown())
         {
             // Check if Remove is OK for this entry.
-            if ((kPortDirectionInput != _direction) && (kPortUsageClient != _usage) &&
-                (0 < _outputConnections.size()))
+            if ((PortDirection::kPortDirectionInput != _direction) &&
+                (PortUsage::kPortUsageClient != _usage) && (0 < _outputConnections.size()))
             {
                 owningPanel.rememberConnectionStartPoint(this, false);
                 setDisconnectMarker();
@@ -913,15 +917,15 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
             
             switch (_direction)
             {
-                case kPortDirectionInput :
+                case PortDirection::kPortDirectionInput :
                     dirText = " input";
                     break;
                     
-                case kPortDirectionOutput :
+                case PortDirection::kPortDirectionOutput :
                     dirText = " output";
                     break;
                     
-                case kPortDirectionInputOutput :
+                case PortDirection::kPortDirectionInputOutput :
                     dirText = " input/ouput";
                     break;
                     
@@ -931,27 +935,24 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
             }
             switch (MplusM::Utilities::GetPortKind(getPortName()))
             {
-                case MplusM::Utilities::kPortKindAdapter :
+                case MplusM::Utilities::PortKind::kPortKindAdapter :
                     prefix = "Adapter";
                     break;
                     
-                case MplusM::Utilities::kPortKindClient :
+                case MplusM::Utilities::PortKind::kPortKindClient :
                     prefix = "Client";
                     break;
                     
-                case MplusM::Utilities::kPortKindService :
+                case MplusM::Utilities::PortKind::kPortKindService :
                     prefix = "Service";
                     break;
                     
-                case MplusM::Utilities::kPortKindServiceRegistry :
+                case MplusM::Utilities::PortKind::kPortKindServiceRegistry :
                     prefix = "Service Registry";
                     break;
                     
-                case MplusM::Utilities::kPortKindStandard :
+                case MplusM::Utilities::PortKind::kPortKindStandard :
                     prefix = "Standard";
-                    break;
-                    
-                case MplusM::Utilities::kPortKindUnknown :
                     break;
                     
             }
@@ -1023,18 +1024,18 @@ void ChannelEntry::mouseUp(const MouseEvent & ee)
                 yarp::os::ConstString secondName(endEntry->getPortName());
                 yarp::os::ConstString secondProtocol(endEntry->getProtocol());
 
-                if ((kPortDirectionOutput != endEntry->getDirection()) &&
-                    (kPortUsageService != endEntry->getUsage()) &&
+                if ((PortDirection::kPortDirectionOutput != endEntry->getDirection()) &&
+                    (PortUsage::kPortUsageService != endEntry->getUsage()) &&
                     protocolsMatch(getProtocol(), secondProtocol) &&
                     (! hasOutgoingConnectionTo(secondName)))
                 {
                     if (MplusM::Utilities::AddConnection(getPortName(), secondName,
                                                          STANDARD_WAIT_TIME, _wasUdp, CheckForExit,
-                                                         NULL))
+                                                         nullptr))
                     {
                         MplusM::Common::ChannelMode mode = (_wasUdp ?
-                                                            MplusM::Common::kChannelModeUDP :
-                                                            MplusM::Common::kChannelModeTCP);
+                                                    MplusM::Common::ChannelMode::kChannelModeUDP :
+                                                    MplusM::Common::ChannelMode::kChannelModeTCP);
                         
                         addOutputConnection(endEntry, mode);
                         endEntry->addInputConnection(this, mode);

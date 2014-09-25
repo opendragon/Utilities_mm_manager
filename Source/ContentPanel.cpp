@@ -386,7 +386,7 @@ void ContentPanel::setEntityPositions(void)
 # if defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY)
     if (_initialPositioningDone)
     {
-        gg = NULL;
+        gg = nullptr;
     }
     else
     {

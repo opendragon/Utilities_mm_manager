@@ -57,7 +57,7 @@ namespace ChannelManager
     class PortData;
     
     /*! @brief An entity detected by the background scanner. */
-    class EntityData
+    class EntityData final
     {
     public :
         
@@ -82,8 +82,9 @@ namespace ChannelManager
          @returns The newly-created port. */
         PortData * addPort(const yarp::os::ConstString & portName,
                            const yarp::os::ConstString & portProtocol = "",
-                           const PortUsage               portKind = kPortUsageOther,
-                           const PortDirection           direction = kPortDirectionInputOutput);
+                           const PortUsage               portKind = PortUsage::kPortUsageOther,
+                           const PortDirection           direction =
+                                                        PortDirection::kPortDirectionInputOutput);
         
         /*! @brief Return the behavioural model for the entity.
          @returns The behavioural model for the entity. */
@@ -124,7 +125,7 @@ namespace ChannelManager
         
         /*! @brief Returns a port by index.
          @param num The zero-origin index of the port.
-         @returns A port or @c NULL if the index is out of range. */
+         @returns A port or @c nullptr if the index is out of range. */
         PortData * getPort(const int num)
         const;
         

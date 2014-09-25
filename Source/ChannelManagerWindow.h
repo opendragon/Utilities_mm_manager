@@ -59,12 +59,15 @@ namespace ChannelManager
     class ScannerThread;
     
     /*! @brief The main window of the application. */
-    class ChannelManagerWindow : public DocumentWindow,
-                                 private AsyncUpdater
+    class ChannelManagerWindow final : public DocumentWindow,
+                                        private AsyncUpdater
     {
     public :
         
-        /*! @brief The commands that we respond to. */
+        /*! @brief The commands that we respond to.
+         
+         Note that this must use the 'old-style' @c enum form, as it's referenced in code that
+         uses 'old-style' values. */
         enum CommandIDs
         {
             /*! @brief The command to trigger a repaint. */
@@ -106,7 +109,8 @@ namespace ChannelManager
         } // getScannerThread
         
         /*! @brief Called back to perform operations. */
-        virtual void handleAsyncUpdate(void);
+        virtual void handleAsyncUpdate(void)
+        override;
 
         /*! @brief Set up the reference to the background scanning thread. */
         void setScannerThread(ScannerThread * theScanner);

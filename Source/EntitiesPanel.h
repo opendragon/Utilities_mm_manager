@@ -61,7 +61,7 @@ namespace ChannelManager
     class ContentPanel;
     
     /*! @brief The entities layer of the main window of the application. */
-    class EntitiesPanel : public Component
+    class EntitiesPanel final : public Component
     {
     public :
         
@@ -106,12 +106,12 @@ namespace ChannelManager
         
         /*! @brief Find an entity in the currently-displayed list by name.
          @param name The name of the entity.
-         @returns @c NULL if the entity cannot be found and non-@c NULL if it is found. */
+         @returns @c nullptr if the entity cannot be found and non-@c nullptr if it is found. */
         ChannelContainer * findKnownEntity(const yarp::os::ConstString & name);
         
         /*! @brief Find a port in the to-be-displayed list by name.
          @param name The name of the port.
-         @returns @c NULL if the port cannot be found and non-@c NULL if it is found. */
+         @returns @c nullptr if the port cannot be found and non-@c nullptr if it is found. */
         ChannelEntry * findKnownPort(const yarp::os::ConstString & name);
         
         /*! @brief Remove a port from the set of known ports.
@@ -135,7 +135,7 @@ namespace ChannelManager
         
         /*! @brief Return an entity by index.
          @param index The zero-origin index of the entity.
-         @returns The entity if the index is within range and @c NULL otherwise. */
+         @returns The entity if the index is within range and @c nullptr otherwise. */
         ChannelContainer * getEntity(const size_t index)
         const;
         
@@ -181,17 +181,19 @@ namespace ChannelManager
 
         /*! @brief Returns an entry at the given location, if it exists.
          @param location The coordinates to check.
-         @returns A pointer to the entry at the given location, or @c NULL if there is none. */
+         @returns A pointer to the entry at the given location, or @c nullptr if there is none. */
         ChannelEntry * locateEntry(const Position & location)
         const;
         
         /*! @brief Called when a mouse button is pressed.
          @param ee Details about the position and status of the mouse event. */
-        virtual void mouseDown(const MouseEvent & ee);
+        virtual void mouseDown(const MouseEvent & ee)
+        override;
         
         /*! @brief Called when a mouse button is released.
          @param ee Details about the position and status of the mouse event. */
-        virtual void mouseUp(const MouseEvent& ee);
+        virtual void mouseUp(const MouseEvent& ee)
+        override;
         
         /*! @brief Draw the content of the component.
          @param gg The graphics context in which to draw. */
@@ -204,7 +206,7 @@ namespace ChannelManager
          @param aPort The first entry selected.
          @param beingAdded @c true if the connection is being added and @c false if it is being
          removed. */
-        void rememberConnectionStartPoint(ChannelEntry * aPort = NULL,
+        void rememberConnectionStartPoint(ChannelEntry * aPort = nullptr,
                                           const bool     beingAdded = false);
         
         /*! @brief Record a newly added port.

@@ -111,7 +111,7 @@ EntitiesPanel::EntitiesPanel(ContentPanel * theContainer,
                              const int      startingWidth,
                              const int      startingHeight) :
     inherited(), _knownPorts(), _knownEntities(), _defaultBoldFont(), _defaultNormalFont(),
-    _firstAddPoint(NULL), _firstRemovePoint(NULL), _container(theContainer),
+    _firstAddPoint(nullptr), _firstRemovePoint(nullptr), _container(theContainer),
     _dragConnectionActive(false)
 {
     OD_LOG_ENTER(); //####
@@ -343,7 +343,7 @@ void EntitiesPanel::clearNodeValues(void)
         
         if (anEntity)
         {
-            anEntity->setNode(NULL);
+            anEntity->setNode(nullptr);
         }
     }
     
@@ -393,7 +393,7 @@ ChannelContainer * EntitiesPanel::findKnownEntity(const yarp::os::ConstString & 
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("name = ", name); //####
-    ChannelContainer * result = NULL;
+    ChannelContainer * result = nullptr;
     
     for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
     {
@@ -419,12 +419,12 @@ ChannelEntry * EntitiesPanel::findKnownPort(const yarp::os::ConstString & name)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("name = ", name); //####
-    ChannelEntry *                  result = NULL;
+    ChannelEntry *                  result = nullptr;
     ChannelEntryMap::const_iterator match(_knownPorts.find(name));
     
     if (_knownPorts.end() == match)
     {
-        result = NULL;
+        result = nullptr;
     }
     else
     {
@@ -477,7 +477,7 @@ const
     }
     else
     {
-        result = NULL;
+        result = nullptr;
     }
     OD_LOG_OBJEXIT_P(result); //####
     return result;
@@ -512,7 +512,7 @@ ChannelEntry * EntitiesPanel::locateEntry(const Position & location)
 const
 {
     OD_LOG_OBJENTER(); //####
-    ChannelEntry * result = NULL;
+    ChannelEntry * result = nullptr;
     
     for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
     {
@@ -585,11 +585,11 @@ void EntitiesPanel::rememberConnectionStartPoint(ChannelEntry * aPort,
     if (beingAdded)
     {
         _firstAddPoint = aPort;
-        _firstRemovePoint = NULL;
+        _firstRemovePoint = nullptr;
     }
     else
     {
-        _firstAddPoint = NULL;
+        _firstAddPoint = nullptr;
         _firstRemovePoint = aPort;
     }
     OD_LOG_OBJEXIT(); //####
@@ -647,7 +647,7 @@ bool EntitiesPanel::removeUnvisitedEntities(void)
     {
         keepGoing = false;
         ContainerList::iterator walker(_knownEntities.begin());
-        ChannelContainer *      anEntity = NULL;
+        ChannelContainer *      anEntity = nullptr;
         
         for ( ; _knownEntities.end() != walker; ++walker)
         {

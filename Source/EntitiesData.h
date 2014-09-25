@@ -57,7 +57,7 @@ namespace ChannelManager
     class EntityData;
     
     /*! @brief The data collected by the background scanner. */
-    class EntitiesData
+    class EntitiesData final
     {
     public :
         
@@ -95,7 +95,7 @@ namespace ChannelManager
         
         /*! @brief Return an entity by index.
          @param index The zero-origin index of the entity.
-         @returns The entity if the index is within range and @c NULL otherwise. */
+         @returns The entity if the index is within range and @c nullptr otherwise. */
         EntityData * getEntity(const size_t index)
         const;
         
