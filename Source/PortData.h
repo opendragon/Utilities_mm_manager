@@ -68,7 +68,7 @@ namespace ChannelManager
         PortData(const yarp::os::ConstString & portName,
                  const yarp::os::ConstString & portProtocol,
                  const PortUsage               portKind,
-                 const PortDirection           direction = PortDirection::kPortDirectionInput);
+                 const PortDirection           direction = kPortDirectionInput);
         
         /*! @brief The destructor. */
         virtual ~PortData(void);
@@ -148,7 +148,7 @@ namespace ChannelManager
         inline bool isInputOutput(void)
         const
         {
-            return (PortUsage::kPortUsageInputOutput == _usage);
+            return (kPortUsageInputOutput == _usage);
         } // isInputOutput
         
         /*! @brief Returns @c true if the port entry is part of a service and @c false
@@ -157,7 +157,7 @@ namespace ChannelManager
         inline bool isService(void)
         const
         {
-            return (PortUsage::kPortUsageService == _usage);
+            return (kPortUsageService == _usage);
         } // isService
 
         /*! @brief Remove an input connection from a port.

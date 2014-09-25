@@ -166,13 +166,13 @@ void ScannerThread::addEntities(void)
     {
         MplusM::Utilities::ServiceDescriptor descriptor(outer->second);
         EntityData *                         anEntity =
-                                                new EntityData(ContainerKind::kContainerKindService,
+                                                new EntityData(kContainerKindService,
                                                                descriptor._serviceName,
                                                                descriptor._kind,
                                                                descriptor._description);
         PortData *                           aPort = anEntity->addPort(descriptor._channelName, "",
-                                                                       PortUsage::kPortUsageService,
-                                                               PortDirection::kPortDirectionInput);
+                                                                       kPortUsageService,
+                                                               kPortDirectionInput);
         MplusM::Common::ChannelVector &      inChannels = descriptor._inputChannels;
         MplusM::Common::ChannelVector &      outChannels = descriptor._outputChannels;
         
@@ -182,8 +182,8 @@ void ScannerThread::addEntities(void)
             MplusM::Common::ChannelDescription aChannel(*inner);
             
             aPort = anEntity->addPort(aChannel._portName, aChannel._portProtocol,
-                                      PortUsage::kPortUsageInputOutput,
-                                      PortDirection::kPortDirectionInput);
+                                      kPortUsageInputOutput,
+                                      kPortDirectionInput);
         }
         for (MplusM::Common::ChannelVector::const_iterator inner = outChannels.begin();
              outChannels.end() != inner; ++inner)
@@ -191,8 +191,8 @@ void ScannerThread::addEntities(void)
             MplusM::Common::ChannelDescription aChannel(*inner);
             
             aPort = anEntity->addPort(aChannel._portName, aChannel._portProtocol,
-                                      PortUsage::kPortUsageInputOutput,
-                                      PortDirection::kPortDirectionOutput);
+                                      kPortUsageInputOutput,
+                                      kPortDirectionOutput);
         }
         _workingData.addEntity(anEntity);
     }
@@ -202,7 +202,7 @@ void ScannerThread::addEntities(void)
     {
         PortData *                                 aPort;
         EntityData *                               anEntity =
-                                        new EntityData(ContainerKind::kContainerKindClientOrAdapter,
+                                        new EntityData(kContainerKindClientOrAdapter,
                                                        outer->first, "", "");
         const MplusM::Utilities::PortAssociation & associates = outer->second._associates;
         const MplusM::Common::StringVector &       assocInputs = associates._inputs;
@@ -211,40 +211,40 @@ void ScannerThread::addEntities(void)
         for (MplusM::Common::StringVector::const_iterator inner = assocInputs.begin();
              assocInputs.end() != inner; ++inner)
         {
-            aPort = anEntity->addPort(*inner, "", PortUsage::kPortUsageOther,
-                                      PortDirection::kPortDirectionInput);
+            aPort = anEntity->addPort(*inner, "", kPortUsageOther,
+                                      kPortDirectionInput);
         }
         for (MplusM::Common::StringVector::const_iterator inner = assocOutputs.begin();
              assocOutputs.end() != inner; ++inner)
         {
-            aPort = anEntity->addPort(*inner, "", PortUsage::kPortUsageOther,
-                                      PortDirection::kPortDirectionOutput);
+            aPort = anEntity->addPort(*inner, "", kPortUsageOther,
+                                      kPortDirectionOutput);
         }
-        aPort = anEntity->addPort(outer->second._name, "", PortUsage::kPortUsageClient,
-                                  PortDirection::kPortDirectionInputOutput);
+        aPort = anEntity->addPort(outer->second._name, "", kPortUsageClient,
+                                  kPortDirectionInputOutput);
         _workingData.addEntity(anEntity);
     }
     // Convert the detected standalone ports into entities in the background list.
     for (SingularPortMap::const_iterator walker(_standalonePorts.begin());
          _standalonePorts.end() != walker; ++walker)
     {
-        EntityData * anEntity = new EntityData(ContainerKind::kContainerKindOther, walker->first,
+        EntityData * anEntity = new EntityData(kContainerKindOther, walker->first,
                                                "", "");
         PortUsage    usage;
         
         switch (MplusM::Utilities::GetPortKind(walker->second._name))
         {
             case MplusM::Utilities::kPortKindClient :
-                usage = PortUsage::kPortUsageClient;
+                usage = kPortUsageClient;
                 break;
                 
             case MplusM::Utilities::kPortKindService :
             case MplusM::Utilities::kPortKindServiceRegistry :
-                usage = PortUsage::kPortUsageService;
+                usage = kPortUsageService;
                 break;
                 
             default :
-                usage = PortUsage::kPortUsageOther;
+                usage = kPortUsageOther;
                 break;
                 
         }
@@ -457,7 +457,7 @@ PortDirection ScannerThread::determineDirection(ChannelEntry *                ol
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("portName = ", portName); //####
     OD_LOG_P1("checkStuff = ", checkStuff); //####
-    PortDirection result = PortDirection::kPortDirectionUnknown;
+    PortDirection result = kPortDirectionUnknown;
     
     if (oldEntry)
     {
@@ -519,21 +519,21 @@ PortDirection ScannerThread::determineDirection(ChannelEntry *                ol
         }
         if (canDoInput)
         {
-            result = (canDoOutput ? PortDirection::kPortDirectionInputOutput :
-                      PortDirection::kPortDirectionInput);
+            result = (canDoOutput ? kPortDirectionInputOutput :
+                      kPortDirectionInput);
         }
         else if (canDoOutput)
         {
-            result = PortDirection::kPortDirectionOutput;
+            result = kPortDirectionOutput;
         }
         else
         {
-            result = PortDirection::kPortDirectionUnknown;
+            result = kPortDirectionUnknown;
         }
     }
     else
     {
-        result = PortDirection::kPortDirectionUnknown;
+        result = kPortDirectionUnknown;
     }
     OD_LOG_OBJEXIT_L(static_cast<long>(result)); //####
     return result;

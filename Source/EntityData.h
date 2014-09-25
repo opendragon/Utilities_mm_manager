@@ -81,9 +81,9 @@ namespace ChannelManager
          @returns The newly-created port. */
         PortData * addPort(const yarp::os::ConstString & portName,
                            const yarp::os::ConstString & portProtocol = "",
-                           const PortUsage               portKind = PortUsage::kPortUsageOther,
+                           const PortUsage               portKind = kPortUsageOther,
                            const PortDirection           direction =
-                                                        PortDirection::kPortDirectionInputOutput);
+                                                        kPortDirectionInputOutput);
         
         /*! @brief Return the behavioural model for the entity.
          @returns The behavioural model for the entity. */

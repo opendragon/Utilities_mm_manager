@@ -60,7 +60,7 @@ namespace ChannelManager
     
     /*! @brief The main window of the application. */
     class ChannelManagerWindow : public DocumentWindow,
-                                        private AsyncUpdater
+                                 private AsyncUpdater
     {
     public :
         

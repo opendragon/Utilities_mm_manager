@@ -352,15 +352,15 @@ void ChannelContainer::mouseDown(const MouseEvent & ee)
         
         switch (_kind)
         {
-            case ContainerKind::kContainerKindClientOrAdapter :
+            case kContainerKindClientOrAdapter :
                 thePanelDescription = "A client or adapter";
                 break;
                 
-            case ContainerKind::kContainerKindService :
+            case kContainerKindService :
                 thePanelDescription = _description;
                 break;
                 
-            case ContainerKind::kContainerKindOther :
+            case kContainerKindOther :
                 thePanelDescription = "A standard port";
                 break;
                 

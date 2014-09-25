@@ -71,7 +71,7 @@ namespace ChannelManager
                      const yarp::os::ConstString & portName,
                      const yarp::os::ConstString & portProtocol,
                      const PortUsage               portKind,
-                     const PortDirection           direction = PortDirection::kPortDirectionInput);
+                     const PortDirection           direction = kPortDirectionInput);
         
         /*! @brief The destructor. */
         virtual ~ChannelEntry(void);
@@ -221,7 +221,7 @@ namespace ChannelManager
         inline bool isInputOutput(void)
         const
         {
-            return (PortUsage::kPortUsageInputOutput == _usage);
+            return (kPortUsageInputOutput == _usage);
         } // isInputOutput
         
         /*! @brief Returns @c true if the port entry is the bottom-most (last) port entry in a
@@ -248,7 +248,7 @@ namespace ChannelManager
         inline bool isService(void)
         const
         {
-            return (PortUsage::kPortUsageService == _usage);
+            return (kPortUsageService == _usage);
         } // isService
         
         /*! @brief Called when a mouse button is pressed.

@@ -93,9 +93,9 @@ namespace ChannelManager
          @returns The newly-created port. */
         ChannelEntry * addPort(const yarp::os::ConstString & portName,
                                const yarp::os::ConstString & portProtocol = "",
-                               const PortUsage               portKind = PortUsage::kPortUsageOther,
+                               const PortUsage               portKind = kPortUsageOther,
                                const PortDirection           direction =
-                                                        PortDirection::kPortDirectionInputOutput);
+                                                        kPortDirectionInputOutput);
         
         /*! @brief Clear any connect / disconnect markers. */
         void clearMarkers(void);
