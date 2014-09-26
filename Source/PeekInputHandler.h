@@ -40,7 +40,7 @@
 #if (! defined(PeekInputHandler_H_))
 # define PeekInputHandler_H_ /* Header guard */
 
-# include <mpm/M+MInputHandler.h>
+# include <mpm/M+MBaseInputHandler.h>
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -60,7 +60,7 @@ namespace ChannelManager
      
      The data is expected to be in the form of an integer specifying the number of values to
      generate. */
-    class PeekInputHandler : public MplusM::Common::InputHandler
+    class PeekInputHandler : public MplusM::Common::BaseInputHandler
     {
     public :
         
@@ -92,7 +92,7 @@ namespace ChannelManager
     private :
         
         /*! @brief The class that this class is derived from. */
-        typedef InputHandler inherited;
+        typedef BaseInputHandler inherited;
         
     }; // PeekInputHandler
     
