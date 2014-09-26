@@ -41,6 +41,7 @@
 #include "ChannelContainer.h"
 #include "ChannelEntry.h"
 #include "ChannelManagerWindow.h"
+#include "EntitiesPanel.h"
 #include "EntityData.h"
 #include "PortData.h"
 #include "ScannerThread.h"

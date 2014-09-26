@@ -39,9 +39,7 @@
 #if (! defined(ChannelContainer_H_))
 # define ChannelContainer_H_ /* Header guard */
 
-# include "ChannelEntry.h"
 # include "ChannelManagerDataTypes.h"
-# include "EntitiesPanel.h"
 
 # if defined(USE_OGDF_POSITIONING)
 #  include <ogdf/basic/Graph.h>
@@ -94,8 +92,7 @@ namespace ChannelManager
         ChannelEntry * addPort(const yarp::os::ConstString & portName,
                                const yarp::os::ConstString & portProtocol = "",
                                const PortUsage               portKind = kPortUsageOther,
-                               const PortDirection           direction =
-                                                        kPortDirectionInputOutput);
+                               const PortDirection           direction = kPortDirectionInputOutput);
         
         /*! @brief Clear any connect / disconnect markers. */
         void clearMarkers(void);

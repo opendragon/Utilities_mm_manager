@@ -40,7 +40,6 @@
 # define ScannerThread_H_ /* Header guard */
 
 # include "EntitiesData.h"
-# include "EntitiesPanel.h"
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -56,6 +55,7 @@
 namespace ChannelManager
 {
     class ChannelManagerWindow;
+    class EntitiesData;
     
     /*! @brief A background scanner thread. */
     class ScannerThread : public Thread

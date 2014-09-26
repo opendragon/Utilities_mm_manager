@@ -37,6 +37,8 @@
 //--------------------------------------------------------------------------------------------------
 
 #include "ChannelContainer.h"
+#include "EntitiesPanel.h"
+#include "ChannelEntry.h"
 
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>

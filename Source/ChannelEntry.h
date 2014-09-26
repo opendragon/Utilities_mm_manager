@@ -39,9 +39,7 @@
 #if (! defined(ChannelEntry_H_))
 # define ChannelEntry_H_ /* Header guard */
 
-# include "ChannelContainer.h"
 # include "ChannelManagerDataTypes.h"
-# include "EntitiesPanel.h"
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -56,6 +54,9 @@
 
 namespace ChannelManager
 {
+    class ChannelContainer;
+    class EntitiesPanel;
+    
     /*! @brief A port or channel. */
     class ChannelEntry : public Component
     {

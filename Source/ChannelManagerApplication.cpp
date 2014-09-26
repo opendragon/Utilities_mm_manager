@@ -37,7 +37,7 @@
 //--------------------------------------------------------------------------------------------------
 
 #include "ChannelManagerApplication.h"
-#include "ChannelContainer.h"
+#include "EntitiesPanel.h"
 #include "PeekInputHandler.h"
 #include "ScannerThread.h"
 

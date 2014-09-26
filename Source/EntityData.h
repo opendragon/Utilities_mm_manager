@@ -40,7 +40,6 @@
 # define EntityData_H_ /* Header guard */
 
 # include "ChannelManagerDataTypes.h"
-# include "PortData.h"
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
