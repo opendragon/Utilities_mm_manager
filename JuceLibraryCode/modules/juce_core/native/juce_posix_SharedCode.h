@@ -234,7 +234,13 @@ namespace
             if (isDir != nullptr)         *isDir        = statOk && ((info.st_mode & S_IFDIR) != 0);
             if (fileSize != nullptr)      *fileSize     = statOk ? info.st_size : 0;
             if (modTime != nullptr)       *modTime      = Time (statOk ? (int64) info.st_mtime * 1000 : 0);
-            if (creationTime != nullptr)  *creationTime = Time (statOk ? (int64) info.st_ctime * 1000 : 0);
+
+            if (creationTime != nullptr)  *creationTime = Time ((! statOk) ? 0 : (int64) (1000 *
+                                                                    #if JUCE_MAC || JUCE_IOS
+                                                                     info.st_birthtime));
+                                                                    #else
+                                                                     info.st_ctime));
+                                                                    #endif
         }
 
         if (isReadOnly != nullptr)
@@ -664,6 +670,7 @@ int File::getVolumeSerialNumber() const
 }
 
 //==============================================================================
+#if ! JUCE_IOS
 void juce_runSystemCommand (const String&);
 void juce_runSystemCommand (const String& command)
 {
@@ -684,7 +691,7 @@ String juce_getOutputFromCommand (const String& command)
     tempFile.deleteFile();
     return result;
 }
-
+#endif
 
 //==============================================================================
 #if JUCE_IOS
