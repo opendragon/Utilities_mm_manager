@@ -63,36 +63,57 @@
         <MODULEPATH id="juce_data_structures" path="/Users/M_M/Documents/git.repositories/JUCE/modules"/>
         <MODULEPATH id="juce_gui_basics" path="/Users/M_M/Documents/git.repositories/JUCE/modules"/>
         <MODULEPATH id="juce_gui_extra" path="/Users/M_M/Documents/git.repositories/JUCE/modules"/>
+        <MODULEPATH id="juce_cryptography" path="/Users/M_M/Documents/git.repositories/JUCE/modules"/>
+        <MODULEPATH id="juce_video" path="/Users/M_M/Documents/git.repositories/JUCE/modules"/>
+        <MODULEPATH id="juce_opengl" path="/Users/M_M/Documents/git.repositories/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="/Users/M_M/Documents/git.repositories/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="/Users/M_M/Documents/git.repositories/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="/Users/M_M/Documents/git.repositories/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="/Users/M_M/Documents/git.repositories/JUCE/modules"/>
       </MODULEPATHS>
     </XCODE_MAC>
-    <VS2012 targetFolder="Builds/VisualStudio2012" externalLibraries="ACE.lib&#10;YARP_OS.lib&#10;YARP_init.lib&#10;odLogging.lib&#10;mpmCommon.lib&#10;ogdf.lib&#10;Psapi.lib">
+    <VS2012 targetFolder="Builds/VisualStudio2012" externalLibraries="ACE.lib&#10;YARP_OS.lib&#10;YARP_init.lib&#10;odLogging.lib&#10;mpmCommon.lib&#10;ogdf.lib">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="1" optimisation="1" targetName="Channel Manager" headerPath="$(ACE_ROOT)&#10;$(YARP_DIR)\generated_include&#10;$(YARP_DIR)\src\libYARP_OS\include&#10;$(MPlusM_ROOT)\&#10;$(MPlusM_ROOT)\odl&#10;$(OGDF)"
-                       libraryPath="$(ACE_ROOT)\lib&#10;$(YARP_DIR)\lib\Debug&#10;$(MPlusM_ROOT)\mpm\Debug&#10;$(MPlusM_ROOT)\odl\Debug&#10;$(OGDF)\Win32\Debug"
+                       isDebug="1" optimisation="1" targetName="Channel Manager" headerPath="$(ACE_ROOT)&#10;$(YARP_DIR)\generated_include&#10;$(YARP_DIR)\src\libYARP_OS\include&#10;$(MPlusM_ROOT)\Common&#10;$(MPlusM_ROOT)\Logging&#10;$(OGDF)"
+                       libraryPath="$(ACE_ROOT)\lib&#10;$(YARP_DIR)\lib\Debug&#10;$(MPlusM_ROOT)\Common\Debug&#10;$(MPlusM_ROOT)\Logging\Debug&#10;$(OGDF)\Win32\Debug"
                        useRuntimeLibDLL="1"/>
         <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="0" optimisation="2" targetName="Channel Manager" libraryPath="$(ACE_ROOT)\lib&#10;$(YARP_DIR)\lib\Release&#10;$(MPlusM_ROOT)\mpm\Release&#10;$(MPlusM_ROOT)\odl\Release&#10;$(OGDF)\Win32\Release"
-                       headerPath="$(ACE_ROOT)&#10;$(YARP_DIR)\generated_include&#10;$(YARP_DIR)\src\libYARP_OS\include&#10;$(MPlusM_ROOT)\&#10;$(MPlusM_ROOT)\odl&#10;$(OGDF)"
+                       isDebug="0" optimisation="2" targetName="Channel Manager" libraryPath="$(ACE_ROOT)\lib&#10;$(YARP_DIR)\lib\Release&#10;$(MPlusM_ROOT)\Common\Release&#10;$(MPlusM_ROOT)\Logging\Release&#10;$(OGDF)\Win32\Release"
+                       headerPath="$(ACE_ROOT)&#10;$(YARP_DIR)\generated_include&#10;$(YARP_DIR)\src\libYARP_OS\include&#10;$(MPlusM_ROOT)\Common&#10;$(MPlusM_ROOT)\Logging&#10;$(OGDF)"
                        useRuntimeLibDLL="1"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
+        <MODULEPATH id="juce_video" path="D:\dev\JUCE\modules"/>
+        <MODULEPATH id="juce_opengl" path="D:\dev\JUCE\modules"/>
         <MODULEPATH id="juce_gui_extra" path="D:\dev\JUCE\modules"/>
         <MODULEPATH id="juce_gui_basics" path="D:\dev\JUCE\modules"/>
         <MODULEPATH id="juce_graphics" path="D:\dev\JUCE\modules"/>
         <MODULEPATH id="juce_events" path="D:\dev\JUCE\modules"/>
         <MODULEPATH id="juce_data_structures" path="D:\dev\JUCE\modules"/>
+        <MODULEPATH id="juce_cryptography" path="D:\dev\JUCE\modules"/>
         <MODULEPATH id="juce_core" path="D:\dev\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_processors" path="D:\dev\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_formats" path="D:\dev\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_devices" path="D:\dev\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_basics" path="D:\dev\JUCE\modules"/>
       </MODULEPATHS>
     </VS2012>
   </EXPORTFORMATS>
   <MODULES>
+    <MODULES id="juce_audio_basics" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_audio_devices" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_audio_formats" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_audio_processors" showAllCode="1" useLocalCopy="1"/>
     <MODULES id="juce_core" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_cryptography" showAllCode="1" useLocalCopy="1"/>
     <MODULES id="juce_data_structures" showAllCode="1" useLocalCopy="1"/>
     <MODULES id="juce_events" showAllCode="1" useLocalCopy="1"/>
     <MODULES id="juce_graphics" showAllCode="1" useLocalCopy="1"/>
     <MODULES id="juce_gui_basics" showAllCode="1" useLocalCopy="1"/>
     <MODULES id="juce_gui_extra" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_opengl" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_video" showAllCode="1" useLocalCopy="1"/>
   </MODULES>
   <JUCEOPTIONS/>
 </JUCERPROJECT>

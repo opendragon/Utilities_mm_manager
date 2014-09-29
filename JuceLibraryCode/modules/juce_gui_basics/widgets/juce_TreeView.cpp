@@ -1773,11 +1773,6 @@ TreeViewItem* TreeViewItem::getNextVisibleItem (const bool recurse) const noexce
     return nullptr;
 }
 
-static String escapeSlashesInTreeViewItemName (const String& s)
-{
-    return s.replaceCharacter ('/', '\\');
-}
-
 String TreeViewItem::getItemIdentifierString() const
 {
     String s;
@@ -1785,12 +1780,12 @@ String TreeViewItem::getItemIdentifierString() const
     if (parentItem != nullptr)
         s = parentItem->getItemIdentifierString();
 
-    return s + "/" + escapeSlashesInTreeViewItemName (getUniqueName());
+    return s + "/" + getUniqueName().replaceCharacter ('/', '\\');
 }
 
 TreeViewItem* TreeViewItem::findItemFromIdentifierString (const String& identifierString)
 {
-    const String thisId ("/" + escapeSlashesInTreeViewItemName (getUniqueName()));
+    const String thisId ("/" + getUniqueName());
 
     if (thisId == identifierString)
         return this;

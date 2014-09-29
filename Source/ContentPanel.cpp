@@ -54,10 +54,6 @@
 # include <ogdf/energybased/FMMMLayout.h>
 #endif // defined(USE_OGDF_POSITIONING)
 
-#if (! MAC_OR_LINUX_)
-# include <Windows.h>
-#endif //! MAC_OR_LINUX_
-
 #if defined(__APPLE__)
 # pragma clang diagnostic push
 # pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
@@ -232,11 +228,7 @@ void ContentPanel::paint(Graphics & gg)
         
         for ( ; ! locked; locked = scanner->conditionallyAcquireForRead())
         {
-#if MAC_OR_LINUX_
-				sleep(SHORT_SLEEP);
-#else
-				Sleep(SHORT_SLEEP);
-#endif //MAC_OR_LINUX_
+            sleep(SHORT_SLEEP);
         }
         bool scanDataReady = scanner->checkAndClearIfScanIsComplete();
         
@@ -372,7 +364,7 @@ void ContentPanel::saveEntityPositions(void)
 #else // ! MAC_OR_LINUX_
             _snprintf(xyBuff, sizeof(xyBuff) - 1, "\t%g\t%g\n", where.x, where.y);
             // Correct for the weird behaviour of _snprintf
-            xyBuff[sizeof(xyBuff) - 1] = '\0';
+            buff[sizeof(xyBuff) - 1] = '\0';
 #endif // ! MAC_OR_LINUX_
             settingsFile.appendText(tag.c_str());
             settingsFile.appendText(xyBuff);
