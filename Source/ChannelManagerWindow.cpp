@@ -77,7 +77,7 @@ static ScopedPointer<ApplicationCommandManager> lApplicationCommandManager;
 
 ChannelManagerWindow::ChannelManagerWindow(const yarp::os::ConstString & title)  :
     inherited1(title.c_str(), Colours::lightgrey, inherited1::allButtons), inherited2(),
-    _contentPanel(new ContentPanel(this)), _scannerThread(nullptr)
+    _contentPanel(new ContentPanel(this)), _scannerThread(NULL)
 {
     OD_LOG_ENTER(); //####
     setOpaque(true);
@@ -93,7 +93,7 @@ ChannelManagerWindow::ChannelManagerWindow(const yarp::os::ConstString & title) 
 ChannelManagerWindow::~ChannelManagerWindow(void)
 {
     OD_LOG_OBJENTER(); //####
-    lApplicationCommandManager = nullptr;
+    lApplicationCommandManager = NULL;
     OD_LOG_OBJEXIT(); //####
 } // ChannelManagerWindow::~ChannelManagerWindow
 

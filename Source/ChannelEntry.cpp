@@ -56,6 +56,7 @@
 #endif // defined(__APPLE__)
 
 using namespace ChannelManager;
+using namespace MplusM;
 using namespace std;
 
 #if defined(__APPLE__)
@@ -342,10 +343,10 @@ static void drawBezier(Graphics &       gg,
  @param source The originating entry.
  @param destination The terminating entry.
  @param mode The kind of connection. */
-static void drawConnection(Graphics &                  gg,
-                           ChannelEntry *              source,
-                           ChannelEntry *              destination,
-                           MplusM::Common::ChannelMode mode)
+static void drawConnection(Graphics &          gg,
+                           ChannelEntry *      source,
+                           ChannelEntry *      destination,
+                           Common::ChannelMode mode)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P3("gg = ", &gg, "source = ", source, "destination = ", destination); //####
@@ -376,7 +377,7 @@ static void drawConnection(Graphics &                  gg,
             sourceAnchor = source->calculateClosestAnchor(startPoint, true, false,
                                                           destinationCentre);
             destinationAnchor = destination->calculateClosestAnchor(endPoint, false,
-                                                    kAnchorBottomCentre == sourceAnchor,
+                                                                kAnchorBottomCentre == sourceAnchor,
                                                                     sourceCentre);
         }
         else
@@ -384,7 +385,7 @@ static void drawConnection(Graphics &                  gg,
             destinationAnchor = destination->calculateClosestAnchor(endPoint, false, false,
                                                                     sourceCentre);
             sourceAnchor = source->calculateClosestAnchor(startPoint, true,
-                                              kAnchorBottomCentre == destinationAnchor,
+                                                          kAnchorBottomCentre == destinationAnchor,
                                                           destinationCentre);
         }
         OD_LOG_D4("startPoint.x <- ", startPoint.getX(), "startPoint.y <- ", //####
@@ -405,11 +406,11 @@ static void drawConnection(Graphics &                  gg,
         OD_LOG_D1("thickness <- ", thickness); //####
         switch (mode)
         {
-            case MplusM::Common::kChannelModeTCP :
+            case Common::kChannelModeTCP :
                 gg.setColour(kTcpConnectionColour);
                 break;
                 
-            case MplusM::Common::kChannelModeUDP :
+            case Common::kChannelModeUDP :
                 gg.setColour(kUdpConnectionColour);
                 break;
                 
@@ -513,8 +514,8 @@ ChannelEntry::~ChannelEntry(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-void ChannelEntry::addInputConnection(ChannelEntry *              other,
-                                      MplusM::Common::ChannelMode mode)
+void ChannelEntry::addInputConnection(ChannelEntry *      other,
+                                      Common::ChannelMode mode)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("other = ", other); //####
@@ -553,8 +554,8 @@ void ChannelEntry::addInputConnection(ChannelEntry *              other,
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::addInputConnection
 
-void ChannelEntry::addOutputConnection(ChannelEntry *              other,
-                                       MplusM::Common::ChannelMode mode)
+void ChannelEntry::addOutputConnection(ChannelEntry *      other,
+                                       Common::ChannelMode mode)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("other = ", other); //####
@@ -831,8 +832,7 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
                 (kPortUsageService != _usage) &&
                 firstRemovePort->hasOutgoingConnectionTo(getPortName()))
             {
-                if (MplusM::Utilities::RemoveConnection(firstName, getPortName(), CheckForExit,
-                                                        nullptr))
+                if (Utilities::RemoveConnection(firstName, getPortName(), CheckForExit, NULL))
                 {
                     firstRemovePort->removeOutputConnection(this);
                     removeInputConnection(firstRemovePort);
@@ -863,12 +863,11 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
                 protocolsMatch(firstProtocol, _portProtocol) &&
                 (! firstAddPort->hasOutgoingConnectionTo(getPortName())))
             {
-                if (MplusM::Utilities::AddConnection(firstName, getPortName(), STANDARD_WAIT_TIME,
-                                                     firstAddPort->_wasUdp, CheckForExit, nullptr))
+                if (Utilities::AddConnection(firstName, getPortName(), STANDARD_WAIT_TIME,
+                                             firstAddPort->_wasUdp, CheckForExit, NULL))
                 {
-                    MplusM::Common::ChannelMode mode = (firstAddPort->_wasUdp ?
-                                                    MplusM::Common::kChannelModeUDP :
-                                                    MplusM::Common::kChannelModeTCP);
+                    Common::ChannelMode mode = (firstAddPort->_wasUdp ? Common::kChannelModeUDP :
+                                                Common::kChannelModeTCP);
                     
                     firstAddPort->addOutputConnection(this, mode);
                     addInputConnection(firstAddPort, mode);
@@ -933,25 +932,25 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
                     break;
                     
             }
-            switch (MplusM::Utilities::GetPortKind(getPortName()))
+            switch (Utilities::GetPortKind(getPortName()))
             {
-                case MplusM::Utilities::kPortKindAdapter :
+                case Utilities::kPortKindAdapter :
                     prefix = "Adapter";
                     break;
                     
-                case MplusM::Utilities::kPortKindClient :
+                case Utilities::kPortKindClient :
                     prefix = "Client";
                     break;
                     
-                case MplusM::Utilities::kPortKindService :
+                case Utilities::kPortKindService :
                     prefix = "Service";
                     break;
                     
-                case MplusM::Utilities::kPortKindServiceRegistry :
+                case Utilities::kPortKindServiceRegistry :
                     prefix = "Service Registry";
                     break;
                     
-                case MplusM::Utilities::kPortKindStandard :
+                case Utilities::kPortKindStandard :
                     prefix = "Standard";
                     break;
                     
@@ -1032,13 +1031,11 @@ void ChannelEntry::mouseUp(const MouseEvent & ee)
                     protocolsMatch(getProtocol(), secondProtocol) &&
                     (! hasOutgoingConnectionTo(secondName)))
                 {
-                    if (MplusM::Utilities::AddConnection(getPortName(), secondName,
-                                                         STANDARD_WAIT_TIME, _wasUdp, CheckForExit,
-                                                         nullptr))
+                    if (Utilities::AddConnection(getPortName(), secondName, STANDARD_WAIT_TIME,
+                                                 _wasUdp, CheckForExit, NULL))
                     {
-                        MplusM::Common::ChannelMode mode = (_wasUdp ?
-                                                    MplusM::Common::kChannelModeUDP :
-                                                    MplusM::Common::kChannelModeTCP);
+                        Common::ChannelMode mode = (_wasUdp ? Common::kChannelModeUDP :
+                                                    Common::kChannelModeTCP);
                         
                         addOutputConnection(endEntry, mode);
                         endEntry->addInputConnection(this, mode);

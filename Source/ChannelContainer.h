@@ -154,7 +154,7 @@ namespace ChannelManager
         
         /*! @brief Returns a port by index.
          @param num The zero-origin index of the port.
-         @returns A port or @c nullptr if the index is out of range. */
+         @returns A port or @c NULL if the index is out of range. */
         ChannelEntry * getPort(const int num)
         const;
         
@@ -199,7 +199,7 @@ namespace ChannelManager
         
         /*! @brief Returns an entry at the given location, if it exists.
          @param location The coordinates to check.
-         @returns A pointer to the entry at the given location, or @c nullptr if there is none. */
+         @returns A pointer to the entry at the given location, or @c NULL if there is none. */
         ChannelEntry * locateEntry(const Position & location)
         const;
         

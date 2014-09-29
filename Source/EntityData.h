@@ -123,7 +123,7 @@ namespace ChannelManager
         
         /*! @brief Returns a port by index.
          @param num The zero-origin index of the port.
-         @returns A port or @c nullptr if the index is out of range. */
+         @returns A port or @c NULL if the index is out of range. */
         PortData * getPort(const int num)
         const;
         

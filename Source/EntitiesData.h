@@ -93,7 +93,7 @@ namespace ChannelManager
         
         /*! @brief Return an entity by index.
          @param index The zero-origin index of the entity.
-         @returns The entity if the index is within range and @c nullptr otherwise. */
+         @returns The entity if the index is within range and @c NULL otherwise. */
         EntityData * getEntity(const size_t index)
         const;
         

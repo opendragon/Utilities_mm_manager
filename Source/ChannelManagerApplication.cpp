@@ -58,6 +58,7 @@
 #endif // defined(__APPLE__)
 
 using namespace ChannelManager;
+using namespace MplusM;
 using namespace std;
 
 #if defined(__APPLE__)
@@ -80,8 +81,8 @@ static bool lExitRequested = false;
 #endif // defined(__APPLE__)
 
 ChannelManagerApplication::ChannelManagerApplication(void) :
-    inherited(), _mainWindow(nullptr), _yarp(nullptr), _scanner(nullptr), _peeker(nullptr),
-    _peekHandler(nullptr)
+    inherited(), _mainWindow(NULL), _yarp(NULL), _scanner(NULL), _peeker(NULL),
+    _peekHandler(NULL)
 {
 #if defined(MpM_ServicesLogToStandardError)
     OD_LOG_INIT(ProjectInfo::projectName, kODLoggingOptionIncludeProcessID | //####
@@ -125,14 +126,11 @@ void ChannelManagerApplication::connectPeekChannel(void)
     OD_LOG_OBJENTER(); //####
     if (_peeker)
     {
-        if (! MplusM::Utilities::NetworkConnectWithRetries(MpM_REGISTRY_STATUS_NAME,
-                                                           _peeker->name(),
-                                                           STANDARD_WAIT_TIME, false, nullptr,
-                                                           nullptr))
+        if (! Utilities::NetworkConnectWithRetries(MpM_REGISTRY_STATUS_NAME, _peeker->name(),
+                                                   STANDARD_WAIT_TIME, false, NULL, NULL))
         {
-            OD_LOG("(! MplusM::Utilities::NetworkConnectWithRetries(" //####
-                   "MpM_REGISTRY_STATUS_NAME, _peeker->name(), STANDARD_WAIT_TIME, false, " //####
-                   "nullptr, nullptr))"); //####
+            OD_LOG("(! Utilities::NetworkConnectWithRetries(MpM_REGISTRY_STATUS_NAME, " //####
+                   "_peeker->name(), STANDARD_WAIT_TIME, false, NULL, NULL))"); //####
         }
     }
     OD_LOG_OBJEXIT(); //####
@@ -172,12 +170,12 @@ void ChannelManagerApplication::initialise(const String & commandLine)
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("commandLine = ", commandLine.toStdString()); //####
 #if MAC_OR_LINUX_
-    MplusM::Common::SetUpLogger(ProjectInfo::projectName);
+    Common::SetUpLogger(ProjectInfo::projectName);
 #endif // MAC_OR_LINUX_
-    MplusM::Common::Initialize(ProjectInfo::projectName);
-    MplusM::Utilities::SetUpGlobalStatusReporter();
+    Common::Initialize(ProjectInfo::projectName);
+    Utilities::SetUpGlobalStatusReporter();
 #if defined(MpM_ReportOnConnections)
-    ChannelStatusReporter * reporter = MplusM::Utilities::GetGlobalStatusReporter();
+    ChannelStatusReporter * reporter = Utilities::GetGlobalStatusReporter();
 #endif // defined(MpM_ReportOnConnections)
 
 #if CheckNetworkWorks_
@@ -192,7 +190,7 @@ void ChannelManagerApplication::initialise(const String & commandLine)
     {
         OD_LOG("! (yarp::os::Network::checkNetwork())"); //####
 # if MAC_OR_LINUX_
-        yarp::os::impl::Logger & theLogger = MplusM::Common::GetLogger();
+        yarp::os::impl::Logger & theLogger = Common::GetLogger();
         
         theLogger.fail("YARP network not running.");
 # endif // MAC_OR_LINUX_
@@ -204,7 +202,7 @@ void ChannelManagerApplication::initialise(const String & commandLine)
         EntitiesPanel & entities = _mainWindow->getEntitiesPanel();
         
         entities.recallPositions();
-        _peeker = new MplusM::Common::AdapterChannel(false);
+        _peeker = new Common::AdapterChannel(false);
         _peekHandler = new PeekInputHandler;
         if (_peeker && _peekHandler)
         {
@@ -212,10 +210,9 @@ void ChannelManagerApplication::initialise(const String & commandLine)
             _peeker->setReporter(reporter);
             _peeker->getReport(reporter);
 #endif // defined(MpM_ReportOnConnections)
-            yarp::os::ConstString peekName =
-                                        MplusM::Common::GetRandomChannelName(HIDDEN_CHANNEL_PREFIX
-                                                                             "peek_/"
-                                                                             DEFAULT_CHANNEL_ROOT);
+            yarp::os::ConstString peekName = Common::GetRandomChannelName(HIDDEN_CHANNEL_PREFIX
+                                                                          "peek_/"
+                                                                          DEFAULT_CHANNEL_ROOT);
             
             if (_peeker->openWithRetries(peekName, STANDARD_WAIT_TIME))
             {
@@ -246,12 +243,12 @@ void ChannelManagerApplication::shutdown(void)
 #if defined(MpM_DoExplicitClose)
     _peeker->close();
 #endif // defined(MpM_DoExplicitClose)
-    MplusM::Common::AdapterChannel::RelinquishChannel(_peeker);
-    _scanner = nullptr; // shuts down thread
-    _mainWindow = nullptr; // (deletes our window)
+    Common::AdapterChannel::RelinquishChannel(_peeker);
+    _scanner = NULL; // shuts down thread
+    _mainWindow = NULL; // (deletes our window)
     yarp::os::Network::fini();
-    _yarp = nullptr;
-    MplusM::Utilities::ShutDownGlobalStatusReporter();
+    _yarp = NULL;
+    Utilities::ShutDownGlobalStatusReporter();
     OD_LOG_OBJEXIT(); //####
 } // ChannelManagerApplication::shutdown
 

@@ -53,6 +53,7 @@
 #endif // defined(__APPLE__)
 
 using namespace ChannelManager;
+using namespace MplusM;
 
 #if defined(__APPLE__)
 # pragma mark Private structures, constants and variables
@@ -93,8 +94,8 @@ PortData::~PortData(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-void PortData::addInputConnection(PortData *                  other,
-                                  MplusM::Common::ChannelMode mode)
+void PortData::addInputConnection(PortData *          other,
+                                  Common::ChannelMode mode)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("other = ", other); //####
@@ -133,8 +134,8 @@ void PortData::addInputConnection(PortData *                  other,
     OD_LOG_OBJEXIT(); //####
 } // PortData::addInputConnection
 
-void PortData::addOutputConnection(PortData *                  other,
-                                   MplusM::Common::ChannelMode mode)
+void PortData::addOutputConnection(PortData *          other,
+                                   Common::ChannelMode mode)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("other = ", other); //####

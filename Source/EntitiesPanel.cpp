@@ -74,6 +74,7 @@
 #endif // defined(__APPLE__)
 
 using namespace ChannelManager;
+using namespace MplusM;
 using namespace std;
 
 #if defined(__APPLE__)
@@ -111,7 +112,7 @@ EntitiesPanel::EntitiesPanel(ContentPanel * theContainer,
                              const int      startingWidth,
                              const int      startingHeight) :
     inherited(), _knownPorts(), _knownEntities(), _defaultBoldFont(), _defaultNormalFont(),
-    _firstAddPoint(nullptr), _firstRemovePoint(nullptr), _container(theContainer),
+    _firstAddPoint(NULL), _firstRemovePoint(NULL), _container(theContainer),
     _dragConnectionActive(false)
 {
     OD_LOG_ENTER(); //####
@@ -127,8 +128,8 @@ EntitiesPanel::~EntitiesPanel(void)
 {
     OD_LOG_OBJENTER(); //####
     clearOutData();
-    _defaultBoldFont = nullptr;
-    _defaultNormalFont = nullptr;
+    _defaultBoldFont = NULL;
+    _defaultNormalFont = NULL;
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::~EntitiesPanel
 
@@ -143,7 +144,7 @@ void EntitiesPanel::addEntity(ChannelContainer * anEntity)
     char buffer1[DATE_TIME_BUFFER_SIZE];
     char buffer2[DATE_TIME_BUFFER_SIZE];
     
-    MplusM::Utilities::GetDateAndTime(buffer1, sizeof(buffer1), buffer2, sizeof(buffer2));
+    Utilities::GetDateAndTime(buffer1, sizeof(buffer1), buffer2, sizeof(buffer2));
     std::cerr << buffer1 << " " << buffer2 << " Adding entity " << anEntity->getName() << std::endl;
     _knownEntities.push_back(anEntity);
     addChildComponent(anEntity);
@@ -343,7 +344,7 @@ void EntitiesPanel::clearNodeValues(void)
         
         if (anEntity)
         {
-            anEntity->setNode(nullptr);
+            anEntity->setNode(NULL);
         }
     }
     
@@ -393,7 +394,7 @@ ChannelContainer * EntitiesPanel::findKnownEntity(const yarp::os::ConstString & 
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("name = ", name); //####
-    ChannelContainer * result = nullptr;
+    ChannelContainer * result = NULL;
     
     for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
     {
@@ -419,12 +420,12 @@ ChannelEntry * EntitiesPanel::findKnownPort(const yarp::os::ConstString & name)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("name = ", name); //####
-    ChannelEntry *                  result = nullptr;
+    ChannelEntry *                  result = NULL;
     ChannelEntryMap::const_iterator match(_knownPorts.find(name));
     
     if (_knownPorts.end() == match)
     {
-        result = nullptr;
+        result = NULL;
     }
     else
     {
@@ -477,7 +478,7 @@ const
     }
     else
     {
-        result = nullptr;
+        result = NULL;
     }
     OD_LOG_OBJEXIT_P(result); //####
     return result;
@@ -512,7 +513,7 @@ ChannelEntry * EntitiesPanel::locateEntry(const Position & location)
 const
 {
     OD_LOG_OBJENTER(); //####
-    ChannelEntry * result = nullptr;
+    ChannelEntry * result = NULL;
     
     for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
     {
@@ -585,11 +586,11 @@ void EntitiesPanel::rememberConnectionStartPoint(ChannelEntry * aPort,
     if (beingAdded)
     {
         _firstAddPoint = aPort;
-        _firstRemovePoint = nullptr;
+        _firstRemovePoint = NULL;
     }
     else
     {
-        _firstAddPoint = nullptr;
+        _firstAddPoint = NULL;
         _firstRemovePoint = aPort;
     }
     OD_LOG_OBJEXIT(); //####
@@ -647,7 +648,7 @@ bool EntitiesPanel::removeUnvisitedEntities(void)
     {
         keepGoing = false;
         ContainerList::iterator walker(_knownEntities.begin());
-        ChannelContainer *      anEntity = nullptr;
+        ChannelContainer *      anEntity = NULL;
         
         for ( ; _knownEntities.end() != walker; ++walker)
         {
@@ -657,8 +658,7 @@ bool EntitiesPanel::removeUnvisitedEntities(void)
                 char buffer1[DATE_TIME_BUFFER_SIZE];
                 char buffer2[DATE_TIME_BUFFER_SIZE];
                 
-                MplusM::Utilities::GetDateAndTime(buffer1, sizeof(buffer1), buffer2,
-                                                  sizeof(buffer2));
+                Utilities::GetDateAndTime(buffer1, sizeof(buffer1), buffer2, sizeof(buffer2));
                 std::cerr << buffer1 << " " << buffer2 << " Removing unvisited entity " <<
                             anEntity->getName() << std::endl;
                 break;

@@ -86,7 +86,7 @@ ChannelContainer::ChannelContainer(const ContainerKind           kind,
                                    EntitiesPanel &               owner) :
     inherited(title.c_str()), _behaviour(behaviour), _description(description),
 #if defined(USE_OGDF_POSITIONING)
-    _node(nullptr),
+    _node(NULL),
 #endif // defined(USE_OGDF_POSITIONING)
     _owner(owner), _kind(kind), _selected(false), _visited(false), _newlyCreated(true)
 {
@@ -231,7 +231,7 @@ const
     }
     else
     {
-        result = nullptr;
+        result = NULL;
     }
     OD_LOG_OBJEXIT_P(result); //####
     return result;
@@ -315,7 +315,7 @@ ChannelEntry * ChannelContainer::locateEntry(const Position & location)
 const
 {
     OD_LOG_OBJENTER(); //####
-    ChannelEntry * result = nullptr;
+    ChannelEntry * result = NULL;
     
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
     {

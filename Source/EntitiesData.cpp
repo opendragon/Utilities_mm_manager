@@ -54,6 +54,7 @@
 #endif // defined(__APPLE__)
 
 using namespace ChannelManager;
+using namespace MplusM;
 
 #if defined(__APPLE__)
 # pragma mark Private structures, constants and variables
@@ -90,7 +91,7 @@ EntitiesData::~EntitiesData(void)
 
 void EntitiesData::addConnection(const yarp::os::ConstString & inName,
                                  const yarp::os::ConstString & outName,
-                                 MplusM::Common::ChannelMode   mode)
+                                 Common::ChannelMode           mode)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S2s("inName = ", inName, "outName = ", outName); //####
@@ -148,7 +149,7 @@ const
     }
     else
     {
-        result = nullptr;
+        result = NULL;
     }
     OD_LOG_OBJEXIT_P(result); //####
     return result;
