@@ -828,8 +828,7 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
             // Check if we can end here.
             firstRemovePort->clearDisconnectMarker();
             firstRemovePort->repaint();
-            if ((kPortDirectionOutput != _direction) &&
-                (kPortUsageService != _usage) &&
+            if ((kPortDirectionOutput != _direction) && (kPortUsageService != _usage) &&
                 firstRemovePort->hasOutgoingConnectionTo(getPortName()))
             {
                 if (Utilities::RemoveConnection(firstName, getPortName(), CheckForExit, NULL))
@@ -858,8 +857,7 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
             // Check if we can end here.
             firstAddPort->clearConnectMarker();
             firstAddPort->repaint();
-            if ((kPortDirectionOutput != _direction) &&
-                (kPortUsageService != _usage) &&
+            if ((kPortDirectionOutput != _direction) && (kPortUsageService != _usage) &&
                 protocolsMatch(firstProtocol, _portProtocol) &&
                 (! firstAddPort->hasOutgoingConnectionTo(getPortName())))
             {
@@ -886,6 +884,17 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
                       "eventComponent = ", ee.eventComponent); //####
             OD_LOG_D2("x = ", ee.position.getX(), "y = ", ee.position.getY()); //####
             // Check if Add is OK for this entry.
+            if (ee.mods.isCtrlDown())
+            {
+                if (ee.mods.isShiftDown())
+                {
+                    
+                }
+                else
+                {
+                    
+                }
+            }
             if ((kPortDirectionInput != _direction) &&
                 (kPortUsageClient != _usage))
             {
@@ -961,6 +970,10 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
             if (0 < getProtocol().length())
             {
                 suffix += yarp::os::ConstString("\nProtocol = '") + getProtocol() + "'";
+                if (ee.mods.isShiftDown())
+                {
+                    
+                }
             }
             AlertWindow::showMessageBox(AlertWindow::NoIcon, getPortName().c_str(),
                                         (prefix + dirText + " port" + suffix).c_str(), "OK", this);

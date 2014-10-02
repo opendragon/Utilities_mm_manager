@@ -167,7 +167,8 @@ void ScannerThread::addEntities(void)
         EntityData *                 anEntity = new EntityData(kContainerKindService,
                                                                descriptor._serviceName,
                                                                descriptor._kind,
-                                                               descriptor._description);
+                                                               descriptor._description,
+                                                               descriptor._requestsDescription);
         PortData *                   aPort = anEntity->addPort(descriptor._channelName, "",
                                                                kPortUsageService,
                                                                kPortDirectionInput);
@@ -200,7 +201,7 @@ void ScannerThread::addEntities(void)
     {
         PortData *                         aPort;
         EntityData *                       anEntity = new EntityData(kContainerKindClientOrAdapter,
-                                                                     outer->first, "", "");
+                                                                     outer->first, "", "", "");
         const Utilities::PortAssociation & associates = outer->second._associates;
         const Common::StringVector &       assocInputs = associates._inputs;
         const Common::StringVector &       assocOutputs = associates._outputs;
@@ -223,8 +224,7 @@ void ScannerThread::addEntities(void)
     for (SingularPortMap::const_iterator walker(_standalonePorts.begin());
          _standalonePorts.end() != walker; ++walker)
     {
-        EntityData * anEntity = new EntityData(kContainerKindOther, walker->first,
-                                               "", "");
+        EntityData * anEntity = new EntityData(kContainerKindOther, walker->first, "", "", "");
         PortUsage    usage;
         
         switch (Utilities::GetPortKind(walker->second._name))
@@ -740,20 +740,16 @@ void ScannerThread::run(void)
                     }
                     else
                     {
-                        char numBuff[30];
+#if MAC_OR_LINUX_
+                        std::stringstream        buff;
+                        yarp::os::impl::Logger & theLogger = Common::GetLogger();
+#endif // MAC_OR_LINUX_
                         
 #if MAC_OR_LINUX_
-                        snprintf(numBuff, sizeof(numBuff), "%g",
-                                 (loopEndTime - loopStartTime) / 1000.0);
-                        yarp::os::impl::Logger & theLogger = Common::GetLogger();
-                        
-                        theLogger.info(yarp::os::ConstString("actual interval = ") + numBuff +
+                        buff << ((loopEndTime - loopStartTime) / 1000.0);
+                        theLogger.info(yarp::os::ConstString("actual interval = ") + buff.str() +
                                        yarp::os::ConstString(" seconds"));
 #else // ! MAC_OR_LINUX_
-//                    _snprintf(numBuff, sizeof(numBuff) - 1, "%g",
-//                              (loopEndTime - loopStartTime) / 1000.0);
-//                    // Correct for the weird behaviour of _snprintf
-//                    numBuff[sizeof(numBuff) - 1] = '\0';
 #endif // ! MAC_OR_LINUX_
                         yield();
                     }

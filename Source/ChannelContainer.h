@@ -73,11 +73,13 @@ namespace ChannelManager
          @param title The title of the entity.
          @param behaviour The behavioural model if a service.
          @param description The description, if this is a service.
+         @param requests The requests supported, if this is a service.
          @param owner The owner of the entity. */
         ChannelContainer(const ContainerKind           kind,
                          const yarp::os::ConstString & title,
                          const yarp::os::ConstString & behaviour,
                          const yarp::os::ConstString & description,
+                         const yarp::os::ConstString & requests,
                          EntitiesPanel &               owner);
         
         /*! @brief The destructor. */
@@ -162,6 +164,14 @@ namespace ChannelManager
          @returns The position of the entity within it's containing panel. */
         Position getPositionInPanel(void)
         const;
+        
+        /*! @brief Return the requests supported by the entity.
+         @returns The requests supported by the entity. */
+        inline yarp::os::ConstString getRequests(void)
+        const
+        {
+            return _requests;
+        } // getRequests
         
         /*! @brief Return the amount of space to the left of the text being displayed.
          @returns The amount of space to the left of the text being displayed. */
@@ -268,6 +278,9 @@ namespace ChannelManager
         
         /*! @brief The description of the container, if it is a service. */
         yarp::os::ConstString _description;
+        
+        /*! @brief The requests for the entity, if it is a service. */
+        yarp::os::ConstString _requests;
         
 # if defined(USE_OGDF_POSITIONING)
         /*! @brief The node corresponding to the container. */

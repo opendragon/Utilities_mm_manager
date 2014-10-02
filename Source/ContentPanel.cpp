@@ -361,25 +361,18 @@ void ContentPanel::saveEntityPositions(void)
     if (settingsFile.create().wasOk())
     {
         OD_LOG("(settingsFile.create().wasOk())"); //####
-        char xyBuff[40];
-
         // Make sure that the file is empty before adding lines to it!
         settingsFile.replaceWithText("");
         for (PositionMap::const_iterator walker(_rememberedPositions.begin());
              _rememberedPositions.end() != walker; ++walker)
         {
+            std::stringstream     buff;
             yarp::os::ConstString tag = walker->first;
             Position              where = walker->second;
 
-#if MAC_OR_LINUX_
-            snprintf(xyBuff, sizeof(xyBuff), "\t%g\t%g\n", where.x, where.y);
-#else // ! MAC_OR_LINUX_
-            _snprintf(xyBuff, sizeof(xyBuff) - 1, "\t%g\t%g\n", where.x, where.y);
-            // Correct for the weird behaviour of _snprintf
-            xyBuff[sizeof(xyBuff) - 1] = '\0';
-#endif // ! MAC_OR_LINUX_
+            buff << "\t" << where.x << "\t" << where.y;
             settingsFile.appendText(tag.c_str());
-            settingsFile.appendText(xyBuff);
+            settingsFile.appendText(buff.str());
         }
     }
     OD_LOG_OBJEXIT(); //####
@@ -686,6 +679,7 @@ void ContentPanel::updatePanels(ScannerThread & scanner)
                                                                     anEntity->getName(),
                                                                     anEntity->getBehaviour(),
                                                                     anEntity->getDescription(),
+                                                                    anEntity->getRequests(),
                                                                     *_entitiesPanel);
                 
                 newEntity->setVisited();

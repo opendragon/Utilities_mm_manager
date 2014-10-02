@@ -74,11 +74,13 @@ using namespace ChannelManager;
 EntityData::EntityData(const ContainerKind           kind,
                        const yarp::os::ConstString & name,
                        const yarp::os::ConstString & behaviour,
-                       const yarp::os::ConstString & description) :
-    _behaviour(behaviour), _description(description), _name(name), _kind(kind)
+                       const yarp::os::ConstString & description,
+                       const yarp::os::ConstString & requests) :
+    _behaviour(behaviour), _description(description), _name(name), _requests(requests), _kind(kind)
 {
     OD_LOG_ENTER(); //####
-    OD_LOG_S3s("name = ", name, "behaviour = ", behaviour, "description = ", description); //####
+    OD_LOG_S4s("name = ", name, "behaviour = ", behaviour, "description = ", description, //####
+               "requests = ", requests); //####
     OD_LOG_EXIT_P(this); //####
 } // EntityData::EntityData
 

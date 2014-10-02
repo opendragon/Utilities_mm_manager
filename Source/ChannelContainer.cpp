@@ -83,15 +83,17 @@ ChannelContainer::ChannelContainer(const ContainerKind           kind,
                                    const yarp::os::ConstString & title,
                                    const yarp::os::ConstString & behaviour,
                                    const yarp::os::ConstString & description,
+                                   const yarp::os::ConstString & requests,
                                    EntitiesPanel &               owner) :
-    inherited(title.c_str()), _behaviour(behaviour), _description(description),
+    inherited(title.c_str()), _behaviour(behaviour), _description(description), _requests(requests),
 #if defined(USE_OGDF_POSITIONING)
     _node(NULL),
 #endif // defined(USE_OGDF_POSITIONING)
     _owner(owner), _kind(kind), _selected(false), _visited(false), _newlyCreated(true)
 {
     OD_LOG_ENTER(); //####
-    OD_LOG_S3s("title = ", title, "behaviour = ", behaviour, "description = ", description); //####
+    OD_LOG_S4s("title = ", title, "behaviour = ", behaviour, "description = ", description, //####
+               "requests = ", requests); //####
     Font & headerFont = _owner.getNormalFont();
     
     _titleHeight = headerFont.getHeight();
@@ -359,7 +361,16 @@ void ChannelContainer::mouseDown(const MouseEvent & ee)
                 break;
                 
             case kContainerKindService :
-                thePanelDescription = _description;
+                thePanelDescription = getDescription();
+                if (ee.mods.isShiftDown())
+                {
+                    yarp::os::ConstString requests = getRequests();
+                    
+                    if (0 < requests.length())
+                    {
+                        thePanelDescription += yarp::os::ConstString("\n\n") + requests;
+                    }
+                }
                 break;
                 
             case kContainerKindOther :

@@ -63,11 +63,13 @@ namespace ChannelManager
          @param kind The kind of entity.
          @param name The name of the entity.
          @param behaviour The behavioural model if a service.
-         @param description The description, if this is a service. */
+         @param description The description, if this is a service.
+         @param requests The requests supported, if this is a service. */
         EntityData(const ContainerKind           kind,
                    const yarp::os::ConstString & name,
                    const yarp::os::ConstString & behaviour,
-                   const yarp::os::ConstString & description);
+                   const yarp::os::ConstString & description,
+                   const yarp::os::ConstString & requests);
         
         /*! @brief The destructor. */
         virtual ~EntityData(void);
@@ -81,8 +83,7 @@ namespace ChannelManager
         PortData * addPort(const yarp::os::ConstString & portName,
                            const yarp::os::ConstString & portProtocol = "",
                            const PortUsage               portKind = kPortUsageOther,
-                           const PortDirection           direction =
-                                                        kPortDirectionInputOutput);
+                           const PortDirection           direction = kPortDirectionInputOutput);
         
         /*! @brief Return the behavioural model for the entity.
          @returns The behavioural model for the entity. */
@@ -127,6 +128,14 @@ namespace ChannelManager
         PortData * getPort(const int num)
         const;
         
+        /*! @brief Return the requests supported by the entity.
+         @returns The requests supported by the entity. */
+        inline yarp::os::ConstString getRequests(void)
+        const
+        {
+            return _requests;
+        } // getRequests
+        
     protected :
         
     private :
@@ -150,6 +159,9 @@ namespace ChannelManager
         
         /*! @brief The name of the entity. */
         yarp::os::ConstString _name;
+        
+        /*! @brief The requests for the entity, if it is a service. */
+        yarp::os::ConstString _requests;
         
         /*! @brief The kind of entity. */
         ContainerKind _kind;
