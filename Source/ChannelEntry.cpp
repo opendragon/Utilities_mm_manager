@@ -960,7 +960,8 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
             }
             if (0 < getProtocol().length())
             {
-                suffix = "\nProtocol = '" + getProtocol() + "'";
+                suffix += "\nProtocol = '";
+				suffix += getProtocol() + "'"; //poor VS compiler...
             }
             AlertWindow::showMessageBox(AlertWindow::NoIcon, getPortName().c_str(),
                                         (prefix + dirText + " port" + suffix).c_str(), "OK", this);
