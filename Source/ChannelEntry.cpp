@@ -960,8 +960,7 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
             }
             if (0 < getProtocol().length())
             {
-                suffix += "\nProtocol = '";
-				suffix += getProtocol() + "'"; //poor VS compiler...
+                suffix += yarp::os::ConstString("\nProtocol = '") + getProtocol() + "'";
             }
             AlertWindow::showMessageBox(AlertWindow::NoIcon, getPortName().c_str(),
                                         (prefix + dirText + " port" + suffix).c_str(), "OK", this);
