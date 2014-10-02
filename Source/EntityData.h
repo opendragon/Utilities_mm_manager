@@ -77,11 +77,13 @@ namespace ChannelManager
         /*! @brief Add a port to the panel.
          @param portName The name of the port.
          @param portProtocol The protocol of the port.
+         @param protocolDescription The description of the protocol.
          @param portKind What the port will be used for.
          @param direction The primary direction of the port.
          @returns The newly-created port. */
         PortData * addPort(const yarp::os::ConstString & portName,
                            const yarp::os::ConstString & portProtocol = "",
+                           const yarp::os::ConstString & protocolDescription = "",
                            const PortUsage               portKind = kPortUsageOther,
                            const PortDirection           direction = kPortDirectionInputOutput);
         

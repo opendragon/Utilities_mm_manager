@@ -73,12 +73,15 @@ using namespace MplusM;
 
 PortData::PortData(const yarp::os::ConstString & portName,
                    const yarp::os::ConstString & portProtocol,
+                   const yarp::os::ConstString & protocolDescription,
                    const PortUsage               portKind,
                    const PortDirection           direction) :
-    _portName(portName), _portProtocol(portProtocol), _direction(direction), _usage(portKind)
+    _portName(portName), _portProtocol(portProtocol), _protocolDescription(protocolDescription),
+    _direction(direction), _usage(portKind)
 {
     OD_LOG_ENTER(); //####
-    OD_LOG_S2s("portName = ", portName, "portProtocol = ", portProtocol); //####
+    OD_LOG_S3s("portName = ", portName, "portProtocol = ", portProtocol, //####
+               "protocolDescription = ", protocolDescription); //####
     OD_LOG_L2("portKind = ", portKind, "direction = ", direction); //####
     OD_LOG_EXIT_P(this); //####
 } // PortData::PortData

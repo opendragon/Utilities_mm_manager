@@ -692,6 +692,7 @@ void ContentPanel::updatePanels(ScannerThread & scanner)
                     {
                         ChannelEntry * newPort = newEntity->addPort(aPort->getPortName(),
                                                                     aPort->getProtocol(),
+                                                                    aPort->getProtocolDescription(),
                                                                     aPort->getUsage(),
                                                                     aPort->getDirection());
                         

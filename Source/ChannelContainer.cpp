@@ -128,13 +128,16 @@ ChannelContainer::~ChannelContainer(void)
 
 ChannelEntry * ChannelContainer::addPort(const yarp::os::ConstString & portName,
                                          const yarp::os::ConstString & portProtocol,
+                                         const yarp::os::ConstString & protocolDescription,
                                          const PortUsage               portKind,
                                          const PortDirection           direction)
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_S2s("portName = ", portName, "portProtocol = ", portProtocol); //####
+    OD_LOG_S3s("portName = ", portName, "portProtocol = ", portProtocol, //####
+               "protocolDescription = ", protocolDescription); //####
     int            countBefore = getNumPorts();
-    ChannelEntry * aPort = new ChannelEntry(this, portName, portProtocol, portKind, direction);
+    ChannelEntry * aPort = new ChannelEntry(this, portName, portProtocol, protocolDescription,
+                                            portKind, direction);
     float          newWidth = max(aPort->getWidth(), getWidth());
     float          newHeight = aPort->getHeight() + getHeight() + lEntryGap;
     

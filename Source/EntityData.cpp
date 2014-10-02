@@ -107,12 +107,15 @@ EntityData::~EntityData(void)
 
 PortData * EntityData::addPort(const yarp::os::ConstString & portName,
                                const yarp::os::ConstString & portProtocol,
+                               const yarp::os::ConstString & protocolDescription,
                                const PortUsage               portKind,
                                const PortDirection           direction)
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_S2s("portName = ", portName, "portProtocol = ", portProtocol); //####
-    PortData * aPort = new PortData(portName, portProtocol, portKind, direction);
+    OD_LOG_S3s("portName = ", portName, "portProtocol = ", portProtocol, //####
+               "protocolDescription = ", protocolDescription); //####
+    PortData * aPort = new PortData(portName, portProtocol, protocolDescription, portKind,
+                                    direction);
     
     _ports.push_back(aPort);
     OD_LOG_OBJEXIT_P(aPort); //####

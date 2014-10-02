@@ -462,15 +462,18 @@ static bool protocolsMatch(const yarp::os::ConstString & sourceProtocol,
 ChannelEntry::ChannelEntry(ChannelContainer *            parent,
                            const yarp::os::ConstString & portName,
                            const yarp::os::ConstString & portProtocol,
+                           const yarp::os::ConstString & protocolDescription,
                            const PortUsage               portKind,
                            const PortDirection           direction) :
-    inherited(), _portName(portName), _portProtocol(portProtocol), _parent(parent),
-    _direction(direction), _usage(portKind), _drawConnectMarker(false),
-    _drawDisconnectMarker(false), _isLastPort(true), _wasUdp(false)
+    inherited(), _portName(portName), _portProtocol(portProtocol),
+    _protocolDescription(protocolDescription), _parent(parent), _direction(direction),
+    _usage(portKind), _drawConnectMarker(false), _drawDisconnectMarker(false), _isLastPort(true),
+    _wasUdp(false)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P1("parent = ", parent); //####
-    OD_LOG_S2s("portName = ", portName, "portProtocol = ", portProtocol); //####
+    OD_LOG_S3s("portName = ", portName, "portProtocol = ", portProtocol, //####
+               "protocolDescription = ", protocolDescription); //####
     OD_LOG_L2("portKind = ", portKind, "direction = ", direction); //####
     Font &                textFont = getOwningPanel().getNormalFont();
     yarp::os::ConstString prefix;
@@ -972,7 +975,10 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
                 suffix += yarp::os::ConstString("\nProtocol = '") + getProtocol() + "'";
                 if (ee.mods.isShiftDown())
                 {
-                    
+                    if (0 < getProtocolDescription().length())
+                    {
+                        suffix += yarp::os::ConstString("\n\n") + getProtocolDescription();
+                    }
                 }
             }
             AlertWindow::showMessageBox(AlertWindow::NoIcon, getPortName().c_str(),

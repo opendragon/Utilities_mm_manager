@@ -169,7 +169,7 @@ void ScannerThread::addEntities(void)
                                                                descriptor._kind,
                                                                descriptor._description,
                                                                descriptor._requestsDescription);
-        PortData *                   aPort = anEntity->addPort(descriptor._channelName, "",
+        PortData *                   aPort = anEntity->addPort(descriptor._channelName, "", "",
                                                                kPortUsageService,
                                                                kPortDirectionInput);
         Common::ChannelVector &      inChannels = descriptor._inputChannels;
@@ -181,7 +181,7 @@ void ScannerThread::addEntities(void)
             Common::ChannelDescription aChannel(*inner);
             
             aPort = anEntity->addPort(aChannel._portName, aChannel._portProtocol,
-                                      kPortUsageInputOutput,
+                                      aChannel._protocolDescription, kPortUsageInputOutput,
                                       kPortDirectionInput);
         }
         for (Common::ChannelVector::const_iterator inner = outChannels.begin();
@@ -190,7 +190,7 @@ void ScannerThread::addEntities(void)
             Common::ChannelDescription aChannel(*inner);
             
             aPort = anEntity->addPort(aChannel._portName, aChannel._portProtocol,
-                                      kPortUsageInputOutput,
+                                      aChannel._protocolDescription, kPortUsageInputOutput,
                                       kPortDirectionOutput);
         }
         _workingData.addEntity(anEntity);
@@ -209,14 +209,14 @@ void ScannerThread::addEntities(void)
         for (Common::StringVector::const_iterator inner = assocInputs.begin();
              assocInputs.end() != inner; ++inner)
         {
-            aPort = anEntity->addPort(*inner, "", kPortUsageOther, kPortDirectionInput);
+            aPort = anEntity->addPort(*inner, "", "", kPortUsageOther, kPortDirectionInput);
         }
         for (Common::StringVector::const_iterator inner = assocOutputs.begin();
              assocOutputs.end() != inner; ++inner)
         {
-            aPort = anEntity->addPort(*inner, "", kPortUsageOther, kPortDirectionOutput);
+            aPort = anEntity->addPort(*inner, "", "", kPortUsageOther, kPortDirectionOutput);
         }
-        aPort = anEntity->addPort(outer->second._name, "", kPortUsageClient,
+        aPort = anEntity->addPort(outer->second._name, "", "", kPortUsageClient,
                                   kPortDirectionInputOutput);
         _workingData.addEntity(anEntity);
     }
@@ -243,7 +243,7 @@ void ScannerThread::addEntities(void)
                 break;
                 
         }
-        /*PortData * aPort =*/ anEntity->addPort(walker->second._name, "", usage,
+        /*PortData * aPort =*/ anEntity->addPort(walker->second._name, "", "", usage,
                                                  walker->second._direction);
         
         _workingData.addEntity(anEntity);

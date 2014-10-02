@@ -66,11 +66,13 @@ namespace ChannelManager
          @param parent The GUI element containing this element.
          @param portName The port name for the entry.
          @param portProtocol The protocol of the port.
+         @param protocolDescription The description of the protocol.
          @param portKind What the port will be used for.
          @param direction The primary direction of the port. */
         ChannelEntry(ChannelContainer *            parent,
                      const yarp::os::ConstString & portName,
                      const yarp::os::ConstString & portProtocol,
+                     const yarp::os::ConstString & protocolDescription,
                      const PortUsage               portKind,
                      const PortDirection           direction = kPortDirectionInput);
         
@@ -198,6 +200,14 @@ namespace ChannelManager
         {
             return _portProtocol;
         } // getProtocol
+        
+        /*! @brief Return the description of the protocol for the associated port.
+         @returns The description of the protocol for the associated port. */
+        inline yarp::os::ConstString getProtocolDescription(void)
+        const
+        {
+            return _protocolDescription;
+        } // getProtocolDescription
         
         /*! @brief Return the usage of the port entry.
          @returns The usage of the port entry. */
@@ -327,6 +337,9 @@ namespace ChannelManager
         
         /*! @brief The protocol of the associated port. */
         yarp::os::ConstString _portProtocol;
+        
+        /*! @brief The description of the protocol for the associated port. */
+        yarp::os::ConstString _protocolDescription;
         
         /*! @brief The text to be displayed for the channel entry. */
         yarp::os::ConstString _title;
