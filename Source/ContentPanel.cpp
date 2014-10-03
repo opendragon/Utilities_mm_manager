@@ -236,11 +236,10 @@ void ContentPanel::paint(Graphics & gg)
         for ( ; ! locked; locked = scanner->conditionallyAcquireForRead())
         {
 #if MAC_OR_LINUX_
-                sleep(SHORT_SLEEP);
-#else
-                Sleep(SHORT_SLEEP);
-#endif //MAC_OR_LINUX_
-
+            sleep(SHORT_SLEEP);
+#else // ! MAC_OR_LINUX_
+            Sleep(SHORT_SLEEP);
+#endif // ! MAC_OR_LINUX_
         }
         bool scanDataReady = scanner->checkAndClearIfScanIsComplete();
         

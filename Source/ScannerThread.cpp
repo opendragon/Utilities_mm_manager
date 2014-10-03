@@ -64,6 +64,9 @@ using namespace std;
 # pragma mark Private structures, constants and variables
 #endif // defined(__APPLE__)
 
+/*! @brief Set to @c true to exit from any delay loops. */
+static bool lBailNow = false;
+
 /*! @brief The minimum time between background scans in milliseconds. */
 static const int64 kMinScanInterval = 5000;
 
@@ -161,7 +164,7 @@ void ScannerThread::addEntities(void)
     PortDataMap portsSeen;
     
     for (ServiceMap::const_iterator outer(_detectedServices.begin());
-         _detectedServices.end() != outer; ++outer)
+         (_detectedServices.end() != outer) && (! lBailNow); ++outer)
     {
         Utilities::ServiceDescriptor descriptor(outer->second);
         EntityData *                 anEntity = new EntityData(kContainerKindService,
@@ -176,7 +179,7 @@ void ScannerThread::addEntities(void)
         Common::ChannelVector &      outChannels = descriptor._outputChannels;
         
         for (Common::ChannelVector::const_iterator inner = inChannels.begin();
-             inChannels.end() != inner; ++inner)
+             (inChannels.end() != inner) && (! lBailNow); ++inner)
         {
             Common::ChannelDescription aChannel(*inner);
             
@@ -185,7 +188,7 @@ void ScannerThread::addEntities(void)
                                       kPortDirectionInput);
         }
         for (Common::ChannelVector::const_iterator inner = outChannels.begin();
-             outChannels.end() != inner; ++inner)
+             (outChannels.end() != inner)  && (! lBailNow); ++inner)
         {
             Common::ChannelDescription aChannel(*inner);
             
@@ -197,7 +200,7 @@ void ScannerThread::addEntities(void)
     }
     // Convert the detected ports with associates into entities in the background list.
     for (AssociatesMap::const_iterator outer(_associatedPorts.begin());
-         _associatedPorts.end() != outer; ++outer)
+         (_associatedPorts.end() != outer)  && (! lBailNow); ++outer)
     {
         PortData *                         aPort;
         EntityData *                       anEntity = new EntityData(kContainerKindClientOrAdapter,
@@ -207,12 +210,12 @@ void ScannerThread::addEntities(void)
         const Common::StringVector &       assocOutputs = associates._outputs;
         
         for (Common::StringVector::const_iterator inner = assocInputs.begin();
-             assocInputs.end() != inner; ++inner)
+             (assocInputs.end() != inner)  && (! lBailNow); ++inner)
         {
             aPort = anEntity->addPort(*inner, "", "", kPortUsageOther, kPortDirectionInput);
         }
         for (Common::StringVector::const_iterator inner = assocOutputs.begin();
-             assocOutputs.end() != inner; ++inner)
+             (assocOutputs.end() != inner)  && (! lBailNow); ++inner)
         {
             aPort = anEntity->addPort(*inner, "", "", kPortUsageOther, kPortDirectionOutput);
         }
@@ -222,7 +225,7 @@ void ScannerThread::addEntities(void)
     }
     // Convert the detected standalone ports into entities in the background list.
     for (SingularPortMap::const_iterator walker(_standalonePorts.begin());
-         _standalonePorts.end() != walker; ++walker)
+         (_standalonePorts.end() != walker)  && (! lBailNow); ++walker)
     {
         EntityData * anEntity = new EntityData(kContainerKindOther, walker->first, "", "", "");
         PortUsage    usage;
@@ -259,7 +262,7 @@ void ScannerThread::addPortConnections(const Utilities::PortVector & detectedPor
     OD_LOG_P2("detectedPorts = ", &detectedPorts, "checkStuff = ", checkStuff); //####
     _workingData.clearConnections();
     for (Utilities::PortVector::const_iterator outer(detectedPorts.begin());
-         detectedPorts.end() != outer; ++outer)
+         (detectedPorts.end() != outer)  && (! lBailNow); ++outer)
     {
         yarp::os::ConstString outerName(outer->_portName);
         
@@ -272,7 +275,7 @@ void ScannerThread::addPortConnections(const Utilities::PortVector & detectedPor
                                              Utilities::InputOutputFlag::kInputAndOutputOutput,
                                              true, checker, checkStuff);
             for (Common::ChannelVector::const_iterator inner(outputs.begin());
-                 outputs.end() != inner; ++inner)
+                 (outputs.end() != inner)  && (! lBailNow); ++inner)
             {
                 yarp::os::ConstString innerName(inner->_portName);
                 
@@ -296,7 +299,7 @@ void ScannerThread::addPortsWithAssociates(const Utilities::PortVector & detecte
     OD_LOG_P2("detectedPorts = ", &detectedPorts, "checkStuff = ", checkStuff); //####
     _associatedPorts.clear();
     for (Utilities::PortVector::const_iterator outer(detectedPorts.begin());
-         detectedPorts.end() != outer; ++outer)
+         (detectedPorts.end() != outer) && (! lBailNow); ++outer)
     {
         yarp::os::ConstString outerName(outer->_portName);
         
@@ -319,13 +322,13 @@ void ScannerThread::addPortsWithAssociates(const Utilities::PortVector & detecte
                     Common::StringVector & assocOutputs = associates._associates._outputs;
                     
                     for (Common::StringVector::const_iterator inner = assocInputs.begin();
-                         assocInputs.end() != inner; ++inner)
+                         (assocInputs.end() != inner)  && (! lBailNow); ++inner)
                     {
                         _rememberedPorts.insert(*inner);
                         yield();
                     }
                     for (Common::StringVector::const_iterator inner = assocOutputs.begin();
-                         assocOutputs.end() != inner; ++inner)
+                         (assocOutputs.end() != inner)  && (! lBailNow); ++inner)
                     {
                         _rememberedPorts.insert(*inner);
                         yield();
@@ -346,7 +349,7 @@ void ScannerThread::addRegularPortEntities(const Utilities::PortVector & detecte
     OD_LOG_P2("detectedPorts = ", &detectedPorts, "checkStuff = ", checkStuff); //####
     _standalonePorts.clear();
     for (Utilities::PortVector::const_iterator walker(detectedPorts.begin());
-         detectedPorts.end() != walker; ++walker)
+         (detectedPorts.end() != walker) && (! lBailNow); ++walker)
     {
         yarp::os::ConstString walkerName(walker->_portName);
         
@@ -374,8 +377,8 @@ void ScannerThread::addServices(const Common::StringVector & services,
     OD_LOG_OBJENTER(); //####
     OD_LOG_P2("services = ", &services, "checkStuff = ", checkStuff); //####
     _detectedServices.clear();
-    for (Common::StringVector::const_iterator outer(services.begin()); services.end() != outer;
-         ++outer)
+    for (Common::StringVector::const_iterator outer(services.begin());
+         (services.end() != outer) && (! lBailNow); ++outer)
     {
         yarp::os::ConstString outerName(*outer);
         
@@ -392,7 +395,7 @@ void ScannerThread::addServices(const Common::StringVector & services,
                 Common::ChannelVector & outChannels = descriptor._outputChannels;
                 
                 for (Common::ChannelVector::const_iterator inner = inChannels.begin();
-                     inChannels.end() != inner; ++inner)
+                     (inChannels.end() != inner) && (! lBailNow); ++inner)
                 {
                     Common::ChannelDescription aChannel(*inner);
                     
@@ -400,7 +403,7 @@ void ScannerThread::addServices(const Common::StringVector & services,
                     yield();
                 }
                 for (Common::ChannelVector::const_iterator inner = outChannels.begin();
-                     outChannels.end() != inner; ++inner)
+                     (outChannels.end() != inner) && (! lBailNow); ++inner)
                 {
                     Common::ChannelDescription aChannel(*inner);
                     
@@ -534,7 +537,30 @@ PortDirection ScannerThread::determineDirection(ChannelEntry *                ol
 void ScannerThread::doScanSoon(void)
 {
     OD_LOG_OBJENTER(); //####
-    _scanSoon = true;
+    bool locked = conditionallyAcquireForWrite();
+    bool needToLeave = false;
+    
+    for ( ; (! locked) && (! needToLeave); locked = conditionallyAcquireForWrite())
+    {
+        if (lBailNow || threadShouldExit())
+        {
+            OD_LOG("(lBailNow || threadShouldExit())"); //####
+            needToLeave = true;
+        }
+        else
+        {
+#if MAC_OR_LINUX_
+            sleep(SHORT_SLEEP);
+#else // ! MAC_OR_LINUX_
+            Sleep(SHORT_SLEEP);
+#endif // ! MAC_OR_LINUX_
+        }
+    }
+    if (locked)
+    {
+        _scanSoon = true;
+        relinquishFromWrite();
+    }
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::doScanSoon
 
@@ -634,23 +660,23 @@ void ScannerThread::relinquishFromWrite(void)
 void ScannerThread::run(void)
 {
     OD_LOG_OBJENTER(); //####
-    while (! threadShouldExit())
+    while ((! threadShouldExit()) && (! lBailNow))
     {
-        OD_LOG("(! threadShouldExit())"); //####
+        OD_LOG("((! threadShouldExit()) && (! lBailNow))"); //####
         bool needToLeave = false;
         
         if (gatherEntities(CheckForExit, NULL))
         {
             int64 loopStartTime = Time::currentTimeMillis();
             
-            _scanSoon = false;
             addEntities();
             // Indicate that the scan data is available.
             unconditionallyAcquireForWrite();
+            _scanSoon = false;
             _scanIsComplete = true;
             _scanCanProceed = false;
-            OD_LOG_B2("_scanIsComplete <- ", _scanIsComplete, "_scanCanProceed <- ", //####
-                      _scanCanProceed); //####
+            OD_LOG_B3("_scanIsComplete <- ", _scanIsComplete, "_scanCanProceed <- ", //####
+                      _scanCanProceed, "_scanSoon <- ", _scanSoon); //####
             relinquishFromWrite();
             // The data has been gathered, so it's safe for the foreground thread to process it -
             // force a repaint of the displayed panel, which will retrieve our data.
@@ -662,12 +688,19 @@ void ScannerThread::run(void)
                 for (int ii = 0, mm = (MIDDLE_SLEEP / VERY_SHORT_SLEEP);
                      (mm > ii) && (! needToLeave); ++ii)
                 {
-                    if (threadShouldExit())
+                    if (lBailNow || threadShouldExit())
                     {
-                        OD_LOG("(threadShouldExit())"); //####
+                        OD_LOG("(lBailNow || threadShouldExit())"); //####
                         needToLeave = true;
                     }
-                    sleep(VERY_SHORT_SLEEP);
+                    else
+                    {
+#if MAC_OR_LINUX_
+                        sleep(VERY_SHORT_SLEEP);
+#else // ! MAC_OR_LINUX_
+                        Sleep(VERY_SHORT_SLEEP);
+#endif // ! MAC_OR_LINUX_
+                    }
                 }
                 if (needToLeave)
                 {
@@ -683,19 +716,26 @@ void ScannerThread::run(void)
                     for (int ii = 0, mm = (MIDDLE_SLEEP / VERY_SHORT_SLEEP);
                          (mm > ii) && (! needToLeave); ++ii)
                     {
-                        if (threadShouldExit())
+                        if (lBailNow || threadShouldExit())
                         {
-                            OD_LOG("(threadShouldExit())"); //####
+                            OD_LOG("(lBailNow || threadShouldExit())"); //####
                             needToLeave = true;
                         }
-                        sleep(VERY_SHORT_SLEEP);
+                        else
+                        {
+#if MAC_OR_LINUX_
+                            sleep(VERY_SHORT_SLEEP);
+#else // ! MAC_OR_LINUX_
+                            Sleep(VERY_SHORT_SLEEP);
+#endif // ! MAC_OR_LINUX_
+                        }
                     }
                 }
-                canProceed = _scanCanProceed;
-                OD_LOG_B1("canProceed <- ", canProceed); //####
                 if (locked)
                 {
                     OD_LOG("(locked)"); //####
+                    canProceed = _scanCanProceed;
+                    OD_LOG_B1("canProceed <- ", canProceed); //####
                     relinquishFromRead();
                 }
             }
@@ -710,9 +750,9 @@ void ScannerThread::run(void)
             {
                 OD_LOG("(canProceed)"); //####
                 _workingData.clearOutData();
-                if (! threadShouldExit())
+                if ((! threadShouldExit()) && (! lBailNow))
                 {
-                    OD_LOG("(! threadShouldExit())"); //####
+                    OD_LOG("((! threadShouldExit()) && (! lBailNow))"); //####
                     int64 loopEndTime = Time::currentTimeMillis();
                     int64 delayAmount = (loopStartTime + kMinScanInterval) - loopEndTime;
                     
@@ -722,21 +762,60 @@ void ScannerThread::run(void)
                     }
                     if (0 < delayAmount)
                     {
-                        for (int ii = 0, mm = static_cast<int>(delayAmount / VERY_SHORT_SLEEP);
-                             (mm > ii) && (! needToLeave) && (! _scanSoon); ++ii)
+                        // Add a bit of delay.
+                        bool shouldScanSoon = false;
+                        int  kk = static_cast<int>(delayAmount / VERY_SHORT_SLEEP);
+                        
+                        do
                         {
-                            if (threadShouldExit())
+                            bool locked = conditionallyAcquireForRead();
+
+                            for ( ; (! locked) && (! needToLeave);
+                                 locked = conditionallyAcquireForRead())
                             {
-                                OD_LOG("(threadShouldExit())"); //####
-                                needToLeave = true;
+                                for (int ii = 0, mm = (MIDDLE_SLEEP / VERY_SHORT_SLEEP);
+                                     (mm > ii) && (0 <= kk) && (! needToLeave); ++ii, --kk)
+                                {
+                                    if (lBailNow || threadShouldExit())
+                                    {
+                                        OD_LOG("(lBailNow || threadShouldExit())"); //####
+                                        needToLeave = true;
+                                    }
+                                    else
+                                    {
+#if MAC_OR_LINUX_
+                                        sleep(VERY_SHORT_SLEEP);
+#else // ! MAC_OR_LINUX_
+                                        Sleep(VERY_SHORT_SLEEP);
+#endif // ! MAC_OR_LINUX_
+                                    }
+                                }
                             }
-                            sleep(VERY_SHORT_SLEEP);
+                            if (locked)
+                            {
+                                OD_LOG("(locked)"); //####
+                                shouldScanSoon = _scanSoon;
+                                OD_LOG_B1("shouldScanSoon <- ", shouldScanSoon); //####
+                                relinquishFromRead();
+                                // Sleep at least once!
+                                if (0 <= kk)
+                                {
+                                    --kk;
+#if MAC_OR_LINUX_
+                                    sleep(VERY_SHORT_SLEEP);
+#else // ! MAC_OR_LINUX_
+                                    Sleep(VERY_SHORT_SLEEP);
+#endif // ! MAC_OR_LINUX_
+                                }
+                            }
+                            if (needToLeave || shouldScanSoon)
+                            {
+                                OD_LOG("(needToLeave || shouldScanSoon)"); //####
+                                break;
+                            }
+
                         }
-                        if (needToLeave)
-                        {
-                            OD_LOG("(needToLeave)"); //####
-                            break;
-                        }
+                        while (0 <= kk);
                     }
                     else
                     {
@@ -758,22 +837,58 @@ void ScannerThread::run(void)
         }
         else
         {
-            for (int ii = 0, mm = (LONG_SLEEP / VERY_SHORT_SLEEP);
-                 (mm > ii) && (! needToLeave) && (! _scanSoon); ++ii)
+            bool shouldScanSoon = false;
+            int  kk = (LONG_SLEEP / VERY_SHORT_SLEEP);
+
+            do
             {
-                if (threadShouldExit())
+                bool locked = conditionallyAcquireForRead();
+                
+                for ( ; (! locked) && (! needToLeave); locked = conditionallyAcquireForRead())
                 {
-                    OD_LOG("(threadShouldExit())"); //####
-                    needToLeave = true;
+                    for (int ii = 0, mm = (MIDDLE_SLEEP / VERY_SHORT_SLEEP);
+                         (mm > ii) && (0 <= kk) && (! needToLeave); ++ii, --kk)
+                    {
+                        if (lBailNow || threadShouldExit())
+                        {
+                            OD_LOG("(lBailNow || threadShouldExit())"); //####
+                            needToLeave = true;
+                        }
+                        else
+                        {
+#if MAC_OR_LINUX_
+                            sleep(VERY_SHORT_SLEEP);
+#else // ! MAC_OR_LINUX_
+                            Sleep(VERY_SHORT_SLEEP);
+#endif // ! MAC_OR_LINUX_
+                        }
+                    }
                 }
-                sleep(VERY_SHORT_SLEEP);
+                if (locked)
+                {
+                    OD_LOG("(locked)"); //####
+                    shouldScanSoon = _scanSoon;
+                    OD_LOG_B1("shouldScanSoon <- ", shouldScanSoon); //####
+                    relinquishFromRead();
+                    // Sleep at least once!
+                    if (0 <= kk)
+                    {
+                        --kk;
+#if MAC_OR_LINUX_
+                        sleep(VERY_SHORT_SLEEP);
+#else // ! MAC_OR_LINUX_
+                        Sleep(VERY_SHORT_SLEEP);
+#endif // ! MAC_OR_LINUX_
+                    }
+                }
+                if (needToLeave || shouldScanSoon)
+                {
+                    OD_LOG("(needToLeave || shouldScanSoon)"); //####
+                    break;
+                }
+                
             }
-            if (needToLeave)
-            {
-                OD_LOG("(needToLeave)"); //####
-                break;
-            }
-            
+            while (0 <= kk);
         }
     }
     OD_LOG_OBJEXIT(); //####
@@ -786,6 +901,14 @@ void ScannerThread::scanCanProceed(void)
     OD_LOG_B1("_scanCanProceed <- ", _scanCanProceed); //####
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::scanCanProceed
+
+void ScannerThread::stopNow(void)
+{
+    OD_LOG_OBJENTER(); //####
+    lBailNow = true;
+    OD_LOG_B1("lBailNow <- ", lBailNow); //####
+    OD_LOG_OBJEXIT(); //####
+} // ScannerThread::stopNow
 
 void ScannerThread::triggerRepaint(void)
 {

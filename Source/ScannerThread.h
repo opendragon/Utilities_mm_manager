@@ -108,6 +108,9 @@ namespace ChannelManager
         /*! @brief Indicate that the scan data has been processed and the scan can proceed. */
         void scanCanProceed(void);
         
+        /*! @brief Indicate that the thread must leave as soon as possible. */
+        void stopNow(void);
+        
         /*! @brief Request access for reading from shared resources. */
         void unconditionallyAcquireForRead(void);
         

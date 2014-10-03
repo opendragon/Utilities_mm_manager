@@ -236,7 +236,11 @@ void ChannelManagerApplication::shutdown(void)
 {
     OD_LOG_OBJENTER(); //####
     SetExitRequest();
-    _scanner->stopThread(5000);
+    if (_scanner)
+    {
+        _scanner->stopNow();
+        _scanner->stopThread(5000);
+    }
     EntitiesPanel & entities = _mainWindow->getEntitiesPanel();
 
     entities.rememberPositions();
