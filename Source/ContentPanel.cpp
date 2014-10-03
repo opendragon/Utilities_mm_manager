@@ -369,7 +369,7 @@ void ContentPanel::saveEntityPositions(void)
             yarp::os::ConstString tag = walker->first;
             Position              where = walker->second;
 
-            buff << "\t" << where.x << "\t" << where.y;
+            buff << "\t" << where.x << "\t" << where.y << std::endl;
             settingsFile.appendText(tag.c_str());
             settingsFile.appendText(buff.str());
         }
