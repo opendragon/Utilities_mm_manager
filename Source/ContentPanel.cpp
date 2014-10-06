@@ -735,6 +735,10 @@ void ContentPanel::updatePanels(ScannerThread & scanner)
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::updatePanels
 
+#if (! MAC_OR_LINUX_)
+# pragma warning(push)
+# pragma warning(disable: 4100)
+#endif // ! MAC_OR_LINUX_
 void ContentPanel::visibleAreaChanged(const juce::Rectangle<int> & newVisibleArea)
 {
 #if (! defined(OD_ENABLE_LOGGING))
@@ -747,6 +751,9 @@ void ContentPanel::visibleAreaChanged(const juce::Rectangle<int> & newVisibleAre
               "nVA.w = ", newVisibleArea.getWidth(), "nVA.h = ", newVisibleArea.getHeight()); //####
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::visibleAreaChanged
+#if (! MAC_OR_LINUX_)
+# pragma warning(pop)
+#endif // ! MAC_OR_LINUX_
 
 #if defined(__APPLE__)
 # pragma mark Global functions

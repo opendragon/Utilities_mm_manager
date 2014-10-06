@@ -533,6 +533,10 @@ const
     return result;
 } // EntitiesPanel::locateEntry
 
+#if (! MAC_OR_LINUX_)
+# pragma warning(push)
+# pragma warning(disable: 4100)
+#endif // ! MAC_OR_LINUX_
 void EntitiesPanel::mouseDown(const MouseEvent & ee)
 {
 #if (! defined(OD_ENABLE_LOGGING))
@@ -547,7 +551,14 @@ void EntitiesPanel::mouseDown(const MouseEvent & ee)
     repaint();
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::mouseDown
+#if (! MAC_OR_LINUX_)
+# pragma warning(pop)
+#endif // ! MAC_OR_LINUX_
 
+#if (! MAC_OR_LINUX_)
+# pragma warning(push)
+# pragma warning(disable: 4100)
+#endif // ! MAC_OR_LINUX_
 void EntitiesPanel::mouseUp(const MouseEvent & ee)
 {
 #if (! defined(OD_ENABLE_LOGGING))
@@ -561,6 +572,9 @@ void EntitiesPanel::mouseUp(const MouseEvent & ee)
     clearMarkers();
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::mouseUp
+#if (! MAC_OR_LINUX_)
+# pragma warning(pop)
+#endif // ! MAC_OR_LINUX_
 
 void EntitiesPanel::paint(Graphics & gg)
 {

@@ -106,6 +106,10 @@ ChannelManagerApplication::~ChannelManagerApplication(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
+#if (! MAC_OR_LINUX_)
+# pragma warning(push)
+# pragma warning(disable: 4100)
+#endif // ! MAC_OR_LINUX_
 void ChannelManagerApplication::anotherInstanceStarted(const String & commandLine)
 {
 #if (! defined(OD_ENABLE_LOGGING))
@@ -120,6 +124,9 @@ void ChannelManagerApplication::anotherInstanceStarted(const String & commandLin
     // the other instance's command-line arguments were.
     OD_LOG_OBJEXIT(); //####
 } // ChannelManagerApplication::anotherInstanceStarted
+#if (! MAC_OR_LINUX_)
+# pragma warning(pop)
+#endif // ! MAC_OR_LINUX_
 
 void ChannelManagerApplication::connectPeekChannel(void)
 {
@@ -160,6 +167,10 @@ const String ChannelManagerApplication::getApplicationVersion(void)
     return ProjectInfo::versionString;
 } // ChannelManagerApplication::getApplicationVersion
 
+#if (! MAC_OR_LINUX_)
+# pragma warning(push)
+# pragma warning(disable: 4100)
+#endif // ! MAC_OR_LINUX_
 void ChannelManagerApplication::initialise(const String & commandLine)
 {
 #if (! defined(OD_ENABLE_LOGGING))
@@ -224,6 +235,9 @@ void ChannelManagerApplication::initialise(const String & commandLine)
     }
     OD_LOG_OBJEXIT(); //####
 } // ChannelManagerApplication::initialise
+#if (! MAC_OR_LINUX_)
+# pragma warning(pop)
+#endif // ! MAC_OR_LINUX_
 
 bool ChannelManagerApplication::moreThanOneInstanceAllowed(void)
 {
@@ -269,6 +283,10 @@ void ChannelManagerApplication::systemRequestedQuit(void)
 # pragma mark Global functions
 #endif // defined(__APPLE__)
 
+#if (! MAC_OR_LINUX_)
+# pragma warning(push)
+# pragma warning(disable: 4100)
+#endif // ! MAC_OR_LINUX_
 bool CheckForExit(void * stuff)
 {
 #if (! defined(OD_ENABLE_LOGGING))
@@ -281,6 +299,9 @@ bool CheckForExit(void * stuff)
     OD_LOG_EXIT_B(lExitRequested); //####
     return lExitRequested;
 } // CheckForExit
+#if (! MAC_OR_LINUX_)
+# pragma warning(pop)
+#endif // ! MAC_OR_LINUX_
 
 void SetExitRequest(void)
 {
