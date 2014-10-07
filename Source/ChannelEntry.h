@@ -314,6 +314,9 @@ namespace ChannelManager
         
     private :
         
+        /*! @brief Respond to a request for a popup menu. */
+        void displayAndProcessPopupMenu(void);
+        
         /*! @brief Display information for a container.
          @param moreDetails @c true if more details are to be shown and @c false otherwise. */
         void displayInformation(const bool moreDetails);

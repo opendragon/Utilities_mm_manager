@@ -107,10 +107,6 @@ namespace ChannelManager
         /*! @brief Deselect the entity. */
         void deselect(void);
         
-        /*! @brief Display information for a container.
-         @param moreDetails @c true if more details are to be shown and @c false otherwise. */
-        void displayInformation(const bool moreDetails);
-
         /*! @brief Display the connections between containers.
          @param gg The graphics context in which to draw. */
         void drawOutgoingConnections(Graphics & gg);
@@ -263,6 +259,13 @@ namespace ChannelManager
     protected :
         
     private :
+        
+        /*! @brief Respond to a request for a popup menu. */
+        void displayAndProcessPopupMenu(void);
+        
+        /*! @brief Display information for a container.
+         @param moreDetails @c true if more details are to be shown and @c false otherwise. */
+        void displayInformation(const bool moreDetails);
         
     public :
     

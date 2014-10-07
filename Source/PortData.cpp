@@ -197,7 +197,7 @@ const
         }
         
     }
-    OD_LOG_EXIT_B(result); //####
+    OD_LOG_OBJEXIT_B(result); //####
     return result;
 } // PortData::hasOutgoingConnectionTo
 
@@ -224,7 +224,7 @@ void PortData::invalidateConnections(void)
             candidate->_valid = false;
         }
     }
-    OD_LOG_EXIT(); //####
+    OD_LOG_OBJEXIT(); //####
 } // PortData::invalidateConnections
 
 void PortData::removeInputConnection(PortData * other)
@@ -302,7 +302,7 @@ void PortData::removeInvalidConnections(void)
         }
     }
     while (keepGoing);
-    OD_LOG_EXIT(); //####
+    OD_LOG_OBJEXIT(); //####
 } // PortData::removeInvalidConnections
 
 void PortData::removeOutputConnection(PortData * other)

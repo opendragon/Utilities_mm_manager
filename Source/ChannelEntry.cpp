@@ -64,6 +64,26 @@ using namespace std;
 # pragma mark Private structures, constants and variables
 #endif // defined(__APPLE__)
 
+/*! @brief The menu selection from the popup menu. */
+enum ChannelPopupMenuSelection
+{
+    /*! @brief A placeholder for the popup menu. */
+    kPopupDisplayNoItem = 0,
+    
+    /*! @brief Add a scrolling monitor to the port. */
+    kPopupAddScrollingMonitor,
+    
+    /*! @brief Add a simple monitor to the port. */
+    kPopupAddSimpleMonitor,
+    
+    /*! @brief Display detailed information request. */
+    kPopupDetailedDisplayPortInfo,
+
+    /*! @brief Display information request. */
+    kPopupDisplayPortInfo
+    
+}; // PopupMenuSelection
+
 /*! @brief The horizontal and vertical length of the arrow 'arm'. */
 static const float kArrowSize = 7;
 
@@ -665,6 +685,45 @@ void ChannelEntry::clearDisconnectMarker(void)
     OD_LOG_EXIT(); //####
 } // ChannelEntry::clearDisconnectMarker
 
+void ChannelEntry::displayAndProcessPopupMenu(void)
+{
+    OD_LOG_OBJENTER(); //####
+    PopupMenu mm;
+    
+    mm.addSectionHeader("Port operations");
+    mm.addItem(kPopupDisplayPortInfo, "Display port information");
+    mm.addItem(kPopupDetailedDisplayPortInfo, "Display detailed port information");
+    if ((kPortDirectionInput != _direction) && (kPortUsageClient != _usage))
+    {
+        mm.addSeparator();
+        mm.addItem(kPopupAddSimpleMonitor, "Add simple monitor", false);
+        mm.addItem(kPopupAddScrollingMonitor, "Add scrolling monitor", false);
+    }
+    int result = mm.show();
+    
+    switch (result)
+    {
+        case kPopupAddScrollingMonitor :
+            break;
+            
+        case kPopupAddSimpleMonitor :
+            break;
+            
+        case kPopupDetailedDisplayPortInfo :
+            displayInformation(true);
+            break;
+            
+        case kPopupDisplayPortInfo :
+            displayInformation(false);
+            break;
+            
+        default :
+            break;
+            
+    }
+    OD_LOG_OBJEXIT(); //####
+} // ChannelEntry::displayAndProcessPopupMenu
+
 void ChannelEntry::displayInformation(const bool moreDetails)
 {
     OD_LOG_ENTER(); //####
@@ -846,7 +905,7 @@ const
         }
         
     }
-    OD_LOG_EXIT_B(result); //####
+    OD_LOG_OBJEXIT_B(result); //####
     return result;
 } // ChannelEntry::hasOutgoingConnectionTo
 
@@ -873,7 +932,7 @@ void ChannelEntry::invalidateConnections(void)
             candidate->_valid = false;
         }
     }
-    OD_LOG_EXIT(); //####
+    OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::invalidateConnections
 
 void ChannelEntry::mouseDown(const MouseEvent & ee)
@@ -990,7 +1049,7 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
         }
         else if (ee.mods.isPopupMenu())
         {
-            displayInformation(ee.mods.isShiftDown());
+            displayAndProcessPopupMenu();
             passOn = false;
         }
     }

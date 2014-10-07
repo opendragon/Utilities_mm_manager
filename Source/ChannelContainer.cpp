@@ -62,6 +62,20 @@ using namespace std;
 # pragma mark Private structures, constants and variables
 #endif // defined(__APPLE__)
 
+/*! @brief The menu selection from the popup menu. */
+enum EntityPopupMenuSelection
+{
+    /*! @brief A placeholder for the popup menu. */
+    kPopupDisplayNoItem = 0,
+    
+    /*! @brief Display detailed information request. */
+    kPopupDetailedDisplayEntityInfo,
+
+    /*! @brief Display information request. */
+    kPopupDisplayEntityInfo
+    
+}; // EntityPopupMenuSelection
+
 /*! @brief The amount of space between each row of the entries in the container. */
 static const float lEntryGap = 1;
 
@@ -197,6 +211,33 @@ void ChannelContainer::deselect(void)
     _selected = false;
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::deselect
+
+void ChannelContainer::displayAndProcessPopupMenu(void)
+{
+    OD_LOG_OBJENTER(); //####
+    PopupMenu mm;
+    
+    mm.addSectionHeader("Entity operations");
+    mm.addItem(kPopupDisplayEntityInfo, "Display entity information");
+    mm.addItem(kPopupDetailedDisplayEntityInfo, "Display detailed entity information");
+    int result = mm.show();
+    
+    switch (result)
+    {
+        case kPopupDisplayEntityInfo :
+            displayInformation(false);
+            break;
+            
+        case kPopupDetailedDisplayEntityInfo :
+            displayInformation(true);
+            break;
+            
+        default :
+            break;
+            
+    }
+    OD_LOG_OBJEXIT(); //####
+} // ChannelContainer::displayAndProcessPopupMenu
 
 void ChannelContainer::displayInformation(const bool moreDetails)
 {
@@ -407,7 +448,7 @@ void ChannelContainer::mouseDown(const MouseEvent & ee)
     }
     else if (ee.mods.isPopupMenu())
     {
-        displayInformation(ee.mods.isShiftDown());
+        displayAndProcessPopupMenu();
         doDrag = false;
     }
     if (doDrag)
