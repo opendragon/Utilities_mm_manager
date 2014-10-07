@@ -405,7 +405,7 @@ void ChannelContainer::mouseDown(const MouseEvent & ee)
     {
         doDrag = false;
     }
-    else if (ee.mods.isCtrlDown())
+    else if (ee.mods.isCtrlDown() || ee.mods.isRightButtonDown())
     {
         displayInformation(ee.mods.isShiftDown());
         doDrag = false;
@@ -423,7 +423,8 @@ void ChannelContainer::mouseDrag(const MouseEvent & ee)
     bool doDrag = true;
     
     // Moves this Component according to the mouse drag event and applies our constraints to it
-    if (ee.mods.isAltDown() || ee.mods.isCommandDown() || ee.mods.isCtrlDown())
+    if (ee.mods.isAltDown() || ee.mods.isCommandDown() || ee.mods.isCtrlDown() ||
+        ee.mods.isRightButtonDown())
     {
         doDrag = false;
     }
