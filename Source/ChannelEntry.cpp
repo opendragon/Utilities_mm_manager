@@ -1014,19 +1014,7 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
                       "eventComponent = ", ee.eventComponent); //####
             OD_LOG_D2("x = ", ee.position.getX(), "y = ", ee.position.getY()); //####
             // Check if Add is OK for this entry.
-            if (ee.mods.isCtrlDown())
-            {
-                if (ee.mods.isShiftDown())
-                {
-                    
-                }
-                else
-                {
-                    
-                }
-            }
-            if ((kPortDirectionInput != _direction) &&
-                (kPortUsageClient != _usage))
+            if ((kPortDirectionInput != _direction) && (kPortUsageClient != _usage))
             {
                 _wasUdp = ee.mods.isShiftDown();
                 owningPanel.rememberConnectionStartPoint(this, true);
@@ -1038,8 +1026,8 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
         else if (ee.mods.isCommandDown())
         {
             // Check if Remove is OK for this entry.
-            if ((kPortDirectionInput != _direction) &&
-                (kPortUsageClient != _usage) && (0 < _outputConnections.size()))
+            if ((kPortDirectionInput != _direction) && (kPortUsageClient != _usage) &&
+                (0 < _outputConnections.size()))
             {
                 owningPanel.rememberConnectionStartPoint(this, false);
                 setDisconnectMarker();
