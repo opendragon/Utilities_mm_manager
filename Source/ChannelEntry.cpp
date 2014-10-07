@@ -988,7 +988,7 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
             }
             passOn = false;
         }
-        else if (ee.mods.isCtrlDown() || ee.mods.isRightButtonDown())
+        else if (ee.mods.isPopupMenu())
         {
             displayInformation(ee.mods.isShiftDown());
             passOn = false;
@@ -1017,7 +1017,7 @@ void ChannelEntry::mouseDrag(const MouseEvent & ee)
         owningPanel.repaint();
         passOn = false;
     }
-    else if (ee.mods.isCommandDown() || ee.mods.isCtrlDown() || ee.mods.isRightButtonDown())
+    else if (ee.mods.isCommandDown() || ee.mods.isPopupMenu())
     {
         passOn = false;
     }
@@ -1076,7 +1076,7 @@ void ChannelEntry::mouseUp(const MouseEvent & ee)
         }
         passOn = false;
     }
-    else if (ee.mods.isCommandDown() || ee.mods.isCtrlDown() || ee.mods.isRightButtonDown())
+    else if (ee.mods.isCommandDown() || ee.mods.isPopupMenu())
     {
         passOn = false;
     }
