@@ -664,6 +664,83 @@ void ChannelEntry::clearDisconnectMarker(void)
     OD_LOG_EXIT(); //####
 } // ChannelEntry::clearDisconnectMarker
 
+void ChannelEntry::displayInformation(const bool moreDetails)
+{
+    OD_LOG_ENTER(); //####
+    OD_LOG_B1("moreDetails = ", moreDetails); //####
+    yarp::os::ConstString dirText;
+    yarp::os::ConstString prefix;
+    yarp::os::ConstString suffix;
+    
+    switch (_direction)
+    {
+        case kPortDirectionInput :
+            dirText = " input";
+            break;
+            
+        case kPortDirectionOutput :
+            dirText = " output";
+            break;
+            
+        case kPortDirectionInputOutput :
+            dirText = " input/ouput";
+            break;
+            
+        default :
+            break;
+            
+    }
+    switch (Utilities::GetPortKind(getPortName()))
+    {
+        case Utilities::kPortKindAdapter :
+            prefix = "Adapter";
+            break;
+            
+        case Utilities::kPortKindClient :
+            prefix = "Client";
+            break;
+            
+        case Utilities::kPortKindService :
+            prefix = "Service";
+            break;
+            
+        case Utilities::kPortKindServiceRegistry :
+            prefix = "Service Registry";
+            break;
+            
+        case Utilities::kPortKindStandard :
+            prefix = "Standard";
+            break;
+            
+        default :
+            break;
+            
+    }
+    if (0 < getProtocol().length())
+    {
+        suffix = yarp::os::ConstString("Protocol = '") + getProtocol() + "'";
+        if (moreDetails)
+        {
+            if (0 < getProtocolDescription().length())
+            {
+                suffix += "\n";
+                suffix += getProtocolDescription().c_str();
+            }
+        }
+    }
+    ScopedPointer<AlertWindow> infoWindow = new AlertWindow(getPortName().c_str(),
+                                                            (prefix + dirText + " port").c_str(),
+                                                            AlertWindow::NoIcon, this);
+    
+    if (0 < suffix.length())
+    {
+        infoWindow->addTextBlock(suffix.c_str());
+    }
+    infoWindow->addButton("OK", 1);
+    infoWindow->runModalLoop();
+    OD_LOG_EXIT(); //####
+} // ChannelEntry::displayInformation
+
 void ChannelEntry::drawDragLine(Graphics &       gg,
                                 const Position & position,
                                 const bool       isUDP)
@@ -682,16 +759,15 @@ void ChannelEntry::drawDragLine(Graphics &       gg,
     {
         sourceAnchor = calculateClosestAnchor(startPoint, true, false, position);
         destinationAnchor = calculateAnchorForPoint(destinationCentre,
-                                                    kAnchorBottomCentre == sourceAnchor,
-                                                    position, sourceCentre);
+                                                    kAnchorBottomCentre == sourceAnchor, position,
+                                                    sourceCentre);
     }
     else
     {
         destinationAnchor = calculateAnchorForPoint(destinationCentre, false, position,
                                                     sourceCentre);
         sourceAnchor = calculateClosestAnchor(startPoint, true,
-                                              kAnchorBottomCentre == destinationAnchor,
-                                              position);
+                                              kAnchorBottomCentre == destinationAnchor, position);
     }
     OD_LOG_D4("startPoint.x <- ", startPoint.getX(), "startPoint.y <- ", //####
               startPoint.getY(), "position.x <- ", position.getX(), "position.y <- ", //####
@@ -704,8 +780,7 @@ void ChannelEntry::drawDragLine(Graphics &       gg,
     {
         gg.setColour(kTcpConnectionColour);
     }
-    drawBezier(gg, startPoint, position, sourceCentre, destinationCentre,
-               kNormalConnectionWidth);
+    drawBezier(gg, startPoint, position, sourceCentre, destinationCentre, kNormalConnectionWidth);
     drawSourceAnchor(gg, sourceAnchor, startPoint, 1);
     drawTargetAnchor(gg, destinationAnchor, position, 1);
     OD_LOG_EXIT(); //####
@@ -834,7 +909,7 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
             if ((kPortDirectionOutput != _direction) && (kPortUsageService != _usage) &&
                 firstRemovePort->hasOutgoingConnectionTo(getPortName()))
             {
-                if (Utilities::RemoveConnection(firstName, getPortName(), CheckForExit, NULL))
+                if (Utilities::RemoveConnection(firstName, getPortName(), CheckForExit))
                 {
                     firstRemovePort->removeOutputConnection(this);
                     removeInputConnection(firstRemovePort);
@@ -865,7 +940,7 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
                 (! firstAddPort->hasOutgoingConnectionTo(getPortName())))
             {
                 if (Utilities::AddConnection(firstName, getPortName(), STANDARD_WAIT_TIME,
-                                             firstAddPort->_wasUdp, CheckForExit, NULL))
+                                             firstAddPort->_wasUdp, CheckForExit))
                 {
                     Common::ChannelMode mode = (firstAddPort->_wasUdp ? Common::kChannelModeUDP :
                                                 Common::kChannelModeTCP);
@@ -922,67 +997,7 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
         }
         else if (ee.mods.isCtrlDown())
         {
-            yarp::os::ConstString dirText;
-            yarp::os::ConstString prefix;
-            yarp::os::ConstString suffix;
-            
-            switch (_direction)
-            {
-                case kPortDirectionInput :
-                    dirText = " input";
-                    break;
-                    
-                case kPortDirectionOutput :
-                    dirText = " output";
-                    break;
-                    
-                case kPortDirectionInputOutput :
-                    dirText = " input/ouput";
-                    break;
-                    
-                default :
-                    break;
-                    
-            }
-            switch (Utilities::GetPortKind(getPortName()))
-            {
-                case Utilities::kPortKindAdapter :
-                    prefix = "Adapter";
-                    break;
-                    
-                case Utilities::kPortKindClient :
-                    prefix = "Client";
-                    break;
-                    
-                case Utilities::kPortKindService :
-                    prefix = "Service";
-                    break;
-                    
-                case Utilities::kPortKindServiceRegistry :
-                    prefix = "Service Registry";
-                    break;
-                    
-                case Utilities::kPortKindStandard :
-                    prefix = "Standard";
-                    break;
-                    
-                default :
-                    break;
-                    
-            }
-            if (0 < getProtocol().length())
-            {
-                suffix += yarp::os::ConstString("\nProtocol = '") + getProtocol() + "'";
-                if (ee.mods.isShiftDown())
-                {
-                    if (0 < getProtocolDescription().length())
-                    {
-                        suffix += yarp::os::ConstString("\n\n") + getProtocolDescription();
-                    }
-                }
-            }
-            AlertWindow::showMessageBox(AlertWindow::NoIcon, getPortName().c_str(),
-                                        (prefix + dirText + " port" + suffix).c_str(), "OK", this);
+            displayInformation(ee.mods.isShiftDown());
             passOn = false;
         }
     }
@@ -1051,7 +1066,7 @@ void ChannelEntry::mouseUp(const MouseEvent & ee)
                     (! hasOutgoingConnectionTo(secondName)))
                 {
                     if (Utilities::AddConnection(getPortName(), secondName, STANDARD_WAIT_TIME,
-                                                 _wasUdp, CheckForExit, NULL))
+                                                 _wasUdp, CheckForExit))
                     {
                         Common::ChannelMode mode = (_wasUdp ? Common::kChannelModeUDP :
                                                     Common::kChannelModeTCP);

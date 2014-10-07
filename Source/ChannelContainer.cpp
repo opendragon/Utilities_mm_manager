@@ -197,6 +197,87 @@ void ChannelContainer::deselect(void)
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::deselect
 
+void ChannelContainer::displayInformation(const bool moreDetails)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_B1("moreDetails = ", moreDetails); //####
+    // Popup of description.
+    yarp::os::ConstString thePanelDescription;
+    
+    switch (_kind)
+    {
+        case kContainerKindClientOrAdapter :
+            thePanelDescription = "A client or adapter";
+            break;
+            
+        case kContainerKindService :
+            thePanelDescription = getDescription();
+            break;
+            
+        case kContainerKindOther :
+            thePanelDescription = "A standard port";
+            break;
+            
+        default :
+            break;
+            
+    }
+    ScopedPointer<AlertWindow> infoWindow = new AlertWindow(getName(), thePanelDescription.c_str(),
+                                                            AlertWindow::NoIcon, this);
+    
+    if (moreDetails)
+    {
+        yarp::os::ConstString requests;
+        
+        switch (_kind)
+        {
+            case kContainerKindService :
+                requests = getRequests();
+                if (0 < requests.length())
+                {
+                    infoWindow->addTextBlock(requests.c_str());
+                }
+                break;
+                
+            default :
+                break;
+                
+        }
+    }
+    infoWindow->addButton("OK", 1);
+    infoWindow->runModalLoop();
+    OD_LOG_OBJEXIT(); //####
+} // ChannelContainer::displayInformation
+#if 0
+void showDialogWindow()
+{
+    String mm;
+    
+    mm << "Dialog Windows can be used to quickly show a component, usually blocking mouse input "
+            "to other windows." << newLine << newLine << "They can also be quickly closed with "
+            "the escape key, try it now.";
+    DialogWindow::LaunchOptions options;
+    Label *                     label = new Label;
+    
+    label->setText(mm, dontSendNotification);
+    label->setColour(Label::textColourId, Colours::whitesmoke);
+    options.content.setOwned(label);
+    Rectangle<int> area(0, 0, 300, 200);
+    
+    options.content->setSize(area.getWidth(), area.getHeight());
+    options.dialogTitle = "Dialog Window";
+    options.dialogBackgroundColour = Colour(0xff0e345a);
+    options.escapeKeyTriggersCloseButton = true;
+    options.useNativeTitleBar = false;
+    options.resizable = true;
+//    const RectanglePlacement placement(RectanglePlacement::xRight + RectanglePlacement::yBottom +
+//                                       RectanglePlacement::doNotResize);
+    DialogWindow *           dw = options.launchAsync();
+
+    dw->centreWithSize(300, 200);
+}
+#endif//0
+
 void ChannelContainer::drawOutgoingConnections(Graphics & gg)
 {
     OD_LOG_OBJENTER(); //####
@@ -354,38 +435,7 @@ void ChannelContainer::mouseDown(const MouseEvent & ee)
     }
     else if (ee.mods.isCtrlDown())
     {
-        // Popup of description.
-        yarp::os::ConstString thePanelDescription;
-        
-        switch (_kind)
-        {
-            case kContainerKindClientOrAdapter :
-                thePanelDescription = "A client or adapter";
-                break;
-                
-            case kContainerKindService :
-                thePanelDescription = getDescription();
-                if (ee.mods.isShiftDown())
-                {
-                    yarp::os::ConstString requests = getRequests();
-                    
-                    if (0 < requests.length())
-                    {
-                        thePanelDescription += yarp::os::ConstString("\n\n") + requests;
-                    }
-                }
-                break;
-                
-            case kContainerKindOther :
-                thePanelDescription = "A standard port";
-                break;
-                
-            default :
-                break;
-                
-        }
-        AlertWindow::showMessageBox(AlertWindow::NoIcon, getName(), thePanelDescription.c_str(),
-                                    "OK", this);
+        displayInformation(ee.mods.isShiftDown());
         doDrag = false;
     }
     if (doDrag)

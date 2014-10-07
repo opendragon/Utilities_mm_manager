@@ -129,32 +129,32 @@ namespace ChannelManager
          @param checker A function that provides for early exit from loops.
          @param checkStuff The private data for the early exit function. */
         void addPortConnections(const MplusM::Utilities::PortVector & detectedPorts,
-                                MplusM::Common::CheckFunction         checker,
-                                void *                                checkStuff);
+                                MplusM::Common::CheckFunction         checker = NULL,
+                                void *                                checkStuff = NULL);
         
         /*! @brief Add ports that have associates as 'adapter' entities to the to-be-displayed list.
          @param detectedPorts The set of detected YARP ports.
          @param checker A function that provides for early exit from loops.
          @param checkStuff The private data for the early exit function. */
         void addPortsWithAssociates(const MplusM::Utilities::PortVector & detectedPorts,
-                                    MplusM::Common::CheckFunction         checker,
-                                    void *                                checkStuff);
+                                    MplusM::Common::CheckFunction         checker = NULL,
+                                    void *                                checkStuff = NULL);
         
         /*! @brief Add regular YARP ports as distinct entities to the to-be-displayed list.
          @param detectedPorts The set of detected YARP ports.
          @param checker A function that provides for early exit from loops.
          @param checkStuff The private data for the early exit function. */
         void addRegularPortEntities(const MplusM::Utilities::PortVector & detectedPorts,
-                                    MplusM::Common::CheckFunction         checker,
-                                    void *                                checkStuff);
+                                    MplusM::Common::CheckFunction         checker = NULL,
+                                    void *                                checkStuff = NULL);
         
         /*! @brief Add services as distinct entities to the list of entities.
          @param services The set of detected services.
          @param checker A function that provides for early exit from loops.
          @param checkStuff The private data for the early exit function. */
         void addServices(const MplusM::Common::StringVector & services,
-                         MplusM::Common::CheckFunction        checker,
-                         void *                               checkStuff);
+                         MplusM::Common::CheckFunction        checker = NULL,
+                         void *                               checkStuff = NULL);
         
         /*! @brief Determine whether a port can be used for input and/or output.
          @param oldEntry The previous record for the port, if it exists.
@@ -164,15 +164,15 @@ namespace ChannelManager
          @returns The allowed directions for the port. */
         PortDirection determineDirection(ChannelEntry *                oldEntry,
                                          const yarp::os::ConstString & portName,
-                                         MplusM::Common::CheckFunction checker,
-                                         void *                        checkStuff);
+                                         MplusM::Common::CheckFunction checker = NULL,
+                                         void *                        checkStuff = NULL);
         
         /*! @brief Identify the YARP network entities.
          @param checker A function that provides for early exit from loops.
          @param checkStuff The private data for the early exit function.
          @returns @c true if the network entity information was gathered and @c false otherwise. */
-        bool gatherEntities(MplusM::Common::CheckFunction checker,
-                            void *                        checkStuff);
+        bool gatherEntities(MplusM::Common::CheckFunction checker = NULL,
+                            void *                        checkStuff = NULL);
         
         /*! @brief Tell the displayed panel to do a repaint. */
         void triggerRepaint(void);

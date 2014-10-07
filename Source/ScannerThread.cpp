@@ -665,7 +665,7 @@ void ScannerThread::run(void)
         OD_LOG("((! threadShouldExit()) && (! lBailNow))"); //####
         bool needToLeave = false;
         
-        if (gatherEntities(CheckForExit, NULL))
+        if (gatherEntities(CheckForExit))
         {
             int64 loopStartTime = Time::currentTimeMillis();
             

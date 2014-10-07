@@ -134,10 +134,10 @@ void ChannelManagerApplication::connectPeekChannel(void)
     if (_peeker)
     {
         if (! Utilities::NetworkConnectWithRetries(MpM_REGISTRY_STATUS_NAME, _peeker->name(),
-                                                   STANDARD_WAIT_TIME, false, NULL, NULL))
+                                                   STANDARD_WAIT_TIME))
         {
             OD_LOG("(! Utilities::NetworkConnectWithRetries(MpM_REGISTRY_STATUS_NAME, " //####
-                   "_peeker->name(), STANDARD_WAIT_TIME, false, NULL, NULL))"); //####
+                   "_peeker->name(), STANDARD_WAIT_TIME))"); //####
         }
     }
     OD_LOG_OBJEXIT(); //####

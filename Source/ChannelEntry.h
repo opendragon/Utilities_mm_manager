@@ -314,6 +314,10 @@ namespace ChannelManager
         
     private :
         
+        /*! @brief Display information for a container.
+         @param moreDetails @c true if more details are to be shown and @c false otherwise. */
+        void displayInformation(const bool moreDetails);
+        
         /*! @brief Remove all connections. */
         void removeAllConnections(void);
         
