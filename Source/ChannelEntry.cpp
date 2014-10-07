@@ -39,6 +39,7 @@
 #include "ChannelEntry.h"
 #include "ChannelContainer.h"
 #include "ChannelManagerApplication.h"
+#include "ContentPanel.h"
 #include "EntitiesPanel.h"
 
 //#include <odl/ODEnableLogging.h>
@@ -718,7 +719,7 @@ void ChannelEntry::displayInformation(const bool moreDetails)
     }
     if (0 < getProtocol().length())
     {
-        suffix = yarp::os::ConstString("Protocol = '") + getProtocol() + "'";
+        suffix = yarp::os::ConstString("\n\nProtocol = '") + getProtocol() + "'";
         if (moreDetails)
         {
             if (0 < getProtocolDescription().length())
@@ -728,16 +729,8 @@ void ChannelEntry::displayInformation(const bool moreDetails)
             }
         }
     }
-    ScopedPointer<AlertWindow> infoWindow = new AlertWindow(getPortName().c_str(),
-                                                            (prefix + dirText + " port").c_str(),
-                                                            AlertWindow::NoIcon, this);
-    
-    if (0 < suffix.length())
-    {
-        infoWindow->addTextBlock(suffix.c_str());
-    }
-    infoWindow->addButton("OK", 1);
-    infoWindow->runModalLoop();
+    DisplayInformationPanel(this, (prefix + dirText + " port" + suffix).c_str(),
+                            getPortName().c_str());
     OD_LOG_EXIT(); //####
 } // ChannelEntry::displayInformation
 

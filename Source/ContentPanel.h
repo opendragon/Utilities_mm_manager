@@ -172,6 +172,14 @@ namespace ChannelManager
         
     }; // ContentPanel
     
+    /*! @brief Create and display an information panel.
+     @param above The visible component that will be below the panel.
+     @param bodyText The text to display in the panel.
+     @param title The title of the panel. */
+    void DisplayInformationPanel(Component *    above,
+                                 const String & bodyText,
+                                 const String & title);
+    
 } // ChannelManager
 
 #endif // ! defined(ContentPanel_H_)

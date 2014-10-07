@@ -39,6 +39,7 @@
 #include "ChannelContainer.h"
 #include "EntitiesPanel.h"
 #include "ChannelEntry.h"
+#include "ContentPanel.h"
 
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
@@ -222,8 +223,7 @@ void ChannelContainer::displayInformation(const bool moreDetails)
             break;
             
     }
-    ScopedPointer<AlertWindow> infoWindow = new AlertWindow(getName(), thePanelDescription.c_str(),
-                                                            AlertWindow::NoIcon, this);
+    String bodyText(thePanelDescription.c_str());
     
     if (moreDetails)
     {
@@ -235,7 +235,9 @@ void ChannelContainer::displayInformation(const bool moreDetails)
                 requests = getRequests();
                 if (0 < requests.length())
                 {
-                    infoWindow->addTextBlock(requests.c_str());
+                    bodyText += "\n\n";
+                    bodyText += requests.c_str();
+                    bodyText += "\n";
                 }
                 break;
                 
@@ -244,39 +246,9 @@ void ChannelContainer::displayInformation(const bool moreDetails)
                 
         }
     }
-    infoWindow->addButton("OK", 1);
-    infoWindow->runModalLoop();
+    DisplayInformationPanel(this, bodyText, getName());
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::displayInformation
-#if 0
-void showDialogWindow()
-{
-    String mm;
-    
-    mm << "Dialog Windows can be used to quickly show a component, usually blocking mouse input "
-            "to other windows." << newLine << newLine << "They can also be quickly closed with "
-            "the escape key, try it now.";
-    DialogWindow::LaunchOptions options;
-    Label *                     label = new Label;
-    
-    label->setText(mm, dontSendNotification);
-    label->setColour(Label::textColourId, Colours::whitesmoke);
-    options.content.setOwned(label);
-    Rectangle<int> area(0, 0, 300, 200);
-    
-    options.content->setSize(area.getWidth(), area.getHeight());
-    options.dialogTitle = "Dialog Window";
-    options.dialogBackgroundColour = Colour(0xff0e345a);
-    options.escapeKeyTriggersCloseButton = true;
-    options.useNativeTitleBar = false;
-    options.resizable = true;
-//    const RectanglePlacement placement(RectanglePlacement::xRight + RectanglePlacement::yBottom +
-//                                       RectanglePlacement::doNotResize);
-    DialogWindow *           dw = options.launchAsync();
-
-    dw->centreWithSize(300, 200);
-}
-#endif//0
 
 void ChannelContainer::drawOutgoingConnections(Graphics & gg)
 {
