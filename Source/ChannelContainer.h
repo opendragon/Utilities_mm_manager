@@ -111,6 +111,11 @@ namespace ChannelManager
          @param gg The graphics context in which to draw. */
         void drawOutgoingConnections(Graphics & gg);
         
+        /*! @brief Convert a tab-delimited line of metric data into a more readable form.
+         @param aRow A line of metric data.
+         @returns The metric data reformatted. */
+        String formatMetricRow(const String & aRow);
+
         /*! @brief Return the behavioural model for the entity.
          @returns The behavioural model for the entity. */
         inline yarp::os::ConstString getBehaviour(void)
@@ -135,6 +140,10 @@ namespace ChannelManager
             return _kind;
         } // getKind
 
+        /*! @brief Return the metrics for the container, if it is a service.
+         @returns The metrics for the container, if it is a service or an empty string. */
+        StringArray getMetrics(void);
+        
 # if defined(USE_OGDF_POSITIONING)
         /*! @brief Return the node corresponding to the entity.
          @returns The node corresponding to the entity. */
@@ -266,6 +275,9 @@ namespace ChannelManager
         /*! @brief Display information for a container.
          @param moreDetails @c true if more details are to be shown and @c false otherwise. */
         void displayInformation(const bool moreDetails);
+        
+        /*! @brief Display metrics for a service. */
+        void displayMetrics(void);
         
     public :
     

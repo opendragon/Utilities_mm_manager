@@ -799,8 +799,11 @@ void ChannelManager::DisplayInformationPanel(Component *    above,
     OD_LOG_P1("above = ", above); //####
     OD_LOG_S2s("bodyText = ", bodyText, "title = ", title); //####
     DialogWindow::LaunchOptions options;
+    String                      monoFontName = Font::getDefaultMonospacedFontName();
+    Font                        monoFont(monoFontName, 16, Font::plain);
     Label *                     aLabel = new Label;
     
+    aLabel->setFont(monoFont);
     aLabel->setText(bodyText, dontSendNotification);
     options.content.setOwned(aLabel);
     Point<int> dimensions;

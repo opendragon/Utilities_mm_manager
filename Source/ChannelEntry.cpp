@@ -80,7 +80,10 @@ enum ChannelPopupMenuSelection
     kPopupDetailedDisplayPortInfo,
 
     /*! @brief Display information request. */
-    kPopupDisplayPortInfo
+    kPopupDisplayPortInfo,
+    
+    /*! @brief Display the metrics for the port. */
+    kPopupDisplayPortMetrics
     
 }; // PopupMenuSelection
 
@@ -693,6 +696,13 @@ void ChannelEntry::displayAndProcessPopupMenu(void)
     mm.addSectionHeader("Port operations");
     mm.addItem(kPopupDisplayPortInfo, "Display port information");
     mm.addItem(kPopupDetailedDisplayPortInfo, "Display detailed port information");
+    if (_parent)
+    {
+        if (kContainerKindService == _parent->getKind())
+        {
+            mm.addItem(kPopupDisplayPortMetrics, "Display port metrics");
+        }
+    }
     if ((kPortDirectionInput != _direction) && (kPortUsageClient != _usage))
     {
         mm.addSeparator();
@@ -715,6 +725,10 @@ void ChannelEntry::displayAndProcessPopupMenu(void)
             
         case kPopupDisplayPortInfo :
             displayInformation(false);
+            break;
+            
+        case kPopupDisplayPortMetrics :
+            displayPortMetrics();
             break;
             
         default :
@@ -792,6 +806,42 @@ void ChannelEntry::displayInformation(const bool moreDetails)
                             getPortName().c_str());
     OD_LOG_EXIT(); //####
 } // ChannelEntry::displayInformation
+
+void ChannelEntry::displayPortMetrics(void)
+{
+    OD_LOG_ENTER(); //####
+    // Popup of metrics.
+    StringArray metricsArray;
+    
+    if (_parent)
+    {
+        metricsArray = _parent->getMetrics();
+        // Find our line and prepare it
+        int numRows = metricsArray.size();
+        
+        for (int ii = 0; ii < numRows; ++ii)
+        {
+            const String & aRow = metricsArray[ii];
+            int            firstTab = aRow.indexOfChar('\t');
+            
+            if (0 < firstTab)
+            {
+                String channelName(aRow.substring(0, firstTab));
+                
+                if (channelName == getPortName().c_str())
+                {
+                    String result("Channel metrics\n\n");
+                    
+                    result += _parent->formatMetricRow(aRow) + "\n";
+                    DisplayInformationPanel(this, result, getPortName().c_str());
+                    break;
+                }
+                
+            }
+        }
+    }
+    OD_LOG_EXIT(); //####
+} // ChannelEntry::displayPortMetrics
 
 void ChannelEntry::drawDragLine(Graphics &       gg,
                                 const Position & position,

@@ -41,6 +41,8 @@
 #include "ChannelEntry.h"
 #include "ContentPanel.h"
 
+#include <mpm/M+MUtilities.h>
+
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
 
@@ -72,7 +74,10 @@ enum EntityPopupMenuSelection
     kPopupDetailedDisplayEntityInfo,
 
     /*! @brief Display information request. */
-    kPopupDisplayEntityInfo
+    kPopupDisplayEntityInfo,
+    
+    /*! @brief Display the channel metrics for a service. */
+    kPopupDisplayServiceMetrics
     
 }; // EntityPopupMenuSelection
 
@@ -220,6 +225,10 @@ void ChannelContainer::displayAndProcessPopupMenu(void)
     mm.addSectionHeader("Entity operations");
     mm.addItem(kPopupDisplayEntityInfo, "Display entity information");
     mm.addItem(kPopupDetailedDisplayEntityInfo, "Display detailed entity information");
+    if (kContainerKindService == _kind)
+    {
+        mm.addItem(kPopupDisplayServiceMetrics, "Display service metrics");
+    }
     int result = mm.show();
     
     switch (result)
@@ -230,6 +239,10 @@ void ChannelContainer::displayAndProcessPopupMenu(void)
             
         case kPopupDetailedDisplayEntityInfo :
             displayInformation(true);
+            break;
+            
+        case kPopupDisplayServiceMetrics :
+            displayMetrics();
             break;
             
         default :
@@ -291,6 +304,29 @@ void ChannelContainer::displayInformation(const bool moreDetails)
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::displayInformation
 
+void ChannelContainer::displayMetrics(void)
+{
+    OD_LOG_OBJENTER(); //####
+    // Popup of metrics.
+    String      result;
+    StringArray metricsArray = getMetrics();
+    int         numRows = metricsArray.size();
+    
+    if (0 < numRows)
+    {
+        result = "Service metrics\n";
+    }
+    for (int ii = 0; ii < numRows; ++ii)
+    {
+        const String & aRow = metricsArray[ii];
+
+        result += "\n";
+        result += formatMetricRow(aRow) + "\n";
+    }
+    DisplayInformationPanel(this, result, getName());
+    OD_LOG_OBJEXIT(); //####
+} // ChannelContainer::displayMetrics
+
 void ChannelContainer::drawOutgoingConnections(Graphics & gg)
 {
     OD_LOG_OBJENTER(); //####
@@ -306,6 +342,61 @@ void ChannelContainer::drawOutgoingConnections(Graphics & gg)
     }
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::drawOutgoingConnections
+
+String ChannelContainer::formatMetricRow(const String & aRow)
+{
+    OD_LOG_OBJENTER();
+    String      result;
+    StringArray asPieces;
+    
+    asPieces.addTokens(aRow, "\t", "");
+    if (7 == asPieces.size())
+    {
+        // We are ignoring the date and time information.
+        String channelName = asPieces[0];
+        String inBytes = asPieces[3];
+        String outBytes = asPieces[4];
+        String inMessages = asPieces[5];
+        String outMessages = asPieces[6];
+
+        result = "Channel:      " + channelName + "\n";
+        result += "In bytes:     " + inBytes + "\n";
+        result += "Out bytes:    " + outBytes + "\n";
+        result += "In messages:  " + inMessages + "\n";
+        result += "Out messages: " + outMessages;
+    }
+    OD_LOG_OBJEXIT_S(result);
+    return result;
+} // ChannelContainer::formatMetricRow
+
+StringArray ChannelContainer::getMetrics(void)
+{
+    OD_LOG_OBJENTER(); //####
+    StringArray result;
+    
+    for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
+    {
+        ChannelEntry * aPort = getPort(ii);
+        
+        if (aPort && (kPortUsageService == aPort->getUsage()))
+        {
+            yarp::os::Bottle metrics;
+            
+            if (MplusM::Utilities::GetMetricsForService(aPort->getPortName(), metrics,
+                                                        STANDARD_WAIT_TIME))
+            {
+                String metricsString = MplusM::Utilities::ConvertMetricsToString(metrics,
+                                                     MplusM::Common::kOutputFlavourTabs).c_str();
+                
+                result.addLines(metricsString);
+                break;
+            }
+            
+        }
+    }
+    OD_LOG_OBJEXIT(); //####
+    return result;
+} // ChannelContainer::getMetrics
 
 #if defined(USE_OGDF_POSITIONING)
 ogdf::node ChannelContainer::getNode(void)
