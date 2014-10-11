@@ -49,6 +49,11 @@
 # pragma clang diagnostic push
 # pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
 #endif // defined(__APPLE__)
+
+#if (! MAC_OR_LINUX_)
+# include <Windows.h>
+#endif //! MAC_OR_LINUX_
+
 /*! @file
  
  @brief The class declaration for the background port and service scanner. */
