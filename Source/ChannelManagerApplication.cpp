@@ -189,8 +189,9 @@ void ChannelManagerApplication::initialise(const String & commandLine)
     ChannelStatusReporter * reporter = Utilities::GetGlobalStatusReporter();
 #endif // defined(MpM_ReportOnConnections)
 
+    Utilities::CheckForNameServerReporter();
 #if CheckNetworkWorks_
-    if (yarp::os::Network::checkNetwork())
+    if (yarp::os::Network::checkNetwork(NETWORK_CHECK_TIMEOUT))
 #endif // CheckNetworkWorks_
     {
         _yarp = new yarp::os::Network; // This is necessary to establish any connections to the YARP
