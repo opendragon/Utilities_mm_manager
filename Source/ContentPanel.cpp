@@ -243,7 +243,7 @@ void ContentPanel::paint(Graphics & gg)
         if (_invertBackground)
         {
             ColourGradient theGradient2(Colours::darkgrey, halfW, halfH, Colours::lightgrey,
-                                        (hh > ww) ? 0 : ww, (hh > ww) ? hh : 0, true);
+                                        static_cast<float>((hh > ww) ? 0 : ww), (hh > ww) ? hh : 0, true);
             FillType       theBackgroundFill2(theGradient2);
             
             gg.setFillType(theBackgroundFill2);

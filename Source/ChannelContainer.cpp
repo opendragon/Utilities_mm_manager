@@ -116,9 +116,9 @@ ChannelContainer::ChannelContainer(const ContainerKind           kind,
                "requests = ", requests); //####
     Font & headerFont = _owner.getNormalFont();
     
-    _titleHeight = headerFont.getHeight();
+    _titleHeight = static_cast<int>(headerFont.getHeight());
     setSize(static_cast<int>(headerFont.getStringWidthFloat(getName() + " ") + getTextInset()),
-            static_cast<int>(_titleHeight));
+            _titleHeight);
     OD_LOG_L2("width = ", getWidth(), "height = ", getHeight()); //####
     setOpaque(true);
     setVisible(true);
@@ -158,7 +158,7 @@ ChannelEntry * ChannelContainer::addPort(const yarp::os::ConstString & portName,
     int            countBefore = getNumPorts();
     ChannelEntry * aPort = new ChannelEntry(this, portName, portProtocol, protocolDescription,
                                             portKind, direction);
-    float          newWidth = max(aPort->getWidth(), getWidth());
+    float          newWidth = static_cast<float>(max(aPort->getWidth(), getWidth()));
     float          newHeight = aPort->getHeight() + getHeight() + lEntryGap;
     
     OD_LOG_L2("newWidth = ", newWidth, "newHeight = ", newHeight); //####
@@ -575,15 +575,15 @@ void ChannelContainer::paint(Graphics & gg)
     
     as.setJustification(Justification::left);
     as.append(getName(), _owner.getNormalFont(), Colours::white);
-    juce::Rectangle<int>   bounds(getLocalBounds());
-    juce::Rectangle<float> area1(bounds.getX(), bounds.getY(), bounds.getWidth(), _titleHeight);
-    juce::Rectangle<float> area2(bounds.getX(), bounds.getY() + _titleHeight, bounds.getWidth(),
+    juce::Rectangle<int> bounds(getLocalBounds());
+    juce::Rectangle<int> area1(bounds.getX(), bounds.getY(), bounds.getWidth(), _titleHeight);
+    juce::Rectangle<int> area2(bounds.getX(), bounds.getY() + _titleHeight, bounds.getWidth(),
                                  bounds.getHeight() - _titleHeight);
     
     gg.setColour(Colours::darkgrey);
     gg.fillRect(area1);
-    area1.setLeft(area1.getX() + getTextInset());
-    as.draw(gg, area1);
+    area1.setLeft(static_cast<int>(area1.getX() + getTextInset()));
+    as.draw(gg, area1.toFloat());
     gg.setColour(Colours::grey);
     gg.fillRect(area2);
     OD_LOG_OBJEXIT(); //####

@@ -312,7 +312,7 @@ namespace ChannelManager
         EntitiesPanel & _owner;
         
         /*! @brief The height of the title of the container. */
-        float _titleHeight;
+        int _titleHeight;
         
         /*! @brief The kind of container. */
         ContainerKind _kind;
