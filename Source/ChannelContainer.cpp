@@ -41,8 +41,6 @@
 #include "ChannelEntry.h"
 #include "ContentPanel.h"
 
-#include <mpm/M+MUtilities.h>
-
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
 
