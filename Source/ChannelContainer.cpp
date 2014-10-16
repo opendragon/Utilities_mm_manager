@@ -312,18 +312,17 @@ void ChannelContainer::displayMetrics(void)
     StringArray metricsArray = getMetrics();
     int         numRows = metricsArray.size();
     
-    if (0 < numRows)
-    {
-        result = "Service metrics\n";
-    }
     for (int ii = 0; ii < numRows; ++ii)
     {
         const String & aRow = metricsArray[ii];
 
-        result += "\n";
+        if (0 < ii)
+        {
+            result += "\n";
+        }
         result += formatMetricRow(aRow) + "\n";
     }
-    DisplayInformationPanel(this, result, getName());
+    DisplayInformationPanel(this, result, String("Metrics for ") + getName());
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::displayMetrics
 

@@ -82,8 +82,8 @@ enum ChannelPopupMenuSelection
     /*! @brief Display information request. */
     kPopupDisplayPortInfo,
     
-    /*! @brief Display the metrics for the port. */
-    kPopupDisplayPortMetrics
+    /*! @brief Display the metrics for the channel. */
+    kPopupDisplayChannelMetrics
     
 }; // PopupMenuSelection
 
@@ -702,7 +702,7 @@ void ChannelEntry::displayAndProcessPopupMenu(void)
         if (kContainerKindService == _parent->getKind())
         {
             mm.addSeparator();
-            mm.addItem(kPopupDisplayPortMetrics, "Display port metrics");
+            mm.addItem(kPopupDisplayChannelMetrics, "Display channel metrics");
         }
     }
     if ((kPortDirectionInput != _direction) && (kPortUsageClient != _usage))
@@ -725,12 +725,12 @@ void ChannelEntry::displayAndProcessPopupMenu(void)
             displayInformation(true);
             break;
             
-        case kPopupDisplayPortInfo :
-            displayInformation(false);
+        case kPopupDisplayChannelMetrics :
+            displayChannelMetrics();
             break;
             
-        case kPopupDisplayPortMetrics :
-            displayPortMetrics();
+        case kPopupDisplayPortInfo :
+            displayInformation(false);
             break;
             
         default :
@@ -739,6 +739,40 @@ void ChannelEntry::displayAndProcessPopupMenu(void)
     }
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::displayAndProcessPopupMenu
+
+void ChannelEntry::displayChannelMetrics(void)
+{
+    OD_LOG_ENTER(); //####
+                    // Popup of metrics.
+    StringArray metricsArray;
+    
+    if (_parent)
+    {
+        metricsArray = _parent->getMetrics();
+        // Find our line and prepare it
+        int numRows = metricsArray.size();
+        
+        for (int ii = 0; ii < numRows; ++ii)
+        {
+            const String & aRow = metricsArray[ii];
+            int            firstTab = aRow.indexOfChar('\t');
+            
+            if (0 < firstTab)
+            {
+                String channelName(aRow.substring(0, firstTab));
+                
+                if (channelName == getPortName().c_str())
+                {
+                    DisplayInformationPanel(this, _parent->formatMetricRow(aRow) + "\n",
+                                            String("Metrics for ") + getPortName().c_str());
+                    break;
+                }
+                
+            }
+        }
+    }
+    OD_LOG_EXIT(); //####
+} // ChannelEntry::displayChannelMetrics
 
 void ChannelEntry::displayInformation(const bool moreDetails)
 {
@@ -808,42 +842,6 @@ void ChannelEntry::displayInformation(const bool moreDetails)
                             getPortName().c_str());
     OD_LOG_EXIT(); //####
 } // ChannelEntry::displayInformation
-
-void ChannelEntry::displayPortMetrics(void)
-{
-    OD_LOG_ENTER(); //####
-    // Popup of metrics.
-    StringArray metricsArray;
-    
-    if (_parent)
-    {
-        metricsArray = _parent->getMetrics();
-        // Find our line and prepare it
-        int numRows = metricsArray.size();
-        
-        for (int ii = 0; ii < numRows; ++ii)
-        {
-            const String & aRow = metricsArray[ii];
-            int            firstTab = aRow.indexOfChar('\t');
-            
-            if (0 < firstTab)
-            {
-                String channelName(aRow.substring(0, firstTab));
-                
-                if (channelName == getPortName().c_str())
-                {
-                    String result("Channel metrics\n\n");
-                    
-                    result += _parent->formatMetricRow(aRow) + "\n";
-                    DisplayInformationPanel(this, result, getPortName().c_str());
-                    break;
-                }
-                
-            }
-        }
-    }
-    OD_LOG_EXIT(); //####
-} // ChannelEntry::displayPortMetrics
 
 void ChannelEntry::drawDragLine(Graphics &       gg,
                                 const Position & position,

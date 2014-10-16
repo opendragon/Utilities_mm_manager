@@ -317,12 +317,12 @@ namespace ChannelManager
         /*! @brief Respond to a request for a popup menu. */
         void displayAndProcessPopupMenu(void);
         
+        /*! @brief Display metrics for a channel. */
+        void displayChannelMetrics(void);
+        
         /*! @brief Display information for a port.
          @param moreDetails @c true if more details are to be shown and @c false otherwise. */
         void displayInformation(const bool moreDetails);
-        
-        /*! @brief Display metrics for a port. */
-        void displayPortMetrics(void);
         
         /*! @brief Remove all connections. */
         void removeAllConnections(void);
