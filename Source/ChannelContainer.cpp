@@ -221,10 +221,12 @@ void ChannelContainer::displayAndProcessPopupMenu(void)
     PopupMenu mm;
     
     mm.addSectionHeader("Entity operations");
+    mm.addSeparator();
     mm.addItem(kPopupDisplayEntityInfo, "Display entity information");
     mm.addItem(kPopupDetailedDisplayEntityInfo, "Display detailed entity information");
     if (kContainerKindService == _kind)
     {
+        mm.addSeparator();
         mm.addItem(kPopupDisplayServiceMetrics, "Display service metrics");
     }
     int result = mm.show();

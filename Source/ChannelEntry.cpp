@@ -694,12 +694,14 @@ void ChannelEntry::displayAndProcessPopupMenu(void)
     PopupMenu mm;
     
     mm.addSectionHeader("Port operations");
+    mm.addSeparator();
     mm.addItem(kPopupDisplayPortInfo, "Display port information");
     mm.addItem(kPopupDetailedDisplayPortInfo, "Display detailed port information");
     if (_parent)
     {
         if (kContainerKindService == _parent->getKind())
         {
+            mm.addSeparator();
             mm.addItem(kPopupDisplayPortMetrics, "Display port metrics");
         }
     }
