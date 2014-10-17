@@ -218,13 +218,16 @@ void ChannelContainer::deselect(void)
 void ChannelContainer::displayAndProcessPopupMenu(void)
 {
     OD_LOG_OBJENTER(); //####
+    bool      isService = (kContainerKindService == _kind);
     PopupMenu mm;
     
-    mm.addSectionHeader("Entity operations");
+    mm.addSectionHeader(isService ? "Service operations" : "Entity operations");
     mm.addSeparator();
-    mm.addItem(kPopupDisplayEntityInfo, "Display entity information");
-    mm.addItem(kPopupDetailedDisplayEntityInfo, "Display detailed entity information");
-    if (kContainerKindService == _kind)
+    mm.addItem(kPopupDisplayEntityInfo, isService ? "Display service information" :
+               "Display entity information");
+    mm.addItem(kPopupDetailedDisplayEntityInfo, isService ? "Display detailed service information" :
+               "Display detailed entity information");
+    if (isService)
     {
         mm.addSeparator();
         mm.addItem(kPopupDisplayServiceMetrics, "Display service metrics");

@@ -691,19 +691,26 @@ void ChannelEntry::clearDisconnectMarker(void)
 void ChannelEntry::displayAndProcessPopupMenu(void)
 {
     OD_LOG_OBJENTER(); //####
+    bool      isChannel = false;
     PopupMenu mm;
     
-    mm.addSectionHeader("Port operations");
-    mm.addSeparator();
-    mm.addItem(kPopupDisplayPortInfo, "Display port information");
-    mm.addItem(kPopupDetailedDisplayPortInfo, "Display detailed port information");
     if (_parent)
     {
         if (kContainerKindService == _parent->getKind())
         {
-            mm.addSeparator();
-            mm.addItem(kPopupDisplayChannelMetrics, "Display channel metrics");
+            isChannel = true;
         }
+    }
+    mm.addSectionHeader(isChannel ? "Channel operations" : "Port operations");
+    mm.addSeparator();
+    mm.addItem(kPopupDisplayPortInfo, isChannel ? "Display channel information" :
+               "Display port information");
+    mm.addItem(kPopupDetailedDisplayPortInfo, isChannel ? "Display detailed channel information" :
+               "Display detailed port information");
+    if (isChannel)
+    {
+        mm.addSeparator();
+        mm.addItem(kPopupDisplayChannelMetrics, "Display channel metrics");
     }
     if ((kPortDirectionInput != _direction) && (kPortUsageClient != _usage))
     {
@@ -722,7 +729,7 @@ void ChannelEntry::displayAndProcessPopupMenu(void)
             break;
             
         case kPopupDetailedDisplayPortInfo :
-            displayInformation(true);
+            displayInformation(isChannel, true);
             break;
             
         case kPopupDisplayChannelMetrics :
@@ -730,7 +737,7 @@ void ChannelEntry::displayAndProcessPopupMenu(void)
             break;
             
         case kPopupDisplayPortInfo :
-            displayInformation(false);
+            displayInformation(isChannel, false);
             break;
             
         default :
@@ -774,10 +781,11 @@ void ChannelEntry::displayChannelMetrics(void)
     OD_LOG_EXIT(); //####
 } // ChannelEntry::displayChannelMetrics
 
-void ChannelEntry::displayInformation(const bool moreDetails)
+void ChannelEntry::displayInformation(const bool isChannel,
+                                      const bool moreDetails)
 {
     OD_LOG_ENTER(); //####
-    OD_LOG_B1("moreDetails = ", moreDetails); //####
+    OD_LOG_B2("isChannel = ", isChannel, "moreDetails = ", moreDetails); //####
     yarp::os::ConstString dirText;
     yarp::os::ConstString prefix;
     yarp::os::ConstString suffix;
@@ -838,8 +846,9 @@ void ChannelEntry::displayInformation(const bool moreDetails)
             }
         }
     }
-    DisplayInformationPanel(this, (prefix + dirText + " port" + suffix).c_str(),
-                            getPortName().c_str());
+    yarp::os::ConstString bodyText(prefix + dirText + (isChannel ? " channel" : " port") + suffix);
+    
+    DisplayInformationPanel(this, bodyText.c_str(), getPortName().c_str());
     OD_LOG_EXIT(); //####
 } // ChannelEntry::displayInformation
 

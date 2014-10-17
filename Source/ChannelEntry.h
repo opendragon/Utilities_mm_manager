@@ -321,8 +321,10 @@ namespace ChannelManager
         void displayChannelMetrics(void);
         
         /*! @brief Display information for a port.
+         @param isChannel @c true if the port is a channel and @c false otherwise.
          @param moreDetails @c true if more details are to be shown and @c false otherwise. */
-        void displayInformation(const bool moreDetails);
+        void displayInformation(const bool isChannel,
+                                const bool moreDetails);
         
         /*! @brief Remove all connections. */
         void removeAllConnections(void);
