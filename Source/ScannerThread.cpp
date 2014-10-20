@@ -241,8 +241,8 @@ void ScannerThread::addEntities(void)
                 usage = kPortUsageClient;
                 break;
                 
+            case Utilities::kPortKindRegistryService :
             case Utilities::kPortKindService :
-            case Utilities::kPortKindServiceRegistry :
                 usage = kPortUsageService;
                 break;
                 
@@ -479,8 +479,8 @@ PortDirection ScannerThread::determineDirection(ChannelEntry *                ol
                 canDoInput = canDoOutput = true;
                 break;
                 
+            case Utilities::kPortKindRegistryService :
             case Utilities::kPortKindService :
-            case Utilities::kPortKindServiceRegistry :
                 canDoInput = true;
                 break;
                 

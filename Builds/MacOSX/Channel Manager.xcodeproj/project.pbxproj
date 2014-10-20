@@ -41,8 +41,8 @@
 		D5E4B7287BEFC863C05F9AA2 /* EntitiesData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 55A7DDCB784682304EC9B39F /* EntitiesData.cpp */; };
 		D955E9BBD7DF44ED871C3B3C /* ChannelContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F8A50B61D95A448FCB3E1B60 /* ChannelContainer.cpp */; };
 		DEEF248165B3103CD7681805 /* juce_gui_extra.mm in Sources */ = {isa = PBXBuildFile; fileRef = 01BE58DF625AAE46E21A507C /* juce_gui_extra.mm */; };
+		DF1CB45419F55FAB003CC88E /* libOGDF.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF1CB45319F55FAB003CC88E /* libOGDF.a */; };
 		DFADC9EC19D0C12F002C2663 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DFADC9EB19D0C12F002C2663 /* Images.xcassets */; };
-		DFADC9EE19D0C1DC002C2663 /* libOGDFDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DFADC9ED19D0C1DC002C2663 /* libOGDFDebug.a */; };
 		DFADC9F019D0C1F3002C2663 /* libmpmCommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DFADC9EF19D0C1F3002C2663 /* libmpmCommon.a */; };
 		DFADC9F219D0C1FE002C2663 /* libodLogging.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DFADC9F119D0C1FE002C2663 /* libodLogging.a */; };
 		DFADC9F519D0C212002C2663 /* libYARP_init.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DFADC9F319D0C212002C2663 /* libYARP_init.a */; };
@@ -645,6 +645,7 @@
 		DE8E1A68B0178FA206709260 /* juce_TabbedComponent.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_TabbedComponent.cpp; path = ../../JuceLibraryCode/modules/juce_gui_basics/layout/juce_TabbedComponent.cpp; sourceTree = SOURCE_ROOT; };
 		DED798D95F292C6200817C4B /* juce_TreeView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_TreeView.h; path = ../../JuceLibraryCode/modules/juce_gui_basics/widgets/juce_TreeView.h; sourceTree = SOURCE_ROOT; };
 		DEE123C22DE88328C8D6C046 /* juce_AsyncUpdater.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_AsyncUpdater.h; path = ../../JuceLibraryCode/modules/juce_events/broadcasters/juce_AsyncUpdater.h; sourceTree = SOURCE_ROOT; };
+		DF1CB45319F55FAB003CC88E /* libOGDF.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOGDF.a; path = ../../../../../../../usr/local/lib/libOGDF.a; sourceTree = "<group>"; };
 		DF2EFBEA7BAA9E19E83C151C /* juce_CharacterFunctions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_CharacterFunctions.cpp; path = ../../JuceLibraryCode/modules/juce_core/text/juce_CharacterFunctions.cpp; sourceTree = SOURCE_ROOT; };
 		DF91B3E932852EBD0347C905 /* juce_android_Messaging.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_android_Messaging.cpp; path = ../../JuceLibraryCode/modules/juce_events/native/juce_android_Messaging.cpp; sourceTree = SOURCE_ROOT; };
 		DF9FF6D4DE18B3DF54A65B7D /* juce_Toolbar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_Toolbar.h; path = ../../JuceLibraryCode/modules/juce_gui_basics/widgets/juce_Toolbar.h; sourceTree = SOURCE_ROOT; };
@@ -753,7 +754,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DFADC9EE19D0C1DC002C2663 /* libOGDFDebug.a in Frameworks */,
+				DF1CB45419F55FAB003CC88E /* libOGDF.a in Frameworks */,
 				DFADC9F019D0C1F3002C2663 /* libmpmCommon.a in Frameworks */,
 				DFADC9F219D0C1FE002C2663 /* libodLogging.a in Frameworks */,
 				DFADC9F519D0C212002C2663 /* libYARP_init.a in Frameworks */,
@@ -1037,6 +1038,7 @@
 		42D582D969583F8E9D16F645 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DF1CB45319F55FAB003CC88E /* libOGDF.a */,
 				31B4B92FD24E30A5486B1178 /* Accelerate.framework */,
 				657CE153E5F14918F42F08F0 /* AudioToolbox.framework */,
 				8BA72840EFF14AF9F39FB65E /* Carbon.framework */,

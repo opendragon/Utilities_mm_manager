@@ -674,6 +674,26 @@ const
     return anchor;
 } // ChannelEntry::calculateClosestAnchor
 
+bool ChannelEntry::checkConnection(ChannelInfo & otherEnd,
+                                   const bool    isOutgoing)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("otherEnd = ", &otherEnd); //####
+    OD_LOG_B1("isOutgoing = ", isOutgoing); //####
+    bool result = false;
+    
+    if (isOutgoing)
+    {
+        result = Utilities::CheckConnection(getPortName(), otherEnd._otherChannel->getPortName());
+    }
+    else
+    {
+        result = Utilities::CheckConnection(otherEnd._otherChannel->getPortName(), getPortName());
+    }
+    OD_LOG_OBJEXIT_B(result); //####
+    return result;
+} // ChannelEntry::checkConnection
+
 void ChannelEntry::clearConnectMarker(void)
 {
     OD_LOG_ENTER(); //####
@@ -818,12 +838,12 @@ void ChannelEntry::displayInformation(const bool isChannel,
             prefix = "Client";
             break;
             
-        case Utilities::kPortKindService :
-            prefix = "Service";
+        case Utilities::kPortKindRegistryService :
+            prefix = "Registry Service";
             break;
             
-        case Utilities::kPortKindServiceRegistry :
-            prefix = "Service Registry";
+        case Utilities::kPortKindService :
+            prefix = "Service";
             break;
             
         case Utilities::kPortKindStandard :
@@ -1287,9 +1307,9 @@ void ChannelEntry::removeInvalidConnections(void)
     
     do
     {
-        keepGoing = false;
         ChannelConnections::iterator walker(_inputConnections.begin());
         
+        keepGoing = false;
         for ( ; _inputConnections.end() != walker; ++walker)
         {
             ChannelInfo * candidate(&*walker);
@@ -1302,16 +1322,24 @@ void ChannelEntry::removeInvalidConnections(void)
         }
         if (_inputConnections.end() != walker)
         {
-            _inputConnections.erase(walker);
+            // Double-check the connection - if YARP says it's still there, don't delete it!
+            if (checkConnection(*walker, false))
+            {
+                walker->_valid = true;
+            }
+            else
+            {
+                _inputConnections.erase(walker);
+            }
             keepGoing = true;
         }
     }
     while (keepGoing);
     do
     {
-        keepGoing = false;
         ChannelConnections::iterator walker(_outputConnections.begin());
         
+        keepGoing = false;
         for ( ; _outputConnections.end() != walker; ++walker)
         {
             ChannelInfo * candidate(&*walker);
@@ -1324,7 +1352,15 @@ void ChannelEntry::removeInvalidConnections(void)
         }
         if (_outputConnections.end() != walker)
         {
-            _outputConnections.erase(walker);
+            // Double-check the connection - if YARP says it's still there, don't delete it!
+            if (checkConnection(*walker, true))
+            {
+                walker->_valid = true;
+            }
+            else
+            {
+                _outputConnections.erase(walker);
+            }
             keepGoing = true;
         }
     }

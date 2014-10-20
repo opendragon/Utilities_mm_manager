@@ -5,7 +5,7 @@
 //  Project:    M+M
 //
 //  Contains:   The class definition for the custom data channel input handler used to watch the
-//              Service Registry.
+//              Registry Service.
 //
 //  Written by: Norman Jaffe
 //
@@ -114,7 +114,7 @@ bool PeekInputHandler::handleInput(const yarp::os::Bottle &      input,
     
     try
     {
-        // The status output of the Service Registry is in the form:
+        // The status output of the Registry Service is in the form:
         // "Date" "Time" "Registry" "operation" ....
         if (4 <= input.size())
         {

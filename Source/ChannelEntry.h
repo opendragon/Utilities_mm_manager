@@ -314,6 +314,13 @@ namespace ChannelManager
         
     private :
         
+        /*! @brief Check if the connection is present.
+         @param otherEnd The connection information.
+         @param isOutgoing @c true if this is an outgoing connection and @c false otherwise.
+         @returns @c true if the YARP connection exists and @c false otherwise. */
+        bool checkConnection(ChannelInfo & otherEnd,
+                             const bool    isOutgoing);
+        
         /*! @brief Respond to a request for a popup menu. */
         void displayAndProcessPopupMenu(void);
         

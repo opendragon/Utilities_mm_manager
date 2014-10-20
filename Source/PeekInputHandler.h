@@ -5,7 +5,7 @@
 //  Project:    M+M
 //
 //  Contains:   The class declaration for the custom data channel input handler used to watch the
-//              Service Registry.
+//              Registry Service.
 //
 //  Written by: Norman Jaffe
 //
@@ -48,8 +48,8 @@
 # endif // defined(__APPLE__)
 /*! @file
  
- @brief The class declaration for the custom data channel input handler used to watch the Service
- Registry. */
+ @brief The class declaration for the custom data channel input handler used to watch the Registry
+ Service. */
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)

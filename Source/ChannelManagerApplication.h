@@ -90,7 +90,7 @@ namespace ChannelManager
          @param commandLine The arguments passed to the new instance. */
         void anotherInstanceStarted(const String & commandLine);
         
-        /*! @brief Connect (or reconnect) the peek channel to the Service Registry. */
+        /*! @brief Connect (or reconnect) the peek channel to the Registry Service. */
         void connectPeekChannel(void);
         
         /*! @brief Indicate that a scan should be performed as soon as possible. */
@@ -144,7 +144,7 @@ namespace ChannelManager
         /*! @brief The background scanner thread. */
         ScopedPointer<ScannerThread> _scanner;
         
-        /*! @brief A channel to watch the Service Registry status. */
+        /*! @brief A channel to watch the Registry Service status. */
         MplusM::Common::AdapterChannel * _peeker;
         
         /*! @brief The input handler for the 'peek' channel. */
