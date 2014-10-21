@@ -277,7 +277,7 @@ void ScannerThread::addPortConnections(const Utilities::PortVector & detectedPor
             Common::ChannelVector outputs;
             
             Utilities::GatherPortConnections(outer->_portName, inputs, outputs,
-                                             Utilities::InputOutputFlag::kInputAndOutputOutput,
+                                             Utilities::kInputAndOutputOutput,
                                              true, checker, checkStuff);
             for (Common::ChannelVector::const_iterator inner(outputs.begin());
                  (outputs.end() != inner)  && (! lBailNow); ++inner)
