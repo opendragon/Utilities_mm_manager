@@ -30,7 +30,6 @@
 		BC56C45521A083DFABDFB7B2 /* juce_gui_basics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 157BEB9CE1D161D7972470B8 /* juce_gui_basics.mm */; };
 		BD983EBB0F303CF40491833A /* PeekInputHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C060BF297177856F78A7C10 /* PeekInputHandler.cpp */; };
 		C3BADFC3FFD8F492B13B8E14 /* ChannelManagerApplication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F643A47ED541003872A03FE /* ChannelManagerApplication.cpp */; };
-		CE92E43C53FC0C70850250AD /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA8B245630FFD64DF900345D /* QuickTime.framework */; };
 		D4D655BB40A58A0C5FEC2EA2 /* ContentPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1841CCAF28EE50821F306588 /* ContentPanel.cpp */; };
 		D5E4B7287BEFC863C05F9AA2 /* EntitiesData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 55A7DDCB784682304EC9B39F /* EntitiesData.cpp */; };
 		D955E9BBD7DF44ED871C3B3C /* ChannelContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F8A50B61D95A448FCB3E1B60 /* ChannelContainer.cpp */; };
@@ -720,7 +719,6 @@
 		F99293AF25356FF0C1B90157 /* juce_LookAndFeel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_LookAndFeel.cpp; path = ../../JuceLibraryCode/modules/juce_gui_basics/lookandfeel/juce_LookAndFeel.cpp; sourceTree = SOURCE_ROOT; };
 		FA519AD6E0A300CD2DA64D9D /* juce_ConnectedChildProcess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_ConnectedChildProcess.h; path = ../../JuceLibraryCode/modules/juce_events/interprocess/juce_ConnectedChildProcess.h; sourceTree = SOURCE_ROOT; };
 		FA86E127885879A1763560A3 /* juce_ConcertinaPanel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_ConcertinaPanel.cpp; path = ../../JuceLibraryCode/modules/juce_gui_basics/layout/juce_ConcertinaPanel.cpp; sourceTree = SOURCE_ROOT; };
-		FA8B245630FFD64DF900345D /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = System/Library/Frameworks/QuickTime.framework; sourceTree = SDKROOT; };
 		FAB74A21FA1B6C13488F1F60 /* juce_Drawable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_Drawable.h; path = ../../JuceLibraryCode/modules/juce_gui_basics/drawables/juce_Drawable.h; sourceTree = SOURCE_ROOT; };
 		FACC70C9077F41E8F58D0EAA /* juce_events.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = juce_events.mm; path = ../../JuceLibraryCode/modules/juce_events/juce_events.mm; sourceTree = SOURCE_ROOT; };
 		FBD325C1EF49D106BDAA313B /* juce_PerformanceCounter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_PerformanceCounter.h; path = ../../JuceLibraryCode/modules/juce_core/time/juce_PerformanceCounter.h; sourceTree = SOURCE_ROOT; };
@@ -757,7 +755,6 @@
 				8C60B5DE1234394A1166E6D8 /* OpenGL.framework in Frameworks */,
 				1D91CF6FA1BDD5E3BC596806 /* QTKit.framework in Frameworks */,
 				03F3FFBB1BE66A71A22A9A5D /* QuartzCore.framework in Frameworks */,
-				CE92E43C53FC0C70850250AD /* QuickTime.framework in Frameworks */,
 				427446365ACD6B5CB41E7527 /* WebKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1034,7 +1031,6 @@
 				A176FBDE54D68D804E8D64DA /* OpenGL.framework */,
 				4258A34CB0A7B7DD3AF1F750 /* QTKit.framework */,
 				C4CB27A1ECE8D4D6F45DDCC0 /* QuartzCore.framework */,
-				FA8B245630FFD64DF900345D /* QuickTime.framework */,
 				F020B3B5B3B3C33A43337FDB /* WebKit.framework */,
 			);
 			name = Frameworks;
