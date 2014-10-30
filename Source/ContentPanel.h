@@ -73,6 +73,28 @@ namespace ChannelManager
         /*! @brief The destructor. */
         virtual ~ContentPanel(void);
         
+        /*! @brief Returns @c true if the background is inverted.
+         @returns @c true if the background is inverted. */
+        inline bool backgroundIsInverted(void)
+        const
+        {
+            return _invertBackground;
+        } // backgroundIsInverted
+        
+        /*! @brief Returns @c true if the background is white.
+         @returns @c true if the background is white. */
+        inline bool backgroundIsWhite(void)
+        const
+        {
+            return _whiteBackground;
+        } // backgroundIsWhite
+        
+        /*! @brief Change the background colour. */
+        inline void changeBackgroundColour(void)
+        {
+            _whiteBackground = ! _whiteBackground;
+        } // changeBackgroundColour
+        
         /*! @brief Returns the entities panel.
          @returns The entities panel. */
         EntitiesPanel & getEntitiesPanel(void)
@@ -91,6 +113,9 @@ namespace ChannelManager
         /*! @brief Record the position of an entity before it is removed from the panel. */
         void rememberPositionOfEntity(ChannelContainer * anEntity);
         
+        /*! @brief Ask the containing window to do a repaint. */
+        void requestWindowRepaint(void);
+        
         /*! @brief Called when the component size has been changed. */
         void resized(void);
         
@@ -99,6 +124,12 @@ namespace ChannelManager
         
         /*! @brief Ignore the result of the next scan. */
         void skipScan(void);
+        
+        /*! @brief Change the background inversion state. */
+        inline void flipBackground(void)
+        {
+            _invertBackground = ! _invertBackground;
+        } // flipBackground
         
         /*! @brief Called when the visible area changes.
          @param newVisibleArea The new visible area. */

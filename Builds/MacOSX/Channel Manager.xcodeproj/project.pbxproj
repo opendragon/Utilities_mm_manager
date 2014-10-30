@@ -745,9 +745,9 @@
 			files = (
 				DF0B256819FAE7C2001AEB0C /* libmpmCommon.a in Frameworks */,
 				DF0B256919FAE7C2001AEB0C /* libodLogging.a in Frameworks */,
+				DF0B256A19FAE7C2001AEB0C /* libOGDF.a in Frameworks */,
 				DF0B256B19FAE7C2001AEB0C /* libYARP_init.a in Frameworks */,
 				DF0B256C19FAE7C2001AEB0C /* libYARP_OS.a in Frameworks */,
-				DF0B256A19FAE7C2001AEB0C /* libOGDF.a in Frameworks */,
 				DF0B256719FAE7C2001AEB0C /* libACE.dylib in Frameworks */,
 				DFADC9FA19D0C236002C2663 /* libc++.dylib in Frameworks */,
 				6E425384782FBC454FEED53B /* Accelerate.framework in Frameworks */,

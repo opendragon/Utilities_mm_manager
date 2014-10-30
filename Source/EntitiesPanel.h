@@ -235,6 +235,9 @@ namespace ChannelManager
         
     private :
 
+        /*! @brief Respond to a request for a popup menu. */
+        void displayAndProcessPopupMenu(void);
+        
         /*! @brief Display the connections between containers.
          @param gg The graphics context in which to draw. */
         void drawConnections(Graphics & gg);

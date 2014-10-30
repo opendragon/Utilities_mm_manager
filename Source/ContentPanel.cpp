@@ -152,7 +152,6 @@ ContentPanel::ContentPanel(ChannelManagerWindow * containingWindow) :
     OD_LOG_ENTER(); //####
     _entitiesPanel->setSize(_entitiesPanel->getWidth(),
                             _entitiesPanel->getHeight() - _containingWindow->getTitleBarHeight());
-    //setOpaque(true);
     setSize(_entitiesPanel->getWidth(), _entitiesPanel->getHeight());
     setScrollBarsShown(true, true);
     setScrollBarThickness(kDefaultScrollbarThickness);
@@ -308,18 +307,18 @@ bool ContentPanel::perform(const InvocationInfo & info)
     switch (info.commandID)
     {
         case ChannelManagerWindow::kCommandDoRepaint :
-            _containingWindow->repaint();
+            requestWindowRepaint();
             wasProcessed = true;
             break;
             
         case ChannelManagerWindow::kCommandInvertBackground :
-            _invertBackground = ! _invertBackground;
-            _containingWindow->repaint();
+            flipBackground();
+            requestWindowRepaint();
             break;
             
         case ChannelManagerWindow::kCommandWhiteBackground :
-            _whiteBackground = ! _whiteBackground;
-            _containingWindow->repaint();
+            changeBackgroundColour();
+            requestWindowRepaint();
             break;
             
         default :
@@ -329,6 +328,13 @@ bool ContentPanel::perform(const InvocationInfo & info)
     OD_LOG_OBJEXIT_B(wasProcessed); //####
     return wasProcessed;
 } // ContentPanel::perform
+
+void ContentPanel::requestWindowRepaint(void)
+{
+    OD_LOG_OBJENTER(); //####
+    _containingWindow->repaint();
+    OD_LOG_OBJEXIT(); //####
+} // ContentPanel::requestWindowRepaint
 
 void ContentPanel::recallEntityPositions(void)
 {

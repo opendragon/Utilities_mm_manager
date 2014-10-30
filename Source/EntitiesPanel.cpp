@@ -40,6 +40,7 @@
 #include "EntitiesPanel.h"
 #include "ChannelContainer.h"
 #include "ChannelEntry.h"
+#include "ChannelManagerWindow.h"
 #include "ContentPanel.h"
 
 //#include <odl/ODEnableLogging.h>
@@ -370,6 +371,46 @@ void EntitiesPanel::clearOutData(void)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::clearOutData
 
+void EntitiesPanel::displayAndProcessPopupMenu(void)
+{
+    OD_LOG_OBJENTER(); //####
+    if (_container)
+    {
+        PopupMenu mm;
+        
+        mm.addSectionHeader("Display operations");
+        mm.addSeparator();
+        mm.addItem(ChannelManagerWindow::kCommandDoRepaint, "Repaint");
+        mm.addItem(ChannelManagerWindow::kCommandInvertBackground, "Invert background", true,
+                   _container->backgroundIsInverted());
+        mm.addItem(ChannelManagerWindow::kCommandWhiteBackground, "White background", true,
+                   _container->backgroundIsWhite());
+        int result = mm.show();
+        
+        switch (result)
+        {
+            case ChannelManagerWindow::kCommandDoRepaint :
+                _container->requestWindowRepaint();
+                break;
+                
+            case ChannelManagerWindow::kCommandInvertBackground :
+                _container->flipBackground();
+                _container->requestWindowRepaint();
+                break;
+                
+            case ChannelManagerWindow::kCommandWhiteBackground :
+                _container->changeBackgroundColour();
+                _container->requestWindowRepaint();
+                break;
+                
+            default :
+                break;
+                
+        }
+    }
+    OD_LOG_OBJEXIT(); //####
+} // EntitiesPanel::displayAndProcessPopupMenu
+
 void EntitiesPanel::drawConnections(Graphics & gg)
 {
     OD_LOG_OBJENTER(); //####
@@ -570,6 +611,10 @@ void EntitiesPanel::mouseUp(const MouseEvent & ee)
     OD_LOG_P1("ee = ", &ee); //####
     rememberConnectionStartPoint();
     clearMarkers();
+    if (ee.mods.isPopupMenu())
+    {
+        displayAndProcessPopupMenu();
+    }
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::mouseUp
 #if (! MAC_OR_LINUX_)
