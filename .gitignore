@@ -34,3 +34,4 @@ subs.db
 test.db
 
 Builds/MacOSX/build
+*.xcuserstate
