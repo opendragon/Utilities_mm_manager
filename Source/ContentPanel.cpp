@@ -242,7 +242,7 @@ void ContentPanel::paint(Graphics & gg)
         if (_invertBackground)
         {
             ColourGradient theGradient2(Colours::darkgrey, halfW, halfH, Colours::lightgrey,
-                                        static_cast<float>((hh > ww) ? 0 : ww), (hh > ww) ? hh : 0, true);
+                                        static_cast<float>((hh > ww) ? 0 : ww), static_cast<float>((hh > ww) ? hh : 0), true);
             FillType       theBackgroundFill2(theGradient2);
             
             gg.setFillType(theBackgroundFill2);
@@ -250,7 +250,7 @@ void ContentPanel::paint(Graphics & gg)
         else
         {
             ColourGradient theGradient1(Colours::lightgrey, halfW, halfH, Colours::darkgrey,
-                                        (hh > ww) ? 0 : ww, (hh > ww) ? hh : 0, true);
+                                        static_cast<float>((hh > ww) ? 0 : ww), static_cast<float>((hh > ww) ? hh : 0), true);
             FillType       theBackgroundFill1(theGradient1);
             
             gg.setFillType(theBackgroundFill1);
@@ -418,8 +418,8 @@ void ContentPanel::saveEntityPositions(void)
 void ContentPanel::setEntityPositions(void)
 {
     OD_LOG_OBJENTER(); //####
-    float         fullHeight = _entitiesPanel->getHeight();
-    float         fullWidth = _entitiesPanel->getWidth();
+    float         fullHeight = static_cast<float>(_entitiesPanel->getHeight());
+    float         fullWidth = static_cast<float>(_entitiesPanel->getWidth());
     Random        randomizer(Time::currentTimeMillis());
 #if defined(USE_OGDF_POSITIONING)
     ogdf::Graph * gg;
