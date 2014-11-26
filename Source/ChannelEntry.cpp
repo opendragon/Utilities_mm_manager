@@ -467,6 +467,10 @@ static bool protocolsMatch(const yarp::os::ConstString & sourceProtocol,
     {
         result = true;
     }
+    else if (destinationProtocol == "*")
+    {
+        result = true;
+    }
     else
     {
         result = (sourceProtocol == destinationProtocol);
