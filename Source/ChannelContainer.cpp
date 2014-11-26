@@ -68,6 +68,9 @@ enum EntityPopupMenuSelection
     /*! @brief A placeholder for the popup menu. */
     kPopupDisplayNoItem = 0,
     
+    /*! @brief Change the state of service metrics collection. */
+    kPopupDisplayChangeServiceMetrics,
+    
     /*! @brief Display detailed information request. */
     kPopupDetailedDisplayEntityInfo,
 
@@ -219,6 +222,7 @@ void ChannelContainer::displayAndProcessPopupMenu(void)
 {
     OD_LOG_OBJENTER(); //####
     bool      isService = (kContainerKindService == _kind);
+    bool      metricsEnabled = false;
     PopupMenu mm;
     
     mm.addSectionHeader(isService ? "Service operations" : "Entity operations");
@@ -229,13 +233,21 @@ void ChannelContainer::displayAndProcessPopupMenu(void)
                "Display detailed entity information");
     if (isService)
     {
+        metricsEnabled = getMetricsState();
         mm.addSeparator();
-        mm.addItem(kPopupDisplayServiceMetrics, "Display service metrics");
+        mm.addItem(kPopupDisplayChangeServiceMetrics,
+                   metricsEnabled ? "Disable service metrics collection":
+                   "Enable service metrics collection");
+        mm.addItem(kPopupDisplayServiceMetrics, "Display service metrics", metricsEnabled);
     }
     int result = mm.show();
     
     switch (result)
     {
+        case kPopupDisplayChangeServiceMetrics :
+            setMetricsState(! metricsEnabled);
+            break;
+            
         case kPopupDisplayEntityInfo :
             displayInformation(false);
             break;
@@ -399,6 +411,29 @@ StringArray ChannelContainer::getMetrics(void)
     OD_LOG_OBJEXIT(); //####
     return result;
 } // ChannelContainer::getMetrics
+
+bool ChannelContainer::getMetricsState(void)
+{
+    OD_LOG_OBJENTER(); //####
+    bool result = false;
+    
+    for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
+    {
+        ChannelEntry * aPort = getPort(ii);
+        
+        if (aPort && (kPortUsageService == aPort->getUsage()))
+        {
+            if (MplusM::Utilities::GetMetricsStateForService(aPort->getPortName(), result,
+                                                             STANDARD_WAIT_TIME))
+            {
+                break;
+            }
+            
+        }
+    }
+    OD_LOG_OBJEXIT_B(result); //####
+    return result;
+} // ChannelContainer::getMetricsState
 
 #if defined(USE_OGDF_POSITIONING)
 ogdf::node ChannelContainer::getNode(void)
@@ -622,6 +657,27 @@ void ChannelContainer::select(void)
     _selected = true;
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::select
+
+void ChannelContainer::setMetricsState(const bool newState)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_B1("newState = ", newState); //####
+    for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
+    {
+        ChannelEntry * aPort = getPort(ii);
+        
+        if (aPort && (kPortUsageService == aPort->getUsage()))
+        {
+            if (MplusM::Utilities::SetMetricsStateForService(aPort->getPortName(), newState,
+                                                             STANDARD_WAIT_TIME))
+            {
+                break;
+            }
+            
+        }
+    }
+    OD_LOG_OBJEXIT(); //####
+} // ChannelContainer::setMetricsState
 
 #if defined(USE_OGDF_POSITIONING)
 void ChannelContainer::setNode(ogdf::node newNode)

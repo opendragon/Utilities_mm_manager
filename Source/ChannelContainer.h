@@ -144,6 +144,11 @@ namespace ChannelManager
          @returns The metrics for the container, if it is a service or an empty string. */
         StringArray getMetrics(void);
         
+        /*! @brief Return the state of measurment collection for the container, if it is a service.
+         @returns @c true if the service is collecting measurements and @c false if it is not a
+         service or if it is a service that is not collecting measurements. */
+        bool getMetricsState(void);
+        
 # if defined(USE_OGDF_POSITIONING)
         /*! @brief Return the node corresponding to the entity.
          @returns The node corresponding to the entity. */
@@ -278,6 +283,10 @@ namespace ChannelManager
         
         /*! @brief Display metrics for a service. */
         void displayMetrics(void);
+        
+        /*! @brief Change the state of service metrics collection.
+         @param newState The requested state of service metrics collection. */
+        void setMetricsState(const bool newState);
         
     public :
     

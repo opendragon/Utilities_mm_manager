@@ -716,6 +716,7 @@ void ChannelEntry::displayAndProcessPopupMenu(void)
 {
     OD_LOG_OBJENTER(); //####
     bool      isChannel = false;
+    bool      showMetrics = false;
     PopupMenu mm;
     
     if (_parent)
@@ -723,6 +724,7 @@ void ChannelEntry::displayAndProcessPopupMenu(void)
         if (kContainerKindService == _parent->getKind())
         {
             isChannel = true;
+            showMetrics = _parent->getMetricsState();
         }
     }
     mm.addSectionHeader(isChannel ? "Channel operations" : "Port operations");
@@ -734,7 +736,7 @@ void ChannelEntry::displayAndProcessPopupMenu(void)
     if (isChannel)
     {
         mm.addSeparator();
-        mm.addItem(kPopupDisplayChannelMetrics, "Display channel metrics");
+        mm.addItem(kPopupDisplayChannelMetrics, "Display channel metrics", showMetrics);
     }
     if ((kPortDirectionInput != _direction) && (kPortUsageClient != _usage))
     {
