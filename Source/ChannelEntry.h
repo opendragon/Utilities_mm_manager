@@ -226,6 +226,14 @@ namespace ChannelManager
         /*! @brief Mark all the connections as invalid. */
         void invalidateConnections(void);
         
+        /*! @brief Returns @c true if the channel is being monitored and @c false otherwise.
+         @returns @c true if the channel is being monitored and @c false otherwise. */
+        inline bool isBeingMonitored(void)
+        const
+        {
+            return _beingMonitored;
+        } // isBeingMonitored
+
         /*! @brief Returns @c true if the port entry is a secondary port of a service and @c false
          otherwise.
          @returns @c true if the port is a secondary port of a service and @c false otherwise. */
@@ -372,6 +380,9 @@ namespace ChannelManager
         /*! @brief The primary usage for the port. */
         PortUsage _usage;
         
+        /*! @brief @c true if activity on the channel is being monitored and @c false otherwise. */
+        bool _beingMonitored;
+        
         /*! @brief @c true if the connect marker is to be displayed and @c false otherwise. */
         bool _drawConnectMarker;
         
@@ -390,7 +401,7 @@ namespace ChannelManager
 #  pragma clang diagnostic ignored "-Wunused-private-field"
 # endif // defined(__APPLE__)
         /*! @brief Filler to pad to alignment boundary */
-        char _filler[5];
+        char _filler[3];
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)

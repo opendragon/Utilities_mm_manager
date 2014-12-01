@@ -495,8 +495,8 @@ ChannelEntry::ChannelEntry(ChannelContainer *            parent,
                            const PortDirection           direction) :
     inherited(), _portName(portName), _portProtocol(portProtocol),
     _protocolDescription(protocolDescription), _parent(parent), _direction(direction),
-    _usage(portKind), _drawConnectMarker(false), _drawDisconnectMarker(false), _isLastPort(true),
-    _wasUdp(false)
+    _usage(portKind), _beingMonitored(false), _drawConnectMarker(false),
+    _drawDisconnectMarker(false), _isLastPort(true), _wasUdp(false)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P1("parent = ", parent); //####
@@ -526,8 +526,10 @@ ChannelEntry::ChannelEntry(ChannelContainer *            parent,
             
     }
     _title = prefix + _portName;
+    int entryHeight = static_cast<int>(textFont.getHeight());
+    
     setSize(static_cast<int>(textFont.getStringWidthFloat((_title + " ").c_str()) +
-                             _parent->getTextInset()), static_cast<int>(textFont.getHeight()));
+                             _parent->getTextInset()) + entryHeight, entryHeight);
     setOpaque(true);
     setVisible(true);
     OD_LOG_EXIT_P(this); //####
