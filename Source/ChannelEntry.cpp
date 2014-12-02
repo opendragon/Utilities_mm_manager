@@ -108,11 +108,14 @@ static const float kServiceConnectionWidth = 6;
 /*! @brief The scale factor to apply to get the size of the target box. */
 static const float kTargetBoxScale = 0.25;
 
-/*! @brief The color to be used for non-TCP/non-UDP connection. */
-static const Colour & kOtherConnectionColour(Colours::orange);
+/*! @brief The color to be used for the entry background. */
+static const Colour & kEntryColour(Colours::black);
 
 /*! @brief The color to be used for markers. */
 static const Colour & kMarkerColour(Colours::yellow);
+
+/*! @brief The color to be used for non-TCP/non-UDP connection. */
+static const Colour & kOtherConnectionColour(Colours::orange);
 
 /*! @brief The color to be used for TCP connections. */
 static const Colour & kTcpConnectionColour(Colours::teal);
@@ -1233,7 +1236,7 @@ void ChannelEntry::paint(Graphics & gg)
     
     OD_LOG_D4("x <- ", area.getX(), "y <- ", area.getY(), "w <- ",area.getWidth(), "h <- ", //####
               area.getHeight()); //####
-    gg.setColour(Colours::black);
+    gg.setColour(kEntryColour);
     gg.fillRect(area);
     area.setLeft(area.getX() + _parent->getTextInset());
     as.draw(gg, area);

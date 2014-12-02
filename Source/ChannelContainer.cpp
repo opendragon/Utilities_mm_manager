@@ -88,6 +88,12 @@ static const float lEntryGap = 1;
 /*! @brief The amount of space to the left of the text being displayed. */
 static const float lTextInset = 2;
 
+/*! @brief The color to be used for the gap between entries. */
+static const Colour & kGapFillColour(Colours::grey);
+
+/*! @brief The color to be used for the heading of the container. */
+static const Colour & kHeadingColour(Colours::darkgrey);
+
 #if defined(__APPLE__)
 # pragma mark Local functions
 #endif // defined(__APPLE__)
@@ -617,11 +623,11 @@ void ChannelContainer::paint(Graphics & gg)
     juce::Rectangle<int> area2(bounds.getX(), bounds.getY() + _titleHeight, bounds.getWidth(),
                                  bounds.getHeight() - _titleHeight);
     
-    gg.setColour(Colours::darkgrey);
+    gg.setColour(kHeadingColour);
     gg.fillRect(area1);
     area1.setLeft(static_cast<int>(area1.getX() + getTextInset()));
     as.draw(gg, area1.toFloat());
-    gg.setColour(Colours::grey);
+    gg.setColour(kGapFillColour);
     gg.fillRect(area2);
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::paint
