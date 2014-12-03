@@ -88,10 +88,10 @@ static const float lEntryGap = 1;
 /*! @brief The amount of space to the left of the text being displayed. */
 static const float lTextInset = 2;
 
-/*! @brief The color to be used for the gap between entries. */
+/*! @brief The colour to be used for the gap between entries. */
 static const Colour & kGapFillColour(Colours::grey);
 
-/*! @brief The color to be used for the heading of the container. */
+/*! @brief The colour to be used for the heading of the container. */
 static const Colour & kHeadingColour(Colours::darkgrey);
 
 #if defined(__APPLE__)

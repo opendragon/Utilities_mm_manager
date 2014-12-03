@@ -383,6 +383,9 @@ namespace ChannelManager
         /*! @brief @c true if activity on the channel is being monitored and @c false otherwise. */
         bool _beingMonitored;
         
+        /*! @brief @c true if the activity marker is to be displayed and @c false otherwise. */
+        bool _drawActivityMarker;
+        
         /*! @brief @c true if the connect marker is to be displayed and @c false otherwise. */
         bool _drawConnectMarker;
         
@@ -401,7 +404,7 @@ namespace ChannelManager
 #  pragma clang diagnostic ignored "-Wunused-private-field"
 # endif // defined(__APPLE__)
         /*! @brief Filler to pad to alignment boundary */
-        char _filler[3];
+        char _filler[2];
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)

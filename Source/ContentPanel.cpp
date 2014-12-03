@@ -77,6 +77,12 @@ using namespace std;
 # pragma mark Private structures, constants and variables
 #endif // defined(__APPLE__)
 
+/*! @brief The first colour to be used for the panel background. */
+static const Colour & kFirstBackgroundColour(Colours::darkgrey);
+
+/*! @brief The second colour to be used for the panel background. */
+static const Colour & kSecondBackgroundColour(Colours::lightgrey);
+
 /*! @brief The initial thickness of the horizontal and vertical scrollbars. */
 static const int kDefaultScrollbarThickness = 16;
 
@@ -228,7 +234,7 @@ void ContentPanel::paint(Graphics & gg)
     OD_LOG_P1("gg = ", &gg); //####
     if (_whiteBackground)
     {
-        gg.setFillType(_invertBackground ? Colours::darkgrey : Colours::lightgrey);
+        gg.setFillType(_invertBackground ? kFirstBackgroundColour : kSecondBackgroundColour);
     }
     else
     {
@@ -241,16 +247,20 @@ void ContentPanel::paint(Graphics & gg)
 
         if (_invertBackground)
         {
-            ColourGradient theGradient2(Colours::darkgrey, halfW, halfH, Colours::lightgrey,
-                                        static_cast<float>((hh > ww) ? 0 : ww), static_cast<float>((hh > ww) ? hh : 0), true);
+            ColourGradient theGradient2(kFirstBackgroundColour, halfW, halfH,
+                                        kSecondBackgroundColour,
+                                        static_cast<float>((hh > ww) ? 0 : ww),
+                                        static_cast<float>((hh > ww) ? hh : 0), true);
             FillType       theBackgroundFill2(theGradient2);
             
             gg.setFillType(theBackgroundFill2);
         }
         else
         {
-            ColourGradient theGradient1(Colours::lightgrey, halfW, halfH, Colours::darkgrey,
-                                        static_cast<float>((hh > ww) ? 0 : ww), static_cast<float>((hh > ww) ? hh : 0), true);
+            ColourGradient theGradient1(kSecondBackgroundColour, halfW, halfH,
+                                        kFirstBackgroundColour,
+                                        static_cast<float>((hh > ww) ? 0 : ww),
+                                        static_cast<float>((hh > ww) ? hh : 0), true);
             FillType       theBackgroundFill1(theGradient1);
             
             gg.setFillType(theBackgroundFill1);

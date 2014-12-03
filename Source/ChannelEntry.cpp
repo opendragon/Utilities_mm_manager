@@ -108,20 +108,29 @@ static const float kServiceConnectionWidth = 6;
 /*! @brief The scale factor to apply to get the size of the target box. */
 static const float kTargetBoxScale = 0.25;
 
-/*! @brief The color to be used for the entry background. */
+/*! @brief The colour to be used for the entry background. */
 static const Colour & kEntryColour(Colours::black);
 
-/*! @brief The color to be used for markers. */
+/*! @brief The first colour to be used for the activity marker. */
+static const Colour & kFirstActivityMarkerColour(Colours::yellow);
+
+/*! @brief The second colour to be used for the activity marker. */
+static const Colour & kSecondActivityMarkerColour(Colours::orange);
+
+/*! @brief The colour to be used for markers. */
 static const Colour & kMarkerColour(Colours::yellow);
 
-/*! @brief The color to be used for non-TCP/non-UDP connection. */
+/*! @brief The colour to be used for non-TCP/non-UDP connection. */
 static const Colour & kOtherConnectionColour(Colours::orange);
 
-/*! @brief The color to be used for TCP connections. */
+/*! @brief The colour to be used for TCP connections. */
 static const Colour & kTcpConnectionColour(Colours::teal);
 
-/*! @brief The color to be used for UDP connections. */
+/*! @brief The colour to be used for UDP connections. */
 static const Colour & kUdpConnectionColour(Colours::purple);
+
+/*! @brief The inset for the activity indicator. */
+static const int kActivityInset = 2;
 
 #if defined(__APPLE__)
 # pragma mark Local functions
@@ -498,7 +507,7 @@ ChannelEntry::ChannelEntry(ChannelContainer *            parent,
                            const PortDirection           direction) :
     inherited(), _portName(portName), _portProtocol(portProtocol),
     _protocolDescription(protocolDescription), _parent(parent), _direction(direction),
-    _usage(portKind), _beingMonitored(false), _drawConnectMarker(false),
+    _usage(portKind), _beingMonitored(false), _drawActivityMarker(false), _drawConnectMarker(false),
     _drawDisconnectMarker(false), _isLastPort(true), _wasUdp(false)
 {
     OD_LOG_ENTER(); //####
@@ -746,7 +755,7 @@ void ChannelEntry::displayAndProcessPopupMenu(void)
     if ((kPortDirectionInput != _direction) && (kPortUsageClient != _usage))
     {
         mm.addSeparator();
-        mm.addItem(kPopupAddSimpleMonitor, "Add simple monitor", false);
+        mm.addItem(kPopupAddSimpleMonitor, "Enable activity indicator", false);
         mm.addItem(kPopupAddScrollingMonitor, "Add scrolling monitor", false);
     }
     int result = mm.show();
@@ -1253,6 +1262,20 @@ void ChannelEntry::paint(Graphics & gg)
         
         gg.setColour(kMarkerColour);
         gg.drawEllipse(markerPos.getX(), markerPos.getY(), kMarkerSide, kMarkerSide, 2);
+    }
+    if (_drawActivityMarker)
+    {
+        int            hh = getHeight() - (2 * kActivityInset);
+        float          halfSize = static_cast<float>(hh / 2.0);
+        Position       markerPos(getWidth() - (hh + kActivityInset), kActivityInset);
+        Position       markerCentre(markerPos + Position(halfSize, halfSize));
+        ColourGradient theGradient(kFirstActivityMarkerColour, markerCentre.getX(),
+                                   markerCentre.getY(), kSecondActivityMarkerColour,
+                                   markerCentre.getX() + halfSize, markerCentre.getY(), true);
+        FillType       theMarkerFill(theGradient);
+        
+        gg.setFillType(theMarkerFill);
+        gg.fillEllipse(markerPos.getX(), markerPos.getY(), hh, hh);
     }
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::paint
