@@ -77,6 +77,9 @@ using namespace std;
 # pragma mark Private structures, constants and variables
 #endif // defined(__APPLE__)
 
+/*! @brief The colour to be used for the dialog background. */
+static const Colour & kDialogBackgroundColour(Colours::whitesmoke);
+
 /*! @brief The first colour to be used for the panel background. */
 static const Colour & kFirstBackgroundColour(Colours::darkgrey);
 
@@ -267,6 +270,44 @@ void ContentPanel::paint(Graphics & gg)
         }
     }
     gg.fillAll();
+#if 0
+    // The following code will draw a dashed line around each container - use it for a template
+    // for the 'selection rectangle' code.
+    // Note that the default thickness of the line is 1 and the offset is set to 5, which should be
+    // a constant.
+    for (size_t ii = 0, mm = _entitiesPanel->getNumberOfEntities(); mm > ii; ++ii)
+    {
+        ChannelContainer * aContainer = _entitiesPanel->getEntity(ii);
+        
+        if (aContainer)
+        {
+            juce::Rectangle<float> containerShape(aContainer->getBounds().toFloat());
+            const float            dashes[] = { 5, 5 };
+            const int              numDashes = (sizeof(dashes) / sizeof(*dashes));
+            
+            containerShape.expand(5, 5);
+            Point<float> topLeft(containerShape.getTopLeft());
+            Point<float> topRight(containerShape.getTopRight());
+            Point<float> bottomLeft(containerShape.getBottomLeft());
+            Point<float> bottomRight(containerShape.getBottomRight());
+            Line<float>  aLine;
+            
+            aLine.setStart(topLeft);
+            aLine.setEnd(topRight);
+            gg.setColour(Colours::cornsilk);
+            gg.drawDashedLine(aLine, dashes, numDashes);
+            aLine.setStart(topRight);
+            aLine.setEnd(bottomRight);
+            gg.drawDashedLine(aLine, dashes, numDashes);
+            aLine.setStart(bottomRight);
+            aLine.setEnd(bottomLeft);
+            gg.drawDashedLine(aLine, dashes, numDashes);
+            aLine.setStart(bottomLeft);
+            aLine.setEnd(topLeft);
+            gg.drawDashedLine(aLine, dashes, numDashes);
+        }
+    }
+#endif // 0
     ScannerThread * scanner = _containingWindow->getScannerThread();
     
     if (scanner)
@@ -830,7 +871,7 @@ void ChannelManager::DisplayInformationPanel(Component *    above,
     options.escapeKeyTriggersCloseButton = true;
     options.useNativeTitleBar = false;
     options.resizable = false;
-    options.dialogBackgroundColour = Colours::whitesmoke;
+    options.dialogBackgroundColour = kDialogBackgroundColour;
     DialogWindow *  aWindow = options.launchAsync();
     BorderSize<int> bt = aWindow->getBorderThickness();
     BorderSize<int> cb = aWindow->getContentComponentBorder();

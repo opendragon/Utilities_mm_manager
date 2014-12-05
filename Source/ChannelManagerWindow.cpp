@@ -63,6 +63,9 @@ using namespace std;
 /*! @brief The command manager object used to dispatch command events. */
 static ScopedPointer<ApplicationCommandManager> lApplicationCommandManager;
 
+/*! @brief The colour to be used for the window background. */
+static const Colour & kWindowBackgroundColour(Colours::lightgrey);
+
 #if defined(__APPLE__)
 # pragma mark Local functions
 #endif // defined(__APPLE__)
@@ -76,7 +79,7 @@ static ScopedPointer<ApplicationCommandManager> lApplicationCommandManager;
 #endif // defined(__APPLE__)
 
 ChannelManagerWindow::ChannelManagerWindow(const yarp::os::ConstString & title)  :
-    inherited1(title.c_str(), Colours::lightgrey, inherited1::allButtons), inherited2(),
+    inherited1(title.c_str(), kWindowBackgroundColour, inherited1::allButtons), inherited2(),
     _contentPanel(new ContentPanel(this)), _scannerThread(NULL)
 {
     OD_LOG_ENTER(); //####

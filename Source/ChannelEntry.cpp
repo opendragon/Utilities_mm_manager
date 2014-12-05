@@ -109,19 +109,22 @@ static const float kServiceConnectionWidth = 6;
 static const float kTargetBoxScale = 0.25;
 
 /*! @brief The colour to be used for the entry background. */
-static const Colour & kEntryColour(Colours::black);
+static const Colour & kEntryBackgroundColour(Colours::black);
+
+/*! @brief The colour to be used for text in the entry. */
+static const Colour & kEntryTextColour(Colours::white);
 
 /*! @brief The first colour to be used for the activity marker. */
 static const Colour & kFirstActivityMarkerColour(Colours::yellow);
-
-/*! @brief The second colour to be used for the activity marker. */
-static const Colour & kSecondActivityMarkerColour(Colours::orange);
 
 /*! @brief The colour to be used for markers. */
 static const Colour & kMarkerColour(Colours::yellow);
 
 /*! @brief The colour to be used for non-TCP/non-UDP connection. */
 static const Colour & kOtherConnectionColour(Colours::orange);
+
+/*! @brief The second colour to be used for the activity marker. */
+static const Colour & kSecondActivityMarkerColour(Colours::orange);
 
 /*! @brief The colour to be used for TCP connections. */
 static const Colour & kTcpConnectionColour(Colours::teal);
@@ -1240,12 +1243,12 @@ void ChannelEntry::paint(Graphics & gg)
     AttributedString as;
     
     as.setJustification(Justification::left);
-    as.append(_title.c_str(), getOwningPanel().getNormalFont(), Colours::white);
+    as.append(_title.c_str(), getOwningPanel().getNormalFont(), kEntryTextColour);
     juce::Rectangle<float> area(getLocalBounds().toFloat());
     
     OD_LOG_D4("x <- ", area.getX(), "y <- ", area.getY(), "w <- ",area.getWidth(), "h <- ", //####
               area.getHeight()); //####
-    gg.setColour(kEntryColour);
+    gg.setColour(kEntryBackgroundColour);
     gg.fillRect(area);
     area.setLeft(area.getX() + _parent->getTextInset());
     as.draw(gg, area);

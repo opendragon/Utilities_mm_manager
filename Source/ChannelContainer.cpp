@@ -92,7 +92,10 @@ static const float lTextInset = 2;
 static const Colour & kGapFillColour(Colours::grey);
 
 /*! @brief The colour to be used for the heading of the container. */
-static const Colour & kHeadingColour(Colours::darkgrey);
+static const Colour & kHeadingBackgroundColour(Colours::darkgrey);
+
+/*! @brief The colour to be used for text in the entry. */
+static const Colour & kHeadingTextColour(Colours::white);
 
 #if defined(__APPLE__)
 # pragma mark Local functions
@@ -617,18 +620,18 @@ void ChannelContainer::paint(Graphics & gg)
     AttributedString as;
     
     as.setJustification(Justification::left);
-    as.append(getName(), _owner.getNormalFont(), Colours::white);
+    as.append(getName(), _owner.getNormalFont(), kHeadingTextColour);
     juce::Rectangle<int> bounds(getLocalBounds());
     juce::Rectangle<int> area1(bounds.getX(), bounds.getY(), bounds.getWidth(), _titleHeight);
     juce::Rectangle<int> area2(bounds.getX(), bounds.getY() + _titleHeight, bounds.getWidth(),
-                                 bounds.getHeight() - _titleHeight);
+                               bounds.getHeight() - _titleHeight);
     
-    gg.setColour(kHeadingColour);
+    gg.setColour(kHeadingBackgroundColour);
     gg.fillRect(area1);
     area1.setLeft(static_cast<int>(area1.getX() + getTextInset()));
     as.draw(gg, area1.toFloat());
     gg.setColour(kGapFillColour);
-    gg.fillRect(area2);
+    gg.fillRect(area2);    
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::paint
 
