@@ -38,8 +38,8 @@
 		DF0ADB391A1A76C70096548B /* libodLogging.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0ADB351A1A76C70096548B /* libodLogging.dylib */; };
 		DF0B256719FAE7C2001AEB0C /* libACE.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0B256119FAE7C2001AEB0C /* libACE.dylib */; };
 		DF0B256A19FAE7C2001AEB0C /* libOGDF.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0B256419FAE7C2001AEB0C /* libOGDF.a */; };
-		DF55EC3D1A3668890096DF54 /* libYARP_init.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF55EC3B1A3668890096DF54 /* libYARP_init.dylib */; };
-		DF55EC3E1A3668890096DF54 /* libYARP_OS.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF55EC3C1A3668890096DF54 /* libYARP_OS.dylib */; };
+		DF55EC4C1A3746870096DF54 /* libYARP_init.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0ADB3C1A1A77EF0096548B /* libYARP_init.1.dylib */; };
+		DF55EC4D1A3746870096DF54 /* libYARP_OS.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0ADB3D1A1A77EF0096548B /* libYARP_OS.1.dylib */; };
 		DFADC9EC19D0C12F002C2663 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DFADC9EB19D0C12F002C2663 /* Images.xcassets */; };
 		DFADC9FA19D0C236002C2663 /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DFADC9F919D0C236002C2663 /* libc++.dylib */; };
 		E2FED85FB76A3966795E8416 /* juce_core.mm in Sources */ = {isa = PBXBuildFile; fileRef = ADC373CE4DEDF850BDE3A738 /* juce_core.mm */; };
@@ -756,8 +756,8 @@
 				4F88274FC5F0AEB30037707B /* CoreMIDI.framework in Frameworks */,
 				799E9E4D4FCEC15EF772888C /* DiscRecording.framework in Frameworks */,
 				56550CBDD43FD1CF751304FE /* IOKit.framework in Frameworks */,
-				DF55EC3D1A3668890096DF54 /* libYARP_init.dylib in Frameworks */,
-				DF55EC3E1A3668890096DF54 /* libYARP_OS.dylib in Frameworks */,
+				DF55EC4C1A3746870096DF54 /* libYARP_init.1.dylib in Frameworks */,
+				DF55EC4D1A3746870096DF54 /* libYARP_OS.1.dylib in Frameworks */,
 				DF0ADB391A1A76C70096548B /* libodLogging.dylib in Frameworks */,
 				8C60B5DE1234394A1166E6D8 /* OpenGL.framework in Frameworks */,
 				1D91CF6FA1BDD5E3BC596806 /* QTKit.framework in Frameworks */,
