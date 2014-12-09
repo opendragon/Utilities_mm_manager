@@ -36,10 +36,10 @@
 		DEEF248165B3103CD7681805 /* juce_gui_extra.mm in Sources */ = {isa = PBXBuildFile; fileRef = 01BE58DF625AAE46E21A507C /* juce_gui_extra.mm */; };
 		DF0ADB381A1A76C70096548B /* libmpmCommon.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0ADB341A1A76C70096548B /* libmpmCommon.dylib */; };
 		DF0ADB391A1A76C70096548B /* libodLogging.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0ADB351A1A76C70096548B /* libodLogging.dylib */; };
-		DF0ADB3E1A1A77EF0096548B /* libYARP_init.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0ADB3C1A1A77EF0096548B /* libYARP_init.1.dylib */; };
-		DF0ADB3F1A1A77EF0096548B /* libYARP_OS.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0ADB3D1A1A77EF0096548B /* libYARP_OS.1.dylib */; };
 		DF0B256719FAE7C2001AEB0C /* libACE.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0B256119FAE7C2001AEB0C /* libACE.dylib */; };
 		DF0B256A19FAE7C2001AEB0C /* libOGDF.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0B256419FAE7C2001AEB0C /* libOGDF.a */; };
+		DF55EC3D1A3668890096DF54 /* libYARP_init.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF55EC3B1A3668890096DF54 /* libYARP_init.dylib */; };
+		DF55EC3E1A3668890096DF54 /* libYARP_OS.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF55EC3C1A3668890096DF54 /* libYARP_OS.dylib */; };
 		DFADC9EC19D0C12F002C2663 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DFADC9EB19D0C12F002C2663 /* Images.xcassets */; };
 		DFADC9FA19D0C236002C2663 /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DFADC9F919D0C236002C2663 /* libc++.dylib */; };
 		E2FED85FB76A3966795E8416 /* juce_core.mm in Sources */ = {isa = PBXBuildFile; fileRef = ADC373CE4DEDF850BDE3A738 /* juce_core.mm */; };
@@ -646,6 +646,8 @@
 		DF0B256F19FAE7E6001AEB0C /* libOGDF.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOGDF.a; path = "../../../../../../../opt/M+M/lib/libOGDF.a"; sourceTree = "<group>"; };
 		DF0B257219FAE7E6001AEB0C /* libACE.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libACE.dylib; path = "../../../../../../../opt/M+M/lib/libACE.dylib"; sourceTree = "<group>"; };
 		DF2EFBEA7BAA9E19E83C151C /* juce_CharacterFunctions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_CharacterFunctions.cpp; path = ../../JuceLibraryCode/modules/juce_core/text/juce_CharacterFunctions.cpp; sourceTree = SOURCE_ROOT; };
+		DF55EC3B1A3668890096DF54 /* libYARP_init.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libYARP_init.dylib; path = "../../../../../../../opt/M+M/lib/libYARP_init.dylib"; sourceTree = "<group>"; };
+		DF55EC3C1A3668890096DF54 /* libYARP_OS.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libYARP_OS.dylib; path = "../../../../../../../opt/M+M/lib/libYARP_OS.dylib"; sourceTree = "<group>"; };
 		DF91B3E932852EBD0347C905 /* juce_android_Messaging.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_android_Messaging.cpp; path = ../../JuceLibraryCode/modules/juce_events/native/juce_android_Messaging.cpp; sourceTree = SOURCE_ROOT; };
 		DF9FF6D4DE18B3DF54A65B7D /* juce_Toolbar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_Toolbar.h; path = ../../JuceLibraryCode/modules/juce_gui_basics/widgets/juce_Toolbar.h; sourceTree = SOURCE_ROOT; };
 		DFADC9EB19D0C12F002C2663 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = "Channel Manager/Images.xcassets"; sourceTree = "<group>"; };
@@ -750,15 +752,15 @@
 				FFD5D4B5504E586A42099C7B /* AudioToolbox.framework in Frameworks */,
 				F33B431E9BA660F6B5034872 /* Carbon.framework in Frameworks */,
 				191270EDA1ECBC5E974DF5A9 /* Cocoa.framework in Frameworks */,
-				DF0ADB3E1A1A77EF0096548B /* libYARP_init.1.dylib in Frameworks */,
 				64581EE4E6330E0D2027E132 /* CoreAudio.framework in Frameworks */,
 				4F88274FC5F0AEB30037707B /* CoreMIDI.framework in Frameworks */,
 				799E9E4D4FCEC15EF772888C /* DiscRecording.framework in Frameworks */,
 				56550CBDD43FD1CF751304FE /* IOKit.framework in Frameworks */,
+				DF55EC3D1A3668890096DF54 /* libYARP_init.dylib in Frameworks */,
+				DF55EC3E1A3668890096DF54 /* libYARP_OS.dylib in Frameworks */,
 				DF0ADB391A1A76C70096548B /* libodLogging.dylib in Frameworks */,
 				8C60B5DE1234394A1166E6D8 /* OpenGL.framework in Frameworks */,
 				1D91CF6FA1BDD5E3BC596806 /* QTKit.framework in Frameworks */,
-				DF0ADB3F1A1A77EF0096548B /* libYARP_OS.1.dylib in Frameworks */,
 				03F3FFBB1BE66A71A22A9A5D /* QuartzCore.framework in Frameworks */,
 				DF0ADB381A1A76C70096548B /* libmpmCommon.dylib in Frameworks */,
 				427446365ACD6B5CB41E7527 /* WebKit.framework in Frameworks */,
@@ -1026,6 +1028,8 @@
 		42D582D969583F8E9D16F645 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DF55EC3B1A3668890096DF54 /* libYARP_init.dylib */,
+				DF55EC3C1A3668890096DF54 /* libYARP_OS.dylib */,
 				DF0B256119FAE7C2001AEB0C /* libACE.dylib */,
 				DF0B256219FAE7C2001AEB0C /* libmpmCommon.a */,
 				DF0B256319FAE7C2001AEB0C /* libodLogging.a */,
