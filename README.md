@@ -9,3 +9,5 @@ M+M simple clients are shown as rectangles with a title consisting of the IP add
 output–only connections.
 
 Connections between ports are shown as lines with one of three thicknesses and one of three colours. The thinnest lines represent simple YARP network connections, which have no explicit behaviours. The middle thickness lines represent connections between Input / Output services; these connections have specific behaviours. The thickest lines represent connections between clients and services, which are not modifiable by this tool. TCP/IP connections, which are the default, are shown in teal, UDP connections are shown in purple and other connections are shown in orange. Note that the tool can only create TCP/IP or UDP connections.
+
+Note that the Channel Manager application requires an M+M installation, and will not execute properly unless there is a 'reachable' YARP server running.
