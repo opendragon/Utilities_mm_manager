@@ -35,3 +35,4 @@ test.db
 
 Builds/MacOSX/build
 *.xcuserstate
+sloc_hashes
