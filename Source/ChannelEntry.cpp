@@ -468,14 +468,17 @@ static void drawConnection(Graphics &          gg,
 /*! @brief Determine whether a connection can be made, based on the port protocols.
  @param sourceProtocol The protocol of the source port.
  @param destinationProtocol The protocol of the destination port.
+ @param ignoreConstraints @c true if the protocols don't have to match.
  @returns @c true if the protocols permit a connection to be made and @c false
  otherwise. */
 static bool protocolsMatch(const yarp::os::ConstString & sourceProtocol,
-                           const yarp::os::ConstString & destinationProtocol)
+                           const yarp::os::ConstString & destinationProtocol,
+                           const bool                    ignoreConstraints)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_S2s("sourceProtocol = ", sourceProtocol, "destinationProtocol = ", //####
                destinationProtocol); //####
+    OD_LOG_B1("ignoreConstraints = ", ignoreConstraints); //####
     bool result = false;
     
     if (0 == destinationProtocol.length())
@@ -488,7 +491,7 @@ static bool protocolsMatch(const yarp::os::ConstString & sourceProtocol,
     }
     else
     {
-        result = (sourceProtocol == destinationProtocol);
+        result = (ignoreConstraints || (sourceProtocol == destinationProtocol));
     }
     OD_LOG_EXIT_B(result); //####
     return result;
@@ -1090,7 +1093,7 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
             firstAddPort->clearConnectMarker();
             firstAddPort->repaint();
             if ((kPortDirectionOutput != _direction) && (kPortUsageService != _usage) &&
-                protocolsMatch(firstProtocol, _portProtocol) &&
+                protocolsMatch(firstProtocol, _portProtocol, ee.mods.isCtrlDown()) &&
                 (! firstAddPort->hasOutgoingConnectionTo(getPortName())))
             {
                 if (Utilities::AddConnection(firstName, getPortName(), STANDARD_WAIT_TIME,
@@ -1204,7 +1207,7 @@ void ChannelEntry::mouseUp(const MouseEvent & ee)
 
                 if ((kPortDirectionOutput != endEntry->getDirection()) &&
                     (kPortUsageService != endEntry->getUsage()) &&
-                    protocolsMatch(getProtocol(), secondProtocol) &&
+                    protocolsMatch(getProtocol(), secondProtocol, ee.mods.isCtrlDown()) &&
                     (! hasOutgoingConnectionTo(secondName)))
                 {
                     if (Utilities::AddConnection(getPortName(), secondName, STANDARD_WAIT_TIME,
