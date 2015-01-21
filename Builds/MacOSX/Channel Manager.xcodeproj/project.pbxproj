@@ -638,11 +638,7 @@
 		DF0ADB3C1A1A77EF0096548B /* libYARP_init.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libYARP_init.1.dylib; path = "../../../../../../../opt/M+M/lib/libYARP_init.1.dylib"; sourceTree = "<group>"; };
 		DF0ADB3D1A1A77EF0096548B /* libYARP_OS.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libYARP_OS.1.dylib; path = "../../../../../../../opt/M+M/lib/libYARP_OS.1.dylib"; sourceTree = "<group>"; };
 		DF0B256119FAE7C2001AEB0C /* libACE.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libACE.dylib; path = "../../../../../../../opt/M+M/lib/libACE.dylib"; sourceTree = "<group>"; };
-		DF0B256219FAE7C2001AEB0C /* libmpmCommon.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmpmCommon.a; path = "../../../../../../../opt/M+M/lib/libmpmCommon.a"; sourceTree = "<group>"; };
-		DF0B256319FAE7C2001AEB0C /* libodLogging.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libodLogging.a; path = "../../../../../../../opt/M+M/lib/libodLogging.a"; sourceTree = "<group>"; };
 		DF0B256419FAE7C2001AEB0C /* libOGDF.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOGDF.a; path = "../../../../../../../opt/M+M/lib/libOGDF.a"; sourceTree = "<group>"; };
-		DF0B256519FAE7C2001AEB0C /* libYARP_init.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libYARP_init.a; path = "../../../../../../../opt/M+M/lib/libYARP_init.a"; sourceTree = "<group>"; };
-		DF0B256619FAE7C2001AEB0C /* libYARP_OS.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libYARP_OS.a; path = "../../../../../../../opt/M+M/lib/libYARP_OS.a"; sourceTree = "<group>"; };
 		DF0B256F19FAE7E6001AEB0C /* libOGDF.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOGDF.a; path = "../../../../../../../opt/M+M/lib/libOGDF.a"; sourceTree = "<group>"; };
 		DF0B257219FAE7E6001AEB0C /* libACE.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libACE.dylib; path = "../../../../../../../opt/M+M/lib/libACE.dylib"; sourceTree = "<group>"; };
 		DF2EFBEA7BAA9E19E83C151C /* juce_CharacterFunctions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_CharacterFunctions.cpp; path = ../../JuceLibraryCode/modules/juce_core/text/juce_CharacterFunctions.cpp; sourceTree = SOURCE_ROOT; };
@@ -1031,11 +1027,7 @@
 				DF55EC3B1A3668890096DF54 /* libYARP_init.dylib */,
 				DF55EC3C1A3668890096DF54 /* libYARP_OS.dylib */,
 				DF0B256119FAE7C2001AEB0C /* libACE.dylib */,
-				DF0B256219FAE7C2001AEB0C /* libmpmCommon.a */,
-				DF0B256319FAE7C2001AEB0C /* libodLogging.a */,
 				DF0B256419FAE7C2001AEB0C /* libOGDF.a */,
-				DF0B256519FAE7C2001AEB0C /* libYARP_init.a */,
-				DF0B256619FAE7C2001AEB0C /* libYARP_OS.a */,
 				31B4B92FD24E30A5486B1178 /* Accelerate.framework */,
 				657CE153E5F14918F42F08F0 /* AudioToolbox.framework */,
 				8BA72840EFF14AF9F39FB65E /* Carbon.framework */,
@@ -2149,10 +2141,6 @@
 				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"/opt/M+M/lib",
-				);
 				OTHER_LDFLAGS = (
 					"-lYARP_OS",
 					"-lYARP_init",
@@ -2237,10 +2225,6 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"/opt/M+M/lib",
-				);
 				OTHER_LDFLAGS = (
 					"-lYARP_OS",
 					"-lYARP_init",

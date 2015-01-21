@@ -25,7 +25,7 @@ install_manifest.txt
 #XCode related
 
 #JUCE specific: expect user to copy modules locally!
-JuceLibraryCode/modules
+#JuceLibraryCode/modules
 
 Testing
 Doxygen_output
