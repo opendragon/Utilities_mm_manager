@@ -42,6 +42,9 @@
 		DF55EC4D1A3746870096DF54 /* libYARP_OS.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0ADB3D1A1A77EF0096548B /* libYARP_OS.1.dylib */; };
 		DFADC9EC19D0C12F002C2663 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DFADC9EB19D0C12F002C2663 /* Images.xcassets */; };
 		DFADC9FA19D0C236002C2663 /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DFADC9F919D0C236002C2663 /* libc++.dylib */; };
+		DFDC7E4B1A7BFF5C00BE0557 /* libYARP_dev.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DFDC7E4A1A7BFF5C00BE0557 /* libYARP_dev.1.dylib */; };
+		DFDC7E4D1A7BFF6E00BE0557 /* libYARP_name.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DFDC7E4C1A7BFF6E00BE0557 /* libYARP_name.1.dylib */; };
+		DFDC7E4F1A7BFF8100BE0557 /* libYARP_sig.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DFDC7E4E1A7BFF8100BE0557 /* libYARP_sig.1.dylib */; };
 		E2FED85FB76A3966795E8416 /* juce_core.mm in Sources */ = {isa = PBXBuildFile; fileRef = ADC373CE4DEDF850BDE3A738 /* juce_core.mm */; };
 		E423C86693E599625A6112CC /* PortData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93AD4B4E9FBADD52BACEF145 /* PortData.cpp */; };
 		F33B431E9BA660F6B5034872 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA72840EFF14AF9F39FB65E /* Carbon.framework */; };
@@ -635,8 +638,8 @@
 		DEE123C22DE88328C8D6C046 /* juce_AsyncUpdater.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_AsyncUpdater.h; path = ../../JuceLibraryCode/modules/juce_events/broadcasters/juce_AsyncUpdater.h; sourceTree = SOURCE_ROOT; };
 		DF0ADB341A1A76C70096548B /* libmpmCommon.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libmpmCommon.dylib; path = "../../../../../../../opt/M+M/lib/libmpmCommon.dylib"; sourceTree = "<group>"; };
 		DF0ADB351A1A76C70096548B /* libodLogging.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libodLogging.dylib; path = "../../../../../../../opt/M+M/lib/libodLogging.dylib"; sourceTree = "<group>"; };
-		DF0ADB3C1A1A77EF0096548B /* libYARP_init.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libYARP_init.1.dylib; path = "../../../../../../../opt/M+M/lib/libYARP_init.1.dylib"; sourceTree = "<group>"; };
-		DF0ADB3D1A1A77EF0096548B /* libYARP_OS.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libYARP_OS.1.dylib; path = "../../../../../../../opt/M+M/lib/libYARP_OS.1.dylib"; sourceTree = "<group>"; };
+		DF0ADB3C1A1A77EF0096548B /* libYARP_init.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libYARP_init.1.dylib; path = "/Users/M_M/Documents/git.repositories/Utilities_Channel Manager/Builds/MacOSX/../../../../../../../opt/M+M/lib/libYARP_init.1.dylib"; sourceTree = "<absolute>"; };
+		DF0ADB3D1A1A77EF0096548B /* libYARP_OS.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libYARP_OS.1.dylib; path = "/Users/M_M/Documents/git.repositories/Utilities_Channel Manager/Builds/MacOSX/../../../../../../../opt/M+M/lib/libYARP_OS.1.dylib"; sourceTree = "<absolute>"; };
 		DF0B256119FAE7C2001AEB0C /* libACE.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libACE.dylib; path = "../../../../../../../opt/M+M/lib/libACE.dylib"; sourceTree = "<group>"; };
 		DF0B256419FAE7C2001AEB0C /* libOGDF.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOGDF.a; path = "../../../../../../../opt/M+M/lib/libOGDF.a"; sourceTree = "<group>"; };
 		DF0B256F19FAE7E6001AEB0C /* libOGDF.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOGDF.a; path = "../../../../../../../opt/M+M/lib/libOGDF.a"; sourceTree = "<group>"; };
@@ -648,6 +651,9 @@
 		DF9FF6D4DE18B3DF54A65B7D /* juce_Toolbar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_Toolbar.h; path = ../../JuceLibraryCode/modules/juce_gui_basics/widgets/juce_Toolbar.h; sourceTree = SOURCE_ROOT; };
 		DFADC9EB19D0C12F002C2663 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = "Channel Manager/Images.xcassets"; sourceTree = "<group>"; };
 		DFADC9F919D0C236002C2663 /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
+		DFDC7E4A1A7BFF5C00BE0557 /* libYARP_dev.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libYARP_dev.1.dylib; path = "/Users/M_M/Documents/git.repositories/Utilities_Channel Manager/Builds/MacOSX/../../../../../../../opt/M+M/lib/libYARP_dev.1.dylib"; sourceTree = "<absolute>"; };
+		DFDC7E4C1A7BFF6E00BE0557 /* libYARP_name.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libYARP_name.1.dylib; path = "/Users/M_M/Documents/git.repositories/Utilities_Channel Manager/Builds/MacOSX/../../../../../../../opt/M+M/lib/libYARP_name.1.dylib"; sourceTree = "<absolute>"; };
+		DFDC7E4E1A7BFF8100BE0557 /* libYARP_sig.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libYARP_sig.1.dylib; path = "/Users/M_M/Documents/git.repositories/Utilities_Channel Manager/Builds/MacOSX/../../../../../../../opt/M+M/lib/libYARP_sig.1.dylib"; sourceTree = "<absolute>"; };
 		E059C6388A6E99841B353887 /* juce_ZipFile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_ZipFile.cpp; path = ../../JuceLibraryCode/modules/juce_core/zip/juce_ZipFile.cpp; sourceTree = SOURCE_ROOT; };
 		E09F5EC75773E15AEDADD364 /* juce_HeapBlock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_HeapBlock.h; path = ../../JuceLibraryCode/modules/juce_core/memory/juce_HeapBlock.h; sourceTree = SOURCE_ROOT; };
 		E0DF6259804712093C5836B0 /* juce_mac_Fonts.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = juce_mac_Fonts.mm; path = ../../JuceLibraryCode/modules/juce_graphics/native/juce_mac_Fonts.mm; sourceTree = SOURCE_ROOT; };
@@ -746,6 +752,7 @@
 				DFADC9FA19D0C236002C2663 /* libc++.dylib in Frameworks */,
 				6E425384782FBC454FEED53B /* Accelerate.framework in Frameworks */,
 				FFD5D4B5504E586A42099C7B /* AudioToolbox.framework in Frameworks */,
+				DFDC7E4B1A7BFF5C00BE0557 /* libYARP_dev.1.dylib in Frameworks */,
 				F33B431E9BA660F6B5034872 /* Carbon.framework in Frameworks */,
 				191270EDA1ECBC5E974DF5A9 /* Cocoa.framework in Frameworks */,
 				64581EE4E6330E0D2027E132 /* CoreAudio.framework in Frameworks */,
@@ -755,9 +762,11 @@
 				DF55EC4C1A3746870096DF54 /* libYARP_init.1.dylib in Frameworks */,
 				DF55EC4D1A3746870096DF54 /* libYARP_OS.1.dylib in Frameworks */,
 				DF0ADB391A1A76C70096548B /* libodLogging.dylib in Frameworks */,
+				DFDC7E4F1A7BFF8100BE0557 /* libYARP_sig.1.dylib in Frameworks */,
 				8C60B5DE1234394A1166E6D8 /* OpenGL.framework in Frameworks */,
 				1D91CF6FA1BDD5E3BC596806 /* QTKit.framework in Frameworks */,
 				03F3FFBB1BE66A71A22A9A5D /* QuartzCore.framework in Frameworks */,
+				DFDC7E4D1A7BFF6E00BE0557 /* libYARP_name.1.dylib in Frameworks */,
 				DF0ADB381A1A76C70096548B /* libmpmCommon.dylib in Frameworks */,
 				427446365ACD6B5CB41E7527 /* WebKit.framework in Frameworks */,
 			);
@@ -1834,8 +1843,11 @@
 				DFADC9F919D0C236002C2663 /* libc++.dylib */,
 				DF0ADB341A1A76C70096548B /* libmpmCommon.dylib */,
 				DF0ADB351A1A76C70096548B /* libodLogging.dylib */,
+				DFDC7E4A1A7BFF5C00BE0557 /* libYARP_dev.1.dylib */,
 				DF0ADB3C1A1A77EF0096548B /* libYARP_init.1.dylib */,
+				DFDC7E4C1A7BFF6E00BE0557 /* libYARP_name.1.dylib */,
 				DF0ADB3D1A1A77EF0096548B /* libYARP_OS.1.dylib */,
+				DFDC7E4E1A7BFF8100BE0557 /* libYARP_sig.1.dylib */,
 				DF0B256F19FAE7E6001AEB0C /* libOGDF.a */,
 				DF0B257219FAE7E6001AEB0C /* libACE.dylib */,
 			);
@@ -2141,6 +2153,10 @@
 				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/opt/M+M/lib",
+				);
 				OTHER_LDFLAGS = (
 					"-lYARP_OS",
 					"-lYARP_init",
@@ -2225,6 +2241,10 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/opt/M+M/lib",
+				);
 				OTHER_LDFLAGS = (
 					"-lYARP_OS",
 					"-lYARP_init",
