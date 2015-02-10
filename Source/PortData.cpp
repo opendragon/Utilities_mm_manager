@@ -76,8 +76,8 @@ PortData::PortData(const yarp::os::ConstString & portName,
                    const yarp::os::ConstString & protocolDescription,
                    const PortUsage               portKind,
                    const PortDirection           direction) :
-    _portName(portName), _portProtocol(portProtocol), _protocolDescription(protocolDescription),
-    _direction(direction), _usage(portKind)
+    _portName(portName), _portPortNumber(), _portProtocol(portProtocol),
+    _protocolDescription(protocolDescription), _direction(direction), _usage(portKind)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_S3s("portName = ", portName, "portProtocol = ", portProtocol, //####

@@ -507,19 +507,20 @@ static bool protocolsMatch(const yarp::os::ConstString & sourceProtocol,
 
 ChannelEntry::ChannelEntry(ChannelContainer *            parent,
                            const yarp::os::ConstString & portName,
+                           const yarp::os::ConstString & portNumber,
                            const yarp::os::ConstString & portProtocol,
                            const yarp::os::ConstString & protocolDescription,
                            const PortUsage               portKind,
                            const PortDirection           direction) :
-    inherited(), _portName(portName), _portProtocol(portProtocol),
+    inherited(), _portName(portName), _portPortNumber(portNumber), _portProtocol(portProtocol),
     _protocolDescription(protocolDescription), _parent(parent), _direction(direction),
     _usage(portKind), _beingMonitored(false), _drawActivityMarker(false), _drawConnectMarker(false),
     _drawDisconnectMarker(false), _isLastPort(true), _wasUdp(false)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P1("parent = ", parent); //####
-    OD_LOG_S3s("portName = ", portName, "portProtocol = ", portProtocol, //####
-               "protocolDescription = ", protocolDescription); //####
+    OD_LOG_S4s("portName = ", portName, "portNumber = ", portNumber, "portProtocol = ", //####
+               portProtocol, "protocolDescription = ", protocolDescription); //####
     OD_LOG_L2("portKind = ", portKind, "direction = ", direction); //####
     Font &                textFont = getOwningPanel().getNormalFont();
     yarp::os::ConstString prefix;
@@ -892,8 +893,9 @@ void ChannelEntry::displayInformation(const bool isChannel,
             }
         }
     }
-    yarp::os::ConstString bodyText(prefix + dirText + (isChannel ? " channel" : " port") + suffix);
+    yarp::os::ConstString bodyText("Port: " + getPortNumber() + "\n");
     
+    bodyText += prefix + dirText + (isChannel ? " channel" : " port") + suffix;
     DisplayInformationPanel(this, bodyText.c_str(), getPortName().c_str());
     OD_LOG_EXIT(); //####
 } // ChannelEntry::displayInformation

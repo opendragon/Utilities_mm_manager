@@ -71,12 +71,14 @@ namespace ChannelManager
         /*! @brief The constructor.
          @param kind The kind of entity.
          @param title The title of the entity.
+         @param ipAddress The IP address of the entity.
          @param behaviour The behavioural model if a service.
          @param description The description, if this is a service.
          @param requests The requests supported, if this is a service.
          @param owner The owner of the entity. */
         ChannelContainer(const ContainerKind           kind,
                          const yarp::os::ConstString & title,
+                         const yarp::os::ConstString & ipAddress,
                          const yarp::os::ConstString & behaviour,
                          const yarp::os::ConstString & description,
                          const yarp::os::ConstString & requests,
@@ -87,12 +89,14 @@ namespace ChannelManager
         
         /*! @brief Add a port to the panel.
          @param portName The name of the port.
+         @param portNumber The port number of the port.
          @param portProtocol The protocol of the port.
          @param protocolDescription The description of the protocol.
          @param portKind What the port will be used for.
          @param direction The primary direction of the port.
          @returns The newly-created port. */
         ChannelEntry * addPort(const yarp::os::ConstString & portName,
+                               const yarp::os::ConstString & portNumber,
                                const yarp::os::ConstString & portProtocol = "",
                                const yarp::os::ConstString & protocolDescription = "",
                                const PortUsage               portKind = kPortUsageOther,
@@ -131,6 +135,14 @@ namespace ChannelManager
         {
             return _description;
         } // getDescription
+        
+        /*! @brief Return the IP address of the container.
+         @returns The IP address of the container. */
+        inline yarp::os::ConstString getIPAddress(void)
+        const
+        {
+            return _IPAddress;
+        } // getIPAddress
         
         /*! @brief Return the kind of container.
          @returns The kind of container. */
@@ -309,6 +321,9 @@ namespace ChannelManager
         /*! @brief The description of the container, if it is a service. */
         yarp::os::ConstString _description;
         
+        /*! @brief The IP address of the primary channel. */
+        yarp::os::ConstString _IPAddress;
+                
         /*! @brief The requests for the entity, if it is a service. */
         yarp::os::ConstString _requests;
         

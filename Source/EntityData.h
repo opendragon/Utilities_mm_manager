@@ -111,6 +111,14 @@ namespace ChannelManager
             return _kind;
         } // getKind
         
+        /*! @brief Return the IP address of the entity.
+         @returns The IP address of the entity. */
+        inline yarp::os::ConstString getIPAddress(void)
+        const
+        {
+            return _IPAddress;
+        } // getIPAddress
+        
         /*! @brief Return the description of the entity.
          @returns The description of the entity. */
         inline yarp::os::ConstString getName(void)
@@ -138,6 +146,13 @@ namespace ChannelManager
             return _requests;
         } // getRequests
         
+        /*! @brief Set the IP address of the entity.
+         @param newAddress The IP address of the entity. */
+        inline void setIPAddress(yarp::os::ConstString & newAddress)
+        {
+            _IPAddress = newAddress;
+        } // setIPAddress
+        
     protected :
         
     private :
@@ -158,6 +173,9 @@ namespace ChannelManager
         
         /*! @brief The description of the entity, if it is a service. */
         yarp::os::ConstString _description;
+        
+        /*! @brief The IP address of the primary channel. */
+        yarp::os::ConstString _IPAddress;
         
         /*! @brief The name of the entity. */
         yarp::os::ConstString _name;

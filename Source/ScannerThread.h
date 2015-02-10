@@ -121,8 +121,9 @@ namespace ChannelManager
         
     private :
         
-        /*! @brief Add the detected entities and connections. */
-        void addEntities(void);
+        /*! @brief Add the detected entities and connections.
+         @param detectedPorts The ports found by YARP. */
+        void addEntities(const MplusM::Utilities::PortVector & detectedPorts);
         
         /*! @brief Add connections between detected ports in the to-be-displayed list.
          @param detectedPorts The set of detected YARP ports.
@@ -168,11 +169,13 @@ namespace ChannelManager
                                          void *                        checkStuff = NULL);
         
         /*! @brief Identify the YARP network entities.
+         @param detectedPorts The ports found by YARP.
          @param checker A function that provides for early exit from loops.
          @param checkStuff The private data for the early exit function.
          @returns @c true if the network entity information was gathered and @c false otherwise. */
-        bool gatherEntities(MplusM::Common::CheckFunction checker = NULL,
-                            void *                        checkStuff = NULL);
+        bool gatherEntities(MplusM::Utilities::PortVector & detectedPorts,
+                            MplusM::Common::CheckFunction   checker = NULL,
+                            void *                          checkStuff = NULL);
         
         /*! @brief Tell the displayed panel to do a repaint. */
         void triggerRepaint(void);

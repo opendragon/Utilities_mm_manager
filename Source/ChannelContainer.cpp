@@ -111,11 +111,13 @@ static const Colour & kHeadingTextColour(Colours::white);
 
 ChannelContainer::ChannelContainer(const ContainerKind           kind,
                                    const yarp::os::ConstString & title,
+                                   const yarp::os::ConstString & ipAddress,
                                    const yarp::os::ConstString & behaviour,
                                    const yarp::os::ConstString & description,
                                    const yarp::os::ConstString & requests,
                                    EntitiesPanel &               owner) :
-    inherited(title.c_str()), _behaviour(behaviour), _description(description), _requests(requests),
+    inherited(title.c_str()), _behaviour(behaviour), _description(description),
+    _IPAddress(ipAddress), _requests(requests),
 #if defined(USE_OGDF_POSITIONING)
     _node(NULL),
 #endif // defined(USE_OGDF_POSITIONING)
@@ -124,6 +126,7 @@ ChannelContainer::ChannelContainer(const ContainerKind           kind,
     OD_LOG_ENTER(); //####
     OD_LOG_S4s("title = ", title, "behaviour = ", behaviour, "description = ", description, //####
                "requests = ", requests); //####
+    OD_LOG_S1s("ipAddress = ", ipAddress); //####
     Font & headerFont = _owner.getNormalFont();
     
     _titleHeight = static_cast<int>(headerFont.getHeight());
@@ -157,17 +160,18 @@ ChannelContainer::~ChannelContainer(void)
 #endif // defined(__APPLE__)
 
 ChannelEntry * ChannelContainer::addPort(const yarp::os::ConstString & portName,
+                                         const yarp::os::ConstString & portNumber,
                                          const yarp::os::ConstString & portProtocol,
                                          const yarp::os::ConstString & protocolDescription,
                                          const PortUsage               portKind,
                                          const PortDirection           direction)
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_S3s("portName = ", portName, "portProtocol = ", portProtocol, //####
-               "protocolDescription = ", protocolDescription); //####
+    OD_LOG_S4s("portName = ", portName, "portNumber = ", portNumber, "portProtocol = ", //####
+               portProtocol, "protocolDescription = ", protocolDescription); //####
     int            countBefore = getNumPorts();
-    ChannelEntry * aPort = new ChannelEntry(this, portName, portProtocol, protocolDescription,
-                                            portKind, direction);
+    ChannelEntry * aPort = new ChannelEntry(this, portName, portNumber, portProtocol,
+                                            protocolDescription, portKind, direction);
     float          newWidth = static_cast<float>(max(aPort->getWidth(), getWidth()));
     float          newHeight = aPort->getHeight() + getHeight() + lEntryGap;
     
@@ -301,8 +305,9 @@ void ChannelContainer::displayInformation(const bool moreDetails)
             break;
             
     }
-    String bodyText(thePanelDescription.c_str());
+    String bodyText("Address: " + getIPAddress() + "\n");
     
+    bodyText += thePanelDescription.c_str();
     if (moreDetails)
     {
         yarp::os::ConstString requests;

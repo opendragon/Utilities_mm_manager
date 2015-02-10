@@ -765,6 +765,7 @@ void ContentPanel::updatePanels(ScannerThread & scanner)
                 // Make a copy of the newly discovered entity, and add it to the active panel.
                 ChannelContainer * newEntity = new ChannelContainer(anEntity->getKind(),
                                                                     anEntity->getName(),
+                                                                    anEntity->getIPAddress(),
                                                                     anEntity->getBehaviour(),
                                                                     anEntity->getDescription(),
                                                                     anEntity->getRequests(),
@@ -779,6 +780,7 @@ void ContentPanel::updatePanels(ScannerThread & scanner)
                     if (aPort)
                     {
                         ChannelEntry * newPort = newEntity->addPort(aPort->getPortName(),
+                                                                    aPort->getPortNumber(),
                                                                     aPort->getProtocol(),
                                                                     aPort->getProtocolDescription(),
                                                                     aPort->getUsage(),

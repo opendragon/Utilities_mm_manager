@@ -119,6 +119,14 @@ namespace ChannelManager
             return _portName;
         } // getPortName
         
+        /*! @brief Return the port number of the associated port.
+         @returns The port number of the associated port. */
+        inline yarp::os::ConstString getPortNumber(void)
+        const
+        {
+            return _portPortNumber;
+        } // getPortNumber
+        
         /*! @brief Return the protocol of the associated port.
          @returns The protocol of the associated port. */
         inline yarp::os::ConstString getProtocol(void)
@@ -181,6 +189,13 @@ namespace ChannelManager
          @param other The port that is to be disconnected. */
         void removeOutputConnection(PortData * other);
         
+        /*! @brief Set the port number of the port.
+         @param newPortNumber The port number of the port. */
+        inline void setPortNumber(const yarp::os::ConstString & newPortNumber)
+        {
+            _portPortNumber = newPortNumber;
+        } // setPortNumber
+        
     protected :
         
     private :
@@ -201,6 +216,9 @@ namespace ChannelManager
         
         /*! @brief The name of the associated port. */
         yarp::os::ConstString _portName;
+        
+        /*! @brief The IP port number for the port. */
+        yarp::os::ConstString _portPortNumber;
         
         /*! @brief The protocol of the associated port. */
         yarp::os::ConstString _portProtocol;

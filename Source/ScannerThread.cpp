@@ -41,6 +41,7 @@
 #include "ChannelManagerApplication.h"
 #include "EntitiesPanel.h"
 #include "EntityData.h"
+#include "PortData.h"
 
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
@@ -83,6 +84,62 @@ static const int64 kMinStaleInterval = 60000;
 #if defined(__APPLE__)
 # pragma mark Local functions
 #endif // defined(__APPLE__)
+
+/*! @brief Locate the IP address and port corresponding to a port name.
+ @param detectedPorts The set of detected YARP ports.
+ @param portName The port name to search for.
+ @param ipAddress The IP address of the port.
+ @param ipPort The IP port of the port. */
+static void findMatchingIpAddressAndPort(const MplusM::Utilities::PortVector & detectedPorts,
+                                         const yarp::os::ConstString &         portName,
+                                         yarp::os::ConstString &               ipAddress,
+                                         yarp::os::ConstString &               ipPort)
+{
+    OD_LOG_ENTER(); //####
+    OD_LOG_P3("detectedPorts = ", &detectedPorts, "ipAddress = ", &ipAddress, "ipPort = ", //####
+              &ipPort); //####
+    OD_LOG_S1s("portName = ", portName); //####
+    ipAddress = ipPort = "";
+    for (Utilities::PortVector::const_iterator walker(detectedPorts.begin());
+         detectedPorts.end() != walker; ++walker)
+    {
+        yarp::os::ConstString walkerName(walker->_portName);
+        
+        if (portName == walkerName)
+        {
+            ipAddress = walker->_portIpAddress;
+            ipPort = walker->_portPortNumber;
+            break;
+        }
+        
+    }
+    OD_LOG_EXIT(); //####
+} // findMatchingIpAddressAndPort
+
+/*! @brief Extract the IP address and port number from a combined string.
+ @param combined The combined IP address and port number.
+ @param ipAddress The IP address of the port.
+ @param ipPort The IP port of the port. */
+static void splitCombinedAddressAndPort(const yarp::os::ConstString & combined,
+                                        yarp::os::ConstString &       ipAddress,
+                                        yarp::os::ConstString &       ipPort)
+{
+    OD_LOG_ENTER(); //####
+    OD_LOG_S1s("combined = ", combined); //####
+    OD_LOG_P2("ipAddress = ", &ipAddress, "ipPort = ", &ipPort); //####
+    size_t splitPos = combined.find(":");
+    
+    if (yarp::os::ConstString::npos == splitPos)
+    {
+        ipAddress = ipPort = "";
+    }
+    else
+    {
+        ipAddress = combined.substr(0, splitPos);
+        ipPort = combined.substr(splitPos + 1);
+    }
+    OD_LOG_EXIT(); //####
+} // splitCombinedAddressAndPort
 
 #if defined(__APPLE__)
 # pragma mark Class methods
@@ -163,15 +220,18 @@ ScannerThread::~ScannerThread(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-void ScannerThread::addEntities(void)
+void ScannerThread::addEntities(const MplusM::Utilities::PortVector & detectedPorts)
 {
     OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("detectedPorts = ", &detectedPorts); //####
     PortDataMap portsSeen;
     
     for (ServiceMap::const_iterator outer(_detectedServices.begin());
          (_detectedServices.end() != outer) && (! lBailNow); ++outer)
     {
         Utilities::ServiceDescriptor descriptor(outer->second);
+        yarp::os::ConstString        ipAddress;
+        yarp::os::ConstString        ipPort;
         EntityData *                 anEntity = new EntityData(kContainerKindService,
                                                                descriptor._serviceName,
                                                                descriptor._kind,
@@ -183,6 +243,9 @@ void ScannerThread::addEntities(void)
         Common::ChannelVector &      inChannels = descriptor._inputChannels;
         Common::ChannelVector &      outChannels = descriptor._outputChannels;
         
+        findMatchingIpAddressAndPort(detectedPorts, descriptor._channelName, ipAddress, ipPort);
+        anEntity->setIPAddress(ipAddress);
+        aPort->setPortNumber(ipPort);
         for (Common::ChannelVector::const_iterator inner = inChannels.begin();
              (inChannels.end() != inner) && (! lBailNow); ++inner)
         {
@@ -191,6 +254,8 @@ void ScannerThread::addEntities(void)
             aPort = anEntity->addPort(aChannel._portName, aChannel._portProtocol,
                                       aChannel._protocolDescription, kPortUsageInputOutput,
                                       kPortDirectionInput);
+            findMatchingIpAddressAndPort(detectedPorts, aChannel._portName, ipAddress, ipPort);
+            aPort->setPortNumber(ipPort);
         }
         for (Common::ChannelVector::const_iterator inner = outChannels.begin();
              (outChannels.end() != inner)  && (! lBailNow); ++inner)
@@ -200,6 +265,8 @@ void ScannerThread::addEntities(void)
             aPort = anEntity->addPort(aChannel._portName, aChannel._portProtocol,
                                       aChannel._protocolDescription, kPortUsageInputOutput,
                                       kPortDirectionOutput);
+            findMatchingIpAddressAndPort(detectedPorts, aChannel._portName, ipAddress, ipPort);
+            aPort->setPortNumber(ipPort);
         }
         _workingData.addEntity(anEntity);
     }
@@ -207,6 +274,9 @@ void ScannerThread::addEntities(void)
     for (AssociatesMap::const_iterator outer(_associatedPorts.begin());
          (_associatedPorts.end() != outer)  && (! lBailNow); ++outer)
     {
+        // The key is 'ipaddress:port'
+        yarp::os::ConstString              ipAddress;
+        yarp::os::ConstString              ipPort;
         PortData *                         aPort;
         EntityData *                       anEntity = new EntityData(kContainerKindClientOrAdapter,
                                                                      outer->first, "", "", "");
@@ -214,27 +284,44 @@ void ScannerThread::addEntities(void)
         const Common::StringVector &       assocInputs = associates._inputs;
         const Common::StringVector &       assocOutputs = associates._outputs;
         
+        splitCombinedAddressAndPort(outer->first, ipAddress, ipPort);
+        anEntity->setIPAddress(ipAddress);
         for (Common::StringVector::const_iterator inner = assocInputs.begin();
              (assocInputs.end() != inner)  && (! lBailNow); ++inner)
         {
+            yarp::os::ConstString innerPort;
+            
+            findMatchingIpAddressAndPort(detectedPorts, *inner, ipAddress, innerPort);
             aPort = anEntity->addPort(*inner, "", "", kPortUsageOther, kPortDirectionInput);
+            aPort->setPortNumber(innerPort);
         }
         for (Common::StringVector::const_iterator inner = assocOutputs.begin();
              (assocOutputs.end() != inner)  && (! lBailNow); ++inner)
         {
+            yarp::os::ConstString innerPort;
+            
+            findMatchingIpAddressAndPort(detectedPorts, *inner, ipAddress, innerPort);
             aPort = anEntity->addPort(*inner, "", "", kPortUsageOther, kPortDirectionOutput);
+            aPort->setPortNumber(innerPort);
         }
         aPort = anEntity->addPort(outer->second._name, "", "", kPortUsageClient,
                                   kPortDirectionInputOutput);
+        aPort->setPortNumber(ipPort);
         _workingData.addEntity(anEntity);
     }
     // Convert the detected standalone ports into entities in the background list.
     for (SingularPortMap::const_iterator walker(_standalonePorts.begin());
          (_standalonePorts.end() != walker)  && (! lBailNow); ++walker)
     {
-        EntityData * anEntity = new EntityData(kContainerKindOther, walker->first, "", "", "");
-        PortUsage    usage;
+        // The key is 'ipaddress:port'
+        yarp::os::ConstString ipAddress;
+        yarp::os::ConstString ipPort;
+        EntityData *          anEntity = new EntityData(kContainerKindOther, walker->first, "", "",
+                                                        "");
+        PortUsage             usage;
         
+        splitCombinedAddressAndPort(walker->first, ipAddress, ipPort);
+        anEntity->setIPAddress(ipAddress);
         switch (Utilities::GetPortKind(walker->second._name))
         {
             case Utilities::kPortKindClient :
@@ -251,9 +338,10 @@ void ScannerThread::addEntities(void)
                 break;
                 
         }
-        /*PortData * aPort =*/ anEntity->addPort(walker->second._name, "", "", usage,
-                                                 walker->second._direction);
+        PortData * aPort = anEntity->addPort(walker->second._name, "", "", usage,
+                                             walker->second._direction);
         
+        aPort->setPortNumber(ipPort);
         _workingData.addEntity(anEntity);
     }
     OD_LOG_OBJEXIT(); //####
@@ -569,15 +657,15 @@ void ScannerThread::doScanSoon(void)
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::doScanSoon
 
-bool ScannerThread::gatherEntities(Common::CheckFunction checker,
-                                   void *                checkStuff)
+bool ScannerThread::gatherEntities(Utilities::PortVector & detectedPorts,
+                                   Common::CheckFunction   checker,
+                                   void *                  checkStuff)
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("checkStuff = ", checkStuff); //####
-    bool                  okSoFar;
-    Utilities::PortVector detectedPorts;
+    OD_LOG_P2("detectedPorts = ", &detectedPorts, "checkStuff = ", checkStuff); //####
+    bool  okSoFar;
 #if (defined(CHECK_FOR_STALE_PORTS) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS)))
-    int64                 now = Time::currentTimeMillis();
+    int64 now = Time::currentTimeMillis();
 #endif //defined(CHECK_FOR_STALE_PORTS) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS))
     
     // Mark our utility ports as known.
@@ -668,13 +756,14 @@ void ScannerThread::run(void)
     while ((! threadShouldExit()) && (! lBailNow))
     {
         OD_LOG("((! threadShouldExit()) && (! lBailNow))"); //####
-        bool needToLeave = false;
+        bool                  needToLeave = false;
+        Utilities::PortVector detectedPorts;
         
-        if (gatherEntities(CheckForExit))
+        if (gatherEntities(detectedPorts, CheckForExit))
         {
             int64 loopStartTime = Time::currentTimeMillis();
             
-            addEntities();
+            addEntities(detectedPorts);
             // Indicate that the scan data is available.
             unconditionallyAcquireForWrite();
             _scanSoon = false;

@@ -65,12 +65,14 @@ namespace ChannelManager
         /*! @brief The constructor.
          @param parent The GUI element containing this element.
          @param portName The port name for the entry.
+         @param portNumber The port number for the entry.
          @param portProtocol The protocol of the port.
          @param protocolDescription The description of the protocol.
          @param portKind What the port will be used for.
          @param direction The primary direction of the port. */
         ChannelEntry(ChannelContainer *            parent,
                      const yarp::os::ConstString & portName,
+                     const yarp::os::ConstString & portNumber,
                      const yarp::os::ConstString & portProtocol,
                      const yarp::os::ConstString & protocolDescription,
                      const PortUsage               portKind,
@@ -187,6 +189,14 @@ namespace ChannelManager
         {
             return _portName;
         } // getPortName
+        
+        /*! @brief Return the port number of the associated port.
+         @returns The port number of the associated port. */
+        inline yarp::os::ConstString getPortNumber(void)
+        const
+        {
+            return _portPortNumber;
+        } // getPortNumber
         
         /*! @brief Return the position of the entity within it's containing panel.
          @returns The position of the entity within it's containing panel. */
@@ -361,6 +371,9 @@ namespace ChannelManager
         
         /*! @brief The name of the associated port. */
         yarp::os::ConstString _portName;
+        
+        /*! @brief The IP port number for the port. */
+        yarp::os::ConstString _portPortNumber;
         
         /*! @brief The protocol of the associated port. */
         yarp::os::ConstString _portProtocol;
