@@ -306,8 +306,9 @@ void ChannelContainer::displayInformation(const bool moreDetails)
             break;
             
     }
-    String bodyText("Address: " + getIPAddress() + "\n");
+    String bodyText("Address: ");
     
+    bodyText += (getIPAddress() + "\n").c_str();
     bodyText += thePanelDescription.c_str();
     if (moreDetails)
     {

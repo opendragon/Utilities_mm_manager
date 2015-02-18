@@ -894,8 +894,9 @@ void ChannelEntry::displayInformation(const bool isChannel,
             }
         }
     }
-    yarp::os::ConstString bodyText("Port: " + getPortNumber() + "\n");
+    yarp::os::ConstString bodyText("Port: ");
     
+    bodyText += getPortNumber() + "\n";
     bodyText += prefix + dirText + (isChannel ? " channel" : " port") + suffix;
     DisplayInformationPanel(this, bodyText.c_str(), getPortName().c_str());
     OD_LOG_EXIT(); //####
