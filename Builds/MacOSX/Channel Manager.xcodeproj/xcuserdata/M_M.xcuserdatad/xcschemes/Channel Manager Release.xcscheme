@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "3D401AEA48F74668882D2486"
-               BuildableName = "Channel Manager Debug.app"
+               BuildableName = "Channel Manager.app"
                BlueprintName = "Channel Manager"
                ReferencedContainer = "container:Channel Manager.xcodeproj">
             </BuildableReference>
@@ -33,7 +33,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "3D401AEA48F74668882D2486"
-            BuildableName = "Channel Manager Debug.app"
+            BuildableName = "Channel Manager.app"
             BlueprintName = "Channel Manager"
             ReferencedContainer = "container:Channel Manager.xcodeproj">
          </BuildableReference>
@@ -55,7 +55,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "3D401AEA48F74668882D2486"
-            BuildableName = "Channel Manager Debug.app"
+            BuildableName = "Channel Manager.app"
             BlueprintName = "Channel Manager"
             ReferencedContainer = "container:Channel Manager.xcodeproj">
          </BuildableReference>
