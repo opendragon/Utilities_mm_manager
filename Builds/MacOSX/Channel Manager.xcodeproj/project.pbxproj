@@ -90,7 +90,7 @@
 		0F4EBDE9D185AB9EA27CFBE0 /* juce_SVGParser.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_SVGParser.cpp; path = ../../JuceLibraryCode/modules/juce_gui_basics/drawables/juce_SVGParser.cpp; sourceTree = SOURCE_ROOT; };
 		0F5F8A1F2E1742F3251DD0DA /* juce_Toolbar.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_Toolbar.cpp; path = ../../JuceLibraryCode/modules/juce_gui_basics/widgets/juce_Toolbar.cpp; sourceTree = SOURCE_ROOT; };
 		0F61CC4C7C3858D1F794E93D /* juce_Value.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_Value.h; path = ../../JuceLibraryCode/modules/juce_data_structures/values/juce_Value.h; sourceTree = SOURCE_ROOT; };
-		104056EDDDED644648A5375F /* Channel Manager Debug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Channel Manager Debug.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		104056EDDDED644648A5375F /* Channel Manager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Channel Manager.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		105623850D9D4EE9609BFB8C /* juce_PropertyPanel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_PropertyPanel.h; path = ../../JuceLibraryCode/modules/juce_gui_basics/properties/juce_PropertyPanel.h; sourceTree = SOURCE_ROOT; };
 		10AC03924B56A4448CA80E09 /* juce_FileListComponent.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_FileListComponent.cpp; path = ../../JuceLibraryCode/modules/juce_gui_basics/filebrowser/juce_FileListComponent.cpp; sourceTree = SOURCE_ROOT; };
 		11E14734F69448A4519880E2 /* juce_CharPointer_UTF32.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_CharPointer_UTF32.h; path = ../../JuceLibraryCode/modules/juce_core/text/juce_CharPointer_UTF32.h; sourceTree = SOURCE_ROOT; };
@@ -1753,7 +1753,7 @@
 		C17A766EFAB371B7FC5DF163 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				104056EDDDED644648A5375F /* Channel Manager Debug.app */,
+				104056EDDDED644648A5375F /* Channel Manager.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2049,7 +2049,7 @@
 			name = "Channel Manager";
 			productInstallPath = "$(HOME)/Applications";
 			productName = "Channel Manager";
-			productReference = 104056EDDDED644648A5375F /* Channel Manager Debug.app */;
+			productReference = 104056EDDDED644648A5375F /* Channel Manager.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
