@@ -202,6 +202,8 @@ void ChannelManagerApplication::initialise(const String & commandLine)
     else
     {
         OD_LOG("! (yarp::os::Network::checkNetwork())"); //####
+        AlertWindow::showMessageBox(AlertWindow::WarningIcon, getApplicationName(),
+                                    "No YARP network was detected, so execution is not possible.");
 # if MAC_OR_LINUX_
         yarp::os::impl::Logger & theLogger = Common::GetLogger();
         
