@@ -57,7 +57,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <AdditionalIncludeDirectories>..\..\JuceLibraryCode;..\..\JuceLibraryCode\modules;$(MPlusM_ROOT);$(ACE_ROOT);$(YARP_DIR)\generated_include;$(YARP_DIR)\src\libYARP_OS\include;$(OGDF);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\JuceLibraryCode;..\..\JuceLibraryCode\modules;$(MPlusM_ROOT);$(ACE_ROOT);$(YARP_DIR)\build\generated_include;$(YARP_DIR)\src\libYARP_OS\include;$(OGDF);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;DEBUG;_DEBUG;JUCER_VS2012_78A501F=1;JUCE_APP_VERSION=1.0.0;JUCE_APP_VERSION_HEX=0x10000;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -81,9 +81,9 @@
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
-      <AdditionalLibraryDirectories>$(MPlusM_ROOT)\mpm\Debug;$(MPlusM_ROOT)\odl\Debug;$(OGDF)\Win32\Debug;$(ACE_ROOT)\lib;$(YARP_DIR)\lib\Debug;c:\program files\bonjour sdk\lib\win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(MPlusM_ROOT)\mpm\Debug;$(MPlusM_ROOT)\odl\Debug;$(OGDF)\Win32\Debug;$(ACE_ROOT)\lib;$(YARP_DIR)\build\lib\Debug;c:\program files\bonjour sdk\lib\win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <LargeAddressAware>true</LargeAddressAware>
-      <AdditionalDependencies>ACE.lib;YARP_OS.lib;YARP_init.lib;odLogging.lib;mpmCommon.lib;ogdf.lib;Psapi.lib;dnssd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ACE.lib;YARP_OSd.lib;YARP_initd.lib;odLogging.lib;mpmCommon.lib;ogdf.lib;Psapi.lib;dnssd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <Version>
       </Version>
     </Link>
@@ -102,7 +102,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Full</Optimization>
-      <AdditionalIncludeDirectories>..\..\JuceLibraryCode;..\..\JuceLibraryCode\modules;$(MPlusM_ROOT);$(ACE_ROOT);$(YARP_DIR)\generated_include;$(YARP_DIR)\src\libYARP_OS\include;$(OGDF);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\JuceLibraryCode;..\..\JuceLibraryCode\modules;$(MPlusM_ROOT);$(ACE_ROOT);$(YARP_DIR)\build\generated_include;$(YARP_DIR)\src\libYARP_OS\include;$(OGDF);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;JUCER_VS2012_78A501F=1;JUCE_APP_VERSION=1.0.0;JUCE_APP_VERSION_HEX=0x10000;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -127,7 +127,7 @@
       <TargetMachine>MachineX86</TargetMachine>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <AdditionalLibraryDirectories>$(MPlusM_ROOT)\mpm\Release;$(MPlusM_ROOT)\odl\Release;$(OGDF)\Win32\Release;$(ACE_ROOT)\lib;$(YARP_DIR)\lib\Release;c:\program files\bonjour sdk\lib\win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(MPlusM_ROOT)\mpm\Release;$(MPlusM_ROOT)\odl\Release;$(OGDF)\Win32\Release;$(ACE_ROOT)\lib;$(YARP_DIR)\build\lib\Release;c:\program files\bonjour sdk\lib\win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <LargeAddressAware>true</LargeAddressAware>
       <AdditionalDependencies>ACE.lib;YARP_OS.lib;YARP_init.lib;odLogging.lib;mpmCommon.lib;ogdf.lib;Psapi.lib;dnssd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <Version>
