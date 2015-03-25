@@ -24,5 +24,5 @@ BEGIN
 END
 
 /* Add the application icon */
-IDI_ICON1 ICON DISCARDABLE "CMicon.ico"
-IDI_ICON2 ICON DISCARDABLE "CMicon.ico"
+IDI_ICON1 ICON DISCARDABLE "..\CMicon.ico"
+IDI_ICON2 ICON DISCARDABLE "..\CMicon.ico"

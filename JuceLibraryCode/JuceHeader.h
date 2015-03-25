@@ -31,8 +31,8 @@
 namespace ProjectInfo
 {
     const char* const  projectName    = "Channel Manager";
-    const char* const  versionString  = "1.0.0";
-    const int          versionNumber  = 0x10000;
+    const char* const  versionString  = "1.4.21";
+    const int          versionNumber  = 0x10415;
 }
 #endif
 

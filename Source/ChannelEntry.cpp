@@ -134,7 +134,7 @@ static const Colour & kTcpConnectionColour(Colours::teal);
 static const Colour & kUdpConnectionColour(Colours::purple);
 
 /*! @brief The inset for the activity indicator. */
-static const int kActivityInset = 2;
+static const float kActivityInset = 2;
 
 #if defined(__APPLE__)
 # pragma mark Local functions
@@ -1275,9 +1275,9 @@ void ChannelEntry::paint(Graphics & gg)
     }
     if (_drawActivityMarker)
     {
-        int            hh = getHeight() - (2 * kActivityInset);
+        float          hh = getHeight() - (2 * kActivityInset);
         float          halfSize = static_cast<float>(hh / 2.0);
-        Position       markerPos(getWidth() - (hh + kActivityInset), kActivityInset);
+        Position       markerPos(getWidth() - static_cast<float>(hh + kActivityInset), kActivityInset);
         Position       markerCentre(markerPos + Position(halfSize, halfSize));
         ColourGradient theGradient(kFirstActivityMarkerColour, markerCentre.getX(),
                                    markerCentre.getY(), kSecondActivityMarkerColour,
