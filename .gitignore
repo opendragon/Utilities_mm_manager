@@ -35,4 +35,5 @@ test.db
 
 Builds/MacOSX/build
 *.xcuserstate
+*.xccheckout
 sloc_hashes
