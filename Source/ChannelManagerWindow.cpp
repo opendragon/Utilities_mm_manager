@@ -80,7 +80,7 @@ static const Colour & kWindowBackgroundColour(Colours::lightgrey);
 #endif // defined(__APPLE__)
 
 ChannelManagerWindow::ChannelManagerWindow(const yarp::os::ConstString & title)  :
-    inherited1(title.c_str(), kWindowBackgroundColour, inherited1::allButtons), inherited2(),
+    inherited1(), inherited2(title.c_str(), kWindowBackgroundColour, inherited2::allButtons),
     _contentPanel(new ContentPanel(this)), _scannerThread(NULL)
 {
     OD_LOG_ENTER(); //####

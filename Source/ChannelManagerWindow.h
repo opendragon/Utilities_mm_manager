@@ -60,8 +60,8 @@ namespace ChannelManager
     class ScannerThread;
     
     /*! @brief The main window of the application. */
-    class ChannelManagerWindow : public DocumentWindow,
-                                 private AsyncUpdater
+    class ChannelManagerWindow : private AsyncUpdater,
+                                 public DocumentWindow
     {
     public :
         
@@ -125,11 +125,11 @@ namespace ChannelManager
     
     private :
         
-        /*! @brief The first class that this class is derived from. */
-        typedef DocumentWindow inherited1;
-        
         /*! @brief The second class that this class is derived from. */
-        typedef AsyncUpdater inherited2;
+        typedef AsyncUpdater inherited1;
+        
+        /*! @brief The first class that this class is derived from. */
+        typedef DocumentWindow inherited2;
         
         /*! @brief The connections panel. */
         ScopedPointer<Component> _connectionsPanel;

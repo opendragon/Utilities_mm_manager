@@ -381,13 +381,6 @@ bool ContentPanel::perform(const InvocationInfo & info)
     return wasProcessed;
 } // ContentPanel::perform
 
-void ContentPanel::requestWindowRepaint(void)
-{
-    OD_LOG_OBJENTER(); //####
-    _containingWindow->repaint();
-    OD_LOG_OBJEXIT(); //####
-} // ContentPanel::requestWindowRepaint
-
 void ContentPanel::recallEntityPositions(void)
 {
     OD_LOG_OBJENTER(); //####
@@ -433,6 +426,13 @@ void ContentPanel::rememberPositionOfEntity(ChannelContainer * anEntity)
     _rememberedPositions[entityName] = anEntity->getPositionInPanel();
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::rememberPositionOfEntity
+
+void ContentPanel::requestWindowRepaint(void)
+{
+    OD_LOG_OBJENTER(); //####
+    _containingWindow->repaint();
+    OD_LOG_OBJEXIT(); //####
+} // ContentPanel::requestWindowRepaint
 
 void ContentPanel::resized(void)
 {

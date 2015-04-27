@@ -191,14 +191,11 @@ void ChannelManagerApplication::initialise(const String & commandLine)
 #endif // defined(MpM_ReportOnConnections)
 
     Utilities::CheckForNameServerReporter();
-#if CheckNetworkWorks_
-    if (yarp::os::Network::checkNetwork(NETWORK_CHECK_TIMEOUT))
-#endif // CheckNetworkWorks_
+    if (Utilities::CheckForValidNetwork(true))
     {
         _yarp = new yarp::os::Network; // This is necessary to establish any connections to the YARP
                                        // infrastructure
     }
-#if CheckNetworkWorks_
     else
     {
         OD_LOG("! (yarp::os::Network::checkNetwork())"); //####
@@ -209,8 +206,8 @@ void ChannelManagerApplication::initialise(const String & commandLine)
         
         theLogger.fail("YARP network not running.");
 # endif // MAC_OR_LINUX_
+        ////
     }
-#endif // CheckNetworkWorks_
     _mainWindow = new ChannelManagerWindow(ProjectInfo::projectName);
     if (_yarp)
     {

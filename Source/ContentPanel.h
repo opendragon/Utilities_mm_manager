@@ -62,8 +62,8 @@ namespace ChannelManager
     class ScannerThread;
     
     /*! @brief The content area of the main window of the application. */
-    class ContentPanel : public Viewport,
-                         public ApplicationCommandTarget
+    class ContentPanel : public ApplicationCommandTarget,
+                         public Viewport
     {
     public :
         
