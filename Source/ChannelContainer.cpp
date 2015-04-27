@@ -37,9 +37,9 @@
 //--------------------------------------------------------------------------------------------------
 
 #include "ChannelContainer.h"
-#include "EntitiesPanel.h"
 #include "ChannelEntry.h"
 #include "ContentPanel.h"
+#include "EntitiesPanel.h"
 
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
@@ -737,13 +737,18 @@ void ChannelContainer::stopTheService(void)
         
         if (aPort && (kPortUsageService == aPort->getUsage()))
         {
-            yarp::os::Bottle metrics;
-            
-            if (MplusM::Utilities::StopAService(aPort->getPortName(), STANDARD_WAIT_TIME))
+            bool doStop = (1 == AlertWindow::showOkCancelBox(AlertWindow::QuestionIcon,
+                                                             "Are you sure that you want to stop "
+                                                             "this service?", "If you do, it may "
+                                                             "take a few seconds to disappear from "
+                                                             "the display, depending on network "
+                                                             "traffic.", String::empty,
+                                                             String::empty, nullptr, nullptr));
+            if (doStop && MplusM::Utilities::StopAService(aPort->getPortName(), STANDARD_WAIT_TIME))
             {
                 _owner.getContainer()->requestWindowRepaint();
-                break;
             }
+            break;
             
         }
     }
