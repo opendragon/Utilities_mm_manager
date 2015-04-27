@@ -110,7 +110,7 @@ void calculateTextArea(Point<int> &   dimensions,
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P2("dimensions = ", &dimensions, "aFont = ", &aFont); //####
-    OD_LOG_S1s("aString = ", aString); //####
+    OD_LOG_S1s("aString = ", aString.toStdString()); //####
     float       maxWidth = 0;
     StringArray asLines;
     
@@ -839,8 +839,8 @@ void ContentPanel::visibleAreaChanged(const juce::Rectangle<int> & newVisibleAre
 # endif // MAC_OR_LINUX_
 #endif // ! defined(OD_ENABLE_LOGGING)
     OD_LOG_OBJENTER(); //####
-    OD_LOG_L4("nVA.x = ", newVisibleArea.getX(), "nVA.y = ", newVisibleArea.getY(), //####
-              "nVA.w = ", newVisibleArea.getWidth(), "nVA.h = ", newVisibleArea.getHeight()); //####
+    OD_LOG_LL4("nVA.x = ", newVisibleArea.getX(), "nVA.y = ", newVisibleArea.getY(), //####
+               "nVA.w = ", newVisibleArea.getWidth(), "nVA.h = ", newVisibleArea.getHeight()); //####
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::visibleAreaChanged
 #if (! MAC_OR_LINUX_)
@@ -857,7 +857,7 @@ void ChannelManager::DisplayInformationPanel(Component *    above,
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P1("above = ", above); //####
-    OD_LOG_S2s("bodyText = ", bodyText, "title = ", title); //####
+    OD_LOG_S2s("bodyText = ", bodyText.toStdString(), "title = ", title.toStdString()); //####
     DialogWindow::LaunchOptions options;
     String                      monoFontName = Font::getDefaultMonospacedFontName();
     Font                        monoFont(monoFontName, 16, Font::plain);

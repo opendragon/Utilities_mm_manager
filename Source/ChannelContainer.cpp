@@ -79,7 +79,10 @@ enum EntityPopupMenuSelection
     kPopupDisplayEntityInfo,
     
     /*! @brief Display the channel metrics for a service. */
-    kPopupDisplayServiceMetrics
+    kPopupDisplayServiceMetrics,
+    
+    /*! @brief Stop the service. */
+    kPopupStopService
     
 }; // EntityPopupMenuSelection
 
@@ -133,7 +136,7 @@ ChannelContainer::ChannelContainer(const ContainerKind           kind,
     _titleHeight = static_cast<int>(headerFont.getHeight());
     setSize(static_cast<int>(headerFont.getStringWidthFloat(getName() + " ") + getTextInset()),
             _titleHeight);
-    OD_LOG_L2("width = ", getWidth(), "height = ", getHeight()); //####
+    OD_LOG_LL2("width = ", getWidth(), "height = ", getHeight()); //####
     setOpaque(true);
     setVisible(true);
     OD_LOG_EXIT_P(this); //####
@@ -176,7 +179,7 @@ ChannelEntry * ChannelContainer::addPort(const yarp::os::ConstString & portName,
     float          newWidth = static_cast<float>(max(aPort->getWidth(), getWidth()));
     float          newHeight = aPort->getHeight() + getHeight() + lEntryGap;
     
-    OD_LOG_L2("newWidth = ", newWidth, "newHeight = ", newHeight); //####
+    OD_LOG_LL2("newWidth = ", newWidth, "newHeight = ", newHeight); //####
     aPort->setTopLeftPosition(0, static_cast<int>(getHeight() + lEntryGap));
     setSize(static_cast<int>(newWidth), static_cast<int>(newHeight));
     addAndMakeVisible(aPort);
@@ -253,6 +256,8 @@ void ChannelContainer::displayAndProcessPopupMenu(void)
                    metricsEnabled ? "Disable service metrics collection":
                    "Enable service metrics collection");
         mm.addItem(kPopupDisplayServiceMetrics, "Display service metrics", metricsEnabled);
+        mm.addSeparator();
+        mm.addItem(kPopupStopService, "Stop the service");
     }
     int result = mm.show();
     
@@ -272,6 +277,10 @@ void ChannelContainer::displayAndProcessPopupMenu(void)
             
         case kPopupDisplayServiceMetrics :
             displayMetrics();
+            break;
+           
+        case kPopupStopService :
+            stopTheService();
             break;
             
         default :
@@ -376,6 +385,7 @@ void ChannelContainer::drawOutgoingConnections(Graphics & gg)
 String ChannelContainer::formatMetricRow(const String & aRow)
 {
     OD_LOG_OBJENTER();
+    OD_LOG_S1s("aRow = ", aRow.toStdString()); //####
     String      result;
     StringArray asPieces;
     
@@ -395,7 +405,7 @@ String ChannelContainer::formatMetricRow(const String & aRow)
         result += "In messages:  " + inMessages + "\n";
         result += "Out messages: " + outMessages;
     }
-    OD_LOG_OBJEXIT_S(result);
+    OD_LOG_OBJEXIT_S(result.toStdString().c_str());
     return result;
 } // ChannelContainer::formatMetricRow
 
@@ -465,7 +475,7 @@ ChannelEntry * ChannelContainer::getPort(const int num)
 const
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_L1("num = ", num); //####
+    OD_LOG_LL1("num = ", num); //####
     ChannelEntry * result;
     
     if ((0 <= num) && (getNumPorts() > num))
@@ -717,6 +727,28 @@ void ChannelContainer::setVisited(void)
     _visited = true;
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::setVisited
+
+void ChannelContainer::stopTheService(void)
+{
+    OD_LOG_OBJENTER(); //####
+    for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
+    {
+        ChannelEntry * aPort = getPort(ii);
+        
+        if (aPort && (kPortUsageService == aPort->getUsage()))
+        {
+            yarp::os::Bottle metrics;
+            
+            if (MplusM::Utilities::StopAService(aPort->getPortName(), STANDARD_WAIT_TIME))
+            {
+                _owner.getContainer()->requestWindowRepaint();
+                break;
+            }
+            
+        }
+    }
+    OD_LOG_OBJEXIT(); //####
+} // ChannelContainer::stopTheService
 
 #if defined(__APPLE__)
 # pragma mark Global functions

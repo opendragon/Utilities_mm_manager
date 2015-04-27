@@ -83,7 +83,7 @@ PortData::PortData(const yarp::os::ConstString & portName,
     OD_LOG_ENTER(); //####
     OD_LOG_S3s("portName = ", portName, "portProtocol = ", portProtocol, //####
                "protocolDescription = ", protocolDescription); //####
-    OD_LOG_L2("portKind = ", portKind, "direction = ", direction); //####
+    OD_LOG_LL2("portKind = ", portKind, "direction = ", direction); //####
     OD_LOG_EXIT_P(this); //####
 } // PortData::PortData
 

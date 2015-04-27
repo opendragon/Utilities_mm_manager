@@ -110,7 +110,7 @@ bool PeekInputHandler::handleInput(const yarp::os::Bottle &      input,
     OD_LOG_OBJENTER(); //####
     OD_LOG_S2s("senderChannel = ", senderChannel, "got ", input.toString()); //####
     OD_LOG_P1("replyMechanism = ", replyMechanism); //####
-    OD_LOG_L1("numBytes = ", numBytes); //####
+    OD_LOG_LL1("numBytes = ", numBytes); //####
     bool result = true;
     
     try

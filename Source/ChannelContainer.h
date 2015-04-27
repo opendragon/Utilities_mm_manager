@@ -301,6 +301,9 @@ namespace ChannelManager
          @param newState The requested state of service metrics collection. */
         void setMetricsState(const bool newState);
         
+        /*! @brief Tell the corresponding service to stop. */
+        void stopTheService(void);
+        
     public :
     
     protected :

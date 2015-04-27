@@ -174,8 +174,8 @@ void EntitiesPanel::adjustSize(const bool andRepaint)
         int  maxY = -1;
         bool haveValues = false;
         
-        OD_LOG_L4("outerL = ", outerL, "outerT = ", outerT, "outerW = ", outerW, //####
-                  "outerH = ", outerH); //####
+        OD_LOG_LL4("outerL = ", outerL, "outerT = ", outerT, "outerW = ", outerW, //####
+                   "outerH = ", outerH); //####
         for (ContainerList::const_iterator it(_knownEntities.begin());
              _knownEntities.end() != it; ++it)
         {
@@ -184,9 +184,9 @@ void EntitiesPanel::adjustSize(const bool andRepaint)
             if (anEntity)
             {
                 juce::Rectangle<int> entityBounds(anEntity->getBounds());
-                OD_LOG_L4("eB.x = ", entityBounds.getX(), "eB.y = ", entityBounds.getY(), //####
-                          "eB.w = ", entityBounds.getWidth(), "eB.h = ", //####
-                          entityBounds.getHeight()); //####
+                OD_LOG_LL4("eB.x = ", entityBounds.getX(), "eB.y = ", entityBounds.getY(), //####
+                           "eB.w = ", entityBounds.getWidth(), "eB.h = ", //####
+                           entityBounds.getHeight()); //####
                 int                  entityLeft = entityBounds.getX();
                 int                  entityTop = entityBounds.getY();
                 int                  entityRight = entityLeft + entityBounds.getWidth();
@@ -212,7 +212,7 @@ void EntitiesPanel::adjustSize(const bool andRepaint)
         if (haveValues)
         {
             OD_LOG("(haveValues)"); //####
-            OD_LOG_L4("minX = ", minX, "maxX = ", maxX, "minY = ", minY, "maxY = ", maxY); //####
+            OD_LOG_LL4("minX = ", minX, "maxX = ", maxX, "minY = ", minY, "maxY = ", maxY); //####
             juce::Rectangle<int> oldBounds(getBounds());
             int                  minLeft = min(0, minX);
             int                  maxRight = max(max(0, maxX + kGutter), minLeft + outerW);
@@ -220,8 +220,8 @@ void EntitiesPanel::adjustSize(const bool andRepaint)
             int                  maxBottom = max(max(0, maxY + kGutter), minTop + outerH);
             juce::Rectangle<int> newBounds(minLeft, minTop, maxRight - minLeft, maxBottom - minTop);
             
-            OD_LOG_L4("minLeft = ", minLeft, "minTop = ", minTop, "maxRight = ", maxRight, //####
-                      "maxBottom = ", maxBottom); //####
+            OD_LOG_LL4("minLeft = ", minLeft, "minTop = ", minTop, "maxRight = ", maxRight, //####
+                       "maxBottom = ", maxBottom); //####
             if (oldBounds != newBounds)
             {
                 OD_LOG("about to call setBounds()"); //####
@@ -235,11 +235,11 @@ void EntitiesPanel::adjustSize(const bool andRepaint)
             int                  currW = currBounds.getWidth();
             int                  currH = currBounds.getHeight();
             
-            OD_LOG_L4("currX = ", currX, "currY = ", currY, "currW = ", currW, "currH = ", //####
-                      currH); //####
+            OD_LOG_LL4("currX = ", currX, "currY = ", currY, "currW = ", currW, "currH = ", //####
+                       currH); //####
             if (vertBar)
             {
-                OD_LOG_L2("CR.y = ", outerT, "CR.h = ", outerH); //####
+                OD_LOG_LL2("CR.y = ", outerT, "CR.h = ", outerH); //####
                 Range<double> currLimits(vertBar->getRangeLimit());
                 Range<double> currRange(vertBar->getCurrentRange());
                 Range<double> newLimits(currY, currY + currH);
@@ -256,7 +256,7 @@ void EntitiesPanel::adjustSize(const bool andRepaint)
             }
             if (horizBar)
             {
-                OD_LOG_L2("CR.x = ", outerL, "CR.w = ", outerW); //####
+                OD_LOG_LL2("CR.x = ", outerL, "CR.w = ", outerW); //####
                 Range<double> currLimits(horizBar->getRangeLimit());
                 Range<double> currRange(horizBar->getCurrentRange());
                 Range<double> newLimits(currX, currX + currW);
@@ -512,7 +512,7 @@ ChannelContainer * EntitiesPanel::getEntity(const size_t index)
 const
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_L1("index = ", index); //####
+    OD_LOG_LL1("index = ", index); //####
     ChannelContainer * result;
     
     if (_knownEntities.size() > index)
@@ -533,7 +533,7 @@ const
     OD_LOG_OBJENTER(); //####
     size_t result = _knownEntities.size();
     
-    OD_LOG_OBJEXIT_L(result); //####
+    OD_LOG_OBJEXIT_LL(result); //####
     return result;
 } // EntitiesPanel::getNumberOfEntities
 

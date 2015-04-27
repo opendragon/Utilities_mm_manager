@@ -141,7 +141,7 @@ EntityData * EntitiesData::getEntity(const size_t index)
 const
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_L1("index = ", index); //####
+    OD_LOG_LL1("index = ", index); //####
     EntityData * result;
     
     if (_entities.size() > index)
@@ -162,7 +162,7 @@ const
     OD_LOG_OBJENTER(); //####
     size_t result = _entities.size();
     
-    OD_LOG_OBJEXIT_L(result); //####
+    OD_LOG_OBJEXIT_LL(result); //####
     return result;
 } // EntitiesData::getNumberOfEntities
 

@@ -246,7 +246,7 @@ static void drawSourceAnchor(Graphics &       gg,
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P2("gg = ", &gg, "anchorPos = ", &anchorPos); //####
-    OD_LOG_L1("anchor = ", static_cast<int>(anchor)); //####
+    OD_LOG_LL1("anchor = ", static_cast<int>(anchor)); //####
     OD_LOG_D1("thickness = ", thickness); //####
     Position first;
     Position second;
@@ -300,7 +300,7 @@ static void drawTargetAnchor(Graphics &       gg,
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P2("gg = ", &gg, "anchorPos = ", &anchorPos); //####
-    OD_LOG_L1("anchor = ", static_cast<int>(anchor)); //####
+    OD_LOG_LL1("anchor = ", static_cast<int>(anchor)); //####
     OD_LOG_D1("thickness = ", thickness); //####
     Position first;
     Position second;
@@ -390,7 +390,7 @@ static void drawConnection(Graphics &          gg,
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P3("gg = ", &gg, "source = ", source, "destination = ", destination); //####
-    OD_LOG_L1("mode = ", static_cast<int>(mode)); //####
+    OD_LOG_LL1("mode = ", static_cast<int>(mode)); //####
     if (source && destination)
     {
         AnchorSide sourceAnchor;
@@ -522,7 +522,7 @@ ChannelEntry::ChannelEntry(ChannelContainer *            parent,
     OD_LOG_P1("parent = ", parent); //####
     OD_LOG_S4s("portName = ", portName, "portNumber = ", portNumber, "portProtocol = ", //####
                portProtocol, "protocolDescription = ", protocolDescription); //####
-    OD_LOG_L2("portKind = ", portKind, "direction = ", direction); //####
+    OD_LOG_LL2("portKind = ", portKind, "direction = ", direction); //####
     Font &                textFont = getOwningPanel().getNormalFont();
     yarp::os::ConstString prefix;
     

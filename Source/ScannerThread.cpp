@@ -624,7 +624,7 @@ PortDirection ScannerThread::determineDirection(ChannelEntry *                ol
     {
         result = kPortDirectionUnknown;
     }
-    OD_LOG_OBJEXIT_L(static_cast<long>(result)); //####
+    OD_LOG_OBJEXIT_LL(static_cast<long>(result)); //####
     return result;
 } // ScannerThread::determineDirection
 
@@ -720,6 +720,11 @@ bool ScannerThread::gatherEntities(Utilities::PortVector & detectedPorts,
             {
                 addPortsWithAssociates(detectedPorts, checker, checkStuff);
             }
+        }
+        else
+        {
+            _associatedPorts.clear();
+            _detectedServices.clear();
         }
         // Record the ports that are standalone.
         addRegularPortEntities(detectedPorts, checker, checkStuff);
