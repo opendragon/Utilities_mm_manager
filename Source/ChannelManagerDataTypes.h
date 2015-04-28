@@ -110,6 +110,26 @@ namespace ChannelManager
         
     }; // AnchorSide
     
+    /*! @brief The menu selection from the popup menu. */
+    enum ChannelPopupMenuSelection
+    {
+        /*! @brief Add a scrolling monitor to the port. */
+        kPopupAddScrollingMonitor = 0x2200,
+        
+        /*! @brief Add a simple monitor to the port. */
+        kPopupAddSimpleMonitor,
+        
+        /*! @brief Display detailed information request. */
+        kPopupDetailedDisplayPortInfo,
+        
+        /*! @brief Display information request. */
+        kPopupDisplayPortInfo,
+        
+        /*! @brief Display the metrics for the channel. */
+        kPopupDisplayChannelMetrics
+        
+    }; // ChannelPopupMenuSelection
+    
     /*! @brief What kind of container. */
     enum ContainerKind
     {
@@ -126,6 +146,29 @@ namespace ChannelManager
         kContainerKindUnknown = 0x7FFFFFF
         
     }; // ContainerKind
+    
+    /*! @brief The menu selection from the popup menu. */
+    enum EntityPopupMenuSelection
+    {
+        /*! @brief Change the state of service metrics collection. */
+        kPopupDisplayChangeServiceMetrics  = 0x2100,
+        
+        /*! @brief Display detailed information request. */
+        kPopupDetailedDisplayEntityInfo,
+        
+        /*! @brief Display information request. */
+        kPopupDisplayEntityInfo,
+        
+        /*! @brief Display the channel metrics for a service. */
+        kPopupDisplayServiceMetrics,
+        
+        /*! @brief Hide the entity. */
+        kPopupHideEntity,
+        
+        /*! @brief Stop the service. */
+        kPopupStopService
+        
+    }; // EntityPopupMenuSelection
     
     /*! @brief The primary direction of the port. */
     enum PortDirection

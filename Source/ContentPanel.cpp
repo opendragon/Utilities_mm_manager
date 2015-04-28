@@ -152,14 +152,16 @@ static String getPathToSettingsFile(void)
 #endif // defined(__APPLE__)
 
 ContentPanel::ContentPanel(ChannelManagerWindow * containingWindow) :
-    inherited1(), inherited2(), _entitiesPanel(new EntitiesPanel(this)),
-    _containingWindow(containingWindow),
+    inherited1(), inherited2(), inherited3(), _entitiesPanel(new EntitiesPanel(this)),
+    _menuBar(new MenuBarComponent(this)), _containingWindow(containingWindow),
+    _selectedChannel(nullptr), _selectedContainer(nullptr),
 #if (defined(USE_OGDF_POSITIONING) && defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY))
     _initialPositioningDone(false),
 #endif // defined(USE_OGDF_POSITIONING) && defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY)
     _invertBackground(false), _skipNextScan(false), _whiteBackground(false)
 {
     OD_LOG_ENTER(); //####
+    addAndMakeVisible(_menuBar);
     _entitiesPanel->setSize(_entitiesPanel->getWidth(),
                             _entitiesPanel->getHeight() - _containingWindow->getTitleBarHeight());
     setSize(_entitiesPanel->getWidth(), _entitiesPanel->getHeight());
@@ -174,6 +176,7 @@ ContentPanel::ContentPanel(ChannelManagerWindow * containingWindow) :
 ContentPanel::~ContentPanel(void)
 {
     OD_LOG_OBJENTER(); //####
+    PopupMenu::dismissAllActiveMenus();
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::~ContentPanel
 
@@ -220,6 +223,7 @@ void ContentPanel::getCommandInfo(CommandID                commandID,
         case ChannelManagerWindow::kCommandUnhideEntities :
             result.setInfo("Unhide", "Unhide all hidden entities", "View", 0);
             result.addDefaultKeypress('U', ModifierKeys::commandModifier);
+            result.setActive(0 < _entitiesPanel->getNumberOfHiddenEntities());
             break;
             
         default :
@@ -229,6 +233,112 @@ void ContentPanel::getCommandInfo(CommandID                commandID,
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::getCommandInfo
 
+StringArray ContentPanel::getMenuBarNames(void)
+{
+    OD_LOG_OBJENTER(); //####
+    const char * const names[] = { "Channel Manager", "Display", "Operation", nullptr };
+    
+    OD_LOG_OBJEXIT(); //####
+    return StringArray(names);
+} // ContentPanel::getMenuBarNames
+
+PopupMenu ContentPanel::getMenuForIndex(const int      menuIndex,
+                                        const String & menuName)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_LL1("menuIndex = ", menuIndex); //####
+    OD_LOG_S1s("menuName = ", menuName.toStdString()); //####
+    ApplicationCommandManager * commandManager =
+                                            &ChannelManagerWindow::getApplicationCommandManager();
+    PopupMenu                   menu;
+    
+    switch (menuIndex)
+    {
+        case 0 :
+            // Main
+            menu.addCommandItem(commandManager, StandardApplicationCommandIDs::quit);
+            break;
+            
+        case 1 :
+            // Display
+            menu.addCommandItem(commandManager, ChannelManagerWindow::kCommandDoRepaint);
+            menu.addCommandItem(commandManager, ChannelManagerWindow::kCommandInvertBackground);
+            menu.addCommandItem(commandManager, ChannelManagerWindow::kCommandWhiteBackground);
+            menu.addSeparator();
+            menu.addCommandItem(commandManager, ChannelManagerWindow::kCommandUnhideEntities);
+            break;
+
+        case 2 :
+            // Operation
+            if (_selectedChannel)
+            {
+                bool               isChannel = false;
+                bool               showMetrics = false;
+                ChannelContainer * theParent = _selectedChannel->getParent();
+                
+                if (theParent && (kContainerKindService == theParent->getKind()))
+                {
+                    isChannel = true;
+                    showMetrics = theParent->getMetricsState();
+                }
+                menu.addItem(kPopupDisplayPortInfo, isChannel ? "Display channel information" :
+                             "Display port information");
+                menu.addItem(kPopupDetailedDisplayPortInfo, isChannel ?
+                             "Display detailed channel information" :
+                             "Display detailed port information");
+                if (isChannel)
+                {
+                    menu.addSeparator();
+                    menu.addItem(kPopupDisplayChannelMetrics, "Display channel metrics",
+                                 showMetrics);
+                }
+                if ((kPortDirectionInput != _selectedChannel->getDirection()) &&
+                    (kPortUsageClient != _selectedChannel->getUsage()))
+                {
+                    menu.addSeparator();
+                    menu.addItem(kPopupAddSimpleMonitor, "Enable activity indicator", false);
+                    menu.addItem(kPopupAddScrollingMonitor, "Add scrolling monitor", false);
+                }
+            }
+            else if (_selectedContainer)
+            {
+                bool isService = (kContainerKindService == _selectedContainer->getKind());
+                
+                menu.addItem(kPopupDisplayEntityInfo, isService ? "Display service information" :
+                             "Display entity information");
+                menu.addItem(kPopupDetailedDisplayEntityInfo, isService ?
+                             "Display detailed service information" :
+                             "Display detailed entity information");
+                if (isService)
+                {
+                    bool metricsEnabled = _selectedContainer->getMetricsState();
+                    
+                    menu.addSeparator();
+                    menu.addItem(kPopupDisplayChangeServiceMetrics,
+                                 metricsEnabled ? "Disable service metrics collection":
+                                 "Enable service metrics collection");
+                    menu.addItem(kPopupDisplayServiceMetrics, "Display service metrics",
+                                 metricsEnabled);
+                }
+                menu.addItem(kPopupHideEntity, isService ? "Hide the service" : "Hide the entity");
+                if (isService)
+                {
+                    menu.addSeparator();
+                    menu.addItem(kPopupStopService, "Stop the service");
+                }
+            }
+            else
+            {
+                menu.addItem(0, "<Nothing selected>", false);
+            }
+            break;
+        
+        default :
+            break;
+    }
+    return menu;
+} // ContentPanel::getMenuForIndex
+
 ApplicationCommandTarget * ContentPanel::getNextCommandTarget(void)
 {
     OD_LOG_OBJENTER(); //####
@@ -237,6 +347,75 @@ ApplicationCommandTarget * ContentPanel::getNextCommandTarget(void)
     OD_LOG_OBJEXIT_P(nextOne); //####
     return nextOne;
 } // ContentPanel::getNextCommandTarget
+
+void ContentPanel::menuItemSelected(const int menuItemID,
+                                    const int topLevelMenuIndex)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_LL2("menuItemID = ", menuItemID, "topLevelMenuIndex = ", topLevelMenuIndex); //####
+    bool isChannel = false;
+    
+    if (_selectedChannel)
+    {
+        ChannelContainer * theParent = _selectedChannel->getParent();
+        
+        if (theParent && (kContainerKindService == theParent->getKind()))
+        {
+            isChannel = true;
+        }
+    }
+    switch (menuItemID)
+    {
+            // Container menu items
+        case kPopupDisplayChangeServiceMetrics :
+            _selectedContainer->setMetricsState(! _selectedContainer->getMetricsState());
+            break;
+            
+        case kPopupDisplayEntityInfo :
+            _selectedContainer->displayInformation(false);
+            break;
+            
+        case kPopupDetailedDisplayEntityInfo :
+            _selectedContainer->displayInformation(true);
+            break;
+            
+        case kPopupDisplayServiceMetrics :
+            _selectedContainer->displayMetrics();
+            break;
+            
+        case kPopupHideEntity :
+            _selectedContainer->hide();
+            break;
+            
+        case kPopupStopService :
+            _selectedContainer->stopTheService();
+            break;
+           
+            // Channel menu items
+        case kPopupAddScrollingMonitor :
+            break;
+            
+        case kPopupAddSimpleMonitor :
+            break;
+            
+        case kPopupDetailedDisplayPortInfo :
+            _selectedChannel->displayInformation(isChannel, true);
+            break;
+            
+        case kPopupDisplayChannelMetrics :
+            _selectedChannel->displayChannelMetrics();
+            break;
+            
+        case kPopupDisplayPortInfo :
+            _selectedChannel->displayInformation(isChannel, false);
+            break;
+            
+        default :
+            break;
+            
+    }
+    OD_LOG_OBJEXIT(); //####
+} // ContentPanel::menuItemSelected
 
 void ContentPanel::paint(Graphics & gg)
 {
@@ -380,7 +559,8 @@ bool ContentPanel::perform(const InvocationInfo & info)
             break;
             
         case ChannelManagerWindow::kCommandUnhideEntities :
-            // TBD
+            _entitiesPanel->unhideEntities();
+            requestWindowRepaint();
             break;
             
         default :
@@ -447,6 +627,10 @@ void ContentPanel::requestWindowRepaint(void)
 void ContentPanel::resized(void)
 {
     OD_LOG_OBJENTER(); //####
+    Rectangle<int> area(getLocalBounds());
+    int            offset = LookAndFeel::getDefaultLookAndFeel().getDefaultMenuBarHeight();
+    
+    _menuBar->setBounds(area.removeFromTop(offset));
     _entitiesPanel->setSize(getWidth(), getHeight());
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::resized
@@ -476,6 +660,23 @@ void ContentPanel::saveEntityPositions(void)
     }
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::saveEntityPositions
+
+void ContentPanel::setChannelOfInterest(ChannelEntry * aChannel)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("aChannel = ", aChannel); //####
+    _selectedChannel = aChannel;
+    _selectedContainer = nullptr;
+    OD_LOG_OBJEXIT(); //####
+} // ContentPanel::setChannelOfInterest
+
+void ContentPanel::setContainerOfInterest(ChannelContainer * aContainer)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("aContainer = ", aContainer); //####
+    _selectedContainer = aContainer;
+    OD_LOG_OBJEXIT(); //####
+} // ContentPanel::setContainerOfInterest
 
 void ContentPanel::setEntityPositions(void)
 {
@@ -860,7 +1061,8 @@ void ContentPanel::visibleAreaChanged(const juce::Rectangle<int> & newVisibleAre
 #endif // ! defined(OD_ENABLE_LOGGING)
     OD_LOG_OBJENTER(); //####
     OD_LOG_LL4("nVA.x = ", newVisibleArea.getX(), "nVA.y = ", newVisibleArea.getY(), //####
-               "nVA.w = ", newVisibleArea.getWidth(), "nVA.h = ", newVisibleArea.getHeight()); //####
+               "nVA.w = ", newVisibleArea.getWidth(), "nVA.h = ", //####
+               newVisibleArea.getHeight()); //####
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::visibleAreaChanged
 #if (! MAC_OR_LINUX_)

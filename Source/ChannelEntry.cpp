@@ -65,29 +65,6 @@ using namespace std;
 # pragma mark Private structures, constants and variables
 #endif // defined(__APPLE__)
 
-/*! @brief The menu selection from the popup menu. */
-enum ChannelPopupMenuSelection
-{
-    /*! @brief A placeholder for the popup menu. */
-    kPopupDisplayNoItem = 0,
-    
-    /*! @brief Add a scrolling monitor to the port. */
-    kPopupAddScrollingMonitor,
-    
-    /*! @brief Add a simple monitor to the port. */
-    kPopupAddSimpleMonitor,
-    
-    /*! @brief Display detailed information request. */
-    kPopupDetailedDisplayPortInfo,
-
-    /*! @brief Display information request. */
-    kPopupDisplayPortInfo,
-    
-    /*! @brief Display the metrics for the channel. */
-    kPopupDisplayChannelMetrics
-    
-}; // PopupMenuSelection
-
 /*! @brief The horizontal and vertical length of the arrow 'arm'. */
 static const float kArrowSize = 7;
 
@@ -1156,6 +1133,10 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
         {
             displayAndProcessPopupMenu();
             passOn = false;
+        }
+        else
+        {
+            _parent->getOwner().getContainer()->setChannelOfInterest(this);
         }
     }
     if (passOn)

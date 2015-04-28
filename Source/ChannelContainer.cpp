@@ -63,32 +63,6 @@ using namespace std;
 # pragma mark Private structures, constants and variables
 #endif // defined(__APPLE__)
 
-/*! @brief The menu selection from the popup menu. */
-enum EntityPopupMenuSelection
-{
-    /*! @brief A placeholder for the popup menu. */
-    kPopupDisplayNoItem = 0,
-    
-    /*! @brief Change the state of service metrics collection. */
-    kPopupDisplayChangeServiceMetrics,
-    
-    /*! @brief Display detailed information request. */
-    kPopupDetailedDisplayEntityInfo,
-
-    /*! @brief Display information request. */
-    kPopupDisplayEntityInfo,
-    
-    /*! @brief Display the channel metrics for a service. */
-    kPopupDisplayServiceMetrics,
-    
-    /*! @brief Hide the entity. */
-    kPopupHideEntity,
-    
-    /*! @brief Stop the service. */
-    kPopupStopService
-    
-}; // EntityPopupMenuSelection
-
 /*! @brief The amount of space between each row of the entries in the container. */
 static const float lEntryGap = 1;
 
@@ -632,6 +606,10 @@ void ChannelContainer::mouseDown(const MouseEvent & ee)
         displayAndProcessPopupMenu();
         doDrag = false;
     }
+    else
+    {
+        _owner.getContainer()->setContainerOfInterest(this);
+    }
     if (doDrag)
     {
         _dragger.startDraggingComponent(this, ee);
@@ -651,6 +629,8 @@ void ChannelContainer::mouseDrag(const MouseEvent & ee)
     }
     if (doDrag)
     {
+        _owner.getContainer()->setContainerOfInterest(nullptr);
+        _owner.getContainer()->setChannelOfInterest(nullptr);
         _dragger.dragComponent(this, ee, &_constrainer);
         _owner.repaint();
     }

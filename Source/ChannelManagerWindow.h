@@ -75,13 +75,13 @@ namespace ChannelManager
             kCommandDoRepaint = 0x2000,
             
             /*! @brief The command to invert the background gradient. */
-            kCommandInvertBackground = 0x2001,
+            kCommandInvertBackground,
             
             /*! @brief The command to set the background to white. */
-            kCommandWhiteBackground = 0x2002,
+            kCommandWhiteBackground,
             
             /*! @brief Unhide all entities. */
-            kCommandUnhideEntities = 0x2003
+            kCommandUnhideEntities
             
         }; // CommandIDs
 

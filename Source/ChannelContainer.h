@@ -115,6 +115,13 @@ namespace ChannelManager
         /*! @brief Deselect the entity. */
         void deselect(void);
         
+        /*! @brief Display information for a container.
+         @param moreDetails @c true if more details are to be shown and @c false otherwise. */
+        void displayInformation(const bool moreDetails);
+        
+        /*! @brief Display metrics for a service. */
+        void displayMetrics(void);
+        
         /*! @brief Display the connections between containers.
          @param gg The graphics context in which to draw. */
         void drawOutgoingConnections(Graphics & gg);
@@ -272,6 +279,10 @@ namespace ChannelManager
         /*! @brief Sets the hidden flag for the entity. */
         void setHidden(void);
         
+        /*! @brief Change the state of service metrics collection.
+         @param newState The requested state of service metrics collection. */
+        void setMetricsState(const bool newState);
+        
 # if defined(USE_OGDF_POSITIONING)
         /*! @brief Sets the node corresponding to the entity.
          @param newNode The new value for the node corresponding to the entity. */
@@ -284,13 +295,8 @@ namespace ChannelManager
         /*! @brief Sets the visited flag for the entity. */
         void setVisited(void);
         
-        /*! @brief Returns the state of the visited flag.
-         @returns The state of the visited flag. */
-        inline bool wasVisited(void)
-        const
-        {
-            return _visited;
-        } // wasVisited
+        /*! @brief Tell the corresponding service to stop. */
+        void stopTheService(void);
         
         /*! @brief Returns the state of the hidden flag.
          @returns The state of the hidden flag. */
@@ -300,26 +306,20 @@ namespace ChannelManager
             return _hidden;
         } // wasHidden
         
+        /*! @brief Returns the state of the visited flag.
+         @returns The state of the visited flag. */
+        inline bool wasVisited(void)
+        const
+        {
+            return _visited;
+        } // wasVisited
+        
     protected :
         
     private :
         
         /*! @brief Respond to a request for a popup menu. */
         void displayAndProcessPopupMenu(void);
-        
-        /*! @brief Display information for a container.
-         @param moreDetails @c true if more details are to be shown and @c false otherwise. */
-        void displayInformation(const bool moreDetails);
-        
-        /*! @brief Display metrics for a service. */
-        void displayMetrics(void);
-        
-        /*! @brief Change the state of service metrics collection.
-         @param newState The requested state of service metrics collection. */
-        void setMetricsState(const bool newState);
-        
-        /*! @brief Tell the corresponding service to stop. */
-        void stopTheService(void);
         
     public :
     

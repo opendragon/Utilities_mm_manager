@@ -129,6 +129,15 @@ namespace ChannelManager
         /*! @brief Stop displaying the disconnect marker. */
         void clearDisconnectMarker(void);
         
+        /*! @brief Display metrics for a channel. */
+        void displayChannelMetrics(void);
+        
+        /*! @brief Display information for a port.
+         @param isChannel @c true if the port is a channel and @c false otherwise.
+         @param moreDetails @c true if more details are to be shown and @c false otherwise. */
+        void displayInformation(const bool isChannel,
+                                const bool moreDetails);
+        
         /*! @brief Draw a drag line from an entry.
          @param gg The graphics context in which to draw.
          @param position The coordinates of the drag line endpoint.
@@ -291,7 +300,7 @@ namespace ChannelManager
         
         /*! @brief Called when a mouse button is released.
          @param ee Details about the position and status of the mouse event. */
-        virtual void mouseUp(const MouseEvent& ee);
+        virtual void mouseUp(const MouseEvent & ee);
         
         /*! @brief Draw the content of the component.
          @param gg The graphics context in which to draw. */
@@ -342,15 +351,6 @@ namespace ChannelManager
         
         /*! @brief Respond to a request for a popup menu. */
         void displayAndProcessPopupMenu(void);
-        
-        /*! @brief Display metrics for a channel. */
-        void displayChannelMetrics(void);
-        
-        /*! @brief Display information for a port.
-         @param isChannel @c true if the port is a channel and @c false otherwise.
-         @param moreDetails @c true if more details are to be shown and @c false otherwise. */
-        void displayInformation(const bool isChannel,
-                                const bool moreDetails);
         
         /*! @brief Remove all connections. */
         void removeAllConnections(void);

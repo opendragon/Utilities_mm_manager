@@ -62,7 +62,7 @@ namespace ChannelManager
     class ScannerThread;
     
     /*! @brief The content area of the main window of the application. */
-    class ContentPanel : public ApplicationCommandTarget,
+    class ContentPanel : public ApplicationCommandTarget, public MenuBarModel,
                          public Viewport
     {
     public :
@@ -104,6 +104,24 @@ namespace ChannelManager
             return *_entitiesPanel;
         } // getEntitiesPanel
         
+        /*! @brief Return a list of the names of the menus.
+         @returns A list of the names of the menus. */
+        virtual StringArray getMenuBarNames(void);
+
+        /*! @brief Return the popup menu to display for a given top-level menu.
+         @param menuIndex The index of the top-level menu to show.
+         @param menuName The name of the top-level menu item to show.
+         @returns The popup menu corresponding to the given index and name. */
+        virtual PopupMenu getMenuForIndex(const int      menuIndex,
+                                          const String & menuName);
+
+        /*! @brief Perform the selected menu item action.
+         @param menuItemID The item ID of the menu item that was selected.
+         @param topLevelMenuIndex The index of the top-level menu from which the item was
+         selected. */
+        virtual void menuItemSelected(const int menuItemID,
+                                      const int topLevelMenuIndex);
+
         /*! @brief Draw the content of the component.
          @param gg The graphics context in which to draw. */
         void paint(Graphics & gg);
@@ -122,6 +140,10 @@ namespace ChannelManager
         
         /*! @brief Record the positions of all the entities in the panel. */
         void saveEntityPositions(void);
+        
+        void setChannelOfInterest(ChannelEntry * aChannel);
+        
+        void setContainerOfInterest(ChannelContainer * aContainer);
         
         /*! @brief Ignore the result of the next scan. */
         void skipScan(void);
@@ -173,10 +195,13 @@ namespace ChannelManager
     private :
         
         /*! @brief The first class that this class is derived from. */
-        typedef Viewport inherited1;
+        typedef ApplicationCommandTarget inherited1;
         
         /*! @brief The second class that this class is derived from. */
-        typedef ApplicationCommandTarget inherited2;
+        typedef MenuBarModel inherited2;
+        
+        /*! @brief The third class that this class is derived from. */
+        typedef Viewport inherited3;
         
         /*! @brief The positions that entities were last seen at. */
         PositionMap _rememberedPositions;
@@ -184,8 +209,17 @@ namespace ChannelManager
         /*! @brief The entities panel. */
         ScopedPointer<EntitiesPanel> _entitiesPanel;
         
+        /*! @brief The menubar for the panel. */
+        ScopedPointer<MenuBarComponent> _menuBar;
+
         /*! @brief The window in which the panel is embedded. */
         ChannelManagerWindow * _containingWindow;
+        
+        /*! @brief The selected channel. */
+        ChannelEntry * _selectedChannel;
+        
+        /*! @brief The selected container. */
+        ChannelContainer * _selectedContainer;
         
 # if (defined(USE_OGDF_POSITIONING) && defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY))
         bool _initialPositioningDone;
