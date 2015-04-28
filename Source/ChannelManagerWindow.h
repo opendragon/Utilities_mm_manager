@@ -78,7 +78,10 @@ namespace ChannelManager
             kCommandInvertBackground = 0x2001,
             
             /*! @brief The command to set the background to white. */
-            kCommandWhiteBackground = 0x2002
+            kCommandWhiteBackground = 0x2002,
+            
+            /*! @brief Unhide all entities. */
+            kCommandUnhideEntities = 0x2003
             
         }; // CommandIDs
 

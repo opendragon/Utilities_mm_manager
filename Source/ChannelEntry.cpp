@@ -951,6 +951,8 @@ void ChannelEntry::drawOutgoingConnections(Graphics & gg)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("gg = ", &gg); //####
+    bool selfIsVisible = _parent->isVisible();
+    
     for (ChannelConnections::const_iterator walker(_outputConnections.begin());
          _outputConnections.end() != walker; ++walker)
     {
@@ -958,7 +960,13 @@ void ChannelEntry::drawOutgoingConnections(Graphics & gg)
         
         if (candidate)
         {
-            drawConnection(gg, this, candidate->_otherChannel, candidate->_connectionMode);
+            ChannelEntry * otherChannelEntry = candidate->_otherChannel;
+            bool           otherIsVisible = otherChannelEntry->_parent->isVisible();
+            
+            if (selfIsVisible && otherIsVisible)
+            {
+                drawConnection(gg, this, candidate->_otherChannel, candidate->_connectionMode);
+            }
         }
     }
     OD_LOG_OBJEXIT(); //####

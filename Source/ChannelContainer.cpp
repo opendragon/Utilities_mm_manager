@@ -81,6 +81,9 @@ enum EntityPopupMenuSelection
     /*! @brief Display the channel metrics for a service. */
     kPopupDisplayServiceMetrics,
     
+    /*! @brief Hide the entity. */
+    kPopupHideEntity,
+    
     /*! @brief Stop the service. */
     kPopupStopService
     
@@ -125,7 +128,8 @@ ChannelContainer::ChannelContainer(const ContainerKind           kind,
 #if defined(USE_OGDF_POSITIONING)
     _node(NULL),
 #endif // defined(USE_OGDF_POSITIONING)
-    _owner(owner), _kind(kind), _selected(false), _visited(false), _newlyCreated(true)
+    _owner(owner), _kind(kind), _hidden(false), _newlyCreated(true), _selected(false),
+    _visited(false)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_S4s("title = ", title, "behaviour = ", behaviour, "description = ", description, //####
@@ -205,6 +209,13 @@ ChannelEntry * ChannelContainer::addPort(const yarp::os::ConstString & portName,
     return aPort;
 } // ChannelContainer::addPort
 
+void ChannelContainer::clearHidden(void)
+{
+    OD_LOG_OBJENTER(); //####
+    _hidden = false;
+    OD_LOG_OBJEXIT(); //####
+} // ChannelContainer::clearHidden
+
 void ChannelContainer::clearMarkers(void)
 {
     OD_LOG_OBJENTER(); //####
@@ -256,6 +267,10 @@ void ChannelContainer::displayAndProcessPopupMenu(void)
                    metricsEnabled ? "Disable service metrics collection":
                    "Enable service metrics collection");
         mm.addItem(kPopupDisplayServiceMetrics, "Display service metrics", metricsEnabled);
+    }
+    mm.addItem(kPopupHideEntity, isService ? "Hide the service" : "Hide the entity");
+    if (isService)
+    {
         mm.addSeparator();
         mm.addItem(kPopupStopService, "Stop the service");
     }
@@ -279,6 +294,10 @@ void ChannelContainer::displayAndProcessPopupMenu(void)
             displayMetrics();
             break;
            
+        case kPopupHideEntity :
+            hide();
+            break;
+            
         case kPopupStopService :
             stopTheService();
             break;
@@ -528,6 +547,14 @@ bool ChannelContainer::hasPort(const ChannelEntry * aPort)
     return result;
 } // ChannelContainer::hasPort
 
+void ChannelContainer::hide(void)
+{
+    OD_LOG_OBJENTER(); //####
+    setVisible(false);
+    _owner.repaint();
+    OD_LOG_OBJEXIT(); //####
+} // ChannelContainer::hide
+
 void ChannelContainer::invalidateConnections(void)
 {
     OD_LOG_OBJENTER(); //####
@@ -683,6 +710,13 @@ void ChannelContainer::select(void)
     _selected = true;
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::select
+
+void ChannelContainer::setHidden(void)
+{
+    OD_LOG_OBJENTER(); //####
+    _hidden = true;
+    OD_LOG_OBJEXIT(); //####
+} // ChannelContainer::setHidden
 
 void ChannelContainer::setMetricsState(const bool newState)
 {

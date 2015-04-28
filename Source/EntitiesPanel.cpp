@@ -387,6 +387,9 @@ void EntitiesPanel::displayAndProcessPopupMenu(void)
                    _container->backgroundIsInverted());
         mm.addItem(ChannelManagerWindow::kCommandWhiteBackground, "White background", true,
                    _container->backgroundIsWhite());
+        mm.addSeparator();
+        mm.addItem(ChannelManagerWindow::kCommandUnhideEntities, "Unhide entities",
+                   0 < getNumberOfHiddenEntities());
         int result = mm.show();
         
         switch (result)
@@ -405,6 +408,11 @@ void EntitiesPanel::displayAndProcessPopupMenu(void)
                 _container->requestWindowRepaint();
                 break;
                 
+            case ChannelManagerWindow::kCommandUnhideEntities :
+                unhideEntities();
+                _container->requestWindowRepaint();
+                break;
+            
             default :
                 break;
                 
@@ -536,6 +544,25 @@ const
     OD_LOG_OBJEXIT_LL(result); //####
     return result;
 } // EntitiesPanel::getNumberOfEntities
+
+size_t EntitiesPanel::getNumberOfHiddenEntities(void)
+const
+{
+    OD_LOG_OBJENTER(); //####
+    size_t count = 0;
+    
+    for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
+    {
+        ChannelContainer * anEntity = *it;
+        
+        if (anEntity && (! anEntity->isVisible()))
+        {
+            ++count;
+        }
+    }
+    OD_LOG_OBJEXIT_LL(count); //####
+    return count;
+} // EntitiesPanel::getNumberOfHiddenEntities
 
 void EntitiesPanel::invalidateAllConnections(void)
 {
@@ -769,6 +796,22 @@ void EntitiesPanel::skipScan(void)
     }
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::skipScan
+
+void EntitiesPanel::unhideEntities(void)
+{
+    OD_LOG_OBJENTER(); //####
+    for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
+    {
+        ChannelContainer * anEntity = *it;
+        
+        if (anEntity && (! anEntity->isVisible()))
+        {
+            anEntity->setHidden();
+        }
+    }
+    _container->requestWindowRepaint();
+    OD_LOG_OBJEXIT(); //####
+} // EntitiesPanel::unhideEntities
 
 #if defined(__APPLE__)
 # pragma mark Global functions

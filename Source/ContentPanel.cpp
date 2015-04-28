@@ -188,7 +188,8 @@ void ContentPanel::getAllCommands(Array<CommandID> & commands)
         {
             ChannelManagerWindow::kCommandDoRepaint,
             ChannelManagerWindow::kCommandInvertBackground,
-            ChannelManagerWindow::kCommandWhiteBackground
+            ChannelManagerWindow::kCommandWhiteBackground,
+            ChannelManagerWindow::kCommandUnhideEntities
         };
     
     commands.addArray(ids, numElementsInArray(ids));
@@ -214,6 +215,11 @@ void ContentPanel::getCommandInfo(CommandID                commandID,
         case ChannelManagerWindow::kCommandWhiteBackground :
             result.setInfo("White", "Use a white background", "View", 0);
             result.addDefaultKeypress('B', ModifierKeys::commandModifier);
+            break;
+            
+        case ChannelManagerWindow::kCommandUnhideEntities :
+            result.setInfo("Unhide", "Unhide all hidden entities", "View", 0);
+            result.addDefaultKeypress('U', ModifierKeys::commandModifier);
             break;
             
         default :
@@ -373,6 +379,10 @@ bool ContentPanel::perform(const InvocationInfo & info)
             requestWindowRepaint();
             break;
             
+        case ChannelManagerWindow::kCommandUnhideEntities :
+            // TBD
+            break;
+            
         default :
             break;
             
@@ -525,9 +535,9 @@ void ContentPanel::setEntityPositions(void)
                     ga->width(aNode) = ww;
                     ga->height(aNode) = hh;
                     aContainer->setNode(aNode);
-                    if (aContainer->isNew())
+                    if (aContainer->isNew() || aContainer->wasHidden())
                     {
-                        OD_LOG("(aContainer->isNew())"); //####
+                        OD_LOG("(aContainer->isNew() || aContainer->wasHidden())"); //####
                         // Check if the position was already known
                         yarp::os::ConstString       entityName(aContainer->getName().toStdString());
                         PositionMap::const_iterator match(_rememberedPositions.find(entityName));
@@ -639,7 +649,7 @@ void ContentPanel::setEntityPositions(void)
                     {
                         ChannelContainer * aContainer = _entitiesPanel->getEntity(ii);
                         
-                        if (aContainer && aContainer->isNew())
+                        if (aContainer && (aContainer->isNew() || aContainer->wasHidden()))
                         {
                             ogdf::node aNode = aContainer->getNode();
                             
@@ -669,9 +679,9 @@ void ContentPanel::setEntityPositions(void)
         {
             ChannelContainer * aContainer = _entitiesPanel->getEntity(ii);
             
-            if (aContainer && aContainer->isNew())
+            if (aContainer && (aContainer->isNew() || aContainer->wasHidden()))
             {
-                OD_LOG("(aContainer->isNew())"); //####
+                OD_LOG("(aContainer && (aContainer->isNew() || aContainer->wasHidden()))"); //####
                 float                       newX;
                 float                       newY;
                 juce::Rectangle<float>      entityShape(aContainer->getLocalBounds().toFloat());
@@ -691,6 +701,11 @@ void ContentPanel::setEntityPositions(void)
                     newY = match->second.y;
                 }
                 aContainer->setTopLeftPosition(static_cast<int>(newX), static_cast<int>(newY));
+                if (! aContainer->isVisible())
+                {
+                    aContainer->setVisible(true);
+                    aContainer->clearHidden();
+                }
             }
         }
     }
@@ -699,9 +714,9 @@ void ContentPanel::setEntityPositions(void)
     {
         ChannelContainer * aContainer = _entitiesPanel->getEntity(ii);
         
-        if (aContainer && aContainer->isNew())
+        if (aContainer && (aContainer->isNew() || aContainer->wasHidden()))
         {
-            OD_LOG("(aContainer->isNew())"); //####
+            OD_LOG("(aContainer && (aContainer->isNew() || aContainer->wasHidden()))"); //####
             float                       newX;
             float                       newY;
             juce::Rectangle<float>      entityShape(aContainer->getLocalBounds().toFloat());
@@ -721,6 +736,11 @@ void ContentPanel::setEntityPositions(void)
                 newY = match->second.y;
             }
             aContainer->setTopLeftPosition(static_cast<int>(newX), static_cast<int>(newY));
+            if (! aContainer->isVisible())
+            {
+                aContainer->setVisible(true);
+                aContainer->clearHidden();
+            }
         }
     }
 #endif // ! defined(USE_OGDF_POSITIONING)

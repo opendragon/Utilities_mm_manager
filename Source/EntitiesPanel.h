@@ -168,6 +168,10 @@ namespace ChannelManager
         size_t getNumberOfEntities(void)
         const;
         
+        /*! @brief Returns the number of hidden entities.
+         @returns The number of hidden entities. */
+        size_t getNumberOfHiddenEntities(void)
+        const;
         
         /*! @brief Mark all connections as invalid. */
         void invalidateAllConnections(void);
@@ -231,6 +235,9 @@ namespace ChannelManager
         
         /*! @brief Ignore the result of the next scan. */
         void skipScan(void);
+        
+        /* @brief Made hidden entities visible. */
+        void unhideEntities(void);
         
     protected :
         

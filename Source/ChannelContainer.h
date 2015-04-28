@@ -103,6 +103,9 @@ namespace ChannelManager
                                const PortUsage               portKind = kPortUsageOther,
                                const PortDirection           direction = kPortDirectionInputOutput);
         
+        /*! @brief Clears the hidden flag for the entity. */
+        void clearHidden(void);
+        
         /*! @brief Clear any connect / disconnect markers. */
         void clearMarkers(void);
         
@@ -212,6 +215,9 @@ namespace ChannelManager
          @returns @c true if the port is contained within the entity and @c false otherwise. */
         bool hasPort(const ChannelEntry * aPort);
         
+        /*! @brief Mark the entity as invisible. */
+        void hide(void);
+        
         /*! @brief Mark all the connections as invalid. */
         void invalidateConnections(void);
         
@@ -263,6 +269,9 @@ namespace ChannelManager
         /*! @brief Select the entity. */
         void select(void);
         
+        /*! @brief Sets the hidden flag for the entity. */
+        void setHidden(void);
+        
 # if defined(USE_OGDF_POSITIONING)
         /*! @brief Sets the node corresponding to the entity.
          @param newNode The new value for the node corresponding to the entity. */
@@ -282,6 +291,14 @@ namespace ChannelManager
         {
             return _visited;
         } // wasVisited
+        
+        /*! @brief Returns the state of the hidden flag.
+         @returns The state of the hidden flag. */
+        inline bool wasHidden(void)
+        const
+        {
+            return _hidden;
+        } // wasHidden
         
     protected :
         
@@ -345,21 +362,24 @@ namespace ChannelManager
         /*! @brief The kind of container. */
         ContainerKind _kind;
         
+        /*! @brief @c true if the container was hidden and @c false otherwise. */
+        bool _hidden;
+        
+        /*! @brief @c true if the container has just been created and @c false otherwise. */
+        bool _newlyCreated;
+        
         /*! @brief @c true if the container is selected and @c false otherwise. */
         bool _selected;
         
         /*! @brief @c true if the container was visited and @c false otherwise. */
         bool _visited;
         
-        /*! @brief @c true if the container has just been created and @c false otherwise. */
-        bool _newlyCreated;
-        
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
 #  pragma clang diagnostic ignored "-Wunused-private-field"
 # endif // defined(__APPLE__)
         /*! @brief Filler to pad to alignment boundary */
-        char _filler[5];
+        char _filler[4];
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
