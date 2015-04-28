@@ -221,7 +221,7 @@ void ContentPanel::getCommandInfo(CommandID                commandID,
             break;
             
         case ChannelManagerWindow::kCommandUnhideEntities :
-            result.setInfo("Unhide", "Unhide all hidden entities", "View", 0);
+            result.setInfo("Unhide entities", "Unhide all hidden entities", "View", 0);
             result.addDefaultKeypress('U', ModifierKeys::commandModifier);
             result.setActive(0 < _entitiesPanel->getNumberOfHiddenEntities());
             break;
@@ -242,10 +242,19 @@ StringArray ContentPanel::getMenuBarNames(void)
     return StringArray(names);
 } // ContentPanel::getMenuBarNames
 
+#if (! MAC_OR_LINUX_)
+# pragma warning(push)
+# pragma warning(disable: 4100)
+#endif // ! MAC_OR_LINUX_
 PopupMenu ContentPanel::getMenuForIndex(const int      menuIndex,
                                         const String & menuName)
 {
-    OD_LOG_OBJENTER(); //####
+#if (! defined(OD_ENABLE_LOGGING))
+# if MAC_OR_LINUX_
+#  pragma unused(menuName)
+# endif // MAC_OR_LINUX_
+#endif // ! defined(OD_ENABLE_LOGGING)
+	OD_LOG_OBJENTER(); //####
     OD_LOG_LL1("menuIndex = ", menuIndex); //####
     OD_LOG_S1s("menuName = ", menuName.toStdString()); //####
     ApplicationCommandManager * commandManager =
@@ -338,6 +347,9 @@ PopupMenu ContentPanel::getMenuForIndex(const int      menuIndex,
     }
     return menu;
 } // ContentPanel::getMenuForIndex
+#if (! MAC_OR_LINUX_)
+# pragma warning(pop)
+#endif // ! MAC_OR_LINUX_
 
 ApplicationCommandTarget * ContentPanel::getNextCommandTarget(void)
 {
@@ -348,10 +360,19 @@ ApplicationCommandTarget * ContentPanel::getNextCommandTarget(void)
     return nextOne;
 } // ContentPanel::getNextCommandTarget
 
+#if (! MAC_OR_LINUX_)
+# pragma warning(push)
+# pragma warning(disable: 4100)
+#endif // ! MAC_OR_LINUX_
 void ContentPanel::menuItemSelected(const int menuItemID,
                                     const int topLevelMenuIndex)
 {
-    OD_LOG_OBJENTER(); //####
+#if (! defined(OD_ENABLE_LOGGING))
+# if MAC_OR_LINUX_
+#  pragma unused(topLevelMenuIndex)
+# endif // MAC_OR_LINUX_
+#endif // ! defined(OD_ENABLE_LOGGING)
+	OD_LOG_OBJENTER(); //####
     OD_LOG_LL2("menuItemID = ", menuItemID, "topLevelMenuIndex = ", topLevelMenuIndex); //####
     bool isChannel = false;
     
@@ -416,6 +437,9 @@ void ContentPanel::menuItemSelected(const int menuItemID,
     }
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::menuItemSelected
+#if (! MAC_OR_LINUX_)
+# pragma warning(pop)
+#endif // ! MAC_OR_LINUX_
 
 void ContentPanel::paint(Graphics & gg)
 {
@@ -627,8 +651,8 @@ void ContentPanel::requestWindowRepaint(void)
 void ContentPanel::resized(void)
 {
     OD_LOG_OBJENTER(); //####
-    Rectangle<int> area(getLocalBounds());
-    int            offset = LookAndFeel::getDefaultLookAndFeel().getDefaultMenuBarHeight();
+    juce::Rectangle<int> area(getLocalBounds());
+    int                  offset = LookAndFeel::getDefaultLookAndFeel().getDefaultMenuBarHeight();
     
     _menuBar->setBounds(area.removeFromTop(offset));
     _entitiesPanel->setSize(getWidth(), getHeight());
