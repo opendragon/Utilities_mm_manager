@@ -699,6 +699,8 @@ bool ScannerThread::gatherEntities(Utilities::PortVector & detectedPorts,
         bool                 servicesSeen;
         Common::StringVector services;
 
+        _associatedPorts.clear();
+        _detectedServices.clear();
         _rememberedPorts.clear();
         _rememberedPorts.insert(_inputOnlyPortName);
         _rememberedPorts.insert(_outputOnlyPortName);
@@ -720,11 +722,6 @@ bool ScannerThread::gatherEntities(Utilities::PortVector & detectedPorts,
             {
                 addPortsWithAssociates(detectedPorts, checker, checkStuff);
             }
-        }
-        else
-        {
-            _associatedPorts.clear();
-            _detectedServices.clear();
         }
         // Record the ports that are standalone.
         addRegularPortEntities(detectedPorts, checker, checkStuff);

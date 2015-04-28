@@ -740,10 +740,13 @@ void ChannelContainer::stopTheService(void)
             bool doStop = (1 == AlertWindow::showOkCancelBox(AlertWindow::QuestionIcon,
                                                              "Are you sure that you want to stop "
                                                              "this service?", "If you do, it may "
-                                                             "take a few seconds to disappear from "
+                                                             "take a few moments to disappear from "
                                                              "the display, depending on network "
-                                                             "traffic.", String::empty,
-                                                             String::empty, nullptr, nullptr));
+                                                             "traffic. Also, the service will not "
+                                                             "exit if it is waiting on a command "
+                                                             "prompt, until a command is issued.",
+                                                             String::empty, String::empty, nullptr,
+                                                             nullptr));
             if (doStop && MplusM::Utilities::StopAService(aPort->getPortName(), STANDARD_WAIT_TIME))
             {
                 _owner.getContainer()->requestWindowRepaint();
