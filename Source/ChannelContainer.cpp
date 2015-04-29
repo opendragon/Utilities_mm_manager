@@ -524,8 +524,15 @@ bool ChannelContainer::hasPort(const ChannelEntry * aPort)
 void ChannelContainer::hide(void)
 {
     OD_LOG_OBJENTER(); //####
+    ContentPanel * thePanel = _owner.getContainer();
+    
     setVisible(false);
-    _owner.repaint();
+    if (thePanel)
+    {
+        thePanel->setChannelOfInterest(nullptr);
+        thePanel->setContainerOfInterest(nullptr);
+        thePanel->requestWindowRepaint();
+    }
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::hide
 
@@ -629,8 +636,6 @@ void ChannelContainer::mouseDrag(const MouseEvent & ee)
     }
     if (doDrag)
     {
-        _owner.getContainer()->setContainerOfInterest(nullptr);
-        _owner.getContainer()->setChannelOfInterest(nullptr);
         _dragger.dragComponent(this, ee, &_constrainer);
         _owner.repaint();
     }
@@ -763,7 +768,14 @@ void ChannelContainer::stopTheService(void)
                                                              nullptr));
             if (doStop && MplusM::Utilities::StopAService(aPort->getPortName(), STANDARD_WAIT_TIME))
             {
-                _owner.getContainer()->requestWindowRepaint();
+                ContentPanel * thePanel = _owner.getContainer();
+                
+                if (thePanel)
+                {
+                    thePanel->setChannelOfInterest(nullptr);
+                    thePanel->setContainerOfInterest(nullptr);
+                    thePanel->requestWindowRepaint();
+                }
             }
             break;
             

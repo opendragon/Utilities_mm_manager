@@ -236,10 +236,11 @@ void ContentPanel::getCommandInfo(CommandID                commandID,
 StringArray ContentPanel::getMenuBarNames(void)
 {
     OD_LOG_OBJENTER(); //####
-    const char * const names[] = { "Channel Manager", "Display", "Operation", nullptr };
+    const char * const names1[] = { "Channel Manager", "Display", "Operation", nullptr };
+    const char * const names2[] = { "Channel Manager", "Display", nullptr };
     
     OD_LOG_OBJEXIT(); //####
-    return StringArray(names);
+    return StringArray(_selectedContainer ? names1 : names2);
 } // ContentPanel::getMenuBarNames
 
 #if (! MAC_OR_LINUX_)
@@ -655,7 +656,7 @@ void ContentPanel::resized(void)
     int                  offset = LookAndFeel::getDefaultLookAndFeel().getDefaultMenuBarHeight();
     
     _menuBar->setBounds(area.removeFromTop(offset));
-    _entitiesPanel->setSize(getWidth(), getHeight());
+    _entitiesPanel->setBounds(area);
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::resized
 
@@ -699,6 +700,8 @@ void ContentPanel::setContainerOfInterest(ChannelContainer * aContainer)
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("aContainer = ", aContainer); //####
     _selectedContainer = aContainer;
+    _menuBar->menuBarItemsChanged(_menuBar->getModel());
+    _menuBar->repaint();
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::setContainerOfInterest
 
