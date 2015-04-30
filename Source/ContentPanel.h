@@ -96,6 +96,12 @@ namespace ChannelManager
             _whiteBackground = ! _whiteBackground;
         } // changeBackgroundColour
         
+        /*! @brief Change the background inversion state. */
+        inline void flipBackground(void)
+        {
+            _invertBackground = ! _invertBackground;
+        } // flipBackground
+        
         /*! @brief Returns the entities panel.
          @returns The entities panel. */
         EntitiesPanel & getEntitiesPanel(void)
@@ -141,18 +147,30 @@ namespace ChannelManager
         /*! @brief Record the positions of all the entities in the panel. */
         void saveEntityPositions(void);
         
+        /*! @brief Record the ChannelEntry that is selected. */
         void setChannelOfInterest(ChannelEntry * aChannel);
         
+        /*! @brief Record the ChannelContainer that is selected. */
         void setContainerOfInterest(ChannelContainer * aContainer);
+        
+        /*! @brief Prepare the channel menu for use.
+         @param aMenu The popup menu to be configured.
+         @param aChannel The selected channel. */
+        void setUpChannelMenu(PopupMenu &    aMenu,
+                              ChannelEntry & aChannel);
+        
+        /*! @brief Prepare the container menu for use.
+         @param aMenu The popup menu to be configured.
+         @param aContainer The selected container. */
+        void setUpContainerMenu(PopupMenu &        aMenu,
+                                ChannelContainer & aContainer);
+        
+        /*! @brief Prepare the display menu for use.
+         @param aMenu The popup menu to be configured. */
+        void setUpDisplayMenu(PopupMenu & aMenu);
         
         /*! @brief Ignore the result of the next scan. */
         void skipScan(void);
-        
-        /*! @brief Change the background inversion state. */
-        inline void flipBackground(void)
-        {
-            _invertBackground = ! _invertBackground;
-        } // flipBackground
         
         /*! @brief Called when the visible area changes.
          @param newVisibleArea The new visible area. */
@@ -183,6 +201,10 @@ namespace ChannelManager
         
         /*! @brief Set the entity positions, based on the scanned entities. */
         void setEntityPositions(void);
+        
+        /*! @brief Prepare the main menu for use.
+         @param aMenu The popup menu to be configured. */
+        void setUpMainMenu(PopupMenu & aMenu);
         
         /*! @brief Refresh the displayed entities and connections, based on the scanned entities.
          @param scanner The background scanning thread. */

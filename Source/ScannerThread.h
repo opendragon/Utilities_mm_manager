@@ -79,13 +79,8 @@ namespace ChannelManager
          @returns @c true if the scan data is available and @c false otherwise. */
         bool checkAndClearIfScanIsComplete(void);
         
-        /*! @brief Request access for reading from shared resources.
-         @returns @c true if the read lock has been acquired and @c false otherwise. */
-        bool conditionallyAcquireForRead(void);
-        
-        /*! @brief Request access for writing to shared resources.
-         @returns @c true if the write lock has been acquired and @c false otherwise. */
-        bool conditionallyAcquireForWrite(void);
+        /*! @brief Indicate that a port cleanup should be performed as soon as possible. */
+        void doCleanupSoon(void);
         
         /*! @brief Indicate that a scan should be performed as soon as possible. */
         void doScanSoon(void);
@@ -97,12 +92,6 @@ namespace ChannelManager
             return _workingData;
         } // getEntitiesData
         
-        /*! @brief Release access from reading from the shared resources. */
-        void relinquishFromRead(void);
-        
-        /*! @brief Release access from writing to the shared resources. */
-        void relinquishFromWrite(void);
-        
         /*! @brief Perform the background scan. */
         virtual void run(void);
         
@@ -111,12 +100,6 @@ namespace ChannelManager
         
         /*! @brief Indicate that the thread must leave as soon as possible. */
         void stopNow(void);
-        
-        /*! @brief Request access for reading from shared resources. */
-        void unconditionallyAcquireForRead(void);
-        
-        /*! @brief Request access for writing to shared resources. */
-        void unconditionallyAcquireForWrite(void);
         
     protected :
         
@@ -158,6 +141,14 @@ namespace ChannelManager
                          MplusM::Common::CheckFunction        checker = NULL,
                          void *                               checkStuff = NULL);
         
+        /*! @brief Request access for reading from shared resources.
+         @returns @c true if the read lock has been acquired and @c false otherwise. */
+        bool conditionallyAcquireForRead(void);
+        
+        /*! @brief Request access for writing to shared resources.
+         @returns @c true if the write lock has been acquired and @c false otherwise. */
+        bool conditionallyAcquireForWrite(void);
+        
         /*! @brief Determine whether a port can be used for input and/or output.
          @param oldEntry The previous record for the port, if it exists.
          @param portName The name of the port to check.
@@ -178,8 +169,20 @@ namespace ChannelManager
                             MplusM::Common::CheckFunction   checker = NULL,
                             void *                          checkStuff = NULL);
         
+        /*! @brief Release access from reading from the shared resources. */
+        void relinquishFromRead(void);
+        
+        /*! @brief Release access from writing to the shared resources. */
+        void relinquishFromWrite(void);
+        
         /*! @brief Tell the displayed panel to do a repaint. */
         void triggerRepaint(void);
+        
+        /*! @brief Request access for reading from shared resources. */
+        void unconditionallyAcquireForRead(void);
+        
+        /*! @brief Request access for writing to shared resources. */
+        void unconditionallyAcquireForWrite(void);
         
     public :
     
@@ -230,6 +233,10 @@ namespace ChannelManager
         /*! @brief The port used to determine if a port being checked can be used as an input. */
         MplusM::Common::AdapterChannel * _outputOnlyPort;
         
+        /*! @brief @c true if a port cleanup should be done as soon as possible and @c false
+         otherwise. */
+        bool _cleanupSoon;
+
 # if (defined(CHECK_FOR_STALE_PORTS) && defined(DO_SINGLE_CHECK_FOR_STALE_PORTS))
         /*! @brief @c true if the initial stale removal occurred and @c false otherwise. */
         bool _initialStaleCheckDone;

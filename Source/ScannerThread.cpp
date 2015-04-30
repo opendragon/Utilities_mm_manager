@@ -157,7 +157,7 @@ ScannerThread::ScannerThread(const yarp::os::ConstString & name,
 #if (defined(CHECK_FOR_STALE_PORTS) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS)))
     _lastStaleTime(- (2 * kMinStaleInterval)),
 #endif // efined(CHECK_FOR_STALE_PORTS) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS))
-    _inputOnlyPort(NULL), _outputOnlyPort(NULL),
+    _inputOnlyPort(NULL), _outputOnlyPort(NULL), _cleanupSoon(false),
 #if (defined(CHECK_FOR_STALE_PORTS) && defined(DO_SINGLE_CHECK_FOR_STALE_PORTS))
     _initialStaleCheckDone(false),
 #endif // defined(CHECK_FOR_STALE_PORTS) && defined(DO_SINGLE_CHECK_FOR_STALE_PORTS)
@@ -514,10 +514,16 @@ void ScannerThread::addServices(const Common::StringVector & services,
 bool ScannerThread::checkAndClearIfScanIsComplete(void)
 {
     OD_LOG_OBJENTER(); //####
+    for (bool locked = conditionallyAcquireForRead(); ! locked;
+         locked = conditionallyAcquireForRead())
+    {
+        MplusM::Utilities::GoToSleep(SHORT_SLEEP);
+    }
     bool result = _scanIsComplete;
     
     _scanIsComplete = false;
     OD_LOG_B1("_scanIsComplete <- ", _scanIsComplete); //####
+    relinquishFromRead();
     OD_LOG_OBJEXIT_B(result); //####
     return result;
 } // ScannerThread::checkAndClearIfScanIsComplete
@@ -628,6 +634,32 @@ PortDirection ScannerThread::determineDirection(ChannelEntry *                ol
     return result;
 } // ScannerThread::determineDirection
 
+void ScannerThread::doCleanupSoon(void)
+{
+    OD_LOG_OBJENTER(); //####
+    bool locked = conditionallyAcquireForWrite();
+    bool needToLeave = false;
+    
+    for ( ; (! locked) && (! needToLeave); locked = conditionallyAcquireForWrite())
+    {
+        if (lBailNow || threadShouldExit())
+        {
+            OD_LOG("(lBailNow || threadShouldExit())"); //####
+            needToLeave = true;
+        }
+        else
+        {
+            MplusM::Utilities::GoToSleep(SHORT_SLEEP);
+        }
+    }
+    if (locked)
+    {
+        _cleanupSoon = true;
+        relinquishFromWrite();
+    }
+    OD_LOG_OBJEXIT(); //####
+} // ScannerThread::doCleanupSoon
+
 void ScannerThread::doScanSoon(void)
 {
     OD_LOG_OBJENTER(); //####
@@ -643,11 +675,7 @@ void ScannerThread::doScanSoon(void)
         }
         else
         {
-#if MAC_OR_LINUX_
-            sleep(SHORT_SLEEP);
-#else // ! MAC_OR_LINUX_
-            Sleep(SHORT_SLEEP);
-#endif // ! MAC_OR_LINUX_
+            MplusM::Utilities::GoToSleep(SHORT_SLEEP);
         }
     }
     if (locked)
@@ -762,7 +790,17 @@ void ScannerThread::run(void)
         bool                  needToLeave = false;
         Utilities::PortVector detectedPorts;
         
-        if (gatherEntities(detectedPorts, CheckForExit))
+        if (_cleanupSoon)
+        {
+            unconditionallyAcquireForWrite();
+            _cleanupSoon = false;
+            OD_LOG_B1("_cleanupSoon <- ", _cleanupSoon); //####
+            relinquishFromWrite();
+#if defined(CHECK_FOR_STALE_PORTS)
+            Utilities::RemoveStalePorts();
+#endif // defined(CHECK_FOR_STALE_PORTS)
+        }
+        else if (gatherEntities(detectedPorts, CheckForExit))
         {
             int64 loopStartTime = Time::currentTimeMillis();
             
@@ -783,7 +821,7 @@ void ScannerThread::run(void)
             do
             {
                 for (int ii = 0, mm = (MIDDLE_SLEEP / VERY_SHORT_SLEEP);
-                     (mm > ii) && (! needToLeave); ++ii)
+                     (mm > ii) && (! needToLeave) && (! _cleanupSoon); ++ii)
                 {
                     if (lBailNow || threadShouldExit())
                     {
@@ -792,11 +830,7 @@ void ScannerThread::run(void)
                     }
                     else
                     {
-#if MAC_OR_LINUX_
-                        sleep(VERY_SHORT_SLEEP);
-#else // ! MAC_OR_LINUX_
-                        Sleep(VERY_SHORT_SLEEP);
-#endif // ! MAC_OR_LINUX_
+                        MplusM::Utilities::GoToSleep(VERY_SHORT_SLEEP);
                     }
                 }
                 if (needToLeave)
@@ -811,7 +845,7 @@ void ScannerThread::run(void)
                 for ( ; (! locked) && (! needToLeave); locked = conditionallyAcquireForRead())
                 {
                     for (int ii = 0, mm = (MIDDLE_SLEEP / VERY_SHORT_SLEEP);
-                         (mm > ii) && (! needToLeave); ++ii)
+                         (mm > ii) && (! needToLeave) && (! _cleanupSoon); ++ii)
                     {
                         if (lBailNow || threadShouldExit())
                         {
@@ -820,11 +854,7 @@ void ScannerThread::run(void)
                         }
                         else
                         {
-#if MAC_OR_LINUX_
-                            sleep(VERY_SHORT_SLEEP);
-#else // ! MAC_OR_LINUX_
-                            Sleep(VERY_SHORT_SLEEP);
-#endif // ! MAC_OR_LINUX_
+                            MplusM::Utilities::GoToSleep(VERY_SHORT_SLEEP);
                         }
                     }
                 }
@@ -836,7 +866,7 @@ void ScannerThread::run(void)
                     relinquishFromRead();
                 }
             }
-            while ((! canProceed) && (! needToLeave));
+            while ((! canProceed) && (! _cleanupSoon) && (! needToLeave));
             if (needToLeave)
             {
                 OD_LOG("(needToLeave)"); //####
@@ -860,6 +890,7 @@ void ScannerThread::run(void)
                     if (0 < delayAmount)
                     {
                         // Add a bit of delay.
+                        bool shouldCleanupSoon = false;
                         bool shouldScanSoon = false;
                         int  kk = static_cast<int>(delayAmount / VERY_SHORT_SLEEP);
                         
@@ -880,34 +911,29 @@ void ScannerThread::run(void)
                                     }
                                     else
                                     {
-#if MAC_OR_LINUX_
-                                        sleep(VERY_SHORT_SLEEP);
-#else // ! MAC_OR_LINUX_
-                                        Sleep(VERY_SHORT_SLEEP);
-#endif // ! MAC_OR_LINUX_
+                                        MplusM::Utilities::GoToSleep(VERY_SHORT_SLEEP);
                                     }
                                 }
                             }
                             if (locked)
                             {
                                 OD_LOG("(locked)"); //####
+                                shouldCleanupSoon = _cleanupSoon;
                                 shouldScanSoon = _scanSoon;
-                                OD_LOG_B1("shouldScanSoon <- ", shouldScanSoon); //####
+                                OD_LOG_B2("shouldCleanupSoon <- ", shouldCleanupSoon, //####
+                                          "shouldScanSoon <- ", shouldScanSoon); //####
                                 relinquishFromRead();
                                 // Sleep at least once!
                                 if (0 <= kk)
                                 {
                                     --kk;
-#if MAC_OR_LINUX_
-                                    sleep(VERY_SHORT_SLEEP);
-#else // ! MAC_OR_LINUX_
-                                    Sleep(VERY_SHORT_SLEEP);
-#endif // ! MAC_OR_LINUX_
+                                    MplusM::Utilities::GoToSleep(VERY_SHORT_SLEEP);
                                 }
                             }
-                            if (needToLeave || shouldScanSoon)
+                            if (needToLeave || shouldCleanupSoon || shouldScanSoon)
                             {
-                                OD_LOG("(needToLeave || shouldScanSoon)"); //####
+                                OD_LOG("(needToLeave || shouldCleanupSoon || " //####
+                                       "shouldScanSoon)"); //####
                                 break;
                             }
 
@@ -934,6 +960,7 @@ void ScannerThread::run(void)
         }
         else
         {
+            bool shouldCleanupSoon = false;
             bool shouldScanSoon = false;
             int  kk = (LONG_SLEEP / VERY_SHORT_SLEEP);
 
@@ -953,34 +980,28 @@ void ScannerThread::run(void)
                         }
                         else
                         {
-#if MAC_OR_LINUX_
-                            sleep(VERY_SHORT_SLEEP);
-#else // ! MAC_OR_LINUX_
-                            Sleep(VERY_SHORT_SLEEP);
-#endif // ! MAC_OR_LINUX_
+                            MplusM::Utilities::GoToSleep(VERY_SHORT_SLEEP);
                         }
                     }
                 }
                 if (locked)
                 {
                     OD_LOG("(locked)"); //####
+                    shouldCleanupSoon = _cleanupSoon;
                     shouldScanSoon = _scanSoon;
-                    OD_LOG_B1("shouldScanSoon <- ", shouldScanSoon); //####
+                    OD_LOG_B2("shouldCleanupSoon <- ", shouldCleanupSoon, //####
+                              "shouldScanSoon <- ", shouldScanSoon); //####
                     relinquishFromRead();
                     // Sleep at least once!
                     if (0 <= kk)
                     {
                         --kk;
-#if MAC_OR_LINUX_
-                        sleep(VERY_SHORT_SLEEP);
-#else // ! MAC_OR_LINUX_
-                        Sleep(VERY_SHORT_SLEEP);
-#endif // ! MAC_OR_LINUX_
+                        MplusM::Utilities::GoToSleep(VERY_SHORT_SLEEP);
                     }
                 }
-                if (needToLeave || shouldScanSoon)
+                if (needToLeave || shouldCleanupSoon || shouldScanSoon)
                 {
-                    OD_LOG("(needToLeave || shouldScanSoon)"); //####
+                    OD_LOG("(needToLeave || shouldCleanupSoon || shouldScanSoon)"); //####
                     break;
                 }
                 
@@ -994,7 +1015,9 @@ void ScannerThread::run(void)
 void ScannerThread::scanCanProceed(void)
 {
     OD_LOG_OBJENTER(); //####
+    unconditionallyAcquireForWrite();
     _scanCanProceed = true;
+    relinquishFromWrite();
     OD_LOG_B1("_scanCanProceed <- ", _scanCanProceed); //####
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::scanCanProceed

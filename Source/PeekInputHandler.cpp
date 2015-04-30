@@ -117,7 +117,7 @@ bool PeekInputHandler::handleInput(const yarp::os::Bottle &      input,
     {
         // The status output of the Registry Service is in the form:
         // "Date" "Time" "Registry" "operation" ....
-        if (4 <= input.size())
+        if (MpM_EXPECTED_REGISTRY_STATUS_SIZE <= input.size())
         {
             yarp::os::Value argValue(input.get(3));
             

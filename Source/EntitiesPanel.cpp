@@ -380,43 +380,9 @@ void EntitiesPanel::displayAndProcessPopupMenu(void)
     {
         PopupMenu mm;
         
-        mm.addSectionHeader("Display operations");
-        mm.addSeparator();
-        mm.addItem(ChannelManagerWindow::kCommandDoRepaint, "Repaint");
-        mm.addItem(ChannelManagerWindow::kCommandInvertBackground, "Invert background", true,
-                   _container->backgroundIsInverted());
-        mm.addItem(ChannelManagerWindow::kCommandWhiteBackground, "White background", true,
-                   _container->backgroundIsWhite());
-        mm.addSeparator();
-        mm.addItem(ChannelManagerWindow::kCommandUnhideEntities, "Unhide entities",
-                   0 < getNumberOfHiddenEntities());
-        int result = mm.show();
-        
-        switch (result)
-        {
-            case ChannelManagerWindow::kCommandDoRepaint :
-                _container->requestWindowRepaint();
-                break;
-                
-            case ChannelManagerWindow::kCommandInvertBackground :
-                _container->flipBackground();
-                _container->requestWindowRepaint();
-                break;
-                
-            case ChannelManagerWindow::kCommandWhiteBackground :
-                _container->changeBackgroundColour();
-                _container->requestWindowRepaint();
-                break;
-                
-            case ChannelManagerWindow::kCommandUnhideEntities :
-                unhideEntities();
-                _container->requestWindowRepaint();
-                break;
-            
-            default :
-                break;
-                
-        }
+        _container->setUpDisplayMenu(mm);
+        // Note that all the menu items are commands, so they are handled by the content panel.
+        mm.show();        
     }
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::displayAndProcessPopupMenu

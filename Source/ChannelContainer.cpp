@@ -223,37 +223,15 @@ void ChannelContainer::deselect(void)
 void ChannelContainer::displayAndProcessPopupMenu(void)
 {
     OD_LOG_OBJENTER(); //####
-    bool      isService = (kContainerKindService == _kind);
-    bool      metricsEnabled = false;
     PopupMenu mm;
-    
-    mm.addSectionHeader(isService ? "Service operations" : "Entity operations");
-    mm.addSeparator();
-    mm.addItem(kPopupDisplayEntityInfo, isService ? "Display service information" :
-               "Display entity information");
-    mm.addItem(kPopupDetailedDisplayEntityInfo, isService ? "Display detailed service information" :
-               "Display detailed entity information");
-    if (isService)
-    {
-        metricsEnabled = getMetricsState();
-        mm.addSeparator();
-        mm.addItem(kPopupDisplayChangeServiceMetrics,
-                   metricsEnabled ? "Disable service metrics collection":
-                   "Enable service metrics collection");
-        mm.addItem(kPopupDisplayServiceMetrics, "Display service metrics", metricsEnabled);
-    }
-    mm.addItem(kPopupHideEntity, isService ? "Hide the service" : "Hide the entity");
-    if (isService)
-    {
-        mm.addSeparator();
-        mm.addItem(kPopupStopService, "Stop the service");
-    }
+
+    getOwner().getContainer()->setUpContainerMenu(mm, *this);
     int result = mm.show();
     
     switch (result)
     {
         case kPopupDisplayChangeServiceMetrics :
-            setMetricsState(! metricsEnabled);
+            setMetricsState(! getMetricsState());
             break;
             
         case kPopupDisplayEntityInfo :

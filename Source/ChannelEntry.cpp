@@ -715,34 +715,13 @@ void ChannelEntry::displayAndProcessPopupMenu(void)
 {
     OD_LOG_OBJENTER(); //####
     bool      isChannel = false;
-    bool      showMetrics = false;
     PopupMenu mm;
     
-    if (_parent)
+    if (_parent && (kContainerKindService == _parent->getKind()))
     {
-        if (kContainerKindService == _parent->getKind())
-        {
-            isChannel = true;
-            showMetrics = _parent->getMetricsState();
-        }
+        isChannel = true;
     }
-    mm.addSectionHeader(isChannel ? "Channel operations" : "Port operations");
-    mm.addSeparator();
-    mm.addItem(kPopupDisplayPortInfo, isChannel ? "Display channel information" :
-               "Display port information");
-    mm.addItem(kPopupDetailedDisplayPortInfo, isChannel ? "Display detailed channel information" :
-               "Display detailed port information");
-    if (isChannel)
-    {
-        mm.addSeparator();
-        mm.addItem(kPopupDisplayChannelMetrics, "Display channel metrics", showMetrics);
-    }
-    if ((kPortDirectionInput != _direction) && (kPortUsageClient != _usage))
-    {
-        mm.addSeparator();
-        mm.addItem(kPopupAddSimpleMonitor, "Enable activity indicator", false);
-        mm.addItem(kPopupAddScrollingMonitor, "Add scrolling monitor", false);
-    }
+    _parent->getOwner().getContainer()->setUpChannelMenu(mm, *this);
     int result = mm.show();
     
     switch (result)

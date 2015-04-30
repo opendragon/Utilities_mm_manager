@@ -95,6 +95,9 @@ namespace ChannelManager
         /*! @brief Connect (or reconnect) the peek channel to the Registry Service. */
         void connectPeekChannel(void);
         
+        /*! @brief Indicate that a port cleanup should be performed as soon as possible. */
+        void doCleanupSoon(void);
+        
         /*! @brief Indicate that a scan should be performed as soon as possible. */
         void doScanSoon(void);
         

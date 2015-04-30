@@ -144,6 +144,16 @@ void ChannelManagerApplication::connectPeekChannel(void)
     OD_LOG_OBJEXIT(); //####
 } // ChannelManagerApplication::connectPeekChannel
 
+void ChannelManagerApplication::doCleanupSoon(void)
+{
+    OD_LOG_OBJENTER(); //####
+    if (_scanner)
+    {
+        _scanner->doScanSoon();
+    }
+    OD_LOG_OBJEXIT(); //####
+} // ChannelManagerApplication::doCleanupSoon
+
 void ChannelManagerApplication::doScanSoon(void)
 {
     OD_LOG_OBJENTER(); //####
