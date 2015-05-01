@@ -243,6 +243,12 @@ namespace ChannelManager
         /*! @brief The selected container. */
         ChannelContainer * _selectedContainer;
         
+        /*! @brief @c true if a channel was clicked and @c false otherwise. */
+        bool _channelClicked;
+        
+        /*! @brief @c true if a container was clicked and @c false otherwise. */
+        bool _containerClicked;
+        
 # if (defined(USE_OGDF_POSITIONING) && defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY))
         bool _initialPositioningDone;
 # endif // defined(USE_OGDF_POSITIONING) && defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY)

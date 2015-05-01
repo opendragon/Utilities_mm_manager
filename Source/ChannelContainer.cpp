@@ -225,7 +225,7 @@ void ChannelContainer::displayAndProcessPopupMenu(void)
     OD_LOG_OBJENTER(); //####
     PopupMenu mm;
 
-    getOwner().getContainer()->setUpContainerMenu(mm, *this);
+    getOwner().getContent()->setUpContainerMenu(mm, *this);
     int result = mm.show();
     
     switch (result)
@@ -502,7 +502,7 @@ bool ChannelContainer::hasPort(const ChannelEntry * aPort)
 void ChannelContainer::hide(void)
 {
     OD_LOG_OBJENTER(); //####
-    ContentPanel * thePanel = _owner.getContainer();
+    ContentPanel * thePanel = _owner.getContent();
     
     setVisible(false);
     if (thePanel)
@@ -593,7 +593,7 @@ void ChannelContainer::mouseDown(const MouseEvent & ee)
     }
     else
     {
-        _owner.getContainer()->setContainerOfInterest(this);
+        _owner.getContent()->setContainerOfInterest(this);
     }
     if (doDrag)
     {
@@ -746,7 +746,7 @@ void ChannelContainer::stopTheService(void)
                                                              nullptr));
             if (doStop && MplusM::Utilities::StopAService(aPort->getPortName(), STANDARD_WAIT_TIME))
             {
-                ContentPanel * thePanel = _owner.getContainer();
+                ContentPanel * thePanel = _owner.getContent();
                 
                 if (thePanel)
                 {

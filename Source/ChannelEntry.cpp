@@ -721,7 +721,7 @@ void ChannelEntry::displayAndProcessPopupMenu(void)
     {
         isChannel = true;
     }
-    _parent->getOwner().getContainer()->setUpChannelMenu(mm, *this);
+    _parent->getOwner().getContent()->setUpChannelMenu(mm, *this);
     int result = mm.show();
     
     switch (result)
@@ -1115,7 +1115,7 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
         }
         else
         {
-            _parent->getOwner().getContainer()->setChannelOfInterest(this);
+            _parent->getOwner().getContent()->setChannelOfInterest(this);
         }
     }
     if (passOn)

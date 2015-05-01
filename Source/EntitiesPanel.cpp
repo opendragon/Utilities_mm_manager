@@ -158,7 +158,7 @@ void EntitiesPanel::adjustSize(const bool andRepaint)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_B1("andRepaint = ", andRepaint); //####
-    ContentPanel * within = getContainer();
+    ContentPanel * within = getContent();
     
     OD_LOG_P1("within <- ", within); //####
     if (within)
@@ -582,6 +582,8 @@ void EntitiesPanel::mouseDown(const MouseEvent & ee)
 #endif // ! defined(OD_ENABLE_LOGGING)
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("ee = ", &ee); //####
+    _container->setChannelOfInterest(nullptr);
+    _container->setContainerOfInterest(nullptr);
     rememberConnectionStartPoint();
     clearMarkers();
     repaint();

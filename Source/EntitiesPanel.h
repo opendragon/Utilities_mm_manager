@@ -128,11 +128,11 @@ namespace ChannelManager
         
         /*! @brief Return the container in which the panel is embedded.
          @returns The container in which the panel is embedded. */
-        ContentPanel * getContainer(void)
+        ContentPanel * getContent(void)
         const
         {
             return _container;
-        } // getContainer
+        } // getContent
         
         /*! @brief Return an entity by index.
          @param index The zero-origin index of the entity.

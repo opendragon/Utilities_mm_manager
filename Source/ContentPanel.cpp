@@ -166,7 +166,8 @@ static String getPathToSettingsFile(void)
 ContentPanel::ContentPanel(ChannelManagerWindow * containingWindow) :
     inherited1(), inherited2(), inherited3(), _entitiesPanel(new EntitiesPanel(this)),
     _menuBar(new MenuBarComponent(this)), _containingWindow(containingWindow),
-    _selectedChannel(nullptr), _selectedContainer(nullptr),
+    _selectedChannel(nullptr), _selectedContainer(nullptr), _channelClicked(false),
+    _containerClicked(false),
 #if (defined(USE_OGDF_POSITIONING) && defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY))
     _initialPositioningDone(false),
 #endif // defined(USE_OGDF_POSITIONING) && defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY)
@@ -238,7 +239,7 @@ void ContentPanel::getCommandInfo(CommandID                commandID,
         case ChannelManagerWindow::kCommandClearSelection :
             result.setInfo("Clear selection", "Deselect any selected entities", "View", 0);
             result.addDefaultKeypress('C', ModifierKeys::commandModifier);
-            result.setActive(nullptr != _selectedContainer);
+            result.setActive((nullptr != _selectedContainer) || (nullptr != _selectedChannel));
             break;
             
         case ChannelManagerWindow::kCommandUnhideEntities :
@@ -440,6 +441,8 @@ void ContentPanel::paint(Graphics & gg)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("gg = ", &gg); //####
+    ChannelContainer * ofInterest;
+    
     if (_whiteBackground)
     {
         gg.setFillType(_invertBackground ? kFirstBackgroundColour : kSecondBackgroundColour);
@@ -475,21 +478,42 @@ void ContentPanel::paint(Graphics & gg)
         }
     }
     gg.fillAll();
+    _channelClicked = _containerClicked = false;
+    OD_LOG_B2("_channelClicked <- ", _channelClicked, "_containerClicked <- ", //####
+              _containerClicked); //####
+    if (_selectedChannel)
+    {
+        ofInterest = _selectedChannel->getParent();
+    }
+    else
+    {
+        ofInterest = _selectedContainer;
+    }
     for (size_t ii = 0, mm = _entitiesPanel->getNumberOfEntities(); mm > ii; ++ii)
     {
         ChannelContainer * aContainer = _entitiesPanel->getEntity(ii);
         
-        if (_selectedContainer == aContainer)
+        if (ofInterest == aContainer)
         {
-            juce::Rectangle<float> containerShape(aContainer->getBounds().toFloat());
+            juce::Rectangle<float> selectionRectangle;
             const float            dashes[] = { 5, 5 };
             const int              numDashes = (sizeof(dashes) / sizeof(*dashes));
             
-            containerShape.expand(kSelectionOffset, kSelectionOffset);
-            Point<float> topLeft(containerShape.getTopLeft());
-            Point<float> topRight(containerShape.getTopRight());
-            Point<float> bottomLeft(containerShape.getBottomLeft());
-            Point<float> bottomRight(containerShape.getBottomRight());
+            if (_selectedChannel)
+            {
+                selectionRectangle =
+                            _selectedChannel->getBounds().translated(ofInterest->getX(),
+                                                                      ofInterest->getY()).toFloat();
+            }
+            else
+            {
+                selectionRectangle = _selectedContainer->getBounds().toFloat();
+            }
+            selectionRectangle.expand(kSelectionOffset, kSelectionOffset);
+            Point<float> topLeft(selectionRectangle.getTopLeft());
+            Point<float> topRight(selectionRectangle.getTopRight());
+            Point<float> bottomLeft(selectionRectangle.getBottomLeft());
+            Point<float> bottomRight(selectionRectangle.getBottomRight());
             Line<float>  line1(topLeft, topRight);
             Line<float>  line2(topRight, bottomRight);
             Line<float>  line3(bottomRight, bottomLeft);
@@ -503,9 +527,15 @@ void ContentPanel::paint(Graphics & gg)
             {
                 gg.setColour(kFirstSelectionColour);
             }
-            gg.drawDashedLine(line1, dashes, numDashes, kSelectionThickness);
+            if (! _selectedChannel)
+            {
+                gg.drawDashedLine(line1, dashes, numDashes, kSelectionThickness);
+            }
             gg.drawDashedLine(line2, dashes, numDashes, kSelectionThickness);
-            gg.drawDashedLine(line3, dashes, numDashes, kSelectionThickness);
+            if (! _selectedChannel)
+            {
+                gg.drawDashedLine(line3, dashes, numDashes, kSelectionThickness);
+            }
             gg.drawDashedLine(line4, dashes, numDashes, kSelectionThickness);
         }
     }
@@ -677,8 +707,14 @@ void ContentPanel::setChannelOfInterest(ChannelEntry * aChannel)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("aChannel = ", aChannel); //####
+    _channelClicked = (nullptr != aChannel);
+    _containerClicked = false;
+    OD_LOG_B2("_channelClicked <- ", _channelClicked, "_containerClicked <- ", //####
+              _containerClicked); //####
     _selectedChannel = aChannel;
     _selectedContainer = nullptr;
+    OD_LOG_P2("_selectedChannel <- ", _selectedChannel, "_selectedContainer <- ", //####
+              _selectedContainer); //####
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::setChannelOfInterest
 
@@ -686,7 +722,15 @@ void ContentPanel::setContainerOfInterest(ChannelContainer * aContainer)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("aContainer = ", aContainer); //####
-    _selectedContainer = aContainer;
+    if (! _channelClicked)
+    {
+        _containerClicked = (nullptr != aContainer);
+        OD_LOG_B1("_containerClicked <- ", _containerClicked); //####
+        _selectedChannel = nullptr;
+        _selectedContainer = aContainer;
+        OD_LOG_P2("_selectedChannel <- ", _selectedChannel, "_selectedContainer <- ", //####
+                  _selectedContainer); //####
+    }
     requestWindowRepaint();
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::setContainerOfInterest
