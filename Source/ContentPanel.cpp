@@ -87,6 +87,18 @@ static const Colour & kFirstBackgroundColour(Colours::darkgrey);
 /*! @brief The second colour to be used for the panel background. */
 static const Colour & kSecondBackgroundColour(Colours::lightgrey);
 
+/*! @brief The first colour to be used for the selection rectangle. */
+static const Colour & kFirstSelectionColour(Colours::greenyellow);
+
+/*! @brief The second colour to be used for the selection rectangle. */
+static const Colour & kSecondSelectionColour(Colours::darkmagenta);
+
+/*! @brief The offset of the selection rectangle from the selected entity. */
+static const float kSelectionOffset = 4;
+
+/*! @brief The thickness of the selection rectangle. */
+static const float kSelectionThickness = 2;
+
 /*! @brief The initial thickness of the horizontal and vertical scrollbars. */
 static const int kDefaultScrollbarThickness = 16;
 
@@ -192,6 +204,7 @@ void ContentPanel::getAllCommands(Array<CommandID> & commands)
             ChannelManagerWindow::kCommandDoRepaint,
             ChannelManagerWindow::kCommandInvertBackground,
             ChannelManagerWindow::kCommandWhiteBackground,
+            ChannelManagerWindow::kCommandClearSelection,
             ChannelManagerWindow::kCommandUnhideEntities
         };
     
@@ -220,6 +233,12 @@ void ContentPanel::getCommandInfo(CommandID                commandID,
             result.setInfo("White", "Use a white background", "View", 0);
             result.addDefaultKeypress('B', ModifierKeys::commandModifier);
             result.setTicked(backgroundIsWhite());
+            break;
+            
+        case ChannelManagerWindow::kCommandClearSelection :
+            result.setInfo("Clear selection", "Deselect any selected entities", "View", 0);
+            result.addDefaultKeypress('C', ModifierKeys::commandModifier);
+            result.setActive(nullptr != _selectedContainer);
             break;
             
         case ChannelManagerWindow::kCommandUnhideEntities :
@@ -456,44 +475,40 @@ void ContentPanel::paint(Graphics & gg)
         }
     }
     gg.fillAll();
-#if 0
-    // The following code will draw a dashed line around each container - use it for a template
-    // for the 'selection rectangle' code.
-    // Note that the default thickness of the line is 1 and the offset is set to 5, which should be
-    // a constant.
     for (size_t ii = 0, mm = _entitiesPanel->getNumberOfEntities(); mm > ii; ++ii)
     {
         ChannelContainer * aContainer = _entitiesPanel->getEntity(ii);
         
-        if (aContainer)
+        if (_selectedContainer == aContainer)
         {
             juce::Rectangle<float> containerShape(aContainer->getBounds().toFloat());
             const float            dashes[] = { 5, 5 };
             const int              numDashes = (sizeof(dashes) / sizeof(*dashes));
             
-            containerShape.expand(5, 5);
+            containerShape.expand(kSelectionOffset, kSelectionOffset);
             Point<float> topLeft(containerShape.getTopLeft());
             Point<float> topRight(containerShape.getTopRight());
             Point<float> bottomLeft(containerShape.getBottomLeft());
             Point<float> bottomRight(containerShape.getBottomRight());
-            Line<float>  aLine;
+            Line<float>  line1(topLeft, topRight);
+            Line<float>  line2(topRight, bottomRight);
+            Line<float>  line3(bottomRight, bottomLeft);
+            Line<float>  line4(bottomLeft, topLeft);
             
-            aLine.setStart(topLeft);
-            aLine.setEnd(topRight);
-            gg.setColour(Colours::cornsilk);
-            gg.drawDashedLine(aLine, dashes, numDashes);
-            aLine.setStart(topRight);
-            aLine.setEnd(bottomRight);
-            gg.drawDashedLine(aLine, dashes, numDashes);
-            aLine.setStart(bottomRight);
-            aLine.setEnd(bottomLeft);
-            gg.drawDashedLine(aLine, dashes, numDashes);
-            aLine.setStart(bottomLeft);
-            aLine.setEnd(topLeft);
-            gg.drawDashedLine(aLine, dashes, numDashes);
+            if (_whiteBackground)
+            {
+                gg.setColour(_invertBackground ? kFirstSelectionColour : kSecondSelectionColour);
+            }
+            else
+            {
+                gg.setColour(kFirstSelectionColour);
+            }
+            gg.drawDashedLine(line1, dashes, numDashes, kSelectionThickness);
+            gg.drawDashedLine(line2, dashes, numDashes, kSelectionThickness);
+            gg.drawDashedLine(line3, dashes, numDashes, kSelectionThickness);
+            gg.drawDashedLine(line4, dashes, numDashes, kSelectionThickness);
         }
     }
-#endif // 0
     ScannerThread * scanner = _containingWindow->getScannerThread();
     
     if (scanner)
@@ -548,6 +563,11 @@ bool ContentPanel::perform(const InvocationInfo & info)
         case ChannelManagerWindow::kCommandWhiteBackground :
             changeBackgroundColour();
             requestWindowRepaint();
+            break;
+            
+        case ChannelManagerWindow::kCommandClearSelection :
+            setChannelOfInterest(nullptr);
+            setContainerOfInterest(nullptr);
             break;
             
         case ChannelManagerWindow::kCommandUnhideEntities :
@@ -667,8 +687,7 @@ void ContentPanel::setContainerOfInterest(ChannelContainer * aContainer)
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("aContainer = ", aContainer); //####
     _selectedContainer = aContainer;
-    _menuBar->menuBarItemsChanged(_menuBar->getModel());
-    _menuBar->repaint();
+    requestWindowRepaint();
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::setContainerOfInterest
 
@@ -988,6 +1007,7 @@ void ContentPanel::setUpDisplayMenu(PopupMenu & aMenu)
     aMenu.addCommandItem(commandManager, ChannelManagerWindow::kCommandInvertBackground);
     aMenu.addCommandItem(commandManager, ChannelManagerWindow::kCommandWhiteBackground);
     aMenu.addSeparator();
+    aMenu.addCommandItem(commandManager, ChannelManagerWindow::kCommandClearSelection);
     aMenu.addCommandItem(commandManager, ChannelManagerWindow::kCommandUnhideEntities);
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::setUpDisplayMenu

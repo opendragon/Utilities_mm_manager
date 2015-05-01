@@ -80,6 +80,9 @@ namespace ChannelManager
             /*! @brief The command to set the background to white. */
             kCommandWhiteBackground,
             
+            /*! @brief Deselect any selected entity. */
+            kCommandClearSelection,
+
             /*! @brief Unhide all entities. */
             kCommandUnhideEntities
             
