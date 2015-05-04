@@ -209,15 +209,126 @@ void ChannelManagerApplication::initialise(const String & commandLine)
     else
     {
         OD_LOG("! (yarp::os::Network::checkNetwork())"); //####
-        AlertWindow::showMessageBox(AlertWindow::WarningIcon, getApplicationName(),
-                                    "No YARP network was detected, so execution is not possible.");
-# if MAC_OR_LINUX_
+        yarp::os::ConstString    yarpPath(Utilities::FindPathToExecutable("yarp"));
+#if MAC_OR_LINUX_
         yarp::os::impl::Logger & theLogger = Common::GetLogger();
+#endif // MAC_OR_LINUX_
         
-        theLogger.fail("YARP network not running.");
-# endif // MAC_OR_LINUX_
-        ////
+#if MAC_OR_LINUX_
+        theLogger.warning("YARP network not running.");
+#endif // MAC_OR_LINUX_
+        // No running YARP server was detected - first check if YARP is actually available:
+        if (0 < yarpPath.length())
+        {
+            // If YARP is installed, give the option of running a private copy.
+            bool           doLaunch = false;
+            ChildProcess * runYarp = new ChildProcess;
+            
+            if (runYarp)
+            {
+                StringArray nameAndArgs(yarpPath.c_str());
+                
+                nameAndArgs.add("version");
+                if (runYarp->start(nameAndArgs))
+                {
+                    const String childOutput(runYarp->readAllProcessOutput());
+                    
+                    runYarp->waitForProcessToFinish(10000);
+                    if (0 < childOutput.length())
+                    {
+                        // We have a useable YARP executable - ask what the user wants to do.
+                        doLaunch = (1 == AlertWindow::showOkCancelBox(AlertWindow::QuestionIcon,
+                                                                      "Do you wish to launch a "
+                                                                      "private YARP network?",
+                                                                      "If you do, it may take a "
+                                                                      "few moments to start, "
+                                                                      "depending on network "
+                                                                      "traffic and system "
+                                                                      "activity. "
+                                                                      "Also, the private YARP "
+                                                                      "network will be shut down "
+                                                                      "when this application "
+                                                                      "exits, resulting in loss of "
+                                                                      "connectivity to any M+M "
+                                                                      "services that are started "
+                                                                      "after the private network "
+                                                                      "is launched.",
+                                                                      String::empty, String::empty,
+                                                                      nullptr, nullptr));
+                        
+                    }
+                    else
+                    {
+                        // The YARP executable can't actually be launched!
+                        AlertWindow::showMessageBox(AlertWindow::WarningIcon, getApplicationName(),
+                                                    "No YARP network was detected and the YARP "
+                                                    "executable found in the PATH system "
+                                                    "environment variable did not return valid "
+                                                    "data. "
+                                                    "Execution is not possible.");
+                    }
+                }
+                else
+                {
+                    AlertWindow::showMessageBox(AlertWindow::WarningIcon, getApplicationName(),
+                                                "No YARP network was detected and the YARP "
+                                                "executable found in the PATH system environment "
+                                                "variable could not be started. "
+                                                "Execution is not possible.");
+                }
+            }
+            delete runYarp;
+            if (doLaunch)
+            {
+#if MAC_OR_LINUX_
+                theLogger.warning("Private YARP network being launched.");
+#endif // MAC_OR_LINUX_
+                
+            }
+        }
+        else
+        {
+            // If YARP isn't installed, say so and leave.
+            AlertWindow::showMessageBox(AlertWindow::WarningIcon, getApplicationName(),
+                                        "No YARP network was detected and a YARP executable could "
+                                        "not be found in the PATH system environment variable. "
+                                        "Execution is not possible.");
+        }
+    
+#if 0
+        bool doStop = (1 == AlertWindow::showOkCancelBox(AlertWindow::QuestionIcon,
+                                                         "Are you sure that you want to stop "
+                                                         "this service?", "If you do, it may "
+                                                         "take a few moments to disappear from "
+                                                         "the display, depending on network "
+                                                         "traffic. Also, the service will not "
+                                                         "exit if it is waiting on a command "
+                                                         "prompt, until a command is issued.",
+                                                         String::empty, String::empty, nullptr,
+                                                         nullptr));
+        if (doStop && MplusM::Utilities::StopAService(aPort->getPortName(), STANDARD_WAIT_TIME))
+        {
+            ContentPanel * thePanel = _owner.getContent();
+            
+            if (thePanel)
+            {
+                thePanel->setChannelOfInterest(nullptr);
+                thePanel->setContainerOfInterest(nullptr);
+                thePanel->requestWindowRepaint();
+            }
+        }
+#endif // 0
+        
+    
     }
+    
+    
+    
+    
+    
+    
+    
+    
     _mainWindow = new ChannelManagerWindow(ProjectInfo::projectName);
     if (_yarp)
     {

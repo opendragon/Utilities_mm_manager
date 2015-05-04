@@ -49,6 +49,8 @@
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
       <PathRunnable
+         runnableDebuggingMode = "0"
+         BundleIdentifier = "com.yourcompany.ChannelManager"
          FilePath = "/Users/M_M/Documents/git.repositories/Utilities_Channel Manager/Builds/MacOSX/build/Release/Channel Manager.app">
       </PathRunnable>
       <MacroExpansion>
@@ -60,6 +62,13 @@
             ReferencedContainer = "container:Channel Manager.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "PATH"
+            value = "/opt/M+M/bin"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -70,6 +79,7 @@
       buildConfiguration = "Release"
       debugDocumentVersioning = "YES">
       <PathRunnable
+         runnableDebuggingMode = "0"
          FilePath = "/Users/M_M/Documents/git.repositories/Utilities_Channel Manager/Builds/MacOSX/build/Release/Channel Manager.app">
       </PathRunnable>
    </ProfileAction>
