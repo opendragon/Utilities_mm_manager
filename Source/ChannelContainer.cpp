@@ -56,6 +56,10 @@
 # pragma clang diagnostic pop
 #endif // defined(__APPLE__)
 
+#if defined(__APPLE__)
+# pragma mark Namespace references
+#endif // defined(__APPLE__)
+
 using namespace ChannelManager;
 using namespace std;
 
@@ -77,6 +81,10 @@ static const Colour & kHeadingBackgroundColour(Colours::darkgrey);
 
 /*! @brief The colour to be used for text in the entry. */
 static const Colour & kHeadingTextColour(Colours::white);
+
+#if defined(__APPLE__)
+# pragma mark Global constants and variables
+#endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
 # pragma mark Local functions

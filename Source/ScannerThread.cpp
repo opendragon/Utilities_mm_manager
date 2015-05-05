@@ -63,6 +63,10 @@
 # pragma clang diagnostic pop
 #endif // defined(__APPLE__)
 
+#if defined(__APPLE__)
+# pragma mark Namespace references
+#endif // defined(__APPLE__)
+
 using namespace ChannelManager;
 using namespace MplusM;
 using namespace std;
@@ -81,6 +85,10 @@ static const int64 kMinScanInterval = 5000;
 /*! @brief The minimum time between removing stale entries, in milliseconds. */
 static const int64 kMinStaleInterval = 60000;
 #endif // defined(CHECK_FOR_STALE_PORTS) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS))
+
+#if defined(__APPLE__)
+# pragma mark Global constants and variables
+#endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
 # pragma mark Local functions

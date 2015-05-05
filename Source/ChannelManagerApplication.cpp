@@ -58,6 +58,10 @@
 # pragma clang diagnostic pop
 #endif // defined(__APPLE__)
 
+#if defined(__APPLE__)
+# pragma mark Namespace references
+#endif // defined(__APPLE__)
+
 using namespace ChannelManager;
 using namespace MplusM;
 using namespace std;
@@ -68,6 +72,10 @@ using namespace std;
 
 /*! @brief @c true if an exit has been requested and @c false otherwise. */
 static bool lExitRequested = false;
+
+#if defined(__APPLE__)
+# pragma mark Global constants and variables
+#endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
 # pragma mark Local functions

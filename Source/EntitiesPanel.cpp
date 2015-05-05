@@ -76,6 +76,10 @@
 # pragma clang diagnostic pop
 #endif // defined(__APPLE__)
 
+#if defined(__APPLE__)
+# pragma mark Namespace references
+#endif // defined(__APPLE__)
+
 using namespace ChannelManager;
 using namespace MplusM;
 using namespace std;
@@ -98,6 +102,10 @@ static const int kInitialPanelHeight = 768;
 
 /*! @brief The initial width of the displayed region. */
 static const int kInitialPanelWidth = 1024;
+
+#if defined(__APPLE__)
+# pragma mark Global constants and variables
+#endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
 # pragma mark Local functions

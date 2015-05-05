@@ -57,6 +57,10 @@
 # pragma clang diagnostic pop
 #endif // defined(__APPLE__)
 
+#if defined(__APPLE__)
+# pragma mark Namespace references
+#endif // defined(__APPLE__)
+
 using namespace ChannelManager;
 using namespace MplusM;
 using namespace std;
@@ -112,6 +116,10 @@ static const Colour & kUdpConnectionColour(Colours::purple);
 
 /*! @brief The inset for the activity indicator. */
 static const float kActivityInset = 2;
+
+#if defined(__APPLE__)
+# pragma mark Global constants and variables
+#endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
 # pragma mark Local functions

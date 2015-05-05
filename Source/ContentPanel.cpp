@@ -71,6 +71,10 @@
 # include <Windows.h>
 #endif //! MAC_OR_LINUX_
 
+#if defined(__APPLE__)
+# pragma mark Namespace references
+#endif // defined(__APPLE__)
+
 using namespace ChannelManager;
 using namespace std;
 
@@ -107,6 +111,10 @@ static const int kDefaultSingleStepSize = 10;
 
 /*! @brief After width to be added to display panels. */
 static const int kExtraDisplayWidth = 32;
+
+#if defined(__APPLE__)
+# pragma mark Global constants and variables
+#endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
 # pragma mark Local functions

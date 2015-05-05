@@ -54,6 +54,10 @@
 # pragma clang diagnostic pop
 #endif // defined(__APPLE__)
 
+#if defined(__APPLE__)
+# pragma mark Namespace references
+#endif // defined(__APPLE__)
+
 using namespace ChannelManager;
 using namespace std;
 
@@ -66,6 +70,10 @@ static ScopedPointer<ApplicationCommandManager> lApplicationCommandManager;
 
 /*! @brief The colour to be used for the window background. */
 static const Colour & kWindowBackgroundColour(Colours::lightgrey);
+
+#if defined(__APPLE__)
+# pragma mark Global constants and variables
+#endif // defined(__APPLE__)
 
 #if defined(__APPLE__)
 # pragma mark Local functions
