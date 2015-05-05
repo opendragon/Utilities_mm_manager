@@ -89,7 +89,7 @@ static const Colour & kWindowBackgroundColour(Colours::lightgrey);
 
 ChannelManagerWindow::ChannelManagerWindow(const yarp::os::ConstString & title)  :
     inherited1(), inherited2(title.c_str(), kWindowBackgroundColour, inherited2::allButtons),
-    _contentPanel(new ContentPanel(this)), _scannerThread(NULL)
+    _contentPanel(new ContentPanel(this)), _scannerThread(nullptr)
 {
     OD_LOG_ENTER(); //####
     setOpaque(true);
@@ -105,7 +105,7 @@ ChannelManagerWindow::ChannelManagerWindow(const yarp::os::ConstString & title) 
 ChannelManagerWindow::~ChannelManagerWindow(void)
 {
     OD_LOG_OBJENTER(); //####
-    lApplicationCommandManager = NULL;
+    lApplicationCommandManager = nullptr;
     OD_LOG_OBJEXIT(); //####
 } // ChannelManagerWindow::~ChannelManagerWindow
 

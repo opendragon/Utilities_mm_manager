@@ -30,9 +30,9 @@
 #if ! JUCE_DONT_DECLARE_PROJECTINFO
 namespace ProjectInfo
 {
-    const char* const  projectName    = "Channel Manager";
-    const char* const  versionString  = "1.4.21";
-    const int          versionNumber  = 0x10415;
+    const char * const projectName    = "Channel Manager";
+    const char * const versionString  = "1.4.25";
+    const int          versionNumber  = 0x10419;
 }
 #endif
 

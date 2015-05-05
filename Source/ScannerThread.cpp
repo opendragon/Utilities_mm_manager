@@ -158,14 +158,13 @@ static void splitCombinedAddressAndPort(const yarp::os::ConstString & combined,
 # pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
-ScannerThread::ScannerThread(const yarp::os::ConstString & name,
-                             ChannelManagerWindow &        window) :
-    inherited(name.c_str()), _window(window), _rememberedPorts(), _detectedServices(),
+ScannerThread::ScannerThread(ChannelManagerWindow & window) :
+    inherited("port scanner"), _window(window), _rememberedPorts(), _detectedServices(),
     _associatedPorts(), _standalonePorts(),
 #if (defined(CHECK_FOR_STALE_PORTS) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS)))
     _lastStaleTime(- (2 * kMinStaleInterval)),
 #endif // efined(CHECK_FOR_STALE_PORTS) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS))
-    _inputOnlyPort(NULL), _outputOnlyPort(NULL), _cleanupSoon(false),
+    _inputOnlyPort(nullptr), _outputOnlyPort(nullptr), _cleanupSoon(false),
 #if (defined(CHECK_FOR_STALE_PORTS) && defined(DO_SINGLE_CHECK_FOR_STALE_PORTS))
     _initialStaleCheckDone(false),
 #endif // defined(CHECK_FOR_STALE_PORTS) && defined(DO_SINGLE_CHECK_FOR_STALE_PORTS)

@@ -1,14 +1,14 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       EntitiesData.cpp
+//  File:       YarpLaunchThread.cpp
 //
 //  Project:    M+M
 //
-//  Contains:   The class definition for the data collected by the background scanner.
+//  Contains:   The class declaration for the background YARP launcher.
 //
 //  Written by: Norman Jaffe
 //
-//  Copyright:  (c) 2014 by H Plus Technologies Ltd. and Simon Fraser University.
+//  Copyright:  (c) 2015 by H Plus Technologies Ltd. and Simon Fraser University.
 //
 //              All rights reserved. Redistribution and use in source and binary forms, with or
 //              without modification, are permitted provided that the following conditions are met:
@@ -32,12 +32,16 @@
 //              ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 //              DAMAGE.
 //
-//  Created:    2014-08-06
+//  Created:    2015-05-05
 //
 //--------------------------------------------------------------------------------------------------
 
-#include "EntitiesData.h"
+#include "YarpLaunchThread.h"
+#include "ChannelEntry.h"
+#include "ChannelManagerApplication.h"
+#include "EntitiesPanel.h"
 #include "EntityData.h"
+#include "PortData.h"
 
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
@@ -47,9 +51,14 @@
 # pragma clang diagnostic ignored "-Wunknown-pragmas"
 # pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
 #endif // defined(__APPLE__)
+
+#if (! MAC_OR_LINUX_)
+# include <Windows.h>
+#endif //! MAC_OR_LINUX_
+
 /*! @file
  
- @brief The class definition for the data collected by the background scanner. */
+ @brief The class declaration for the background YARP launcher. */
 #if defined(__APPLE__)
 # pragma clang diagnostic pop
 #endif // defined(__APPLE__)
@@ -60,10 +69,14 @@
 
 using namespace ChannelManager;
 using namespace MplusM;
+using namespace std;
 
 #if defined(__APPLE__)
 # pragma mark Private structures, constants and variables
 #endif // defined(__APPLE__)
+
+/*! @brief Set to @c true to exit from any delay loops. */
+static bool lBailNow = false;
 
 #if defined(__APPLE__)
 # pragma mark Global constants and variables
@@ -81,98 +94,58 @@ using namespace MplusM;
 # pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
-EntitiesData::EntitiesData(void)
+YarpLaunchThread::YarpLaunchThread(const String & pathToExecutable) :
+    inherited("YARP launcher"), _yarpProcess(nullptr), _yarpPath(pathToExecutable)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_EXIT_P(this); //####
-} // EntitiesData::EntitiesData
+} // YarpLaunchThread::YarpLaunchThread
 
-EntitiesData::~EntitiesData(void)
+YarpLaunchThread::~YarpLaunchThread(void)
 {
     OD_LOG_OBJENTER(); //####
-    clearOutData();
+    stopThread(3000); // Give thread 3 seconds to shut down.
+    _yarpProcess = nullptr;
     OD_LOG_OBJEXIT(); //####
-} // EntitiesData::~EntitiesData
+} // YarpLaunchThread::~YarpLaunchThread
 
 #if defined(__APPLE__)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-void EntitiesData::addConnection(const yarp::os::ConstString & inName,
-                                 const yarp::os::ConstString & outName,
-                                 Common::ChannelMode           mode)
+void YarpLaunchThread::run(void)
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_S2s("inName = ", inName, "outName = ", outName); //####
-    ConnectionDetails details;
-    
-    details._inPortName = inName;
-    details._outPortName = outName;
-    details._mode = mode;
-    _connections.push_back(details);
-    OD_LOG_OBJEXIT(); //####
-} // EntitiesData::addConnection
-
-void EntitiesData::addEntity(EntityData * anEntity)
-{
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("anEntity = ", anEntity); //####
-    _entities.push_back(anEntity);
-    OD_LOG_OBJEXIT(); //####
-} // EntitiesData::addEntity
-
-void EntitiesData::clearConnections(void)
-{
-    OD_LOG_OBJENTER(); //####
-    _connections.clear();
-    OD_LOG_OBJEXIT(); //####
-} // EntitiesData::clearConnections
-
-void EntitiesData::clearOutData(void)
-{
-    OD_LOG_OBJENTER(); //####
-    clearConnections();
-    for (EntitiesList::const_iterator it(_entities.begin()); _entities.end() != it; ++it)
+    _yarpProcess = new ChildProcess;
+    if (_yarpProcess)
     {
-        EntityData * anEntity = *it;
-        
-        if (anEntity)
+        StringArray nameAndArgs(_yarpPath);
+
+        nameAndArgs.add("server");
+        nameAndArgs.add("--write");
+        if (_yarpProcess->start(nameAndArgs, 0))
         {
-            delete anEntity;
+            while ((! threadShouldExit()) && (_yarpProcess->isRunning()) && (! lBailNow))
+            {
+                sleep(50);
+            }
+            if (_yarpProcess->isRunning())
+            {
+                _yarpProcess->kill();
+            }
+            _yarpProcess->waitForProcessToFinish(10000);
         }
     }
-    _entities.clear();
     OD_LOG_OBJEXIT(); //####
-} // EntitiesData::clearOutData
+} // YarpLaunchThread::run
 
-EntityData * EntitiesData::getEntity(const size_t index)
-const
+void YarpLaunchThread::stopNow(void)
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_LL1("index = ", index); //####
-    EntityData * result;
-    
-    if (_entities.size() > index)
-    {
-        result = _entities.at(index);
-    }
-    else
-    {
-        result = nullptr;
-    }
-    OD_LOG_OBJEXIT_P(result); //####
-    return result;
-} // EntitiesData::getEntity
-
-size_t EntitiesData::getNumberOfEntities(void)
-const
-{
-    OD_LOG_OBJENTER(); //####
-    size_t result = _entities.size();
-    
-    OD_LOG_OBJEXIT_LL(result); //####
-    return result;
-} // EntitiesData::getNumberOfEntities
+    lBailNow = true;
+    OD_LOG_B1("lBailNow <- ", lBailNow); //####
+    OD_LOG_OBJEXIT(); //####
+} // YarpLaunchThread::stopNow
 
 #if defined(__APPLE__)
 # pragma mark Global functions

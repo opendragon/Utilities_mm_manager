@@ -1,14 +1,14 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       EntitiesData.h
+//  File:       YarpLaunchThread.h
 //
 //  Project:    M+M
 //
-//  Contains:   The class declaration for the data collected by the background scanner.
+//  Contains:   The class declaration for the background YARP launcher.
 //
 //  Written by: Norman Jaffe
 //
-//  Copyright:  (c) 2014 by H Plus Technologies Ltd. and Simon Fraser University.
+//  Copyright:  (c) 2015 by H Plus Technologies Ltd. and Simon Fraser University.
 //
 //              All rights reserved. Redistribution and use in source and binary forms, with or
 //              without modification, are permitted provided that the following conditions are met:
@@ -32,12 +32,12 @@
 //              ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 //              DAMAGE.
 //
-//  Created:    2014-08-06
+//  Created:    2015-05-05
 //
 //--------------------------------------------------------------------------------------------------
 
-#if (! defined(EntitiesData_H_))
-# define EntitiesData_H_ /* Header guard */
+#if (! defined(YarpLaunchThread_H_))
+# define YarpLaunchThread_H_ /* Header guard */
 
 # include "ChannelManagerDataTypes.h"
 
@@ -48,81 +48,54 @@
 # endif // defined(__APPLE__)
 /*! @file
  
- @brief The class declaration for the data collected by the background scanner. */
+ @brief The class declaration for the background YARP launcher. */
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
 
 namespace ChannelManager
 {
-    /*! @brief The data collected by the background scanner. */
-    class EntitiesData
+    /*! @brief A background YARP launcher. */
+    class YarpLaunchThread : public Thread
     {
     public :
         
-        /*! @brief The constructor. */
-        EntitiesData(void);
+        /*! @brief The constructor.
+         @param pathToExecutable The file system path for the executable. */
+        YarpLaunchThread(const String & pathToExecutable);
         
         /*! @brief The destructor. */
-        virtual ~EntitiesData(void);
+        virtual ~YarpLaunchThread(void);
         
-        /*! @brief Record a connection between ports.
-         @param inName The name of the destination port.
-         @param outName The name of the source port.
-         @param mode The mode of the connection. */
-        void addConnection(const yarp::os::ConstString & inName,
-                           const yarp::os::ConstString & outName,
-                           MplusM::Common::ChannelMode   mode);
-         
-        /*! @brief Add an entity to the list of known entities.
-         @param anEntity The entity to be added. */
-        void addEntity(EntityData * anEntity);
+        /*! @brief Perform the background scan. */
+        virtual void run(void);
         
-        /*! @brief Clear out connection information. */
-        void clearConnections(void);
-        
-        /*! @brief Release all data held by the panel. */
-        void clearOutData(void);
-        
-        /*! @brief Return the list of detected connections.
-         @returns The list of detected connections. */
-        const ConnectionList & getConnections(void)
-        const
-        {
-            return _connections;
-        } // getConnections
-        
-        /*! @brief Return an entity by index.
-         @param index The zero-origin index of the entity.
-         @returns The entity if the index is within range and @c nullptr otherwise. */
-        EntityData * getEntity(const size_t index)
-        const;
-        
-        /*! @brief Return the number of entities.
-         @returns The number of entities. */
-        size_t getNumberOfEntities(void)
-        const;
+        /*! @brief Indicate that the thread must leave as soon as possible. */
+        void stopNow(void);
         
     protected :
         
     private :
-        
-        COPY_AND_ASSIGNMENT_(EntitiesData);
         
     public :
     
     protected :
     
     private :
+
+        /*! @brief The class that this class is derived from. */
+        typedef Thread inherited;
         
-        /*! @brief A set of connections. */
-        ConnectionList _connections;
+        /*! @brief The running YARP process. */
+        ScopedPointer<ChildProcess> _yarpProcess;
         
-        /*! @brief A set of entities. */
-        EntitiesList _entities;
+        /*! @brief The file system path to the executable. */
+        String _yarpPath;
         
-    }; // EntitiesData
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(YarpLaunchThread)
+        
+    }; // YarpLaunchThread
     
 } // ChannelManager
 
-#endif // ! defined(EntitiesData_H_)
+#endif // ! defined(YarpLaunchThread_H_)

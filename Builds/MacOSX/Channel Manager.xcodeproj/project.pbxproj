@@ -40,6 +40,7 @@
 		DF0B256A19FAE7C2001AEB0C /* libOGDF.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0B256419FAE7C2001AEB0C /* libOGDF.a */; };
 		DF55EC4C1A3746870096DF54 /* libYARP_init.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0ADB3C1A1A77EF0096548B /* libYARP_init.1.dylib */; };
 		DF55EC4D1A3746870096DF54 /* libYARP_OS.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0ADB3D1A1A77EF0096548B /* libYARP_OS.1.dylib */; };
+		DF8888241AF92D99001320EB /* YarpLaunchThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF8888221AF92D99001320EB /* YarpLaunchThread.cpp */; };
 		DFADC9EC19D0C12F002C2663 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DFADC9EB19D0C12F002C2663 /* Images.xcassets */; };
 		DFADC9FA19D0C236002C2663 /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DFADC9F919D0C236002C2663 /* libc++.dylib */; };
 		DFDC7E4B1A7BFF5C00BE0557 /* libYARP_dev.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DFDC7E4A1A7BFF5C00BE0557 /* libYARP_dev.1.dylib */; };
@@ -647,6 +648,8 @@
 		DF2EFBEA7BAA9E19E83C151C /* juce_CharacterFunctions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_CharacterFunctions.cpp; path = ../../JuceLibraryCode/modules/juce_core/text/juce_CharacterFunctions.cpp; sourceTree = SOURCE_ROOT; };
 		DF55EC3B1A3668890096DF54 /* libYARP_init.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libYARP_init.dylib; path = "../../../../../../../opt/M+M/lib/libYARP_init.dylib"; sourceTree = "<group>"; };
 		DF55EC3C1A3668890096DF54 /* libYARP_OS.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libYARP_OS.dylib; path = "../../../../../../../opt/M+M/lib/libYARP_OS.dylib"; sourceTree = "<group>"; };
+		DF8888221AF92D99001320EB /* YarpLaunchThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = YarpLaunchThread.cpp; path = ../../Source/YarpLaunchThread.cpp; sourceTree = "<group>"; };
+		DF8888231AF92D99001320EB /* YarpLaunchThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YarpLaunchThread.h; path = ../../Source/YarpLaunchThread.h; sourceTree = "<group>"; };
 		DF91B3E932852EBD0347C905 /* juce_android_Messaging.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_android_Messaging.cpp; path = ../../JuceLibraryCode/modules/juce_events/native/juce_android_Messaging.cpp; sourceTree = SOURCE_ROOT; };
 		DF91F1891AC49BE7003D9F6D /* CMicon.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; name = CMicon.ico; path = ../CMicon.ico; sourceTree = "<group>"; };
 		DF91F18A1AC49BE7003D9F6D /* CMResources.rc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = CMResources.rc; path = ../CMResources.rc; sourceTree = "<group>"; };
@@ -981,6 +984,8 @@
 				81EC88BC7B243530EE0F1DAE /* PortData.h */,
 				26C09F0B67E7A2430A04C13D /* ScannerThread.cpp */,
 				948F35DF7F1528DEF5C8295D /* ScannerThread.h */,
+				DF8888221AF92D99001320EB /* YarpLaunchThread.cpp */,
+				DF8888231AF92D99001320EB /* YarpLaunchThread.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -2115,6 +2120,7 @@
 			files = (
 				D955E9BBD7DF44ED871C3B3C /* ChannelContainer.cpp in Sources */,
 				499E38442A69C4C056D30A5C /* ChannelEntry.cpp in Sources */,
+				DF8888241AF92D99001320EB /* YarpLaunchThread.cpp in Sources */,
 				C3BADFC3FFD8F492B13B8E14 /* ChannelManagerApplication.cpp in Sources */,
 				240DB34ABCC4CE53B98A2311 /* ChannelManagerMain.cpp in Sources */,
 				B87D4FD874D7B0366056649E /* ChannelManagerWindow.cpp in Sources */,

@@ -40,6 +40,7 @@
 #include "EntitiesPanel.h"
 #include "PeekInputHandler.h"
 #include "ScannerThread.h"
+#include "YarpLaunchThread.h"
 
 #include <mpm/M+MRequests.h>
 
@@ -90,8 +91,8 @@ static bool lExitRequested = false;
 #endif // defined(__APPLE__)
 
 ChannelManagerApplication::ChannelManagerApplication(void) :
-    inherited(), _mainWindow(NULL), _yarp(NULL), _scanner(NULL), _peeker(NULL),
-    _peekHandler(NULL)
+    inherited(), _mainWindow(nullptr), _yarp(nullptr), _scanner(nullptr), _yarpLauncher(nullptr),
+    _peeker(nullptr), _peekHandler(nullptr)
 {
 #if defined(MpM_ServicesLogToStandardError)
     OD_LOG_INIT(ProjectInfo::projectName, kODLoggingOptionIncludeProcessID | //####
@@ -136,6 +137,104 @@ void ChannelManagerApplication::anotherInstanceStarted(const String & commandLin
 #if (! MAC_OR_LINUX_)
 # pragma warning(pop)
 #endif // ! MAC_OR_LINUX_
+
+yarp::os::Network * ChannelManagerApplication::checkForYarpAndLaunchIfDesired(void)
+{
+    OD_LOG_OBJENTER(); //####
+    yarp::os::ConstString    yarpPath(Utilities::FindPathToExecutable("yarp"));
+    yarp::os::Network *      result = nullptr;
+#if MAC_OR_LINUX_
+    yarp::os::impl::Logger & theLogger = Common::GetLogger();
+#endif // MAC_OR_LINUX_
+    
+    // No running YARP server was detected - first check if YARP is actually available:
+    if (0 < yarpPath.length())
+    {
+        // If YARP is installed, give the option of running a private copy.
+        bool           doLaunch = false;
+        ChildProcess * runYarp = new ChildProcess;
+        
+        if (runYarp)
+        {
+            StringArray nameAndArgs(yarpPath.c_str());
+            
+            nameAndArgs.add("version");
+            if (runYarp->start(nameAndArgs))
+            {
+                const String childOutput(runYarp->readAllProcessOutput());
+                
+                runYarp->waitForProcessToFinish(10000);
+                if (0 < childOutput.length())
+                {
+                    // We have a useable YARP executable - ask what the user wants to do.
+                    doLaunch = (1 == AlertWindow::showOkCancelBox(AlertWindow::QuestionIcon,
+                                                                  "Do you wish to launch a private "
+                                                                  "YARP network?",
+                                                                  "If you do, it may take a few "
+                                                                  "moments to start, depending on "
+                                                                  "network traffic and system "
+                                                                  "activity. "
+                                                                  "Also, the private YARP network "
+                                                                  "will be shut down when this "
+                                                                  "application exits, resulting in "
+                                                                  "a potential loss of "
+                                                                  "connectivity to any M+M "
+                                                                  "services that were started after "
+                                                                  "the private network was "
+                                                                  "launched.",
+                                                                  String::empty, String::empty,
+                                                                  nullptr, nullptr));
+                    
+                }
+                else
+                {
+                    // The YARP executable can't actually be launched!
+                    AlertWindow::showMessageBox(AlertWindow::WarningIcon, getApplicationName(),
+                                                "No YARP network was detected and the YARP "
+                                                "executable found in the PATH system environment "
+                                                "variable did not return valid data. "
+                                                "Execution is not possible.");
+                }
+            }
+            else
+            {
+                AlertWindow::showMessageBox(AlertWindow::WarningIcon, getApplicationName(),
+                                            "No YARP network was detected and the YARP executable "
+                                            "found in the PATH system environment variable could "
+                                            "not be started. "
+                                            "Execution is not possible.");
+            }
+        }
+        delete runYarp;
+        if (doLaunch)
+        {
+#if MAC_OR_LINUX_
+            theLogger.warning("Private YARP network being launched.");
+#endif // MAC_OR_LINUX_
+            _yarpLauncher = new YarpLaunchThread(yarpPath.c_str());
+            if (_yarpLauncher)
+            {
+                _yarpLauncher->startThread();
+                // Sleep for a little while and recheck if YARP is active.
+                for ( ; ! result; )
+                {
+                    Thread::sleep(100);
+                    result = new yarp::os::Network;
+                }
+            }
+        }
+    }
+    else
+    {
+        // If YARP isn't installed, say so and leave.
+        AlertWindow::showMessageBox(AlertWindow::WarningIcon, getApplicationName(),
+                                    "No YARP network was detected and a YARP executable could not "
+                                    "be found in the PATH system environment variable. "
+                                    "Execution is not possible.");
+    }
+    OD_LOG_OBJEXIT_P(result); //####
+    return result;
+} // yarp::os::Network * ChannelManagerApplication::checkForYarpAndLaunchIfDesired(void)
 
 void ChannelManagerApplication::connectPeekChannel(void)
 {
@@ -217,126 +316,15 @@ void ChannelManagerApplication::initialise(const String & commandLine)
     else
     {
         OD_LOG("! (yarp::os::Network::checkNetwork())"); //####
-        yarp::os::ConstString    yarpPath(Utilities::FindPathToExecutable("yarp"));
 #if MAC_OR_LINUX_
         yarp::os::impl::Logger & theLogger = Common::GetLogger();
 #endif // MAC_OR_LINUX_
-        
+
 #if MAC_OR_LINUX_
         theLogger.warning("YARP network not running.");
 #endif // MAC_OR_LINUX_
-        // No running YARP server was detected - first check if YARP is actually available:
-        if (0 < yarpPath.length())
-        {
-            // If YARP is installed, give the option of running a private copy.
-            bool           doLaunch = false;
-            ChildProcess * runYarp = new ChildProcess;
-            
-            if (runYarp)
-            {
-                StringArray nameAndArgs(yarpPath.c_str());
-                
-                nameAndArgs.add("version");
-                if (runYarp->start(nameAndArgs))
-                {
-                    const String childOutput(runYarp->readAllProcessOutput());
-                    
-                    runYarp->waitForProcessToFinish(10000);
-                    if (0 < childOutput.length())
-                    {
-                        // We have a useable YARP executable - ask what the user wants to do.
-                        doLaunch = (1 == AlertWindow::showOkCancelBox(AlertWindow::QuestionIcon,
-                                                                      "Do you wish to launch a "
-                                                                      "private YARP network?",
-                                                                      "If you do, it may take a "
-                                                                      "few moments to start, "
-                                                                      "depending on network "
-                                                                      "traffic and system "
-                                                                      "activity. "
-                                                                      "Also, the private YARP "
-                                                                      "network will be shut down "
-                                                                      "when this application "
-                                                                      "exits, resulting in loss of "
-                                                                      "connectivity to any M+M "
-                                                                      "services that are started "
-                                                                      "after the private network "
-                                                                      "is launched.",
-                                                                      String::empty, String::empty,
-                                                                      nullptr, nullptr));
-                        
-                    }
-                    else
-                    {
-                        // The YARP executable can't actually be launched!
-                        AlertWindow::showMessageBox(AlertWindow::WarningIcon, getApplicationName(),
-                                                    "No YARP network was detected and the YARP "
-                                                    "executable found in the PATH system "
-                                                    "environment variable did not return valid "
-                                                    "data. "
-                                                    "Execution is not possible.");
-                    }
-                }
-                else
-                {
-                    AlertWindow::showMessageBox(AlertWindow::WarningIcon, getApplicationName(),
-                                                "No YARP network was detected and the YARP "
-                                                "executable found in the PATH system environment "
-                                                "variable could not be started. "
-                                                "Execution is not possible.");
-                }
-            }
-            delete runYarp;
-            if (doLaunch)
-            {
-#if MAC_OR_LINUX_
-                theLogger.warning("Private YARP network being launched.");
-#endif // MAC_OR_LINUX_
-                
-            }
-        }
-        else
-        {
-            // If YARP isn't installed, say so and leave.
-            AlertWindow::showMessageBox(AlertWindow::WarningIcon, getApplicationName(),
-                                        "No YARP network was detected and a YARP executable could "
-                                        "not be found in the PATH system environment variable. "
-                                        "Execution is not possible.");
-        }
-    
-#if 0
-        bool doStop = (1 == AlertWindow::showOkCancelBox(AlertWindow::QuestionIcon,
-                                                         "Are you sure that you want to stop "
-                                                         "this service?", "If you do, it may "
-                                                         "take a few moments to disappear from "
-                                                         "the display, depending on network "
-                                                         "traffic. Also, the service will not "
-                                                         "exit if it is waiting on a command "
-                                                         "prompt, until a command is issued.",
-                                                         String::empty, String::empty, nullptr,
-                                                         nullptr));
-        if (doStop && MplusM::Utilities::StopAService(aPort->getPortName(), STANDARD_WAIT_TIME))
-        {
-            ContentPanel * thePanel = _owner.getContent();
-            
-            if (thePanel)
-            {
-                thePanel->setChannelOfInterest(nullptr);
-                thePanel->setContainerOfInterest(nullptr);
-                thePanel->requestWindowRepaint();
-            }
-        }
-#endif // 0
-        
-    
+        _yarp = checkForYarpAndLaunchIfDesired();
     }
-    
-    
-    
-    
-    
-    
-    
-    
     _mainWindow = new ChannelManagerWindow(ProjectInfo::projectName);
     if (_yarp)
     {
@@ -358,7 +346,7 @@ void ChannelManagerApplication::initialise(const String & commandLine)
             if (_peeker->openWithRetries(peekName, STANDARD_WAIT_TIME))
             {
                 _peeker->setReader(*_peekHandler);
-                _scanner = new ScannerThread(ProjectInfo::projectName, *_mainWindow);
+                _scanner = new ScannerThread(*_mainWindow);
                 _scanner->startThread();
             }
         }
@@ -385,6 +373,11 @@ void ChannelManagerApplication::shutdown(void)
         _scanner->stopNow();
         _scanner->stopThread(5000);
     }
+    if (_yarpLauncher)
+    {
+        _yarpLauncher->stopNow();
+        _yarpLauncher->stopThread(5000);
+    }
     EntitiesPanel & entities = _mainWindow->getEntitiesPanel();
 
     entities.rememberPositions();
@@ -392,10 +385,10 @@ void ChannelManagerApplication::shutdown(void)
     _peeker->close();
 #endif // defined(MpM_DoExplicitClose)
     Common::AdapterChannel::RelinquishChannel(_peeker);
-    _scanner = NULL; // shuts down thread
-    _mainWindow = NULL; // (deletes our window)
+    _scanner = nullptr; // shuts down thread
+    _mainWindow = nullptr; // (deletes our window)
     yarp::os::Network::fini();
-    _yarp = NULL;
+    _yarp = nullptr;
     Utilities::ShutDownGlobalStatusReporter();
     OD_LOG_OBJEXIT(); //####
 } // ChannelManagerApplication::shutdown

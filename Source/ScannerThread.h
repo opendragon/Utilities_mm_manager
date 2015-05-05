@@ -64,10 +64,8 @@ namespace ChannelManager
     public :
         
         /*! @brief The constructor.
-         @param name The name to give to the thread.
          @param window The window to be updated. */
-        ScannerThread(const yarp::os::ConstString & name,
-                      ChannelManagerWindow &        window);
+        ScannerThread(ChannelManagerWindow & window);
         
         /*! @brief The destructor. */
         virtual ~ScannerThread(void);
@@ -114,32 +112,32 @@ namespace ChannelManager
          @param checker A function that provides for early exit from loops.
          @param checkStuff The private data for the early exit function. */
         void addPortConnections(const MplusM::Utilities::PortVector & detectedPorts,
-                                MplusM::Common::CheckFunction         checker = NULL,
-                                void *                                checkStuff = NULL);
+                                MplusM::Common::CheckFunction         checker = nullptr,
+                                void *                                checkStuff = nullptr);
         
         /*! @brief Add ports that have associates as 'adapter' entities to the to-be-displayed list.
          @param detectedPorts The set of detected YARP ports.
          @param checker A function that provides for early exit from loops.
          @param checkStuff The private data for the early exit function. */
         void addPortsWithAssociates(const MplusM::Utilities::PortVector & detectedPorts,
-                                    MplusM::Common::CheckFunction         checker = NULL,
-                                    void *                                checkStuff = NULL);
+                                    MplusM::Common::CheckFunction         checker = nullptr,
+                                    void *                                checkStuff = nullptr);
         
         /*! @brief Add regular YARP ports as distinct entities to the to-be-displayed list.
          @param detectedPorts The set of detected YARP ports.
          @param checker A function that provides for early exit from loops.
          @param checkStuff The private data for the early exit function. */
         void addRegularPortEntities(const MplusM::Utilities::PortVector & detectedPorts,
-                                    MplusM::Common::CheckFunction         checker = NULL,
-                                    void *                                checkStuff = NULL);
+                                    MplusM::Common::CheckFunction         checker = nullptr,
+                                    void *                                checkStuff = nullptr);
         
         /*! @brief Add services as distinct entities to the list of entities.
          @param services The set of detected services.
          @param checker A function that provides for early exit from loops.
          @param checkStuff The private data for the early exit function. */
         void addServices(const MplusM::Common::StringVector & services,
-                         MplusM::Common::CheckFunction        checker = NULL,
-                         void *                               checkStuff = NULL);
+                         MplusM::Common::CheckFunction        checker = nullptr,
+                         void *                               checkStuff = nullptr);
         
         /*! @brief Request access for reading from shared resources.
          @returns @c true if the read lock has been acquired and @c false otherwise. */
@@ -157,8 +155,8 @@ namespace ChannelManager
          @returns The allowed directions for the port. */
         PortDirection determineDirection(ChannelEntry *                oldEntry,
                                          const yarp::os::ConstString & portName,
-                                         MplusM::Common::CheckFunction checker = NULL,
-                                         void *                        checkStuff = NULL);
+                                         MplusM::Common::CheckFunction checker = nullptr,
+                                         void *                        checkStuff = nullptr);
         
         /*! @brief Identify the YARP network entities.
          @param detectedPorts The ports found by YARP.
@@ -166,8 +164,8 @@ namespace ChannelManager
          @param checkStuff The private data for the early exit function.
          @returns @c true if the network entity information was gathered and @c false otherwise. */
         bool gatherEntities(MplusM::Utilities::PortVector & detectedPorts,
-                            MplusM::Common::CheckFunction   checker = NULL,
-                            void *                          checkStuff = NULL);
+                            MplusM::Common::CheckFunction   checker = nullptr,
+                            void *                          checkStuff = nullptr);
         
         /*! @brief Release access from reading from the shared resources. */
         void relinquishFromRead(void);

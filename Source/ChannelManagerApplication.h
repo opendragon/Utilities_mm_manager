@@ -76,6 +76,7 @@ namespace ChannelManager
 {
     class PeekInputHandler;
     class ScannerThread;
+    class YarpLaunchThread;
     
     /*! @brief The application object of the application. */
     class ChannelManagerApplication : public JUCEApplication
@@ -129,6 +130,11 @@ namespace ChannelManager
         
     private :
         
+        /*! @brief If YARP is not currently running, give the user the option to launch a private
+         copy.
+         @returns A pointer to the %Network object used for YARP access. */
+        yarp::os::Network * checkForYarpAndLaunchIfDesired(void);
+        
         COPY_AND_ASSIGNMENT_(ChannelManagerApplication);
 
     public :
@@ -148,6 +154,9 @@ namespace ChannelManager
         
         /*! @brief The background scanner thread. */
         ScopedPointer<ScannerThread> _scanner;
+        
+        /*! @brief The background private YARP launch thread. */
+        ScopedPointer<YarpLaunchThread> _yarpLauncher;
         
         /*! @brief A channel to watch the Registry Service status. */
         MplusM::Common::AdapterChannel * _peeker;

@@ -108,7 +108,7 @@ ChannelContainer::ChannelContainer(const ContainerKind           kind,
     inherited(title.c_str()), _behaviour(behaviour), _description(description),
     _IPAddress(ipAddress), _requests(requests),
 #if defined(USE_OGDF_POSITIONING)
-    _node(NULL),
+    _node(nullptr),
 #endif // defined(USE_OGDF_POSITIONING)
     _owner(owner), _kind(kind), _hidden(false), _newlyCreated(true), _selected(false),
     _visited(false)
@@ -463,7 +463,7 @@ const
     }
     else
     {
-        result = NULL;
+        result = nullptr;
     }
     OD_LOG_OBJEXIT_P(result); //####
     return result;
@@ -562,7 +562,7 @@ ChannelEntry * ChannelContainer::locateEntry(const Position & location)
 const
 {
     OD_LOG_OBJENTER(); //####
-    ChannelEntry * result = NULL;
+    ChannelEntry * result = nullptr;
     
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
     {
