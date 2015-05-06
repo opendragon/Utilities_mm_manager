@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="NMAvRH" name="Channel Manager" projectType="guiapp" version="1.4.21"
-              bundleIdentifier="com.yourcompany.ChannelManager" includeBinaryInAppConfig="1"
+<JUCERPROJECT id="NMAvRH" name="Channel Manager" projectType="guiapp" version="1.4.25"
+              bundleIdentifier="com.yourcompany.ChannelManager" includeBinaryInAppConfig="0"
               jucerVersion="3.1.1" companyName="H Plus Technologies Ltd. and Simon Fraser University">
   <MAINGROUP id="OL479e" name="Channel Manager">
+    <FILE id="BJxnS8" name="CMicon.ico" compile="0" resource="1" file="Builds/CMicon.ico"/>
+    <FILE id="eSydRj" name="CMResources.rc" compile="0" resource="1" file="Builds/CMResources.rc"/>
     <GROUP id="{A78E9CC6-F073-D9D4-035B-BA5785A3D3C6}" name="Source">
+      <FILE id="eaNoKS" name="YarpLaunchThread.cpp" compile="1" resource="0"
+            file="Source/YarpLaunchThread.cpp"/>
+      <FILE id="l5elqz" name="YarpLaunchThread.h" compile="0" resource="0"
+            file="Source/YarpLaunchThread.h"/>
       <FILE id="uZibtZ" name="ChannelContainer.cpp" compile="1" resource="0"
             file="Source/ChannelContainer.cpp"/>
       <FILE id="OWbexv" name="ChannelContainer.h" compile="0" resource="0"

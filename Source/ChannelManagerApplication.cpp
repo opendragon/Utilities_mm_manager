@@ -386,6 +386,7 @@ void ChannelManagerApplication::shutdown(void)
 #endif // defined(MpM_DoExplicitClose)
     Common::AdapterChannel::RelinquishChannel(_peeker);
     _scanner = nullptr; // shuts down thread
+	_yarpLauncher = nullptr; // shuts down thread
     _mainWindow = nullptr; // (deletes our window)
     yarp::os::Network::fini();
     _yarp = nullptr;

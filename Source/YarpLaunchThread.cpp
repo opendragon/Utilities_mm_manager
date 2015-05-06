@@ -122,7 +122,7 @@ void YarpLaunchThread::run(void)
         StringArray nameAndArgs(_yarpPath);
 
         nameAndArgs.add("server");
-        nameAndArgs.add("--write");
+//        nameAndArgs.add("--write");
         if (_yarpProcess->start(nameAndArgs, 0))
         {
             while ((! threadShouldExit()) && (_yarpProcess->isRunning()) && (! lBailNow))
