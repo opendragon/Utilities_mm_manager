@@ -92,11 +92,13 @@ using namespace std;
 #endif // defined(__APPLE__)
 
 YarpLaunchThread::YarpLaunchThread(const String & pathToExecutable,
-	                               const int      portNumber) :
-	inherited("YARP launcher"), _yarpProcess(nullptr), _yarpPath(pathToExecutable), _port(portNumber)
+                                   const String & ipAddress,
+                                   const int      portNumber) :
+	inherited("YARP launcher"), _yarpProcess(nullptr), _yarpAddress(ipAddress),
+    _yarpPath(pathToExecutable), _port(portNumber)
 {
     OD_LOG_ENTER(); //####
-	OD_LOG_S1s("pathToExecutable = ", pathToExecutable); //####
+	OD_LOG_S2s("pathToExecutable = ", pathToExecutable, "ipAddress = ", ipAddress); //####
 	OD_LOG_LL1("portNumber = ", portNumber); //####
     OD_LOG_EXIT_P(this); //####
 } // YarpLaunchThread::YarpLaunchThread
@@ -129,20 +131,20 @@ void YarpLaunchThread::run(void)
     _yarpProcess = new ChildProcess;
     if (_yarpProcess)
     {
-        StringArray       nameAndArgs(_yarpPath);
-		std::stringstream buff;
+        StringArray nameAndArgs(_yarpPath);
 
-		buff << _port;
         nameAndArgs.add("server");
+        nameAndArgs.add("--ip");
+        nameAndArgs.add(_yarpAddress);
 		nameAndArgs.add("--socket");
-		nameAndArgs.add(buff.str());
+		nameAndArgs.add(String(_port));
 //        nameAndArgs.add("--write");
         if (_yarpProcess->start(nameAndArgs, 0))
         {
-			const String childOutput(_yarpProcess->readAllProcessOutput());
-
-			_yarpProcess->waitForProcessToFinish(10000);
-		}
+            const String childOutput(_yarpProcess->readAllProcessOutput());
+            
+            _yarpProcess->waitForProcessToFinish(10000);
+        }
     }
     OD_LOG_OBJEXIT(); //####
 } // YarpLaunchThread::run

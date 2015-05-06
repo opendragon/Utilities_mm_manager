@@ -62,8 +62,10 @@ namespace ChannelManager
         
         /*! @brief The constructor.
          @param pathToExecutable The file system path for the executable.
+         @param ipAddress The network address to use.
 		 @param portNumber The network port number to use. */
         YarpLaunchThread(const String & pathToExecutable,
+                         const String & ipAddress,
 			             const int      portNumber);
         
         /*! @brief The destructor. */
@@ -90,6 +92,9 @@ namespace ChannelManager
         
         /*! @brief The running YARP process. */
         ScopedPointer<ChildProcess> _yarpProcess;
+        
+        /*! @brief The network address to use. */
+        String _yarpAddress;
         
         /*! @brief The file system path to the executable. */
         String _yarpPath;

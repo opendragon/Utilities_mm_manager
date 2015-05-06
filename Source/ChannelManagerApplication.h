@@ -135,6 +135,12 @@ namespace ChannelManager
          @returns A pointer to the %Network object used for YARP access. */
         yarp::os::Network * checkForYarpAndLaunchIfDesired(void);
         
+        /*! @brief Check if YARP can be launched and if the user wishes it to be.
+         @param execPath The file system path to the YARP executable.
+         @returns @c true if the user requests that a private YARP network be set up and @ c false
+         if the YARP executable is invalid or the user does not want a private YARP network. */
+        bool validateYarp(void);
+        
         COPY_AND_ASSIGNMENT_(ChannelManagerApplication);
 
     public :
