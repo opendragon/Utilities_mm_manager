@@ -47,7 +47,7 @@
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
 
-#include <arpa/inet.h>
+//#include <arpa/inet.h>
 
 #if defined(__APPLE__)
 # pragma clang diagnostic push
@@ -76,6 +76,9 @@ using namespace std;
 /*! @brief @c true if an exit has been requested and @c false otherwise. */
 static bool lExitRequested = false;
 
+/*! @brief The number of milliseconds before a thread is force-killed. */
+static const int kThreadKillTime = 5000;
+
 #if defined(__APPLE__)
 # pragma mark Global constants and variables
 #endif // defined(__APPLE__)
@@ -85,23 +88,23 @@ static bool lExitRequested = false;
 #endif // defined(__APPLE__)
 
 /*! @brief Check if YARP can be launched and if the user wishes it to be.
- @param yarpPath The file system path to the YARP executable.
+ @param execPath The file system path to the YARP executable.
  @returns @c true if the user requests that a private YARP network be set up and @ c false if the
  YARP executable is invalid or the user does not want a private YARP network. */
-static bool validateYarp(const String & yarpPath)
+static bool validateYarp(const String & execPath)
 {
     OD_LOG_ENTER(); //####
     bool         doLaunch = false;
     ChildProcess runYarp;
     String       appName(JUCEApplication::getInstance()->getApplicationName());
-    StringArray  nameAndArgs(yarpPath);
+	StringArray  nameAndArgs(execPath);
     
     nameAndArgs.add("version");
     if (runYarp.start(nameAndArgs))
     {
         const String childOutput(runYarp.readAllProcessOutput());
         
-        runYarp.waitForProcessToFinish(10000);
+		runYarp.waitForProcessToFinish(kThreadKillTime);
         if (0 < childOutput.length())
         {
             // We have a useable YARP executable - ask what the user wants to do.
@@ -199,17 +202,17 @@ void ChannelManagerApplication::anotherInstanceStarted(const String & commandLin
 yarp::os::Network * ChannelManagerApplication::checkForYarpAndLaunchIfDesired(void)
 {
     OD_LOG_OBJENTER(); //####
-    yarp::os::ConstString    yarpPath(Utilities::FindPathToExecutable("yarp"));
     yarp::os::Network *      result = nullptr;
 #if MAC_OR_LINUX_
     yarp::os::impl::Logger & theLogger = Common::GetLogger();
 #endif // MAC_OR_LINUX_
     
     // No running YARP server was detected - first check if YARP is actually available:
-    if (0 < yarpPath.length())
+	_yarpPath = Utilities::FindPathToExecutable("yarp");
+    if (0 < _yarpPath.length())
     {
         // If YARP is installed, give the option of running a private copy.
-        if (validateYarp(yarpPath.c_str()))
+        if (validateYarp(_yarpPath.c_str()))
         {
             struct in_addr       serverAddress;
             int                  serverPort;
@@ -218,7 +221,6 @@ yarp::os::Network * ChannelManagerApplication::checkForYarpAndLaunchIfDesired(vo
 #if MAC_OR_LINUX_
             theLogger.warning("Private YARP network being launched.");
 #endif // MAC_OR_LINUX_
-            Utilities::GetMachineIPs(ipAddresses);
             if (Utilities::GetCurrentYarpConfiguration(serverAddress, serverPort))
             {
                 if (INADDR_NONE != serverAddress.s_addr)
@@ -232,19 +234,19 @@ yarp::os::Network * ChannelManagerApplication::checkForYarpAndLaunchIfDesired(vo
                     }
                 }
             }
+			Utilities::GetMachineIPs(ipAddresses);
 
-
-            _yarpLauncher = new YarpLaunchThread(yarpPath.c_str());
-            if (_yarpLauncher)
-            {
-                _yarpLauncher->startThread();
-                // Sleep for a little while and recheck if YARP is active.
-                for ( ; ! result; )
-                {
-                    Thread::sleep(100);
-                    result = new yarp::os::Network;
-                }
-            }
+			_yarpLauncher = new YarpLaunchThread(_yarpPath.c_str(), serverPort);
+			if (_yarpLauncher)
+			{
+				_yarpLauncher->startThread();
+				// Sleep for a little while and recheck if YARP is active.
+				for ( ; ! result; )
+				{
+					Thread::sleep(100);
+					result = new yarp::os::Network;
+				}
+			}
         }
     }
     else
@@ -391,25 +393,31 @@ void ChannelManagerApplication::shutdown(void)
 {
     OD_LOG_OBJENTER(); //####
     SetExitRequest();
-    if (_scanner)
+	if (_scanner)
+	{
+		_scanner->signalThreadShouldExit();
+	}
+	if (_yarpLauncher)
+	{
+		_yarpLauncher->killChildProcess();
+	}
+	if (_scanner)
+	{
+        _scanner->stopThread(kThreadKillTime);
+		_scanner = nullptr; // shuts down thread
+	}
+	if (_yarpLauncher)
     {
-        _scanner->stopNow();
-        _scanner->stopThread(5000);
-    }
-    if (_yarpLauncher)
-    {
-        _yarpLauncher->stopNow();
-        _yarpLauncher->stopThread(5000);
-    }
-    EntitiesPanel & entities = _mainWindow->getEntitiesPanel();
+        _yarpLauncher->stopThread(kThreadKillTime);
+		_yarpLauncher = nullptr; // shuts down thread
+	}
+	EntitiesPanel & entities = _mainWindow->getEntitiesPanel();
 
     entities.rememberPositions();
 #if defined(MpM_DoExplicitClose)
     _peeker->close();
 #endif // defined(MpM_DoExplicitClose)
     Common::AdapterChannel::RelinquishChannel(_peeker);
-    _scanner = nullptr; // shuts down thread
-	_yarpLauncher = nullptr; // shuts down thread
     _mainWindow = nullptr; // (deletes our window)
     yarp::os::Network::fini();
     _yarp = nullptr;

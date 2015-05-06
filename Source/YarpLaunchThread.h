@@ -61,8 +61,10 @@ namespace ChannelManager
     public :
         
         /*! @brief The constructor.
-         @param pathToExecutable The file system path for the executable. */
-        YarpLaunchThread(const String & pathToExecutable);
+         @param pathToExecutable The file system path for the executable.
+		 @param portNumber The network port number to use. */
+        YarpLaunchThread(const String & pathToExecutable,
+			             const int      portNumber);
         
         /*! @brief The destructor. */
         virtual ~YarpLaunchThread(void);
@@ -70,9 +72,9 @@ namespace ChannelManager
         /*! @brief Perform the background scan. */
         virtual void run(void);
         
-        /*! @brief Indicate that the thread must leave as soon as possible. */
-        void stopNow(void);
-        
+		/*! @brief Force the child process to terminate. */
+		void killChildProcess(void);
+
     protected :
         
     private :
@@ -91,6 +93,9 @@ namespace ChannelManager
         
         /*! @brief The file system path to the executable. */
         String _yarpPath;
+
+		/*! @brief The network port number to use. */
+		int _port;
         
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(YarpLaunchThread)
         

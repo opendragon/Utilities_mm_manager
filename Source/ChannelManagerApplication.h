@@ -158,6 +158,9 @@ namespace ChannelManager
         /*! @brief The background private YARP launch thread. */
         ScopedPointer<YarpLaunchThread> _yarpLauncher;
         
+		/*! @brief The file system path to the YARP executable. */
+		yarp::os::ConstString _yarpPath;
+
         /*! @brief A channel to watch the Registry Service status. */
         MplusM::Common::AdapterChannel * _peeker;
         

@@ -75,9 +75,6 @@ using namespace std;
 # pragma mark Private structures, constants and variables
 #endif // defined(__APPLE__)
 
-/*! @brief Set to @c true to exit from any delay loops. */
-static bool lBailNow = false;
-
 #if defined(__APPLE__)
 # pragma mark Global constants and variables
 #endif // defined(__APPLE__)
@@ -94,18 +91,21 @@ static bool lBailNow = false;
 # pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
-YarpLaunchThread::YarpLaunchThread(const String & pathToExecutable) :
-    inherited("YARP launcher"), _yarpProcess(nullptr), _yarpPath(pathToExecutable)
+YarpLaunchThread::YarpLaunchThread(const String & pathToExecutable,
+	                               const int      portNumber) :
+	inherited("YARP launcher"), _yarpProcess(nullptr), _yarpPath(pathToExecutable), _port(portNumber)
 {
     OD_LOG_ENTER(); //####
+	OD_LOG_S1s("pathToExecutable = ", pathToExecutable); //####
+	OD_LOG_LL1("portNumber = ", portNumber); //####
     OD_LOG_EXIT_P(this); //####
 } // YarpLaunchThread::YarpLaunchThread
 
 YarpLaunchThread::~YarpLaunchThread(void)
 {
     OD_LOG_OBJENTER(); //####
-    stopThread(3000); // Give thread 3 seconds to shut down.
-    _yarpProcess = nullptr;
+	killChildProcess();
+	_yarpProcess = nullptr;
     OD_LOG_OBJEXIT(); //####
 } // YarpLaunchThread::~YarpLaunchThread
 
@@ -113,39 +113,39 @@ YarpLaunchThread::~YarpLaunchThread(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
+void YarpLaunchThread::killChildProcess(void)
+{
+	OD_LOG_OBJENTER(); //####
+	if (_yarpProcess)
+	{
+		_yarpProcess->kill();
+	}
+	OD_LOG_OBJEXIT(); //####
+} // YarpLaunchThread::killChildProcess
+
 void YarpLaunchThread::run(void)
 {
     OD_LOG_OBJENTER(); //####
     _yarpProcess = new ChildProcess;
     if (_yarpProcess)
     {
-        StringArray nameAndArgs(_yarpPath);
+        StringArray       nameAndArgs(_yarpPath);
+		std::stringstream buff;
 
+		buff << _port;
         nameAndArgs.add("server");
+		nameAndArgs.add("--socket");
+		nameAndArgs.add(buff.str());
 //        nameAndArgs.add("--write");
         if (_yarpProcess->start(nameAndArgs, 0))
         {
-            while ((! threadShouldExit()) && (_yarpProcess->isRunning()) && (! lBailNow))
-            {
-                sleep(50);
-            }
-            if (_yarpProcess->isRunning())
-            {
-                _yarpProcess->kill();
-            }
-            _yarpProcess->waitForProcessToFinish(10000);
-        }
+			const String childOutput(_yarpProcess->readAllProcessOutput());
+
+			_yarpProcess->waitForProcessToFinish(10000);
+		}
     }
     OD_LOG_OBJEXIT(); //####
 } // YarpLaunchThread::run
-
-void YarpLaunchThread::stopNow(void)
-{
-    OD_LOG_OBJENTER(); //####
-    lBailNow = true;
-    OD_LOG_B1("lBailNow <- ", lBailNow); //####
-    OD_LOG_OBJEXIT(); //####
-} // YarpLaunchThread::stopNow
 
 #if defined(__APPLE__)
 # pragma mark Global functions
