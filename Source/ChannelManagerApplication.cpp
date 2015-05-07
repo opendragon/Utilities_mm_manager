@@ -39,6 +39,7 @@
 #include "ChannelManagerApplication.h"
 #include "EntitiesPanel.h"
 #include "PeekInputHandler.h"
+#include "RegistryServiceLaunchThread.h"
 #include "ScannerThread.h"
 #include "YarpLaunchThread.h"
 
@@ -46,8 +47,6 @@
 
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
-
-//#include <arpa/inet.h>
 
 #if defined(__APPLE__)
 # pragma clang diagnostic push
@@ -143,6 +142,12 @@ void ChannelManagerApplication::anotherInstanceStarted(const String & commandLin
 # pragma warning(pop)
 #endif // ! MAC_OR_LINUX_
 
+void ChannelManagerApplication::checkForRegistryServiceAndLaunchIfDesired(void)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_OBJEXIT(); //####
+} // ChannelManagerApplication::checkForRegistryServiceAndLaunchIfDesired
+
 yarp::os::Network * ChannelManagerApplication::checkForYarpAndLaunchIfDesired(void)
 {
     OD_LOG_OBJENTER(); //####
@@ -161,7 +166,7 @@ yarp::os::Network * ChannelManagerApplication::checkForYarpAndLaunchIfDesired(vo
             char                 ipBuffer[INET_ADDRSTRLEN + 1];
             const char *         ipAddressAsString = nullptr;
             struct in_addr       serverAddress;
-            int                  serverPort;
+            int                  serverPort = 10000;
             String               selectedIpAddress;
             String               serverPortAsString;
             Common::StringVector ipAddressVector;
@@ -176,10 +181,13 @@ yarp::os::Network * ChannelManagerApplication::checkForYarpAndLaunchIfDesired(vo
                     serverPortAsString = String(serverPort);
                     ipAddressAsString = inet_ntop(AF_INET, &serverAddress.s_addr, ipBuffer,
                                                   sizeof(ipBuffer));
+                    _configuredYarpAddress = ipAddressAsString;
+                    _configuredYarpPort = serverPort;
                 }
             }
 			Utilities::GetMachineIPs(ipAddressVector);
             int         initialSelection = 0;
+            int         portChoice = serverPort;
             int         res;
             StringArray ipAddressArray;
             String      appName(JUCEApplication::getInstance()->getApplicationName());
@@ -212,8 +220,7 @@ yarp::os::Network * ChannelManagerApplication::checkForYarpAndLaunchIfDesired(vo
                     String portText = ww.getTextEditorContents("NetworkPort");
 
                     selectedIpAddress = ipAddressArray[addressIndexChosen];
-                    int    portChoice = portText.getIntValue();
-
+                    portChoice = portText.getIntValue();
                     if ((1024 <= portChoice) && (65535 > portChoice))
                     {
                         keepGoing = false;
@@ -234,7 +241,7 @@ yarp::os::Network * ChannelManagerApplication::checkForYarpAndLaunchIfDesired(vo
             if (1 == res)
             {
                 _yarpLauncher = new YarpLaunchThread(_yarpPath.c_str(), selectedIpAddress,
-                                                     serverPort);
+                                                     portChoice);
                 if (_yarpLauncher)
                 {
                     _yarpLauncher->startThread();
@@ -242,8 +249,22 @@ yarp::os::Network * ChannelManagerApplication::checkForYarpAndLaunchIfDesired(vo
                     for ( ; ! result; )
                     {
                         Thread::sleep(100);
-                        result = new yarp::os::Network;
+                        if (_yarpLauncher->isThreadRunning())
+                        {
+                            result = new yarp::os::Network;
+                        }
+                        else
+                        {
+                            _yarpLauncher = nullptr;
+                            break;
+                        }
+                        
                     }
+                }
+                if (_yarpLauncher)
+                {
+                    // Still running, YARP network active, so start the Registry Service
+                    checkForRegistryServiceAndLaunchIfDesired();
                 }
             }
         }
@@ -409,6 +430,7 @@ void ChannelManagerApplication::shutdown(void)
     {
         _yarpLauncher->stopThread(kThreadKillTime);
 		_yarpLauncher = nullptr; // shuts down thread
+        restoreYarpConfiguration();
 	}
 	EntitiesPanel & entities = _mainWindow->getEntitiesPanel();
 
@@ -433,9 +455,28 @@ void ChannelManagerApplication::systemRequestedQuit(void)
     OD_LOG_OBJEXIT(); //####
 } // ChannelManagerApplication::systemRequestedQuit
 
+void ChannelManagerApplication::restoreYarpConfiguration(void)
+{
+    OD_LOG_OBJENTER(); //####
+    ChildProcess runYarp;
+    String       appName(JUCEApplication::getInstance()->getApplicationName());
+    StringArray  nameAndArgs(_yarpPath.c_str());
+    
+    nameAndArgs.add("conf");
+    nameAndArgs.add(_configuredYarpAddress);
+    nameAndArgs.add(String(_configuredYarpPort));
+    if (runYarp.start(nameAndArgs))
+    {
+        const String childOutput(runYarp.readAllProcessOutput());
+        
+        runYarp.waitForProcessToFinish(kThreadKillTime);
+    }
+    OD_LOG_OBJEXIT(); //####
+} // ChannelManagerApplication::restoreYarpConfiguration
+
 bool ChannelManagerApplication::validateYarp(void)
 {
-    OD_LOG_ENTER(); //####
+    OD_LOG_OBJENTER(); //####
     bool         doLaunch = false;
     ChildProcess runYarp;
     String       appName(JUCEApplication::getInstance()->getApplicationName());
@@ -481,7 +522,7 @@ bool ChannelManagerApplication::validateYarp(void)
                                     "the PATH system environment variable could not be started. "
                                     "Execution is not possible.", String::empty, _mainWindow);
     }
-    OD_LOG_EXIT_B(doLaunch); //####
+    OD_LOG_OBJEXIT_B(doLaunch); //####
     return doLaunch;
 } // validateYarp
 

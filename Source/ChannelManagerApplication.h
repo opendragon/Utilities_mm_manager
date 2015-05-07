@@ -75,6 +75,7 @@
 namespace ChannelManager
 {
     class PeekInputHandler;
+    class RegistryServiceLaunchThread;
     class ScannerThread;
     class YarpLaunchThread;
     
@@ -130,10 +131,18 @@ namespace ChannelManager
         
     private :
         
+        /*! @brief If the Registry Service is not currently running, give the user the option to
+         launch it. */
+        void checkForRegistryServiceAndLaunchIfDesired(void);
+        
         /*! @brief If YARP is not currently running, give the user the option to launch a private
          copy.
          @returns A pointer to the %Network object used for YARP access. */
         yarp::os::Network * checkForYarpAndLaunchIfDesired(void);
+        
+        /*! @brief Put back the YARP configuration settings that were in effect prior to launching a
+         private YARP network. */
+        void restoreYarpConfiguration(void);
         
         /*! @brief Check if YARP can be launched and if the user wishes it to be.
          @param execPath The file system path to the YARP executable.
@@ -164,6 +173,9 @@ namespace ChannelManager
         /*! @brief The background private YARP launch thread. */
         ScopedPointer<YarpLaunchThread> _yarpLauncher;
         
+        /*! @brief The configured YARP address prior to launching a private YARP network. */
+        String _configuredYarpAddress;
+        
 		/*! @brief The file system path to the YARP executable. */
 		yarp::os::ConstString _yarpPath;
 
@@ -172,6 +184,9 @@ namespace ChannelManager
         
         /*! @brief The input handler for the 'peek' channel. */
         PeekInputHandler * _peekHandler;
+        
+        /*! @brief The configured YARP port prior to launching a private YARP network. */
+        int _configuredYarpPort;
         
     }; // ChannelManagerApplication
     

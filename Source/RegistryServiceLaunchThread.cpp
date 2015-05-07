@@ -1,10 +1,10 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       YarpLaunchThread.cpp
+//  File:       RegistryServiceLaunchThread.cpp
 //
 //  Project:    M+M
 //
-//  Contains:   The class declaration for the background YARP launcher.
+//  Contains:   The class declaration for the background Registry Service launcher.
 //
 //  Written by: Norman Jaffe
 //
@@ -32,11 +32,11 @@
 //              ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 //              DAMAGE.
 //
-//  Created:    2015-05-05
+//  Created:    2015-05-07
 //
 //--------------------------------------------------------------------------------------------------
 
-#include "YarpLaunchThread.h"
+#include "RegistryServiceLaunchThread.h"
 #include "ChannelEntry.h"
 #include "ChannelManagerApplication.h"
 #include "EntitiesPanel.h"
@@ -58,7 +58,7 @@
 
 /*! @file
  
- @brief The class declaration for the background YARP launcher. */
+ @brief The class declaration for the background Registry Service launcher. */
 #if defined(__APPLE__)
 # pragma clang diagnostic pop
 #endif // defined(__APPLE__)
@@ -91,9 +91,9 @@ using namespace std;
 # pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
-YarpLaunchThread::YarpLaunchThread(const String & pathToExecutable,
-                                   const String & ipAddress,
-                                   const int      portNumber) :
+RegistryServiceLaunchThread::RegistryServiceLaunchThread(const String & pathToExecutable,
+                                                         const String & ipAddress,
+                                                         const int      portNumber) :
 	inherited("YARP launcher"), _yarpProcess(nullptr), _yarpAddress(ipAddress),
     _yarpPath(pathToExecutable), _port(portNumber)
 {
@@ -101,21 +101,21 @@ YarpLaunchThread::YarpLaunchThread(const String & pathToExecutable,
 	OD_LOG_S2s("pathToExecutable = ", pathToExecutable, "ipAddress = ", ipAddress); //####
 	OD_LOG_LL1("portNumber = ", portNumber); //####
     OD_LOG_EXIT_P(this); //####
-} // YarpLaunchThread::YarpLaunchThread
+} // RegistryServiceLaunchThread::RegistryServiceLaunchThread
 
-YarpLaunchThread::~YarpLaunchThread(void)
+RegistryServiceLaunchThread::~RegistryServiceLaunchThread(void)
 {
     OD_LOG_OBJENTER(); //####
 	killChildProcess();
 	_yarpProcess = nullptr;
     OD_LOG_OBJEXIT(); //####
-} // YarpLaunchThread::~YarpLaunchThread
+} // RegistryServiceLaunchThread::~RegistryServiceLaunchThread
 
 #if defined(__APPLE__)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-void YarpLaunchThread::killChildProcess(void)
+void RegistryServiceLaunchThread::killChildProcess(void)
 {
 	OD_LOG_OBJENTER(); //####
 	if (_yarpProcess)
@@ -123,9 +123,9 @@ void YarpLaunchThread::killChildProcess(void)
 		_yarpProcess->kill();
 	}
 	OD_LOG_OBJEXIT(); //####
-} // YarpLaunchThread::killChildProcess
+} // RegistryServiceLaunchThread::killChildProcess
 
-void YarpLaunchThread::run(void)
+void RegistryServiceLaunchThread::run(void)
 {
     OD_LOG_OBJENTER(); //####
     _yarpProcess = new ChildProcess;
@@ -147,7 +147,7 @@ void YarpLaunchThread::run(void)
         }
     }
     OD_LOG_OBJEXIT(); //####
-} // YarpLaunchThread::run
+} // RegistryServiceLaunchThread::run
 
 #if defined(__APPLE__)
 # pragma mark Global functions

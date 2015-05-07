@@ -750,7 +750,7 @@ bool ScannerThread::gatherEntities(Utilities::PortVector & detectedPorts,
             // Record the services to be displayed.
             addServices(services, checker, checkStuff);
             // Record the ports that have associates.
-            if (Utilities::CheckForRegistryService(detectedPorts))
+            if (Utilities::CheckListForRegistryService(detectedPorts))
             {
                 addPortsWithAssociates(detectedPorts, checker, checkStuff);
             }
