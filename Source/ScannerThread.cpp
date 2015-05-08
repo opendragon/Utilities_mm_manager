@@ -155,13 +155,15 @@ static void splitCombinedAddressAndPort(const yarp::os::ConstString & combined,
 # pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
-ScannerThread::ScannerThread(ChannelManagerWindow & window) :
+ScannerThread::ScannerThread(ChannelManagerWindow & window,
+                             const bool             delayFirstScan) :
     inherited("port scanner"), _window(window), _rememberedPorts(), _detectedServices(),
     _associatedPorts(), _standalonePorts(),
 #if (defined(CHECK_FOR_STALE_PORTS) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS)))
     _lastStaleTime(- (2 * kMinStaleInterval)),
 #endif // efined(CHECK_FOR_STALE_PORTS) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS))
     _inputOnlyPort(nullptr), _outputOnlyPort(nullptr), _cleanupSoon(false),
+    _delayScan(delayFirstScan),
 #if (defined(CHECK_FOR_STALE_PORTS) && defined(DO_SINGLE_CHECK_FOR_STALE_PORTS))
     _initialStaleCheckDone(false),
 #endif // defined(CHECK_FOR_STALE_PORTS) && defined(DO_SINGLE_CHECK_FOR_STALE_PORTS)
@@ -803,6 +805,57 @@ void ScannerThread::run(void)
             Utilities::RemoveStalePorts();
 #endif // defined(CHECK_FOR_STALE_PORTS)
         }
+        else if (_delayScan)
+        {
+            bool shouldCleanupSoon = false;
+            bool shouldScanSoon = false;
+            int  kk = (LONG_SLEEP / VERY_SHORT_SLEEP);
+            
+            _delayScan = false;
+            do
+            {
+                bool locked = conditionallyAcquireForRead();
+                
+                for ( ; (! locked) && (! needToLeave); locked = conditionallyAcquireForRead())
+                {
+                    for (int ii = 0, mm = (MIDDLE_SLEEP / VERY_SHORT_SLEEP);
+                         (mm > ii) && (0 <= kk) && (! needToLeave); ++ii, --kk)
+                    {
+                        if (threadShouldExit())
+                        {
+                            OD_LOG("threadShouldExit()"); //####
+                            needToLeave = true;
+                        }
+                        else
+                        {
+                            MplusM::Utilities::GoToSleep(VERY_SHORT_SLEEP);
+                        }
+                    }
+                }
+                if (locked)
+                {
+                    OD_LOG("(locked)"); //####
+                    shouldCleanupSoon = _cleanupSoon;
+                    shouldScanSoon = _scanSoon;
+                    OD_LOG_B2("shouldCleanupSoon <- ", shouldCleanupSoon, //####
+                              "shouldScanSoon <- ", shouldScanSoon); //####
+                    relinquishFromRead();
+                    // Sleep at least once!
+                    if (0 <= kk)
+                    {
+                        --kk;
+                        MplusM::Utilities::GoToSleep(VERY_SHORT_SLEEP);
+                    }
+                }
+                if (needToLeave || shouldCleanupSoon || shouldScanSoon)
+                {
+                    OD_LOG("(needToLeave || shouldCleanupSoon || shouldScanSoon)"); //####
+                    break;
+                }
+                
+            }
+            while (0 <= kk);
+        }
         else if (gatherEntities(detectedPorts, CheckForExit))
         {
             int64 loopStartTime = Time::currentTimeMillis();
@@ -810,9 +863,8 @@ void ScannerThread::run(void)
             addEntities(detectedPorts);
             // Indicate that the scan data is available.
             unconditionallyAcquireForWrite();
-            _scanSoon = false;
             _scanIsComplete = true;
-            _scanCanProceed = false;
+            _scanSoon = _scanCanProceed = false;
             OD_LOG_B3("_scanIsComplete <- ", _scanIsComplete, "_scanCanProceed <- ", //####
                       _scanCanProceed, "_scanSoon <- ", _scanSoon); //####
             relinquishFromWrite();

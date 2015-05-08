@@ -64,8 +64,10 @@ namespace ChannelManager
     public :
         
         /*! @brief The constructor.
-         @param window The window to be updated. */
-        ScannerThread(ChannelManagerWindow & window);
+         @param window The window to be updated.
+         @param delayFirstScan @c true if a short delay should occur before the first scan. */
+        ScannerThread(ChannelManagerWindow & window,
+                      const bool             delayFirstScan);
         
         /*! @brief The destructor. */
         virtual ~ScannerThread(void);
@@ -232,6 +234,9 @@ namespace ChannelManager
          otherwise. */
         bool _cleanupSoon;
 
+        /*! @brief @c true if the next scan is to be delayed. */
+        bool _delayScan;
+        
 # if (defined(CHECK_FOR_STALE_PORTS) && defined(DO_SINGLE_CHECK_FOR_STALE_PORTS))
         /*! @brief @c true if the initial stale removal occurred and @c false otherwise. */
         bool _initialStaleCheckDone;

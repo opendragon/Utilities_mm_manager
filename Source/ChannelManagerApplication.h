@@ -132,8 +132,9 @@ namespace ChannelManager
     private :
         
         /*! @brief If the Registry Service is not currently running, give the user the option to
-         launch it. */
-        void checkForRegistryServiceAndLaunchIfDesired(void);
+         launch it.
+         @returns @c true if the Registry Service was launched and @c false otherwise. */
+        bool checkForRegistryServiceAndLaunchIfDesired(void);
         
         /*! @brief If YARP is not currently running, give the user the option to launch a private
          copy.
@@ -143,6 +144,13 @@ namespace ChannelManager
         /*! @brief Put back the YARP configuration settings that were in effect prior to launching a
          private YARP network. */
         void restoreYarpConfiguration(void);
+        
+        /*! @brief Check if the Registry Service can be launched and if the user wishes it to be.
+         @param execPath The file system path to the Registry Service executable.
+         @returns @c true if the user requests that the Registry Service be started and @ c false
+         if the YARP executable is invalid or the user does not want to launch the Registry
+         Service. */
+        bool validateRegistryService(void);
         
         /*! @brief Check if YARP can be launched and if the user wishes it to be.
          @param execPath The file system path to the YARP executable.
@@ -170,11 +178,17 @@ namespace ChannelManager
         /*! @brief The background scanner thread. */
         ScopedPointer<ScannerThread> _scanner;
         
+        /*! @brief The background Registry Service launch thread. */
+        ScopedPointer<RegistryServiceLaunchThread> _registryServiceLauncher;
+
         /*! @brief The background private YARP launch thread. */
         ScopedPointer<YarpLaunchThread> _yarpLauncher;
         
         /*! @brief The configured YARP address prior to launching a private YARP network. */
         String _configuredYarpAddress;
+        
+        /*! @brief The file system path to the Registry Service executable. */
+        yarp::os::ConstString _registryServicePath;
         
 		/*! @brief The file system path to the YARP executable. */
 		yarp::os::ConstString _yarpPath;

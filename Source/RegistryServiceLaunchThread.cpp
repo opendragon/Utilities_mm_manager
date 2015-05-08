@@ -92,14 +92,13 @@ using namespace std;
 #endif // defined(__APPLE__)
 
 RegistryServiceLaunchThread::RegistryServiceLaunchThread(const String & pathToExecutable,
-                                                         const String & ipAddress,
                                                          const int      portNumber) :
-	inherited("YARP launcher"), _yarpProcess(nullptr), _yarpAddress(ipAddress),
-    _yarpPath(pathToExecutable), _port(portNumber)
+	inherited("YARP launcher"), _registryServiceProcess(nullptr),
+    _registryServicePath(pathToExecutable), _registryServicePort(portNumber)
 {
     OD_LOG_ENTER(); //####
-	OD_LOG_S2s("pathToExecutable = ", pathToExecutable, "ipAddress = ", ipAddress); //####
-	OD_LOG_LL1("portNumber = ", portNumber); //####
+	OD_LOG_S1s("pathToExecutable = ", pathToExecutable.toStdString()); //####
+    OD_LOG_LL1("portNumber = ", portNumber); //####
     OD_LOG_EXIT_P(this); //####
 } // RegistryServiceLaunchThread::RegistryServiceLaunchThread
 
@@ -107,7 +106,7 @@ RegistryServiceLaunchThread::~RegistryServiceLaunchThread(void)
 {
     OD_LOG_OBJENTER(); //####
 	killChildProcess();
-	_yarpProcess = nullptr;
+	_registryServiceProcess = nullptr;
     OD_LOG_OBJEXIT(); //####
 } // RegistryServiceLaunchThread::~RegistryServiceLaunchThread
 
@@ -118,9 +117,9 @@ RegistryServiceLaunchThread::~RegistryServiceLaunchThread(void)
 void RegistryServiceLaunchThread::killChildProcess(void)
 {
 	OD_LOG_OBJENTER(); //####
-	if (_yarpProcess)
+	if (_registryServiceProcess)
 	{
-		_yarpProcess->kill();
+		_registryServiceProcess->kill();
 	}
 	OD_LOG_OBJEXIT(); //####
 } // RegistryServiceLaunchThread::killChildProcess
@@ -128,22 +127,24 @@ void RegistryServiceLaunchThread::killChildProcess(void)
 void RegistryServiceLaunchThread::run(void)
 {
     OD_LOG_OBJENTER(); //####
-    _yarpProcess = new ChildProcess;
-    if (_yarpProcess)
+    _registryServiceProcess = new ChildProcess;
+    if (_registryServiceProcess)
     {
-        StringArray nameAndArgs(_yarpPath);
+        OD_LOG("(_registryServiceProcess)"); //####
+        StringArray nameAndArgs(_registryServicePath);
 
-        nameAndArgs.add("server");
-        nameAndArgs.add("--ip");
-        nameAndArgs.add(_yarpAddress);
-		nameAndArgs.add("--socket");
-		nameAndArgs.add(String(_port));
-        nameAndArgs.add("--write");
-        if (_yarpProcess->start(nameAndArgs, 0))
+        if (0 < _registryServicePort)
         {
-            const String childOutput(_yarpProcess->readAllProcessOutput());
+            OD_LOG("(0 < _registryServicePort)"); //####
+            nameAndArgs.add("--port");
+            nameAndArgs.add(String(_registryServicePort));
+        }
+        if (_registryServiceProcess->start(nameAndArgs, 0))
+        {
+            OD_LOG("(_registryServiceProcess->start(nameAndArgs, 0))"); //####
+            const String childOutput(_registryServiceProcess->readAllProcessOutput());
             
-            _yarpProcess->waitForProcessToFinish(10000);
+            _registryServiceProcess->waitForProcessToFinish(10000);
         }
     }
     OD_LOG_OBJEXIT(); //####

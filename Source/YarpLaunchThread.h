@@ -100,7 +100,7 @@ namespace ChannelManager
         String _yarpPath;
 
 		/*! @brief The network port number to use. */
-		int _port;
+		int _yarpPort;
         
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(YarpLaunchThread)
         

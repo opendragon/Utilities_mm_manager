@@ -62,11 +62,9 @@ namespace ChannelManager
         
         /*! @brief The constructor.
          @param pathToExecutable The file system path for the executable.
-         @param ipAddress The network address to use.
 		 @param portNumber The network port number to use. */
         RegistryServiceLaunchThread(const String & pathToExecutable,
-                                    const String & ipAddress,
-                                    const int      portNumber);
+                                    const int      portNumber = 0);
         
         /*! @brief The destructor. */
         virtual ~RegistryServiceLaunchThread(void);
@@ -91,16 +89,13 @@ namespace ChannelManager
         typedef Thread inherited;
         
         /*! @brief The running YARP process. */
-        ScopedPointer<ChildProcess> _yarpProcess;
-        
-        /*! @brief The network address to use. */
-        String _yarpAddress;
+        ScopedPointer<ChildProcess> _registryServiceProcess;
         
         /*! @brief The file system path to the executable. */
-        String _yarpPath;
+        String _registryServicePath;
 
 		/*! @brief The network port number to use. */
-		int _port;
+		int _registryServicePort;
         
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RegistryServiceLaunchThread)
         

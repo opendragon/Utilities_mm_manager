@@ -95,7 +95,7 @@ YarpLaunchThread::YarpLaunchThread(const String & pathToExecutable,
                                    const String & ipAddress,
                                    const int      portNumber) :
 	inherited("YARP launcher"), _yarpProcess(nullptr), _yarpAddress(ipAddress),
-    _yarpPath(pathToExecutable), _port(portNumber)
+    _yarpPath(pathToExecutable), _yarpPort(portNumber)
 {
     OD_LOG_ENTER(); //####
 	OD_LOG_S2s("pathToExecutable = ", pathToExecutable, "ipAddress = ", ipAddress); //####
@@ -131,16 +131,18 @@ void YarpLaunchThread::run(void)
     _yarpProcess = new ChildProcess;
     if (_yarpProcess)
     {
+        OD_LOG("_yarpProcess"); //####
         StringArray nameAndArgs(_yarpPath);
 
         nameAndArgs.add("server");
         nameAndArgs.add("--ip");
         nameAndArgs.add(_yarpAddress);
 		nameAndArgs.add("--socket");
-		nameAndArgs.add(String(_port));
+		nameAndArgs.add(String(_yarpPort));
         nameAndArgs.add("--write");
         if (_yarpProcess->start(nameAndArgs, 0))
         {
+            OD_LOG("(_yarpProcess->start(nameAndArgs, 0))"); //####
             const String childOutput(_yarpProcess->readAllProcessOutput());
             
             _yarpProcess->waitForProcessToFinish(10000);
