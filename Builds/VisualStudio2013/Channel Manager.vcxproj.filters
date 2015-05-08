@@ -1074,6 +1074,9 @@
     <ClCompile Include="..\..\Source\YarpLaunchThread.cpp">
       <Filter>Channel Manager\Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\RegistryServiceLaunchThread.cpp">
+      <Filter>Channel Manager\Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\ChannelContainer.h">
@@ -2125,6 +2128,9 @@
     </ClInclude>
     <ClInclude Include="resource.h" />
     <ClInclude Include="..\..\Source\YarpLaunchThread.h">
+      <Filter>Channel Manager\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\RegistryServiceLaunchThread.h">
       <Filter>Channel Manager\Source</Filter>
     </ClInclude>
   </ItemGroup>
