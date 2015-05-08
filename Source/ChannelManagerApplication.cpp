@@ -163,7 +163,7 @@ bool ChannelManagerApplication::checkForRegistryServiceAndLaunchIfDesired(void)
             theLogger.warning("Registry Service being launched.");
 #endif // MAC_OR_LINUX_
             int         portChoice = servicePort;
-            int         res;
+            int         res = 0;
             String      appName(JUCEApplication::getInstance()->getApplicationName());
             AlertWindow ww(appName, "Please select the network port to be used to start the "
                            "Registry Service (enter 0 to use the default port):",
@@ -262,7 +262,7 @@ yarp::os::Network * ChannelManagerApplication::checkForYarpAndLaunchIfDesired(vo
 			Utilities::GetMachineIPs(ipAddressVector);
             int         initialSelection = 0;
             int         portChoice = serverPort;
-            int         res;
+            int         res = 0;
             StringArray ipAddressArray;
             String      appName(JUCEApplication::getInstance()->getApplicationName());
             AlertWindow ww(appName, "Please select the IP address and port to be used to start the "
