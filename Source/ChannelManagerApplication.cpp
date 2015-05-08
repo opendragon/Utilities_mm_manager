@@ -169,7 +169,8 @@ bool ChannelManagerApplication::checkForRegistryServiceAndLaunchIfDesired(void)
                            "Registry Service (enter 0 to use the default port):",
                            AlertWindow::QuestionIcon, _mainWindow);
             
-            ww.addTextEditor("NetworkPort", servicePortAsString, "Network port:");
+            ww.addTextEditor("NetworkPort", servicePortAsString,
+                             "Network port [0 for the default port]:");
             ww.addButton("OK", 1, KeyPress(KeyPress::returnKey, 0, 0));
             ww.addButton("Cancel", 0, KeyPress(KeyPress::escapeKey, 0, 0));
             for (bool keepGoing = true; keepGoing; )
