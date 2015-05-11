@@ -37,11 +37,6 @@
 //--------------------------------------------------------------------------------------------------
 
 #include "YarpLaunchThread.h"
-#include "ChannelEntry.h"
-#include "ChannelManagerApplication.h"
-#include "EntitiesPanel.h"
-#include "EntityData.h"
-#include "PortData.h"
 
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>

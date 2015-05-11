@@ -104,7 +104,7 @@ namespace ChannelManager
         
         /*! @brief Returns the entities panel.
          @returns The entities panel. */
-        EntitiesPanel & getEntitiesPanel(void)
+        inline EntitiesPanel & getEntitiesPanel(void)
         const
         {
             return *_entitiesPanel;

@@ -131,8 +131,7 @@ bool PeekInputHandler::handleInput(const yarp::os::Bottle &      input,
             
             if (argValue.isString())
             {
-                ChannelManagerApplication * ourApp =
-                        static_cast<ChannelManagerApplication *>(JUCEApplication::getInstance());
+                ChannelManagerApplication * ourApp = ChannelManagerApplication::getApp();
                 yarp::os::ConstString       argAsString(argValue.toString());
                 
                 if (ourApp)

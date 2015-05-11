@@ -84,7 +84,10 @@ namespace ChannelManager
             kCommandClearSelection,
 
             /*! @brief Unhide all entities. */
-            kCommandUnhideEntities
+            kCommandUnhideEntities,
+            
+            /*! @brief Launch the Registry Service. */
+            kCommandLaunchRegistryService
             
         }; // CommandIDs
 

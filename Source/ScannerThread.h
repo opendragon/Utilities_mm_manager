@@ -87,7 +87,7 @@ namespace ChannelManager
         
         /*! @brief Return the collected entities data.
          @returns The collected entities data. */
-        EntitiesData & getEntitiesData(void)
+        inline EntitiesData & getEntitiesData(void)
         {
             return _workingData;
         } // getEntitiesData

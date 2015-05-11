@@ -761,8 +761,7 @@ bool ScannerThread::gatherEntities(Utilities::PortVector & detectedPorts,
         addRegularPortEntities(detectedPorts, checker, checkStuff);
         // Record the port connections.
         addPortConnections(detectedPorts, checker, checkStuff);
-        ChannelManagerApplication * ourApp =
-                        static_cast<ChannelManagerApplication *>(JUCEApplication::getInstance());
+        ChannelManagerApplication * ourApp = ChannelManagerApplication::getApp();
         
         if (ourApp && servicesSeen)
         {

@@ -157,7 +157,7 @@ namespace ChannelManager
         
         /*! @brief Return the direction of the port entry.
          @returns The direction of the port entry. */
-        PortDirection getDirection(void)
+        inline PortDirection getDirection(void)
         const
         {
             return _direction;
@@ -231,7 +231,7 @@ namespace ChannelManager
         
         /*! @brief Return the usage of the port entry.
          @returns The usage of the port entry. */
-        PortUsage getUsage(void)
+        inline PortUsage getUsage(void)
         const
         {
             return _usage;
@@ -275,7 +275,7 @@ namespace ChannelManager
         
         /*! @brief Returns @c true if the port entry is marked and @c false otherwise.
          @returns @c true if the port entry is marked and @c false otherwise. */
-        bool isMarked(void)
+        inline bool isMarked(void)
         const
         {
             return (_drawConnectMarker || _drawDisconnectMarker);

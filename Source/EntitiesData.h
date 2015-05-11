@@ -86,7 +86,7 @@ namespace ChannelManager
         
         /*! @brief Return the list of detected connections.
          @returns The list of detected connections. */
-        const ConnectionList & getConnections(void)
+        inline const ConnectionList & getConnections(void)
         const
         {
             return _connections;

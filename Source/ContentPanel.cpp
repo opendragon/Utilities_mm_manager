@@ -40,6 +40,7 @@
 #include "ContentPanel.h"
 #include "ChannelContainer.h"
 #include "ChannelEntry.h"
+#include "ChannelManagerApplication.h"
 #include "ChannelManagerWindow.h"
 #include "EntitiesPanel.h"
 #include "EntityData.h"
@@ -76,6 +77,7 @@
 #endif // defined(__APPLE__)
 
 using namespace ChannelManager;
+using namespace MplusM;
 using namespace std;
 
 #if defined(__APPLE__)
@@ -214,7 +216,8 @@ void ContentPanel::getAllCommands(Array<CommandID> & commands)
             ChannelManagerWindow::kCommandInvertBackground,
             ChannelManagerWindow::kCommandWhiteBackground,
             ChannelManagerWindow::kCommandClearSelection,
-            ChannelManagerWindow::kCommandUnhideEntities
+            ChannelManagerWindow::kCommandUnhideEntities,
+            ChannelManagerWindow::kCommandLaunchRegistryService
         };
     
     commands.addArray(ids, numElementsInArray(ids));
@@ -254,6 +257,12 @@ void ContentPanel::getCommandInfo(CommandID                commandID,
             result.setInfo("Unhide entities", "Unhide all hidden entities", "View", 0);
             result.addDefaultKeypress('U', ModifierKeys::commandModifier);
             result.setActive(0 < _entitiesPanel->getNumberOfHiddenEntities());
+            break;
+            
+        case ChannelManagerWindow::kCommandLaunchRegistryService :
+            result.setInfo("Launch Registry", "Launch the Registry Service", "View", 0);
+            result.addDefaultKeypress('R', ModifierKeys::commandModifier);
+            result.setActive(! Utilities::CheckForRegistryService());
             break;
             
         default :
@@ -579,8 +588,9 @@ void ContentPanel::paint(Graphics & gg)
 bool ContentPanel::perform(const InvocationInfo & info)
 {
     OD_LOG_OBJENTER(); //####
-    bool            wasProcessed = false;
-    ScannerThread * scanner = _containingWindow->getScannerThread();
+    bool                        wasProcessed = false;
+    ChannelManagerApplication * ourApp = ChannelManagerApplication::getApp();
+    ScannerThread *             scanner = _containingWindow->getScannerThread();
     
     switch (info.commandID)
     {
@@ -596,21 +606,33 @@ bool ContentPanel::perform(const InvocationInfo & info)
         case ChannelManagerWindow::kCommandInvertBackground :
             flipBackground();
             requestWindowRepaint();
+            wasProcessed = true;
             break;
             
         case ChannelManagerWindow::kCommandWhiteBackground :
             changeBackgroundColour();
             requestWindowRepaint();
+            wasProcessed = true;
             break;
             
         case ChannelManagerWindow::kCommandClearSelection :
             setChannelOfInterest(nullptr);
             setContainerOfInterest(nullptr);
+            wasProcessed = true;
             break;
             
         case ChannelManagerWindow::kCommandUnhideEntities :
             _entitiesPanel->unhideEntities();
             requestWindowRepaint();
+            wasProcessed = true;
+            break;
+
+        case ChannelManagerWindow::kCommandLaunchRegistryService :
+            if (ourApp)
+            {
+                ourApp->doLaunchRegistry();
+            }
+            wasProcessed = true;
             break;
             
         default :
@@ -1061,6 +1083,8 @@ void ContentPanel::setUpDisplayMenu(PopupMenu & aMenu)
     aMenu.addSeparator();
     aMenu.addCommandItem(commandManager, ChannelManagerWindow::kCommandClearSelection);
     aMenu.addCommandItem(commandManager, ChannelManagerWindow::kCommandUnhideEntities);
+    aMenu.addSeparator();
+    aMenu.addCommandItem(commandManager, ChannelManagerWindow::kCommandLaunchRegistryService);
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::setUpDisplayMenu
 

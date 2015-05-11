@@ -121,14 +121,14 @@ namespace ChannelManager
         
         /*! @brief Return the font to be used for bold text.
          @returns The font to be used for bold text. */
-        Font & getBoldFont(void)
+        inline Font & getBoldFont(void)
         {
             return *_defaultBoldFont;
         } // getBoldFont
         
         /*! @brief Return the container in which the panel is embedded.
          @returns The container in which the panel is embedded. */
-        ContentPanel * getContent(void)
+        inline ContentPanel * getContent(void)
         const
         {
             return _container;
@@ -142,7 +142,7 @@ namespace ChannelManager
         
         /*! @brief Return the starting point for a connection being added.
          @returns The starting point for a connection being added. */
-        ChannelEntry * getFirstAddPoint(void)
+        inline ChannelEntry * getFirstAddPoint(void)
         const
         {
             return _firstAddPoint;
@@ -150,7 +150,7 @@ namespace ChannelManager
         
         /*! @brief Return the starting point for a connection being removed.
          @returns The starting point for a connection being removed. */
-        ChannelEntry * getFirstRemovePoint(void)
+        inline ChannelEntry * getFirstRemovePoint(void)
         const
         {
             return _firstRemovePoint;
@@ -158,7 +158,7 @@ namespace ChannelManager
         
         /*! @brief Return the font to be used for normal text.
          @returns The font to be used for normal text. */
-        Font & getNormalFont(void)
+        inline Font & getNormalFont(void)
         {
             return *_defaultNormalFont;
         } // getNormalFont

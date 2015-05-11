@@ -97,7 +97,7 @@ static const int kThreadKillTime = 5000;
 ChannelManagerApplication::ChannelManagerApplication(void) :
     inherited(), _mainWindow(nullptr), _yarp(nullptr), _scanner(nullptr),
     _registryServiceLauncher(nullptr), _yarpLauncher(nullptr), _peeker(nullptr),
-    _peekHandler(nullptr)
+    _peekHandler(nullptr), _registryServiceCanBeLaunched(false)
 {
 #if defined(MpM_ServicesLogToStandardError)
     OD_LOG_INIT(ProjectInfo::projectName, kODLoggingOptionIncludeProcessID | //####
@@ -143,6 +143,67 @@ void ChannelManagerApplication::anotherInstanceStarted(const String & commandLin
 # pragma warning(pop)
 #endif // ! MAC_OR_LINUX_
 
+bool ChannelManagerApplication::doLaunchRegistry(void)
+{
+    OD_LOG_OBJENTER(); //####
+    bool                     result = false;
+#if MAC_OR_LINUX_
+    yarp::os::impl::Logger & theLogger = Common::GetLogger();
+#endif // MAC_OR_LINUX_
+    int                      portChoice = 0;
+    int                      res = 0;
+    String                   appName(JUCEApplication::getInstance()->getApplicationName());
+    AlertWindow              ww(appName, "Please select the network port to be used to start the "
+                                "Registry Service (enter 0 to use the default port):",
+                                AlertWindow::QuestionIcon, _mainWindow);
+    
+#if MAC_OR_LINUX_
+    theLogger.warning("Registry Service being launched.");
+#endif // MAC_OR_LINUX_
+    ww.addTextEditor("NetworkPort", "0", "Network port [0 for the default port]:");
+    ww.addButton("OK", 1, KeyPress(KeyPress::returnKey, 0, 0));
+    ww.addButton("Cancel", 0, KeyPress(KeyPress::escapeKey, 0, 0));
+    for (bool keepGoing = true; keepGoing; )
+    {
+        res = ww.runModalLoop();
+        if (1 == res)
+        {
+            String portText = ww.getTextEditorContents("NetworkPort");
+            
+            portChoice = portText.getIntValue();
+            if ((! portChoice) || Utilities::ValidPortNumber(portChoice))
+            {
+                keepGoing = false;
+            }
+            else
+            {
+                AlertWindow::showMessageBox(AlertWindow::WarningIcon, getApplicationName(),
+                                            "The port number is invalid. "
+                                            "Please enter a value between 1024 and 65535",
+                                            String::empty, _mainWindow);
+            }
+        }
+        else
+        {
+            keepGoing = false;
+        }
+    }
+    if (1 == res)
+    {
+        _registryServiceLauncher =
+        new RegistryServiceLaunchThread(_registryServicePath.c_str(),
+                                        portChoice);
+        if (_registryServiceLauncher)
+        {
+            _registryServiceLauncher->startThread();
+            _registryServiceCanBeLaunched = false;
+            result = true;
+        }
+    }
+    OD_LOG_OBJEXIT_B(result); //####
+    return result;
+} // ChannelManagerApplication::doLaunchRegistry
+
 bool ChannelManagerApplication::checkForRegistryServiceAndLaunchIfDesired(void)
 {
     OD_LOG_OBJENTER(); //####
@@ -156,59 +217,7 @@ bool ChannelManagerApplication::checkForRegistryServiceAndLaunchIfDesired(void)
         // If the Registry Service is installed, give the option of running it.
         if (validateRegistryService())
         {
-            int    servicePort = 0;
-            String servicePortAsString("0");
-
-#if MAC_OR_LINUX_
-            theLogger.warning("Registry Service being launched.");
-#endif // MAC_OR_LINUX_
-            int         portChoice = servicePort;
-            int         res = 0;
-            String      appName(JUCEApplication::getInstance()->getApplicationName());
-            AlertWindow ww(appName, "Please select the network port to be used to start the "
-                           "Registry Service (enter 0 to use the default port):",
-                           AlertWindow::QuestionIcon, _mainWindow);
-            
-            ww.addTextEditor("NetworkPort", servicePortAsString,
-                             "Network port [0 for the default port]:");
-            ww.addButton("OK", 1, KeyPress(KeyPress::returnKey, 0, 0));
-            ww.addButton("Cancel", 0, KeyPress(KeyPress::escapeKey, 0, 0));
-            for (bool keepGoing = true; keepGoing; )
-            {
-                res = ww.runModalLoop();
-                if (1 == res)
-                {
-                    String portText = ww.getTextEditorContents("NetworkPort");
-                    
-                    portChoice = portText.getIntValue();
-                    if ((! portChoice) || Utilities::ValidPortNumber(portChoice))
-                    {
-                        keepGoing = false;
-                    }
-                    else
-                    {
-                        AlertWindow::showMessageBox(AlertWindow::WarningIcon, getApplicationName(),
-                                                    "The port number is invalid. "
-                                                    "Please enter a value between 1024 and 65535",
-                                                    String::empty, _mainWindow);
-                    }
-                }
-                else
-                {
-                    keepGoing = false;
-                }
-            }
-            if (1 == res)
-            {
-                _registryServiceLauncher =
-                                    new RegistryServiceLaunchThread(_registryServicePath.c_str(),
-                                                                    portChoice);
-                if (_registryServiceLauncher)
-                {
-                    _registryServiceLauncher->startThread();
-                    didLaunch = true;
-                }
-            }
+            didLaunch = doLaunchRegistry();
         }
     }
     else
@@ -578,9 +587,11 @@ bool ChannelManagerApplication::validateRegistryService(void)
         if (0 < childOutput.length())
         {
             // We have a useable Registry Service executable - ask what the user wants to do.
+            _registryServiceCanBeLaunched = true;
             doLaunch = (1 == AlertWindow::showOkCancelBox(AlertWindow::QuestionIcon,
-                                                          "Do you wish to launch the Registry "
-                                                          "Service?",
+                                                          "No running Registry Service was "
+                                                          "detected - do you wish to launch the "
+                                                          "Registry Service?",
                                                           "If you do, it may take a few moments to "
                                                           "start, depending on network traffic and "
                                                           "system activity. "
@@ -589,8 +600,8 @@ bool ChannelManagerApplication::validateRegistryService(void)
                                                           "resulting in a potential loss of "
                                                           "connectivity to any M+M services that "
                                                           "were started after the Registry Service "
-                                                          "was launched.", String::empty,
-                                                          String::empty, _mainWindow, nullptr));
+                                                          "was launched.", "Yes", "No",
+                                                          _mainWindow, nullptr));
         }
         else
         {
@@ -632,8 +643,8 @@ bool ChannelManagerApplication::validateYarp(void)
         {
             // We have a useable YARP executable - ask what the user wants to do.
             doLaunch = (1 == AlertWindow::showOkCancelBox(AlertWindow::QuestionIcon,
-                                                          "Do you wish to launch a private YARP "
-                                                          "network?",
+                                                          "No YARP network was detected - do you "
+                                                          "wish to launch a private YARP network?",
                                                           "If you do, it may take a few moments to "
                                                           "start, depending on network traffic and "
                                                           "system activity. "
@@ -642,8 +653,8 @@ bool ChannelManagerApplication::validateYarp(void)
                                                           "resulting in a potential loss of "
                                                           "connectivity to any M+M services that "
                                                           "were started after the private YARP "
-                                                          "network was launched.", String::empty,
-                                                          String::empty, _mainWindow, nullptr));
+                                                          "network was launched.", "Yes", "No",
+                                                          _mainWindow, nullptr));
         }
         else
         {

@@ -94,12 +94,26 @@ namespace ChannelManager
          @param commandLine The arguments passed to the new instance. */
         void anotherInstanceStarted(const String & commandLine);
         
+        /*! @brief Returns @c true if there is a Registry Service executable available but no
+         running Registry Service was detected.
+         @returns @c true if the Registry Service can be launched and @c false otherwise. */
+        inline bool canTheRegistryServiceBeLaunched(void)
+        const
+        {
+            return _registryServiceCanBeLaunched;
+        } // canTheRegistryServiceBeLaunched
+        
         /*! @brief Connect (or reconnect) the peek channel to the Registry Service. */
         void connectPeekChannel(void);
         
         /*! @brief Indicate that a port cleanup should be performed as soon as possible. */
         void doCleanupSoon(void);
         
+        /*! @brief Ask the user for information required to launch the Registry Service and launch
+         it if the user requests.
+         @returns @c true if the Registry Service was launched and @c false otherwise. */
+        bool doLaunchRegistry(void);
+
         /*! @brief Indicate that a scan should be performed as soon as possible. */
         void doScanSoon(void);
         
@@ -126,6 +140,13 @@ namespace ChannelManager
         
         /*! @brief Called when the operating system is trying to close the application. */
         virtual void systemRequestedQuit(void);
+        
+        /*! @brief Return the application object.
+         @returns The application object. */
+        inline static ChannelManagerApplication * getApp(void)
+        {
+            return static_cast<ChannelManagerApplication *>(JUCEApplication::getInstance());
+        } // getApp
         
     protected :
         
@@ -202,16 +223,12 @@ namespace ChannelManager
         /*! @brief The configured YARP port prior to launching a private YARP network. */
         int _configuredYarpPort;
         
+        /*! @brief @c true if it is possible to launch the Registry Service and @c false if there is
+         a running Registry Service or a launchable one cannot be found. */
+        bool _registryServiceCanBeLaunched;
+        
     }; // ChannelManagerApplication
     
 } // ChannelManager
-
-/*! @brief Return @c true if exit is requested.
- @param stuff Dummy argument to satisfy caller.
- @returns @c true if exit has been requested. */
-bool CheckForExit(void * stuff);
-
-/*! @brief Indicate that an exit has been requested. */
-void SetExitRequest(void);
 
 #endif // ! defined(ChannelManagerApplication_H_)
