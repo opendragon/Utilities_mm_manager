@@ -61,6 +61,7 @@
 #endif // defined(__APPLE__)
 
 using namespace ChannelManager;
+using namespace MplusM;
 using namespace std;
 
 #if defined(__APPLE__)
@@ -397,7 +398,7 @@ StringArray ChannelContainer::getMetrics(void)
     {
         ChannelEntry * aPort = getPort(ii);
         
-        if (aPort && (kPortUsageService == aPort->getUsage()))
+        if (aPort && aPort->isService())
         {
             yarp::os::Bottle metrics;
             
@@ -426,7 +427,7 @@ bool ChannelContainer::getMetricsState(void)
     {
         ChannelEntry * aPort = getPort(ii);
         
-        if (aPort && (kPortUsageService == aPort->getUsage()))
+        if (aPort && aPort->isService())
         {
             if (MplusM::Utilities::GetMetricsStateForService(aPort->getPortName(), result,
                                                              STANDARD_WAIT_TIME))
@@ -697,7 +698,7 @@ void ChannelContainer::setMetricsState(const bool newState)
     {
         ChannelEntry * aPort = getPort(ii);
         
-        if (aPort && (kPortUsageService == aPort->getUsage()))
+        if (aPort && aPort->isService())
         {
             if (MplusM::Utilities::SetMetricsStateForService(aPort->getPortName(), newState,
                                                              STANDARD_WAIT_TIME))
@@ -740,18 +741,43 @@ void ChannelContainer::stopTheService(void)
     {
         ChannelEntry * aPort = getPort(ii);
         
-        if (aPort && (kPortUsageService == aPort->getUsage()))
+        if (aPort && aPort->isService())
         {
-            bool doStop = (1 == AlertWindow::showOkCancelBox(AlertWindow::QuestionIcon,
-                                                             "Are you sure that you want to stop "
-                                                             "this service?", "If you do, it may "
-                                                             "take a few moments to disappear from "
-                                                             "the display, depending on network "
-                                                             "traffic. Also, the service will not "
-                                                             "exit if it is waiting on a command "
-                                                             "prompt, until a command is issued.",
-                                                             String::empty, String::empty, nullptr,
-                                                             nullptr));
+            bool doStop;
+            
+            if (Utilities::PortIsRegistryService(aPort->getPortName()))
+            {
+                doStop = (1 == AlertWindow::showOkCancelBox(AlertWindow::QuestionIcon,
+                                                            "Are you sure that you want to stop "
+                                                            "the Registry Service?", "If you do, "
+                                                            "it may take a few moments to "
+                                                            "disappear from the display, depending "
+                                                            "on network traffic. "
+                                                            "Also, stopping the Registry Service "
+                                                            "will interfere with the ability of "
+                                                            "clients and adapters to locate their "
+                                                            "corresponding services, and this "
+                                                            "application will not be able to "
+                                                            "identify services, clients or "
+                                                            "adapters or to group secondary ports "
+                                                            "together with their primary ports.",
+                                                            "Yes", String::empty, nullptr,
+                                                            nullptr));
+            }
+            else
+            {
+                doStop = (1 == AlertWindow::showOkCancelBox(AlertWindow::QuestionIcon,
+                                                            "Are you sure that you want to stop "
+                                                            "this service?", "If you do, it may "
+                                                            "take a few moments to disappear from "
+                                                            "the display, depending on network "
+                                                            "traffic. "
+                                                            "Also, the service will not exit if it "
+                                                            "is waiting on a command prompt, until "
+                                                            "a command is issued.",
+                                                            "Yes", String::empty, nullptr,
+                                                            nullptr));
+            }
             if (doStop && MplusM::Utilities::StopAService(aPort->getPortName(), STANDARD_WAIT_TIME))
             {
                 ContentPanel * thePanel = _owner.getContent();
