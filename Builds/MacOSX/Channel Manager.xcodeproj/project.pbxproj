@@ -40,6 +40,7 @@
 		DF0B256A19FAE7C2001AEB0C /* libOGDF.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0B256419FAE7C2001AEB0C /* libOGDF.a */; };
 		DF55EC4C1A3746870096DF54 /* libYARP_init.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0ADB3C1A1A77EF0096548B /* libYARP_init.1.dylib */; };
 		DF55EC4D1A3746870096DF54 /* libYARP_OS.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0ADB3D1A1A77EF0096548B /* libYARP_OS.1.dylib */; };
+		DF7623631B02590E002BDC49 /* GeneralServiceLaunchThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF7623611B02590E002BDC49 /* GeneralServiceLaunchThread.cpp */; };
 		DF8888241AF92D99001320EB /* YarpLaunchThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF8888221AF92D99001320EB /* YarpLaunchThread.cpp */; };
 		DF8888281AFBD66C001320EB /* RegistryServiceLaunchThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF8888261AFBD66C001320EB /* RegistryServiceLaunchThread.cpp */; };
 		DFADC9EC19D0C12F002C2663 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DFADC9EB19D0C12F002C2663 /* Images.xcassets */; };
@@ -649,6 +650,8 @@
 		DF2EFBEA7BAA9E19E83C151C /* juce_CharacterFunctions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_CharacterFunctions.cpp; path = ../../JuceLibraryCode/modules/juce_core/text/juce_CharacterFunctions.cpp; sourceTree = SOURCE_ROOT; };
 		DF55EC3B1A3668890096DF54 /* libYARP_init.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libYARP_init.dylib; path = "../../../../../../../opt/M+M/lib/libYARP_init.dylib"; sourceTree = "<group>"; };
 		DF55EC3C1A3668890096DF54 /* libYARP_OS.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libYARP_OS.dylib; path = "../../../../../../../opt/M+M/lib/libYARP_OS.dylib"; sourceTree = "<group>"; };
+		DF7623611B02590E002BDC49 /* GeneralServiceLaunchThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GeneralServiceLaunchThread.cpp; path = ../../Source/GeneralServiceLaunchThread.cpp; sourceTree = "<group>"; };
+		DF7623621B02590E002BDC49 /* GeneralServiceLaunchThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GeneralServiceLaunchThread.h; path = ../../Source/GeneralServiceLaunchThread.h; sourceTree = "<group>"; };
 		DF8888221AF92D99001320EB /* YarpLaunchThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = YarpLaunchThread.cpp; path = ../../Source/YarpLaunchThread.cpp; sourceTree = "<group>"; };
 		DF8888231AF92D99001320EB /* YarpLaunchThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YarpLaunchThread.h; path = ../../Source/YarpLaunchThread.h; sourceTree = "<group>"; };
 		DF8888261AFBD66C001320EB /* RegistryServiceLaunchThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RegistryServiceLaunchThread.cpp; path = ../../Source/RegistryServiceLaunchThread.cpp; sourceTree = "<group>"; };
@@ -981,6 +984,8 @@
 				C5AB44D32AE328464084F3B3 /* EntitiesPanel.h */,
 				46C132D661A3B9BEB29B9E2D /* EntityData.cpp */,
 				700A549C9FE4467A2B3FCE56 /* EntityData.h */,
+				DF7623611B02590E002BDC49 /* GeneralServiceLaunchThread.cpp */,
+				DF7623621B02590E002BDC49 /* GeneralServiceLaunchThread.h */,
 				4C060BF297177856F78A7C10 /* PeekInputHandler.cpp */,
 				5EA1A82E5A1071C5C2DDDBBE /* PeekInputHandler.h */,
 				93AD4B4E9FBADD52BACEF145 /* PortData.cpp */,
@@ -2143,6 +2148,7 @@
 				81E02713982BA5A1CFDA27C2 /* juce_graphics.mm in Sources */,
 				BC56C45521A083DFABDFB7B2 /* juce_gui_basics.mm in Sources */,
 				DEEF248165B3103CD7681805 /* juce_gui_extra.mm in Sources */,
+				DF7623631B02590E002BDC49 /* GeneralServiceLaunchThread.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

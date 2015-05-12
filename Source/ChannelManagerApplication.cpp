@@ -38,6 +38,7 @@
 
 #include "ChannelManagerApplication.h"
 #include "EntitiesPanel.h"
+#include "GeneralServiceLaunchThread.h"
 #include "PeekInputHandler.h"
 #include "RegistryServiceLaunchThread.h"
 #include "ScannerThread.h"
@@ -48,6 +49,26 @@
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
 
+#if defined(__APPLE__)
+# pragma clang diagnostic push
+# pragma clang diagnostic ignored "-Wunknown-pragmas"
+# pragma clang diagnostic ignored "-Wc++11-extensions"
+# pragma clang diagnostic ignored "-Wconversion"
+# pragma clang diagnostic ignored "-Wdeprecated-declarations"
+# pragma clang diagnostic ignored "-Wdocumentation"
+# pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
+# pragma clang diagnostic ignored "-Wextern-c-compat"
+# pragma clang diagnostic ignored "-Wextra-semi"
+# pragma clang diagnostic ignored "-Wpadded"
+# pragma clang diagnostic ignored "-Wshadow"
+# pragma clang diagnostic ignored "-Wsign-conversion"
+# pragma clang diagnostic ignored "-Wunused-parameter"
+# pragma clang diagnostic ignored "-Wweak-vtables"
+#endif // defined(__APPLE__)
+#include <yarp/os/impl/SystemInfo.h>
+#if defined(__APPLE__)
+# pragma clang diagnostic pop
+#endif // defined(__APPLE__)
 #if defined(__APPLE__)
 # pragma clang diagnostic push
 # pragma clang diagnostic ignored "-Wunknown-pragmas"
@@ -67,6 +88,11 @@
 using namespace ChannelManager;
 using namespace MplusM;
 using namespace std;
+
+#if defined(__APPLE__)
+/*! @brief The system environment variable table. */
+extern char * * environ;
+#endif // __APPLE__
 
 #if defined(__APPLE__)
 # pragma mark Private structures, constants and variables
@@ -190,9 +216,8 @@ bool ChannelManagerApplication::doLaunchRegistry(void)
     }
     if (1 == res)
     {
-        _registryServiceLauncher =
-        new RegistryServiceLaunchThread(_registryServicePath.c_str(),
-                                        portChoice);
+        _registryServiceLauncher = new RegistryServiceLaunchThread(_registryServicePath,
+                                                                   portChoice);
         if (_registryServiceLauncher)
         {
             _registryServiceLauncher->startThread();
@@ -324,8 +349,7 @@ yarp::os::Network * ChannelManagerApplication::checkForYarpAndLaunchIfDesired(vo
             }
             if (1 == res)
             {
-                _yarpLauncher = new YarpLaunchThread(_yarpPath.c_str(), selectedIpAddress,
-                                                     portChoice);
+                _yarpLauncher = new YarpLaunchThread(_yarpPath, selectedIpAddress, portChoice);
                 if (_yarpLauncher)
                 {
                     _yarpLauncher->startThread();
@@ -395,6 +419,127 @@ void ChannelManagerApplication::doScanSoon(void)
     OD_LOG_OBJEXIT(); //####
 } // ChannelManagerApplication::doScanSoon
 
+String ChannelManagerApplication::findPathToExecutable(const String & execName)
+{
+    OD_LOG_ENTER(); //####
+    OD_LOG_S1s("execName = ", execName.toStdString()); //####
+    String result;
+    
+    if (juce::File::isAbsolutePath(execName))
+    {
+        bool       doCheck = false;
+        juce::File aFile(juce::File::createFileWithoutCheckingPath(execName));
+        
+        if (aFile.existsAsFile())
+        {
+            doCheck = true;
+        }
+#if (! MAC_OR_LINUX_)
+        else
+        {
+            String temp(aFile.getFileNameWithoutExtension() + ".exe");
+            
+            aFile = juce::File::createFileWithoutCheckingPath(temp));
+            if (aFile.existsAsFile())
+            {
+                doCheck = true;
+            }
+        }
+#endif // ! MAC_OR_LINUX_
+        if (doCheck)
+        {
+            String temp(aFile.getFullPathName());
+            
+#if MAC_OR_LINUX_
+            if (! access(temp.toStdString().c_str(), X_OK))
+#else // ! MAC_OR_LINUX_
+            if (! _access(temp.toStdString().c_str(), 0)) // Note that there's no explicit check for
+                                                          // execute permission in Windows
+#endif // ! MAC_OR_LINUX_
+            {
+                // We've found an executable that we can use!
+                result = temp;
+            }
+        }
+    }
+    else
+    {
+        String pathVar(getEnvironmentVar("PATH"));
+        
+        if (pathVar.isNotEmpty())
+        {
+            for ( ; pathVar.isNotEmpty(); )
+            {
+                bool       doCheck = false;
+                juce::File aFile;
+                String     pathToCheck;
+#if MAC_OR_LINUX_
+                int        indx = pathVar.indexOfChar(':');
+#else // ! MAC_OR_LINUX_
+                int        indx = pathVar.indexOfChar(';');
+#endif // ! MAC_OR_LINUX_
+                
+                if (-1 == indx)
+                {
+                    pathToCheck = pathVar;
+                    pathVar.clear();
+                }
+                else
+                {
+                    pathToCheck = pathVar.substring(0, indx);
+                    pathVar = pathVar.substring(indx + 1);
+                }
+                pathToCheck = juce::File::addTrailingSeparator(pathToCheck);
+                aFile = juce::File::createFileWithoutCheckingPath(pathToCheck + execName);
+                if (aFile.existsAsFile())
+                {
+                    doCheck = true;
+                }
+#if (! MAC_OR_LINUX_)
+                else
+                {
+                    String temp(aFile.getFileNameWithoutExtension() + ".exe");
+
+                    aFile = juce::File::createFileWithoutCheckingPath(temp));
+                    if (aFile.existsAsFile())
+                    {
+                        doCheck = true;
+                    }
+                }
+#endif // ! MAC_OR_LINUX_
+                if (doCheck)
+                {
+                    String temp(aFile.getFullPathName());
+                    
+#if MAC_OR_LINUX_
+                    if (! access(temp.toStdString().c_str(), X_OK))
+#else // ! MAC_OR_LINUX_
+                    if (! _access(temp.toStdString().c_str(), 0)) // Note that there's no explicit
+                                                                  // check for execute permission in
+                                                                  // Windows
+#endif // ! MAC_OR_LINUX_
+                    {
+                        // We've found an executable that we can use!
+                        result = temp;
+                    }
+                }
+            }
+        }
+    }
+    OD_LOG_EXIT_s(result.toStdString()); //####
+    return result;
+} // ChannelManagerApplication::findPathToExecutable
+
+ChannelManagerApplication * ChannelManagerApplication::getApp(void)
+{
+    OD_LOG_ENTER(); //####
+    ChannelManagerApplication * result =
+                        static_cast<ChannelManagerApplication *>(JUCEApplication::getInstance());
+
+    OD_LOG_EXIT_P(result); //####
+    return result;
+} // ChannelManagerApplication::getApp
+
 const String ChannelManagerApplication::getApplicationName(void)
 {
     OD_LOG_OBJENTER(); //####
@@ -408,6 +553,160 @@ const String ChannelManagerApplication::getApplicationVersion(void)
     OD_LOG_OBJEXIT_S(ProjectInfo::versionString); //####
     return ProjectInfo::versionString;
 } // ChannelManagerApplication::getApplicationVersion
+
+String ChannelManagerApplication::getEnvironmentVar(const char * varName)
+{
+    OD_LOG_ENTER(); //####
+    OD_LOG_S1("varName = ", varName); //####
+    String                    result;
+    StringMap                 envVars(getEnvironmentVars());
+    StringMap::const_iterator it(envVars.find(varName));
+    
+    if (envVars.end() != it)
+    {
+        result = it->second;
+    }
+    OD_LOG_EXIT_s(result.toStdString()); //####
+    return result;
+} // ChannelManagerApplication::getEnvironmentVar
+
+ChannelManagerApplication::StringMap ChannelManagerApplication::getEnvironmentVars(void)
+{
+    OD_LOG_ENTER(); //####
+    StringMap result;
+#if defined(__APPLE__)
+    char *                varChar = *environ;
+#else // ! defined(__APPLE__)
+    yarp::os::Property    vars(yarp::os::impl::SystemInfo::getPlatformInfo().environmentVars);
+    yarp::os::ConstString varsAsString(vars.toString());
+    yarp::os::Bottle      varsAsBottle(varsAsString);
+#endif // ! defined(__APPLE__)
+
+#if defined(__APPLE__)
+    for (int ii = 0; varChar; ++ii)
+    {
+        std::string tmpVariable(varChar);
+        size_t      equalsSign = tmpVariable.find("=");
+        
+        if (equalsSign != std::string::npos)
+        {
+            result.insert(StringMap::value_type(tmpVariable.substr(0, equalsSign),
+                                                tmpVariable.substr(equalsSign + 1)));
+        }
+        varChar = *(environ + ii);
+    }
+#else // ! defined(__APPLE__)
+    for (int ii = 0, numVars = varsAsBottle.size(); numVars > ii; ++ii)
+    {
+        yarp::os::Value & aValue = varsAsBottle.get(ii);
+        
+        if (aValue.isList())
+        {
+            yarp::os::Bottle * asList = aValue.asList();
+            
+            if (asList && (2 == asList->size()))
+            {
+                yarp::os::Value & keyValue = asList->get(0);
+                yarp::os::Value & valueValue = asList->get(1);
+                
+                if (keyValue.isString() && valueValue.isString())
+                {
+                    yarp::os::ConstString keyString = keyValue.asString();
+                    yarp::os::ConstString valueString = valueValue.asString();
+                    
+                    if ((0 < keyString.length()) && (0 < valueString.length()))
+                    {
+                        result.insert(StringMap::value_type(keyString.c_str(),
+                                                            valueString.c_str()));
+                    }
+                }
+            }
+        }
+    }
+#endif // ! defined(__APPLE__)
+    OD_LOG_EXIT(); //####
+    return result;
+} // ChannelManagerApplication::getEnvironmentVars
+
+String ChannelManagerApplication::getHomeDir(void)
+{
+    OD_LOG_ENTER(); //####
+    juce::File homeDir(juce::File::getSpecialLocation(juce::File::userHomeDirectory));
+    String     result(homeDir.getFullPathName());
+    
+    OD_LOG_EXIT_s(result.toStdString()); //####
+    return result;
+} // ChannelManagerApplication::getHomeDir
+
+String ChannelManagerApplication::getRealName(void)
+{
+    OD_LOG_ENTER(); //####
+    String          result;
+#if defined(__APPLE__)
+    struct passwd   pwd;
+    struct passwd * pwdPtr = NULL;
+    char *          buf;
+    long            bufSize = sysconf(_SC_GETPW_R_SIZE_MAX);
+#endif // defined(__APPLE__)
+    
+    // Note that yarp::os::impl::SystemInfo::getUserInfo() does nothing in Mac OS X!
+#if defined(__APPLE__)
+    if (-1 == bufSize)
+    {
+        // Value was indeterminate.
+        bufSize = 16384; // Should be more than enough.
+    }
+    buf = static_cast<char *>(malloc(bufSize));
+    if (buf)
+    {
+        getpwuid_r(getuid(), &pwd, buf, bufSize, &pwdPtr);
+        if (pwdPtr)
+        {
+            result = pwd.pw_gecos;
+        }
+        free(buf);
+    }
+#else // ! defined(__APPLE__)
+    result = yarp::os::impl::SystemInfo::getUserInfo().realName;
+#endif // ! defined(__APPLE__)
+    OD_LOG_EXIT_s(result.toStdString()); //####
+    return result;
+} // ChannelManagerApplication::getRealName
+
+String ChannelManagerApplication::getUserName(void)
+{
+    OD_LOG_ENTER(); //####
+    String          result;
+#if defined(__APPLE__)
+    struct passwd   pwd;
+    struct passwd * pwdPtr = NULL;
+    char *          buf;
+    long            bufSize = sysconf(_SC_GETPW_R_SIZE_MAX);
+#endif // defined(__APPLE__)
+    
+    // Note that yarp::os::impl::SystemInfo::getUserInfo() does nothing in Mac OS X!
+#if defined(__APPLE__)
+    if (-1 == bufSize)
+    {
+        // Value was indeterminate.
+        bufSize = 16384; // Should be more than enough.
+    }
+    buf = static_cast<char *>(malloc(bufSize));
+    if (buf)
+    {
+        getpwuid_r(getuid(), &pwd, buf, bufSize, &pwdPtr);
+        if (pwdPtr)
+        {
+            result = pwd.pw_name;
+        }
+        free(buf);
+    }
+#else // ! defined(__APPLE__)
+    result = yarp::os::impl::SystemInfo::getUserInfo().userName;
+#endif // ! defined(__APPLE__)
+    OD_LOG_EXIT_s(result.toStdString()); //####
+    return result;
+} // ChannelManagerApplication::getUserName
 
 #if (! MAC_OR_LINUX_)
 # pragma warning(push)
@@ -450,14 +749,14 @@ void ChannelManagerApplication::initialise(const String & commandLine)
 #if MAC_OR_LINUX_
         theLogger.warning("YARP network not running.");
 #endif // MAC_OR_LINUX_
-        _yarpPath = Utilities::FindPathToExecutable("yarp");
+        _yarpPath = findPathToExecutable("yarp");
         _yarp = checkForYarpAndLaunchIfDesired();
     }
     if (_yarp)
     {
         if (! Utilities::CheckForRegistryService())
         {
-            _registryServicePath = Utilities::FindPathToExecutable(MpM_REGISTRY_EXECUTABLE_NAME);
+            _registryServicePath = findPathToExecutable(MpM_REGISTRY_EXECUTABLE_NAME);
             launchedRegistry = checkForRegistryServiceAndLaunchIfDesired();
         }
         EntitiesPanel & entities = _mainWindow->getEntitiesPanel();
@@ -556,7 +855,7 @@ void ChannelManagerApplication::restoreYarpConfiguration(void)
     OD_LOG_OBJENTER(); //####
     ChildProcess runYarp;
     String       appName(JUCEApplication::getInstance()->getApplicationName());
-    StringArray  nameAndArgs(_yarpPath.c_str());
+    StringArray  nameAndArgs(_yarpPath);
     
     nameAndArgs.add("conf");
     nameAndArgs.add(_configuredYarpAddress);
@@ -576,7 +875,7 @@ bool ChannelManagerApplication::validateRegistryService(void)
     bool         doLaunch = false;
     ChildProcess runRegistryService;
     String       appName(JUCEApplication::getInstance()->getApplicationName());
-    StringArray  nameAndArgs(_registryServicePath.c_str());
+    StringArray  nameAndArgs(_registryServicePath);
     
     nameAndArgs.add("--vers");
     if (runRegistryService.start(nameAndArgs))
@@ -631,7 +930,7 @@ bool ChannelManagerApplication::validateYarp(void)
     bool         doLaunch = false;
     ChildProcess runYarp;
     String       appName(JUCEApplication::getInstance()->getApplicationName());
-    StringArray  nameAndArgs(_yarpPath.c_str());
+    StringArray  nameAndArgs(_yarpPath);
     
     nameAndArgs.add("version");
     if (runYarp.start(nameAndArgs))

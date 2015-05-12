@@ -74,6 +74,7 @@
 
 namespace ChannelManager
 {
+    class GeneralServiceLaunchThread;
     class PeekInputHandler;
     class RegistryServiceLaunchThread;
     class ScannerThread;
@@ -83,6 +84,9 @@ namespace ChannelManager
     class ChannelManagerApplication : public JUCEApplication
     {
     public :
+        
+        /*! @brief A mapping from Strings to Strings. */
+        typedef std::map<String, String> StringMap;
         
         /*! @brief The constructor. */
         ChannelManagerApplication(void);
@@ -117,6 +121,16 @@ namespace ChannelManager
         /*! @brief Indicate that a scan should be performed as soon as possible. */
         void doScanSoon(void);
         
+        /*! @brief Determine the path to an executable, using the system PATH environment variable.
+         @param execName The short name of the executable.
+         @returns The full path to the first executable found in the system PATH environment
+         variable. */
+        static String findPathToExecutable(const String & execName);
+        
+        /*! @brief Return the application object.
+         @returns The application object. */
+        static ChannelManagerApplication * getApp(void);
+        
         /*! @brief Return the application name.
          @returns The application's name. */
         virtual const String getApplicationName(void);
@@ -124,6 +138,27 @@ namespace ChannelManager
         /*! @brief Return the application version number.
          @returns The application's version number. */
         virtual const String getApplicationVersion(void);
+        
+        /*! @brief Return the value of a system environment variable.
+         @param varName The name of the system environment variable.
+         @returns The value of the system environment variable, or an empty value. */
+        static String getEnvironmentVar(const char * varName);
+        
+        /*! @brief Return the set of system environment variables.
+         @returns The set of system environment variables. */
+        static ChannelManagerApplication::StringMap getEnvironmentVars(void);
+        
+        /*! @brief Return the home directory of the current user.
+         @returns The home directory of the current user. */
+        String getHomeDir(void);
+        
+        /*! @brief Return the real name of the current user.
+         @returns The real name of the current user. */
+        String getRealName(void);
+        
+        /*! @brief Return the name of the current user.
+         @returns The set of name of the current user. */
+        String getUserName(void);
         
         /*! @brief Called when the application starts.
          @param commandLine The parameters passed to the application. */
@@ -140,13 +175,6 @@ namespace ChannelManager
         
         /*! @brief Called when the operating system is trying to close the application. */
         virtual void systemRequestedQuit(void);
-        
-        /*! @brief Return the application object.
-         @returns The application object. */
-        inline static ChannelManagerApplication * getApp(void)
-        {
-            return static_cast<ChannelManagerApplication *>(JUCEApplication::getInstance());
-        } // getApp
         
     protected :
         
@@ -205,14 +233,17 @@ namespace ChannelManager
         /*! @brief The background private YARP launch thread. */
         ScopedPointer<YarpLaunchThread> _yarpLauncher;
         
+        /*! @brief The set of background general service launch threads. */
+        OwnedArray<GeneralServiceLaunchThread> _serviceLaunchers;
+        
         /*! @brief The configured YARP address prior to launching a private YARP network. */
         String _configuredYarpAddress;
         
         /*! @brief The file system path to the Registry Service executable. */
-        yarp::os::ConstString _registryServicePath;
+        String _registryServicePath;
         
 		/*! @brief The file system path to the YARP executable. */
-		yarp::os::ConstString _yarpPath;
+		String _yarpPath;
 
         /*! @brief A channel to watch the Registry Service status. */
         MplusM::Common::AdapterChannel * _peeker;

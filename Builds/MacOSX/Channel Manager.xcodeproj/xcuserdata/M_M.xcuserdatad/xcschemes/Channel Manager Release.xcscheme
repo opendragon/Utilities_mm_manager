@@ -65,7 +65,7 @@
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "PATH"
-            value = "/opt/M+M/bin"
+            value = "/usr/bin:/bin:/usr/sbin:/sbin:/opt/M+M/bin"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>

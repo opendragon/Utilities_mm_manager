@@ -983,6 +983,11 @@ void ScannerThread::run(void)
                                     --kk;
                                     MplusM::Utilities::GoToSleep(VERY_SHORT_SLEEP);
                                 }
+                                if (threadShouldExit())
+                                {
+                                    OD_LOG("threadShouldExit()"); //####
+                                    needToLeave = true;
+                                }
                             }
                             if (needToLeave || shouldCleanupSoon || shouldScanSoon)
                             {
