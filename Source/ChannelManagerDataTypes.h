@@ -110,6 +110,20 @@ namespace ChannelManager
         
     }; // AnchorSide
     
+    /*! @brief The kind of application. */
+    enum ApplicationKind
+    {
+        /*! @brief The application is an Adapter. */
+        kApplicationAdapter,
+        
+        /*! @brief The application is a Service. */
+        kApplicationService,
+        
+        /*! @brief The application is not recognized. */
+        kApplicationUnknown
+        
+    }; // ApplicationKind
+    
     /*! @brief The menu selection from the popup menu. */
     enum ChannelPopupMenuSelection
     {
@@ -207,6 +221,26 @@ namespace ChannelManager
         
     }; // PortUsage
     
+    /*! @brief The information used to launch an application. */
+    struct ApplicationInfo
+    {
+        /*! @brief The file system path to the application. */
+        String _applicationPath;
+ 
+        /*! @brief The matching criteria (if an Adapter) or supported options (if a Service). */
+        String _criteriaOrOptions;
+        
+        /*! @brief The description provided by the application. */
+        String _description;
+        
+        /*! @brief The 'short name' of the application. */
+        String _shortName;
+        
+        /*! @brief What kind of application this is. */
+        ApplicationKind _kind;
+        
+    }; // ApplicationInfo
+    
     /*! @brief The form of a channel connection. */
     struct ChannelInfo
     {
@@ -279,6 +313,9 @@ namespace ChannelManager
     
     /*! @brief The set of connections to the channel. */
     typedef std::vector<ChannelInfo> ChannelConnections;
+    
+    /*! @brief A collection of application details. */
+    typedef std::vector<ApplicationInfo> ApplicationList;
     
     /*! @brief A collection of connections. */
     typedef std::vector<ConnectionDetails> ConnectionList;

@@ -638,6 +638,57 @@ String ChannelManagerApplication::getHomeDir(void)
     return result;
 } // ChannelManagerApplication::getHomeDir
 
+void ChannelManagerApplication::getParametersForApplication(const String & execName)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_S1s("execName = ", execName.toStdString()); //####
+    String execPath(findPathToExecutable(execName));
+    
+    if (0 < execPath.length())
+    {
+        ChildProcess runApplication;
+        StringArray  nameAndArgs(findPathToExecutable(execName));
+        
+        nameAndArgs.add("--info");
+        if (runApplication.start(nameAndArgs))
+        {
+            const String childOutput(runApplication.readAllProcessOutput());
+            
+            runApplication.waitForProcessToFinish(kThreadKillTime);
+            if (0 < childOutput.length())
+            {
+                StringArray aRecord(StringArray::fromTokens(childOutput, "\t", ""));
+                
+                // The input lines should be composed of three tab-separated items:
+                // 1) Type ('Service' or 'Adapter')
+                // 2) Allowed options (if 'Service') or matching criteria (if 'Adapter')
+                // 3) Description
+                if (3 <= aRecord.size())
+                {
+                    ApplicationInfo theInfo;
+                    String          execKind(aRecord[0]);
+                    
+                    theInfo._applicationPath = nameAndArgs[0];
+                    theInfo._criteriaOrOptions = aRecord[1];
+                    theInfo._description = aRecord[2];
+                    theInfo._shortName = execName;
+                    if (execKind == "Adapter")
+                    {
+                        theInfo._kind = kApplicationAdapter;
+                        _appList.push_back(theInfo);
+                    }
+                    else if (execKind == "Service")
+                    {
+                        theInfo._kind = kApplicationService;
+                        _appList.push_back(theInfo);
+                    }
+                }
+            }
+        }
+    }
+    OD_LOG_OBJEXIT(); //####
+} // ChannelManagerApplication::getParametersForApplication
+
 String ChannelManagerApplication::getRealName(void)
 {
     OD_LOG_ENTER(); //####
@@ -781,12 +832,41 @@ void ChannelManagerApplication::initialise(const String & commandLine)
                 _scanner->startThread();
             }
         }
+        loadApplicationLists();
     }
     OD_LOG_OBJEXIT(); //####
 } // ChannelManagerApplication::initialise
 #if (! MAC_OR_LINUX_)
 # pragma warning(pop)
 #endif // ! MAC_OR_LINUX_
+
+void ChannelManagerApplication::loadApplicationLists(void)
+{
+    OD_LOG_OBJENTER(); //####
+    juce::File  commonDir(juce::File::getSpecialLocation(juce::File::commonDocumentsDirectory));
+    String      commonPath(juce::File::addTrailingSeparator(commonDir.getFullPathName()) + "M+M");
+    String      pathToStdList(juce::File::addTrailingSeparator(commonPath) +
+                              "standardApplications.txt");
+    String      pathToCustomList(juce::File::addTrailingSeparator(commonPath) +
+                                 "customApplications.txt");
+    juce::File  stdListFile(pathToStdList);
+    juce::File  customListFile(pathToCustomList);
+    StringArray lines;
+    
+    if (stdListFile.existsAsFile())
+    {
+        stdListFile.readLines(lines);
+    }
+    if (customListFile.existsAsFile())
+    {
+        customListFile.readLines(lines);
+    }
+    for (int ii = 0, mm = lines.size(); mm > ii; ++ii)
+    {
+        getParametersForApplication(lines[ii]);
+    }
+    OD_LOG_OBJEXIT(); //####
+} // ChannelManagerApplication::loadApplicationLists
 
 bool ChannelManagerApplication::moreThanOneInstanceAllowed(void)
 {

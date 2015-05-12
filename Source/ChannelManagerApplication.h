@@ -190,6 +190,15 @@ namespace ChannelManager
          @returns A pointer to the %Network object used for YARP access. */
         yarp::os::Network * checkForYarpAndLaunchIfDesired(void);
         
+        /*! @brief Get the operational parameters for an application and add them to the list of
+         applications.
+         @param execName The name of the executable to be analyzed. */
+        void getParametersForApplication(const String & execName);
+
+        /*! @brief Load the text files containing the standard and user-defined applications, and
+         set up for later use. */
+        void loadApplicationLists(void);
+        
         /*! @brief Put back the YARP configuration settings that were in effect prior to launching a
          private YARP network. */
         void restoreYarpConfiguration(void);
@@ -235,6 +244,9 @@ namespace ChannelManager
         
         /*! @brief The set of background general service launch threads. */
         OwnedArray<GeneralServiceLaunchThread> _serviceLaunchers;
+        
+        /*! @brief The list of launchable applications. */
+        ApplicationList _appList;
         
         /*! @brief The configured YARP address prior to launching a private YARP network. */
         String _configuredYarpAddress;
