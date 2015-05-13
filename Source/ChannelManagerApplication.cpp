@@ -349,23 +349,47 @@ void ChannelManagerApplication::doCleanupSoon(void)
     OD_LOG_OBJEXIT(); //####
 } // ChannelManagerApplication::doCleanupSoon
 
+bool ChannelManagerApplication::doLaunchAnAdapter(const ApplicationInfo & appInfo)
+{
+    OD_LOG_OBJENTER(); //####
+    bool result = false;
+    
+    OD_LOG_OBJEXIT_B(result); //####
+    return result;
+} // ChannelManagerApplication::doLaunchAnAdapter
+
+bool ChannelManagerApplication::doLaunchAService(const ApplicationInfo & appInfo)
+{
+    OD_LOG_OBJENTER(); //####
+    bool result = false;
+    
+    // We need to check the endpoint used by the service, using the '--endpoint'
+    
+    OD_LOG_OBJEXIT_B(result); //####
+    return result;
+} // ChannelManagerApplication::doLaunchAService
+
 bool ChannelManagerApplication::doLaunchOtherApplication(void)
 {
     OD_LOG_OBJENTER(); //####
-    bool                     result = false;
-    PopupMenu                mm;
-#if MAC_OR_LINUX_
-    yarp::os::impl::Logger & theLogger = Common::GetLogger();
-#endif // MAC_OR_LINUX_
+    bool      result = false;
+    int       res;
+    PopupMenu mm;
 
     setUpApplicationMenu(mm);
-    int res = mm.show();
-    
+    res = mm.show();
     if (0 < res)
     {
-        ApplicationInfo & appInfo = _appList.at(res - 1);
+        const ApplicationInfo & appInfo = _appList.at(res - 1);
         
-        cerr << appInfo._shortName << endl;
+        if (kApplicationAdapter == appInfo._kind)
+        {
+            result = doLaunchAnAdapter(appInfo);
+        }
+        else if (kApplicationService == appInfo._kind)
+        {
+            result = doLaunchAService(appInfo);
+        }
     }
     OD_LOG_OBJEXIT_B(result); //####
     return result;

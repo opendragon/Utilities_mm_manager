@@ -203,6 +203,18 @@ namespace ChannelManager
          @returns A pointer to the %Network object used for YARP access. */
         yarp::os::Network * checkForYarpAndLaunchIfDesired(void);
         
+        /*! @brief Ask the user for information required to launch an adapter and launch it if the
+         user requests.
+         @param appInfo The description of the executable.
+         @returns @c true if the adapter was launched and @c false otherwise. */
+        bool doLaunchAnAdapter(const ApplicationInfo & appInfo);
+        
+        /*! @brief Ask the user for information required to launch a service and launch it if the
+         user requests.
+         @param appInfo The description of the executable.
+         @returns @c true if the service was launched and @c false otherwise. */
+        bool doLaunchAService(const ApplicationInfo & appInfo);
+        
         /*! @brief Get the operational parameters for an application and add them to the list of
          applications.
          @param execName The name of the executable to be analyzed. */
