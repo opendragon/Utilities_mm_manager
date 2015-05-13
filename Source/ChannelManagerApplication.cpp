@@ -169,66 +169,6 @@ void ChannelManagerApplication::anotherInstanceStarted(const String & commandLin
 # pragma warning(pop)
 #endif // ! MAC_OR_LINUX_
 
-bool ChannelManagerApplication::doLaunchRegistry(void)
-{
-    OD_LOG_OBJENTER(); //####
-    bool                     result = false;
-#if MAC_OR_LINUX_
-    yarp::os::impl::Logger & theLogger = Common::GetLogger();
-#endif // MAC_OR_LINUX_
-    int                      portChoice = 0;
-    int                      res = 0;
-    String                   appName(JUCEApplication::getInstance()->getApplicationName());
-    AlertWindow              ww(appName, "Please select the network port to be used to start the "
-                                "Registry Service (enter 0 to use the default port):",
-                                AlertWindow::QuestionIcon, _mainWindow);
-    
-#if MAC_OR_LINUX_
-    theLogger.warning("Registry Service being launched.");
-#endif // MAC_OR_LINUX_
-    ww.addTextEditor("NetworkPort", "0", "Network port [0 for the default port]:");
-    ww.addButton("OK", 1, KeyPress(KeyPress::returnKey, 0, 0));
-    ww.addButton("Cancel", 0, KeyPress(KeyPress::escapeKey, 0, 0));
-    for (bool keepGoing = true; keepGoing; )
-    {
-        res = ww.runModalLoop();
-        if (1 == res)
-        {
-            String portText = ww.getTextEditorContents("NetworkPort");
-            
-            portChoice = portText.getIntValue();
-            if ((! portChoice) || Utilities::ValidPortNumber(portChoice))
-            {
-                keepGoing = false;
-            }
-            else
-            {
-                AlertWindow::showMessageBox(AlertWindow::WarningIcon, getApplicationName(),
-                                            "The port number is invalid. "
-                                            "Please enter a value between 1024 and 65535",
-                                            String::empty, _mainWindow);
-            }
-        }
-        else
-        {
-            keepGoing = false;
-        }
-    }
-    if (1 == res)
-    {
-        _registryServiceLauncher = new RegistryServiceLaunchThread(_registryServicePath,
-                                                                   portChoice);
-        if (_registryServiceLauncher)
-        {
-            _registryServiceLauncher->startThread();
-            _registryServiceCanBeLaunched = false;
-            result = true;
-        }
-    }
-    OD_LOG_OBJEXIT_B(result); //####
-    return result;
-} // ChannelManagerApplication::doLaunchRegistry
-
 bool ChannelManagerApplication::checkForRegistryServiceAndLaunchIfDesired(void)
 {
     OD_LOG_OBJENTER(); //####
@@ -408,6 +348,88 @@ void ChannelManagerApplication::doCleanupSoon(void)
     }
     OD_LOG_OBJEXIT(); //####
 } // ChannelManagerApplication::doCleanupSoon
+
+bool ChannelManagerApplication::doLaunchOtherApplication(void)
+{
+    OD_LOG_OBJENTER(); //####
+    bool                     result = false;
+    PopupMenu                mm;
+#if MAC_OR_LINUX_
+    yarp::os::impl::Logger & theLogger = Common::GetLogger();
+#endif // MAC_OR_LINUX_
+
+    setUpApplicationMenu(mm);
+    int res = mm.show();
+    
+    if (0 < res)
+    {
+        ApplicationInfo & appInfo = _appList.at(res - 1);
+        
+        cerr << appInfo._shortName << endl;
+    }
+    OD_LOG_OBJEXIT_B(result); //####
+    return result;
+} // ChannelManagerApplication::doLaunchOtherApplication
+
+bool ChannelManagerApplication::doLaunchRegistry(void)
+{
+    OD_LOG_OBJENTER(); //####
+    bool                     result = false;
+#if MAC_OR_LINUX_
+    yarp::os::impl::Logger & theLogger = Common::GetLogger();
+#endif // MAC_OR_LINUX_
+    int                      portChoice = 0;
+    int                      res = 0;
+    String                   appName(JUCEApplication::getInstance()->getApplicationName());
+    AlertWindow              ww(appName, "Please select the network port to be used to start the "
+                                "Registry Service (enter 0 to use the default port):",
+                                AlertWindow::QuestionIcon, _mainWindow);
+    
+#if MAC_OR_LINUX_
+    theLogger.warning("Registry Service being launched.");
+#endif // MAC_OR_LINUX_
+    ww.addTextEditor("NetworkPort", "0", "Network port [0 for the default port]:");
+    ww.addButton("OK", 1, KeyPress(KeyPress::returnKey, 0, 0));
+    ww.addButton("Cancel", 0, KeyPress(KeyPress::escapeKey, 0, 0));
+    for (bool keepGoing = true; keepGoing; )
+    {
+        res = ww.runModalLoop();
+        if (1 == res)
+        {
+            String portText = ww.getTextEditorContents("NetworkPort");
+            
+            portChoice = portText.getIntValue();
+            if ((! portChoice) || Utilities::ValidPortNumber(portChoice))
+            {
+                keepGoing = false;
+            }
+            else
+            {
+                AlertWindow::showMessageBox(AlertWindow::WarningIcon, getApplicationName(),
+                                            "The port number is invalid. "
+                                            "Please enter a value between 1024 and 65535",
+                                            String::empty, _mainWindow);
+            }
+        }
+        else
+        {
+            keepGoing = false;
+        }
+    }
+    if (1 == res)
+    {
+        _registryServiceLauncher = new RegistryServiceLaunchThread(_registryServicePath,
+                                                                   portChoice);
+        if (_registryServiceLauncher)
+        {
+            _registryServiceLauncher->startThread();
+            _registryServiceCanBeLaunched = false;
+            result = true;
+        }
+    }
+    OD_LOG_OBJEXIT_B(result); //####
+    return result;
+} // ChannelManagerApplication::doLaunchRegistry
 
 void ChannelManagerApplication::doScanSoon(void)
 {
@@ -876,6 +898,27 @@ bool ChannelManagerApplication::moreThanOneInstanceAllowed(void)
     OD_LOG_OBJEXIT_B(true); //####
     return true;
 } // ChannelManagerApplication::moreThanOneInstanceAllowed
+
+void ChannelManagerApplication::setUpApplicationMenu(PopupMenu & aMenu)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("aMenu = ", &aMenu); //####
+    int ii = 0;
+    
+    aMenu.addSectionHeader("Applications available:");
+    aMenu.addSeparator();
+    for (ApplicationList::const_iterator walker(_appList.begin()); _appList.end() != walker;
+         ++walker)
+    {
+        const ApplicationInfo * candidate(&*walker);
+        
+        if (candidate)
+        {
+            aMenu.addItem(++ii, candidate->_description);
+        }
+    }
+    OD_LOG_OBJEXIT(); //####
+} // ChannelManagerApplication::setUpApplicationMenu
 
 void ChannelManagerApplication::shutdown(void)
 {

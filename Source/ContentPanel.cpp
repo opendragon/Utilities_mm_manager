@@ -217,7 +217,8 @@ void ContentPanel::getAllCommands(Array<CommandID> & commands)
             ChannelManagerWindow::kCommandWhiteBackground,
             ChannelManagerWindow::kCommandClearSelection,
             ChannelManagerWindow::kCommandUnhideEntities,
-            ChannelManagerWindow::kCommandLaunchRegistryService
+            ChannelManagerWindow::kCommandLaunchRegistryService,
+            ChannelManagerWindow::kCommandLaunchExecutables
         };
     
     commands.addArray(ids, numElementsInArray(ids));
@@ -228,6 +229,8 @@ void ContentPanel::getCommandInfo(CommandID                commandID,
                                   ApplicationCommandInfo & result)
 {
     OD_LOG_OBJENTER(); //####
+    ChannelManagerApplication * ourApp = ChannelManagerApplication::getApp();
+
     switch (commandID)
     {
         case ChannelManagerWindow::kCommandDoRepaint :
@@ -261,8 +264,15 @@ void ContentPanel::getCommandInfo(CommandID                commandID,
             
         case ChannelManagerWindow::kCommandLaunchRegistryService :
             result.setInfo("Launch Registry", "Launch the Registry Service", "View", 0);
-            result.addDefaultKeypress('R', ModifierKeys::commandModifier);
+            result.addDefaultKeypress('L', ModifierKeys::commandModifier);
             result.setActive(! Utilities::CheckForRegistryService());
+            break;
+            
+        case ChannelManagerWindow::kCommandLaunchExecutables :
+            result.setInfo("Launch others ...", "Launch other executables", "View", 0);
+            result.addDefaultKeypress('O', ModifierKeys::commandModifier);
+            result.setActive(Utilities::CheckForRegistryService() && ourApp &&
+                             (0 < ourApp->getCountOfApplications()));
             break;
             
         default :
@@ -631,6 +641,14 @@ bool ContentPanel::perform(const InvocationInfo & info)
             if (ourApp)
             {
                 ourApp->doLaunchRegistry();
+            }
+            wasProcessed = true;
+            break;
+            
+        case ChannelManagerWindow::kCommandLaunchExecutables :
+            if (ourApp)
+            {
+                ourApp->doLaunchOtherApplication();
             }
             wasProcessed = true;
             break;
@@ -1085,6 +1103,7 @@ void ContentPanel::setUpDisplayMenu(PopupMenu & aMenu)
     aMenu.addCommandItem(commandManager, ChannelManagerWindow::kCommandUnhideEntities);
     aMenu.addSeparator();
     aMenu.addCommandItem(commandManager, ChannelManagerWindow::kCommandLaunchRegistryService);
+    aMenu.addCommandItem(commandManager, ChannelManagerWindow::kCommandLaunchExecutables);
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::setUpDisplayMenu
 

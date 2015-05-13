@@ -113,6 +113,11 @@ namespace ChannelManager
         /*! @brief Indicate that a port cleanup should be performed as soon as possible. */
         void doCleanupSoon(void);
         
+        /*! @brief Ask the user to select an application, provide information required to launch the
+         application and launch it if the user requests.
+         @returns @c true if the application was launched and @c false otherwise. */
+        bool doLaunchOtherApplication(void);
+        
         /*! @brief Ask the user for information required to launch the Registry Service and launch
          it if the user requests.
          @returns @c true if the Registry Service was launched and @c false otherwise. */
@@ -138,6 +143,14 @@ namespace ChannelManager
         /*! @brief Return the application version number.
          @returns The application's version number. */
         virtual const String getApplicationVersion(void);
+        
+        /*! @brief Return the number of launchable applications.
+         @returns The number of launchable applications. */
+        inline size_t getCountOfApplications(void)
+        const
+        {
+            return _appList.size();
+        } // getCountOfApplications
         
         /*! @brief Return the value of a system environment variable.
          @param varName The name of the system environment variable.
@@ -203,6 +216,10 @@ namespace ChannelManager
          private YARP network. */
         void restoreYarpConfiguration(void);
         
+        /*! @brief Prepare the application menu for use.
+         @param aMenu The popup menu to be configured. */
+        void setUpApplicationMenu(PopupMenu & aMenu);
+
         /*! @brief Check if the Registry Service can be launched and if the user wishes it to be.
          @param execPath The file system path to the Registry Service executable.
          @returns @c true if the user requests that the Registry Service be started and @ c false

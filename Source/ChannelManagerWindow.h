@@ -87,7 +87,10 @@ namespace ChannelManager
             kCommandUnhideEntities,
             
             /*! @brief Launch the Registry Service. */
-            kCommandLaunchRegistryService
+            kCommandLaunchRegistryService,
+            
+            /*! @brief Launch other executables. */
+            kCommandLaunchExecutables
             
         }; // CommandIDs
 
