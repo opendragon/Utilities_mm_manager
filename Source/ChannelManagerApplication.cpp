@@ -660,17 +660,19 @@ void ChannelManagerApplication::getParametersForApplication(const String & execN
                 StringArray aRecord(StringArray::fromTokens(childOutput, "\t", ""));
                 
                 // The input lines should be composed of three tab-separated items:
-                // 1) Type ('Service' or 'Adapter')
-                // 2) Allowed options (if 'Service') or matching criteria (if 'Adapter')
+                // 0) Type ('Service' or 'Adapter')
+                // 1) Allowed options (if 'Service') or matching criteria (if 'Adapter')
+                // 2) Expected arguments, if any
                 // 3) Description
-                if (3 <= aRecord.size())
+                if (4 <= aRecord.size())
                 {
                     ApplicationInfo theInfo;
                     String          execKind(aRecord[0]);
                     
                     theInfo._applicationPath = nameAndArgs[0];
                     theInfo._criteriaOrOptions = aRecord[1];
-                    theInfo._description = aRecord[2];
+                    theInfo._argumentList = aRecord[2];
+                    theInfo._description = aRecord[3];
                     theInfo._shortName = execName;
                     if (execKind == "Adapter")
                     {

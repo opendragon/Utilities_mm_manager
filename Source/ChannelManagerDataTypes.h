@@ -230,6 +230,9 @@ namespace ChannelManager
         /*! @brief The matching criteria (if an Adapter) or supported options (if a Service). */
         String _criteriaOrOptions;
         
+        /*! @brief The expected arguments, if any, for the application. */
+        String _argumentList;
+        
         /*! @brief The description provided by the application. */
         String _description;
         
