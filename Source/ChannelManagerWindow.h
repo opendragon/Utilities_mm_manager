@@ -96,7 +96,7 @@ namespace ChannelManager
 
         /*! @brief The constructor.
          @param title The window title. */
-        ChannelManagerWindow(const yarp::os::ConstString & title);
+        ChannelManagerWindow(const MplusM::Common::YarpString & title);
         
         /*! @brief The destructor. */
         virtual ~ChannelManagerWindow(void);

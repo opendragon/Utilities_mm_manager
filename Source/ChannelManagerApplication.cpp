@@ -212,13 +212,13 @@ yarp::os::Network * ChannelManagerApplication::checkForYarpAndLaunchIfDesired(vo
         // If YARP is installed, give the option of running a private copy.
         if (validateYarp())
         {
-            char                 ipBuffer[INET_ADDRSTRLEN + 1];
-            const char *         ipAddressAsString = nullptr;
-            struct in_addr       serverAddress;
-            int                  serverPort = 10000;
-            String               selectedIpAddress;
-            String               serverPortAsString;
-            Common::StringVector ipAddressVector;
+            char                     ipBuffer[INET_ADDRSTRLEN + 1];
+            const char *             ipAddressAsString = nullptr;
+            struct in_addr           serverAddress;
+            int                      serverPort = 10000;
+            String                   selectedIpAddress;
+            String                   serverPortAsString;
+            Common::YarpStringVector ipAddressVector;
             
 #if MAC_OR_LINUX_
             theLogger.warning("Private YARP network being launched.");
@@ -245,7 +245,7 @@ yarp::os::Network * ChannelManagerApplication::checkForYarpAndLaunchIfDesired(vo
             
             for (unsigned ii = 0; ipAddressVector.size() > ii; ++ii)
             {
-                yarp::os::ConstString anAddress(ipAddressVector[ii]);
+                Common::YarpString anAddress(ipAddressVector[ii]);
                 
                 ipAddressArray.add(anAddress.c_str());
                 if (anAddress == ipAddressAsString)
@@ -352,7 +352,67 @@ void ChannelManagerApplication::doCleanupSoon(void)
 bool ChannelManagerApplication::doLaunchAnAdapter(const ApplicationInfo & appInfo)
 {
     OD_LOG_OBJENTER(); //####
-    bool result = false;
+    bool                     result = false;
+#if MAC_OR_LINUX_
+    yarp::os::impl::Logger & theLogger = Common::GetLogger();
+#endif // MAC_OR_LINUX_
+    int                      res = 0;
+    String                   appName(JUCEApplication::getInstance()->getApplicationName());
+    AlertWindow              ww(appName, "Please select the network port to be used to start the "
+                                "Registry Service (enter 0 to use the default port):",
+                                AlertWindow::NoIcon, _mainWindow);
+    
+#if MAC_OR_LINUX_
+    theLogger.warning("Adapter being launched.");
+#endif // MAC_OR_LINUX_
+    
+    // we need to use a YarpStringVector to gather the arguments...
+    
+    //ww.addTextEditor("NetworkPort", "0", "Network port [0 for the default port]:");
+    
+    
+    
+    ww.addButton("OK", 1, KeyPress(KeyPress::returnKey, 0, 0));
+    ww.addButton("Cancel", 0, KeyPress(KeyPress::escapeKey, 0, 0));
+    
+    
+    
+    for (bool keepGoing = true; keepGoing; )
+    {
+        res = ww.runModalLoop();
+        if (1 == res)
+        {
+//            String portText = ww.getTextEditorContents("NetworkPort");
+//            
+//            portChoice = portText.getIntValue();
+//            if ((! portChoice) || Utilities::ValidPortNumber(portChoice))
+//            {
+//                keepGoing = false;
+//            }
+//            else
+//            {
+//                AlertWindow::showMessageBox(AlertWindow::WarningIcon, getApplicationName(),
+//                                            "The port number is invalid. "
+//                                            "Please enter a value between 1024 and 65535",
+//                                            String::empty, _mainWindow);
+//            }
+        }
+        else
+        {
+            keepGoing = false;
+        }
+    }
+    if (1 == res)
+    {
+//        _registryServiceLauncher = new RegistryServiceLaunchThread(_registryServicePath,
+//                                                                   portChoice);
+//        if (_registryServiceLauncher)
+//        {
+//            _registryServiceLauncher->startThread();
+//            _registryServiceCanBeLaunched = false;
+//            result = true;
+//        }
+    }
     
     OD_LOG_OBJEXIT_B(result); //####
     return result;
@@ -604,9 +664,9 @@ String ChannelManagerApplication::getEnvironmentVar(const char * varName)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_S1("varName = ", varName); //####
-    String                    result;
-    StringMap                 envVars(getEnvironmentVars());
-    StringMap::const_iterator it(envVars.find(varName));
+    String                        result;
+    JuceStringMap                 envVars(getEnvironmentVars());
+    JuceStringMap::const_iterator it(envVars.find(varName));
     
     if (envVars.end() != it)
     {
@@ -616,16 +676,16 @@ String ChannelManagerApplication::getEnvironmentVar(const char * varName)
     return result;
 } // ChannelManagerApplication::getEnvironmentVar
 
-ChannelManagerApplication::StringMap ChannelManagerApplication::getEnvironmentVars(void)
+ChannelManagerApplication::JuceStringMap ChannelManagerApplication::getEnvironmentVars(void)
 {
     OD_LOG_ENTER(); //####
-    StringMap result;
+    JuceStringMap      result;
 #if defined(__APPLE__)
-    char *                varChar = *environ;
+    char *             varChar = *environ;
 #else // ! defined(__APPLE__)
-    yarp::os::Property    vars(yarp::os::impl::SystemInfo::getPlatformInfo().environmentVars);
-    yarp::os::ConstString varsAsString(vars.toString());
-    yarp::os::Bottle      varsAsBottle(varsAsString);
+    yarp::os::Property vars(yarp::os::impl::SystemInfo::getPlatformInfo().environmentVars);
+    YarpString         varsAsString(vars.toString());
+    yarp::os::Bottle   varsAsBottle(varsAsString);
 #endif // ! defined(__APPLE__)
 
 #if defined(__APPLE__)
@@ -636,8 +696,8 @@ ChannelManagerApplication::StringMap ChannelManagerApplication::getEnvironmentVa
         
         if (equalsSign != std::string::npos)
         {
-            result.insert(StringMap::value_type(tmpVariable.substr(0, equalsSign),
-                                                tmpVariable.substr(equalsSign + 1)));
+            result.insert(JuceStringMap::value_type(tmpVariable.substr(0, equalsSign),
+                                                    tmpVariable.substr(equalsSign + 1)));
         }
         varChar = *(environ + ii);
     }
@@ -657,13 +717,13 @@ ChannelManagerApplication::StringMap ChannelManagerApplication::getEnvironmentVa
                 
                 if (keyValue.isString() && valueValue.isString())
                 {
-                    yarp::os::ConstString keyString = keyValue.asString();
-                    yarp::os::ConstString valueString = valueValue.asString();
+                    YarpString keyString = keyValue.asString();
+                    YarpString valueString = valueValue.asString();
                     
                     if ((0 < keyString.length()) && (0 < valueString.length()))
                     {
-                        result.insert(StringMap::value_type(keyString.c_str(),
-                                                            valueString.c_str()));
+                        result.insert(JuceStringMap::value_type(keyString.c_str(),
+                                                                valueString.c_str()));
                     }
                 }
             }
@@ -683,6 +743,16 @@ String ChannelManagerApplication::getHomeDir(void)
     OD_LOG_EXIT_s(result.toStdString()); //####
     return result;
 } // ChannelManagerApplication::getHomeDir
+
+void ChannelManagerApplication::getChannelsForAdapter(const String & execName,
+                                                      const String & arguments)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_S2s("execName = ", execName.toStdString(), "arguments = ", arguments.toStdString()); //####
+    
+}
+
+
 
 void ChannelManagerApplication::getParametersForApplication(const String & execName)
 {
@@ -869,9 +939,9 @@ void ChannelManagerApplication::initialise(const String & commandLine)
             _peeker->setReporter(reporter);
             _peeker->getReport(reporter);
 #endif // defined(MpM_ReportOnConnections)
-            yarp::os::ConstString peekName = Common::GetRandomChannelName(HIDDEN_CHANNEL_PREFIX
-                                                                          "peek_/"
-                                                                          DEFAULT_CHANNEL_ROOT);
+            Common::YarpString peekName = Common::GetRandomChannelName(HIDDEN_CHANNEL_PREFIX
+                                                                       "peek_/"
+                                                                       DEFAULT_CHANNEL_ROOT);
             
             if (_peeker->openWithRetries(peekName, STANDARD_WAIT_TIME))
             {

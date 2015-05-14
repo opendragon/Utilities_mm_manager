@@ -285,39 +285,10 @@ void ContentPanel::getCommandInfo(CommandID                commandID,
 StringArray ContentPanel::getMenuBarNames(void)
 {
     OD_LOG_OBJENTER(); //####
-    const char * const names[] = { "Channel Manager", "Display", "Operation", nullptr };
+    const char * const names[] = { "Channel Manager", "View", "Operation", nullptr };
 
     return StringArray(names);
 } // ContentPanel::getMenuBarNames
-
-void ContentPanel::setUpContainerMenu(PopupMenu &        aMenu,
-                                      ChannelContainer & aContainer)
-{
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P2("aMenu = ", &aMenu, "aContainer = ", &aContainer); //####
-    bool isService = (kContainerKindService == aContainer.getKind());
-    
-    aMenu.addItem(kPopupDisplayEntityInfo, isService ? "Display service information" :
-                  "Display entity information");
-    aMenu.addItem(kPopupDetailedDisplayEntityInfo, isService ?
-                  "Display detailed service information" : "Display detailed entity information");
-    if (isService)
-    {
-        bool metricsEnabled = aContainer.getMetricsState();
-        
-        aMenu.addSeparator();
-        aMenu.addItem(kPopupDisplayChangeServiceMetrics, metricsEnabled ?
-                      "Disable service metrics collection" : "Enable service metrics collection");
-        aMenu.addItem(kPopupDisplayServiceMetrics, "Display service metrics", metricsEnabled);
-    }
-    aMenu.addItem(kPopupHideEntity, isService ? "Hide the service" : "Hide the entity");
-    if (isService)
-    {
-        aMenu.addSeparator();
-        aMenu.addItem(kPopupStopService, "Stop the service");
-    }
-    OD_LOG_OBJEXIT(); //####
-} // ContentPanel::setUpContainerMenu
 
 #if (! MAC_OR_LINUX_)
 # pragma warning(push)
@@ -334,7 +305,9 @@ PopupMenu ContentPanel::getMenuForIndex(const int      menuIndex,
 	OD_LOG_OBJENTER(); //####
     OD_LOG_LL1("menuIndex = ", menuIndex); //####
     OD_LOG_S1s("menuName = ", menuName.toStdString()); //####
-    PopupMenu menu;
+    ApplicationCommandManager * commandManager =
+                                            &ChannelManagerWindow::getApplicationCommandManager();
+    PopupMenu                   menu;
     
     switch (menuIndex)
     {
@@ -344,8 +317,8 @@ PopupMenu ContentPanel::getMenuForIndex(const int      menuIndex,
             break;
             
         case 1 :
-            // Display
-            setUpDisplayMenu(menu);
+            // View
+            setUpViewMenu(menu);
             break;
 
         case 2 :
@@ -353,15 +326,16 @@ PopupMenu ContentPanel::getMenuForIndex(const int      menuIndex,
             if (_selectedChannel)
             {
                 setUpChannelMenu(menu, *_selectedChannel);
+                menu.addSeparator();
             }
             else if (_selectedContainer)
             {
                 setUpContainerMenu(menu, *_selectedContainer);
+                menu.addSeparator();
             }
-            else
-            {
-                menu.addItem(0, "<Nothing selected>", false);
-            }
+            menu.addCommandItem(commandManager,
+                                ChannelManagerWindow::kCommandLaunchRegistryService);
+            menu.addCommandItem(commandManager, ChannelManagerWindow::kCommandLaunchExecutables);
             break;
         
         default :
@@ -701,7 +675,7 @@ void ContentPanel::rememberPositionOfEntity(ChannelContainer * anEntity)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("anEntity = ", anEntity); //####
-    yarp::os::ConstString entityName(anEntity->getName().toStdString());
+    Common::YarpString entityName(anEntity->getName().toStdString());
 
     _rememberedPositions[entityName] = anEntity->getPositionInPanel();
     OD_LOG_OBJEXIT(); //####
@@ -739,9 +713,9 @@ void ContentPanel::saveEntityPositions(void)
         for (PositionMap::const_iterator walker(_rememberedPositions.begin());
              _rememberedPositions.end() != walker; ++walker)
         {
-            std::stringstream     buff;
-            yarp::os::ConstString tag = walker->first;
-            Position              where = walker->second;
+            std::stringstream  buff;
+            Common::YarpString tag = walker->first;
+            Position           where = walker->second;
 
             buff << "\t" << where.x << "\t" << where.y << std::endl;
             settingsFile.appendText(tag.c_str());
@@ -845,7 +819,7 @@ void ContentPanel::setEntityPositions(void)
                     {
                         OD_LOG("(aContainer->isNew() || aContainer->wasHidden())"); //####
                         // Check if the position was already known
-                        yarp::os::ConstString       entityName(aContainer->getName().toStdString());
+                        Common::YarpString          entityName(aContainer->getName().toStdString());
                         PositionMap::const_iterator match(_rememberedPositions.find(entityName));
                         
                         if (_rememberedPositions.end() == match)
@@ -962,8 +936,7 @@ void ContentPanel::setEntityPositions(void)
                             if (aNode)
                             {
                                 // Check if the position was already known
-                                yarp::os::ConstString entityName =
-                                                                aContainer->getName().toStdString();
+                                Common::YarpString entityName(aContainer->getName().toStdString());
                                 
                                 if (_rememberedPositions.end() ==
                                                             _rememberedPositions.find(entityName))
@@ -993,7 +966,7 @@ void ContentPanel::setEntityPositions(void)
                 juce::Rectangle<float>      entityShape(aContainer->getLocalBounds().toFloat());
                 float                       hh = entityShape.getHeight();
                 float                       ww = entityShape.getWidth();
-                yarp::os::ConstString       entityName(aContainer->getName().toStdString());
+                Common::YarpString          entityName(aContainer->getName().toStdString());
                 PositionMap::const_iterator match(_rememberedPositions.find(entityName));
 
                 if (_rememberedPositions.end() == match)
@@ -1028,7 +1001,7 @@ void ContentPanel::setEntityPositions(void)
             juce::Rectangle<float>      entityShape(aContainer->getLocalBounds().toFloat());
             float                       hh = entityShape.getHeight();
             float                       ww = entityShape.getWidth();
-            yarp::os::ConstString       entityName(aContainer->getName().toStdString());
+            Common::YarpString          entityName(aContainer->getName().toStdString());
             PositionMap::const_iterator match(_rememberedPositions.find(entityName));
             
             if (_rememberedPositions.end() == match)
@@ -1088,7 +1061,47 @@ void ContentPanel::setUpChannelMenu(PopupMenu &    aMenu,
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::setUpChannelMenu
 
-void ContentPanel::setUpDisplayMenu(PopupMenu & aMenu)
+void ContentPanel::setUpContainerMenu(PopupMenu &        aMenu,
+                                      ChannelContainer & aContainer)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P2("aMenu = ", &aMenu, "aContainer = ", &aContainer); //####
+    bool isService = (kContainerKindService == aContainer.getKind());
+    
+    aMenu.addItem(kPopupDisplayEntityInfo, isService ? "Display service information" :
+                  "Display entity information");
+    aMenu.addItem(kPopupDetailedDisplayEntityInfo, isService ?
+                  "Display detailed service information" : "Display detailed entity information");
+    if (isService)
+    {
+        bool metricsEnabled = aContainer.getMetricsState();
+        
+        aMenu.addSeparator();
+        aMenu.addItem(kPopupDisplayChangeServiceMetrics, metricsEnabled ?
+                      "Disable service metrics collection" : "Enable service metrics collection");
+        aMenu.addItem(kPopupDisplayServiceMetrics, "Display service metrics", metricsEnabled);
+    }
+    aMenu.addItem(kPopupHideEntity, isService ? "Hide the service" : "Hide the entity");
+    if (isService)
+    {
+        aMenu.addSeparator();
+        aMenu.addItem(kPopupStopService, "Stop the service");
+    }
+    OD_LOG_OBJEXIT(); //####
+} // ContentPanel::setUpContainerMenu
+
+void ContentPanel::setUpMainMenu(PopupMenu & aMenu)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("aMenu = ", &aMenu); //####
+    ApplicationCommandManager * commandManager =
+                                            &ChannelManagerWindow::getApplicationCommandManager();
+    
+    aMenu.addCommandItem(commandManager, StandardApplicationCommandIDs::quit);
+    OD_LOG_OBJEXIT(); //####
+} // ContentPanel::setUpMainMenu
+
+void ContentPanel::setUpViewMenu(PopupMenu & aMenu)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("aMenu = ", &aMenu); //####
@@ -1101,22 +1114,8 @@ void ContentPanel::setUpDisplayMenu(PopupMenu & aMenu)
     aMenu.addSeparator();
     aMenu.addCommandItem(commandManager, ChannelManagerWindow::kCommandClearSelection);
     aMenu.addCommandItem(commandManager, ChannelManagerWindow::kCommandUnhideEntities);
-    aMenu.addSeparator();
-    aMenu.addCommandItem(commandManager, ChannelManagerWindow::kCommandLaunchRegistryService);
-    aMenu.addCommandItem(commandManager, ChannelManagerWindow::kCommandLaunchExecutables);
     OD_LOG_OBJEXIT(); //####
-} // ContentPanel::setUpDisplayMenu
-
-void ContentPanel::setUpMainMenu(PopupMenu & aMenu)
-{
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("aMenu = ", &aMenu); //####
-    ApplicationCommandManager * commandManager =
-                                            &ChannelManagerWindow::getApplicationCommandManager();
-    
-    aMenu.addCommandItem(commandManager, StandardApplicationCommandIDs::quit);
-    OD_LOG_OBJEXIT(); //####
-} // ContentPanel::setUpMainMenu
+} // ContentPanel::setUpViewMenu
 
 void ContentPanel::skipScan(void)
 {

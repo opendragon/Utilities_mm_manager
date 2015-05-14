@@ -96,10 +96,10 @@ static const int64 kMinStaleInterval = 60000;
  @param portName The port name to search for.
  @param ipAddress The IP address of the port.
  @param ipPort The IP port of the port. */
-static void findMatchingIpAddressAndPort(const MplusM::Utilities::PortVector & detectedPorts,
-                                         const yarp::os::ConstString &         portName,
-                                         yarp::os::ConstString &               ipAddress,
-                                         yarp::os::ConstString &               ipPort)
+static void findMatchingIpAddressAndPort(const Utilities::PortVector & detectedPorts,
+                                         const Common::YarpString &    portName,
+                                         Common::YarpString &          ipAddress,
+                                         Common::YarpString &          ipPort)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P3("detectedPorts = ", &detectedPorts, "ipAddress = ", &ipAddress, "ipPort = ", //####
@@ -109,7 +109,7 @@ static void findMatchingIpAddressAndPort(const MplusM::Utilities::PortVector & d
     for (Utilities::PortVector::const_iterator walker(detectedPorts.begin());
          detectedPorts.end() != walker; ++walker)
     {
-        yarp::os::ConstString walkerName(walker->_portName);
+        Common::YarpString walkerName(walker->_portName);
         
         if (portName == walkerName)
         {
@@ -126,16 +126,16 @@ static void findMatchingIpAddressAndPort(const MplusM::Utilities::PortVector & d
  @param combined The combined IP address and port number.
  @param ipAddress The IP address of the port.
  @param ipPort The IP port of the port. */
-static void splitCombinedAddressAndPort(const yarp::os::ConstString & combined,
-                                        yarp::os::ConstString &       ipAddress,
-                                        yarp::os::ConstString &       ipPort)
+static void splitCombinedAddressAndPort(const Common::YarpString & combined,
+                                        Common::YarpString &       ipAddress,
+                                        Common::YarpString &       ipPort)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_S1s("combined = ", combined); //####
     OD_LOG_P2("ipAddress = ", &ipAddress, "ipPort = ", &ipPort); //####
     size_t splitPos = combined.find(":");
     
-    if (yarp::os::ConstString::npos == splitPos)
+    if (Common::YarpString::npos == splitPos)
     {
         ipAddress = ipPort = "";
     }
@@ -227,7 +227,7 @@ ScannerThread::~ScannerThread(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-void ScannerThread::addEntities(const MplusM::Utilities::PortVector & detectedPorts)
+void ScannerThread::addEntities(const Utilities::PortVector & detectedPorts)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("detectedPorts = ", &detectedPorts); //####
@@ -237,8 +237,8 @@ void ScannerThread::addEntities(const MplusM::Utilities::PortVector & detectedPo
          (_detectedServices.end() != outer) && (! threadShouldExit()); ++outer)
     {
         Utilities::ServiceDescriptor descriptor(outer->second);
-        yarp::os::ConstString        ipAddress;
-        yarp::os::ConstString        ipPort;
+        Common::YarpString           ipAddress;
+        Common::YarpString           ipPort;
         EntityData *                 anEntity = new EntityData(kContainerKindService,
                                                                descriptor._serviceName,
                                                                descriptor._kind,
@@ -282,30 +282,30 @@ void ScannerThread::addEntities(const MplusM::Utilities::PortVector & detectedPo
          (_associatedPorts.end() != outer) && (! threadShouldExit()); ++outer)
     {
         // The key is 'ipaddress:port'
-        yarp::os::ConstString              ipAddress;
-        yarp::os::ConstString              ipPort;
+        Common::YarpString                 ipAddress;
+        Common::YarpString                 ipPort;
         PortData *                         aPort;
         EntityData *                       anEntity = new EntityData(kContainerKindClientOrAdapter,
                                                                      outer->first, "", "", "");
         const Utilities::PortAssociation & associates = outer->second._associates;
-        const Common::StringVector &       assocInputs = associates._inputs;
-        const Common::StringVector &       assocOutputs = associates._outputs;
+        const Common::YarpStringVector &   assocInputs = associates._inputs;
+        const Common::YarpStringVector &   assocOutputs = associates._outputs;
         
         splitCombinedAddressAndPort(outer->first, ipAddress, ipPort);
         anEntity->setIPAddress(ipAddress);
-        for (Common::StringVector::const_iterator inner = assocInputs.begin();
+        for (Common::YarpStringVector::const_iterator inner = assocInputs.begin();
              (assocInputs.end() != inner) && (! threadShouldExit()); ++inner)
         {
-            yarp::os::ConstString innerPort;
+            Common::YarpString innerPort;
             
             findMatchingIpAddressAndPort(detectedPorts, *inner, ipAddress, innerPort);
             aPort = anEntity->addPort(*inner, "", "", kPortUsageOther, kPortDirectionInput);
             aPort->setPortNumber(innerPort);
         }
-        for (Common::StringVector::const_iterator inner = assocOutputs.begin();
+        for (Common::YarpStringVector::const_iterator inner = assocOutputs.begin();
              (assocOutputs.end() != inner) && (! threadShouldExit()); ++inner)
         {
-            yarp::os::ConstString innerPort;
+            Common::YarpString innerPort;
             
             findMatchingIpAddressAndPort(detectedPorts, *inner, ipAddress, innerPort);
             aPort = anEntity->addPort(*inner, "", "", kPortUsageOther, kPortDirectionOutput);
@@ -321,11 +321,11 @@ void ScannerThread::addEntities(const MplusM::Utilities::PortVector & detectedPo
          (_standalonePorts.end() != walker) && (! threadShouldExit()); ++walker)
     {
         // The key is 'ipaddress:port'
-        yarp::os::ConstString ipAddress;
-        yarp::os::ConstString ipPort;
-        EntityData *          anEntity = new EntityData(kContainerKindOther, walker->first, "", "",
-                                                        "");
-        PortUsage             usage;
+        Common::YarpString ipAddress;
+        Common::YarpString ipPort;
+        EntityData *       anEntity = new EntityData(kContainerKindOther, walker->first, "", "",
+                                                     "");
+        PortUsage          usage;
         
         splitCombinedAddressAndPort(walker->first, ipAddress, ipPort);
         anEntity->setIPAddress(ipAddress);
@@ -364,7 +364,7 @@ void ScannerThread::addPortConnections(const Utilities::PortVector & detectedPor
     for (Utilities::PortVector::const_iterator outer(detectedPorts.begin());
          (detectedPorts.end() != outer) && (! threadShouldExit()); ++outer)
     {
-        yarp::os::ConstString outerName(outer->_portName);
+        Common::YarpString outerName(outer->_portName);
         
         if (_rememberedPorts.end() != _rememberedPorts.find(outerName))
         {
@@ -377,7 +377,7 @@ void ScannerThread::addPortConnections(const Utilities::PortVector & detectedPor
             for (Common::ChannelVector::const_iterator inner(outputs.begin());
                  (outputs.end() != inner) && (! threadShouldExit()); ++inner)
             {
-                yarp::os::ConstString innerName(inner->_portName);
+                Common::YarpString innerName(inner->_portName);
                 
                 if (_rememberedPorts.end() != _rememberedPorts.find(innerName))
                 {
@@ -401,7 +401,7 @@ void ScannerThread::addPortsWithAssociates(const Utilities::PortVector & detecte
     for (Utilities::PortVector::const_iterator outer(detectedPorts.begin());
          (detectedPorts.end() != outer) && (! threadShouldExit()); ++outer)
     {
-        yarp::os::ConstString outerName(outer->_portName);
+        Common::YarpString outerName(outer->_portName);
         
         if (_rememberedPorts.end() == _rememberedPorts.find(outerName))
         {
@@ -412,22 +412,22 @@ void ScannerThread::addPortsWithAssociates(const Utilities::PortVector & detecte
             {
                 if (associates._associates._primary)
                 {
-                    yarp::os::ConstString caption(outer->_portIpAddress + ":" +
-                                                  outer->_portPortNumber);
+                    Common::YarpString caption(outer->_portIpAddress + ":" +
+                                               outer->_portPortNumber);
                     
                     associates._name = outerName;
                     _associatedPorts[caption] = associates;
                     _rememberedPorts.insert(outerName);
-                    Common::StringVector & assocInputs = associates._associates._inputs;
-                    Common::StringVector & assocOutputs = associates._associates._outputs;
+                    Common::YarpStringVector & assocInputs = associates._associates._inputs;
+                    Common::YarpStringVector & assocOutputs = associates._associates._outputs;
                     
-                    for (Common::StringVector::const_iterator inner = assocInputs.begin();
+                    for (Common::YarpStringVector::const_iterator inner = assocInputs.begin();
                          (assocInputs.end() != inner) && (! threadShouldExit()); ++inner)
                     {
                         _rememberedPorts.insert(*inner);
                         yield();
                     }
-                    for (Common::StringVector::const_iterator inner = assocOutputs.begin();
+                    for (Common::YarpStringVector::const_iterator inner = assocOutputs.begin();
                          (assocOutputs.end() != inner) && (! threadShouldExit()); ++inner)
                     {
                         _rememberedPorts.insert(*inner);
@@ -451,14 +451,14 @@ void ScannerThread::addRegularPortEntities(const Utilities::PortVector & detecte
     for (Utilities::PortVector::const_iterator walker(detectedPorts.begin());
          (detectedPorts.end() != walker) && (! threadShouldExit()); ++walker)
     {
-        yarp::os::ConstString walkerName(walker->_portName);
+        Common::YarpString walkerName(walker->_portName);
         
         if (_rememberedPorts.end() == _rememberedPorts.find(walkerName))
         {
-            EntitiesPanel &       entitiesPanel(_window.getEntitiesPanel());
-            yarp::os::ConstString caption(walker->_portIpAddress + ":" + walker->_portPortNumber);
-            NameAndDirection      info;
-            ChannelEntry *        oldEntry = entitiesPanel.findKnownPort(walkerName);
+            EntitiesPanel &    entitiesPanel(_window.getEntitiesPanel());
+            Common::YarpString caption(walker->_portIpAddress + ":" + walker->_portPortNumber);
+            NameAndDirection   info;
+            ChannelEntry *     oldEntry = entitiesPanel.findKnownPort(walkerName);
             
             _rememberedPorts.insert(walkerName);
             info._name = walkerName;
@@ -470,17 +470,17 @@ void ScannerThread::addRegularPortEntities(const Utilities::PortVector & detecte
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::addRegularPortEntities
 
-void ScannerThread::addServices(const Common::StringVector & services,
-                                Common::CheckFunction        checker,
-                                void *                       checkStuff)
+void ScannerThread::addServices(const Common::YarpStringVector & services,
+                                Common::CheckFunction            checker,
+                                void *                           checkStuff)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P2("services = ", &services, "checkStuff = ", checkStuff); //####
     _detectedServices.clear();
-    for (Common::StringVector::const_iterator outer(services.begin());
+    for (Common::YarpStringVector::const_iterator outer(services.begin());
          (services.end() != outer) && (! threadShouldExit()); ++outer)
     {
-        yarp::os::ConstString outerName(*outer);
+        Common::YarpString outerName(*outer);
         
         if (_detectedServices.end() == _detectedServices.find(outerName))
         {
@@ -523,7 +523,7 @@ bool ScannerThread::checkAndClearIfScanIsComplete(void)
     for (bool locked = conditionallyAcquireForRead(); ! locked;
          locked = conditionallyAcquireForRead())
     {
-        MplusM::Utilities::GoToSleep(SHORT_SLEEP);
+        Utilities::GoToSleep(SHORT_SLEEP);
     }
     bool result = _scanIsComplete;
     
@@ -552,10 +552,10 @@ bool ScannerThread::conditionallyAcquireForWrite(void)
     return result;
 } // ScannerThread::conditionallyAcquireForWrite
 
-PortDirection ScannerThread::determineDirection(ChannelEntry *                oldEntry,
-                                                const yarp::os::ConstString & portName,
-                                                Common::CheckFunction         checker,
-                                                void *                        checkStuff)
+PortDirection ScannerThread::determineDirection(ChannelEntry *             oldEntry,
+                                                const Common::YarpString & portName,
+                                                Common::CheckFunction      checker,
+                                                void *                     checkStuff)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("portName = ", portName); //####
@@ -655,7 +655,7 @@ void ScannerThread::doCleanupSoon(void)
         }
         else
         {
-            MplusM::Utilities::GoToSleep(SHORT_SLEEP);
+            Utilities::GoToSleep(SHORT_SLEEP);
         }
     }
     if (locked)
@@ -681,7 +681,7 @@ void ScannerThread::doScanSoon(void)
         }
         else
         {
-            MplusM::Utilities::GoToSleep(SHORT_SLEEP);
+            Utilities::GoToSleep(SHORT_SLEEP);
         }
     }
     if (locked)
@@ -730,8 +730,8 @@ bool ScannerThread::gatherEntities(Utilities::PortVector & detectedPorts,
     }
     if (okSoFar)
     {
-        bool                 servicesSeen;
-        Common::StringVector services;
+        bool                     servicesSeen;
+        Common::YarpStringVector services;
 
         _associatedPorts.clear();
         _detectedServices.clear();
@@ -827,7 +827,7 @@ void ScannerThread::run(void)
                         }
                         else
                         {
-                            MplusM::Utilities::GoToSleep(VERY_SHORT_SLEEP);
+                            Utilities::GoToSleep(VERY_SHORT_SLEEP);
                         }
                     }
                 }
@@ -843,7 +843,7 @@ void ScannerThread::run(void)
                     if (0 <= kk)
                     {
                         --kk;
-                        MplusM::Utilities::GoToSleep(VERY_SHORT_SLEEP);
+                        Utilities::GoToSleep(VERY_SHORT_SLEEP);
                     }
                 }
                 if (needToLeave || shouldCleanupSoon || shouldScanSoon)
@@ -884,7 +884,7 @@ void ScannerThread::run(void)
                     }
                     else
                     {
-                        MplusM::Utilities::GoToSleep(VERY_SHORT_SLEEP);
+                        Utilities::GoToSleep(VERY_SHORT_SLEEP);
                     }
                 }
                 if (needToLeave)
@@ -908,7 +908,7 @@ void ScannerThread::run(void)
                         }
                         else
                         {
-                            MplusM::Utilities::GoToSleep(VERY_SHORT_SLEEP);
+                            Utilities::GoToSleep(VERY_SHORT_SLEEP);
                         }
                     }
                 }
@@ -965,7 +965,7 @@ void ScannerThread::run(void)
                                     }
                                     else
                                     {
-                                        MplusM::Utilities::GoToSleep(VERY_SHORT_SLEEP);
+                                        Utilities::GoToSleep(VERY_SHORT_SLEEP);
                                     }
                                 }
                             }
@@ -981,7 +981,7 @@ void ScannerThread::run(void)
                                 if (0 <= kk)
                                 {
                                     --kk;
-                                    MplusM::Utilities::GoToSleep(VERY_SHORT_SLEEP);
+                                    Utilities::GoToSleep(VERY_SHORT_SLEEP);
                                 }
                                 if (threadShouldExit())
                                 {
@@ -1008,8 +1008,8 @@ void ScannerThread::run(void)
                         
 #if MAC_OR_LINUX_
                         buff << ((loopEndTime - loopStartTime) / 1000.0);
-                        theLogger.info(yarp::os::ConstString("actual interval = ") + buff.str() +
-                                       yarp::os::ConstString(" seconds"));
+                        theLogger.info(Common::YarpString("actual interval = ") + buff.str() +
+                                       Common::YarpString(" seconds"));
 #else // ! MAC_OR_LINUX_
 #endif // ! MAC_OR_LINUX_
                         yield();
@@ -1039,7 +1039,7 @@ void ScannerThread::run(void)
                         }
                         else
                         {
-                            MplusM::Utilities::GoToSleep(VERY_SHORT_SLEEP);
+                            Utilities::GoToSleep(VERY_SHORT_SLEEP);
                         }
                     }
                 }
@@ -1055,7 +1055,7 @@ void ScannerThread::run(void)
                     if (0 <= kk)
                     {
                         --kk;
-                        MplusM::Utilities::GoToSleep(VERY_SHORT_SLEEP);
+                        Utilities::GoToSleep(VERY_SHORT_SLEEP);
                     }
                 }
                 if (needToLeave || shouldCleanupSoon || shouldScanSoon)

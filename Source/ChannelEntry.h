@@ -71,13 +71,13 @@ namespace ChannelManager
          @param protocolDescription The description of the protocol.
          @param portKind What the port will be used for.
          @param direction The primary direction of the port. */
-        ChannelEntry(ChannelContainer *            parent,
-                     const yarp::os::ConstString & portName,
-                     const yarp::os::ConstString & portNumber,
-                     const yarp::os::ConstString & portProtocol,
-                     const yarp::os::ConstString & protocolDescription,
-                     const PortUsage               portKind,
-                     const PortDirection           direction = kPortDirectionInput);
+        ChannelEntry(ChannelContainer *                 parent,
+                     const MplusM::Common::YarpString & portName,
+                     const MplusM::Common::YarpString & portNumber,
+                     const MplusM::Common::YarpString & portProtocol,
+                     const MplusM::Common::YarpString & protocolDescription,
+                     const PortUsage                    portKind,
+                     const PortDirection                direction = kPortDirectionInput);
         
         /*! @brief The destructor. */
         virtual ~ChannelEntry(void);
@@ -194,7 +194,7 @@ namespace ChannelManager
         
         /*! @brief Return the name of the associated port.
          @returns The name of the associated port. */
-        inline yarp::os::ConstString getPortName(void)
+        inline MplusM::Common::YarpString getPortName(void)
         const
         {
             return _portName;
@@ -202,7 +202,7 @@ namespace ChannelManager
         
         /*! @brief Return the port number of the associated port.
          @returns The port number of the associated port. */
-        inline yarp::os::ConstString getPortNumber(void)
+        inline MplusM::Common::YarpString getPortNumber(void)
         const
         {
             return _portPortNumber;
@@ -215,7 +215,7 @@ namespace ChannelManager
         
         /*! @brief Return the protocol of the associated port.
          @returns The protocol of the associated port. */
-        inline yarp::os::ConstString getProtocol(void)
+        inline MplusM::Common::YarpString getProtocol(void)
         const
         {
             return _portProtocol;
@@ -223,7 +223,7 @@ namespace ChannelManager
         
         /*! @brief Return the description of the protocol for the associated port.
          @returns The description of the protocol for the associated port. */
-        inline yarp::os::ConstString getProtocolDescription(void)
+        inline MplusM::Common::YarpString getProtocolDescription(void)
         const
         {
             return _protocolDescription;
@@ -240,7 +240,7 @@ namespace ChannelManager
         /*! @brief Returns @c true if there is an outgoing connection to the named port.
          @param otherPort The name of the destination port.
          @returns @c true if there is an outgoing connection to the named port. */
-        bool hasOutgoingConnectionTo(const yarp::os::ConstString & otherPort)
+        bool hasOutgoingConnectionTo(const MplusM::Common::YarpString & otherPort)
         const;
         
         /*! @brief Mark all the connections as invalid. */
@@ -371,19 +371,19 @@ namespace ChannelManager
         ChannelConnections _outputConnections;
         
         /*! @brief The name of the associated port. */
-        yarp::os::ConstString _portName;
+        MplusM::Common::YarpString _portName;
         
         /*! @brief The IP port number for the port. */
-        yarp::os::ConstString _portPortNumber;
+        MplusM::Common::YarpString _portPortNumber;
         
         /*! @brief The protocol of the associated port. */
-        yarp::os::ConstString _portProtocol;
+        MplusM::Common::YarpString _portProtocol;
         
         /*! @brief The description of the protocol for the associated port. */
-        yarp::os::ConstString _protocolDescription;
+        MplusM::Common::YarpString _protocolDescription;
         
         /*! @brief The text to be displayed for the channel entry. */
-        yarp::os::ConstString _title;
+        MplusM::Common::YarpString _title;
         
         /*! @brief The container in which this is embedded. */
         ChannelContainer * _parent;

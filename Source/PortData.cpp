@@ -80,11 +80,11 @@ using namespace MplusM;
 # pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
-PortData::PortData(const yarp::os::ConstString & portName,
-                   const yarp::os::ConstString & portProtocol,
-                   const yarp::os::ConstString & protocolDescription,
-                   const PortUsage               portKind,
-                   const PortDirection           direction) :
+PortData::PortData(const Common::YarpString & portName,
+                   const Common::YarpString & portProtocol,
+                   const Common::YarpString & protocolDescription,
+                   const PortUsage            portKind,
+                   const PortDirection        direction) :
     _portName(portName), _portPortNumber(), _portProtocol(portProtocol),
     _protocolDescription(protocolDescription), _direction(direction), _usage(portKind)
 {
@@ -186,7 +186,7 @@ void PortData::addOutputConnection(PortData *          other,
     OD_LOG_OBJEXIT(); //####
 } // PortData::addOutputConnection
 
-bool PortData::hasOutgoingConnectionTo(const yarp::os::ConstString & otherPort)
+bool PortData::hasOutgoingConnectionTo(const Common::YarpString & otherPort)
 const
 {
     OD_LOG_OBJENTER(); //####

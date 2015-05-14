@@ -386,9 +386,14 @@ void EntitiesPanel::displayAndProcessPopupMenu(void)
     OD_LOG_OBJENTER(); //####
     if (_container)
     {
-        PopupMenu mm;
+        ApplicationCommandManager * commandManager =
+                                            &ChannelManagerWindow::getApplicationCommandManager();
+        PopupMenu                   mm;
         
-        _container->setUpDisplayMenu(mm);
+        _container->setUpViewMenu(mm);
+        mm.addSeparator();
+        mm.addCommandItem(commandManager, ChannelManagerWindow::kCommandLaunchRegistryService);
+        mm.addCommandItem(commandManager, ChannelManagerWindow::kCommandLaunchExecutables);
         // Note that all the menu items are commands, so they are handled by the content panel.
         mm.show();        
     }
@@ -415,7 +420,7 @@ void EntitiesPanel::drawConnections(Graphics & gg)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::drawConnections
 
-ChannelContainer * EntitiesPanel::findKnownEntity(const yarp::os::ConstString & name)
+ChannelContainer * EntitiesPanel::findKnownEntity(const Common::YarpString & name)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("name = ", name); //####
@@ -427,7 +432,7 @@ ChannelContainer * EntitiesPanel::findKnownEntity(const yarp::os::ConstString & 
         
         if (anEntity)
         {
-            yarp::os::ConstString entityName(anEntity->getName().toStdString().c_str());
+            Common::YarpString entityName(anEntity->getName().toStdString().c_str());
             
             if (name == entityName)
             {
@@ -441,7 +446,7 @@ ChannelContainer * EntitiesPanel::findKnownEntity(const yarp::os::ConstString & 
     return result;
 } // EntitiesPanel::findKnownEntity
 
-ChannelEntry * EntitiesPanel::findKnownPort(const yarp::os::ConstString & name)
+ChannelEntry * EntitiesPanel::findKnownPort(const Common::YarpString & name)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("name = ", name); //####
@@ -466,7 +471,7 @@ void EntitiesPanel::forgetPort(ChannelEntry * aPort)
     OD_LOG_P1("aPort = ", aPort); //####
     if (aPort)
     {
-        yarp::os::ConstString     aPortName(aPort->getName().toStdString().c_str());
+        Common::YarpString        aPortName(aPort->getName().toStdString().c_str());
         ChannelEntryMap::iterator match(_knownPorts.find(aPortName));
         
         if (_knownPorts.end() == match)

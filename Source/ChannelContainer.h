@@ -77,13 +77,13 @@ namespace ChannelManager
          @param description The description, if this is a service.
          @param requests The requests supported, if this is a service.
          @param owner The owner of the entity. */
-        ChannelContainer(const ContainerKind           kind,
-                         const yarp::os::ConstString & title,
-                         const yarp::os::ConstString & ipAddress,
-                         const yarp::os::ConstString & behaviour,
-                         const yarp::os::ConstString & description,
-                         const yarp::os::ConstString & requests,
-                         EntitiesPanel &               owner);
+        ChannelContainer(const ContainerKind                kind,
+                         const MplusM::Common::YarpString & title,
+                         const MplusM::Common::YarpString & ipAddress,
+                         const MplusM::Common::YarpString & behaviour,
+                         const MplusM::Common::YarpString & description,
+                         const MplusM::Common::YarpString & requests,
+                         EntitiesPanel &                    owner);
         
         /*! @brief The destructor. */
         virtual ~ChannelContainer(void);
@@ -96,12 +96,13 @@ namespace ChannelManager
          @param portKind What the port will be used for.
          @param direction The primary direction of the port.
          @returns The newly-created port. */
-        ChannelEntry * addPort(const yarp::os::ConstString & portName,
-                               const yarp::os::ConstString & portNumber,
-                               const yarp::os::ConstString & portProtocol = "",
-                               const yarp::os::ConstString & protocolDescription = "",
-                               const PortUsage               portKind = kPortUsageOther,
-                               const PortDirection           direction = kPortDirectionInputOutput);
+        ChannelEntry * addPort(const MplusM::Common::YarpString & portName,
+                               const MplusM::Common::YarpString & portNumber,
+                               const MplusM::Common::YarpString & portProtocol = "",
+                               const MplusM::Common::YarpString & protocolDescription = "",
+                               const PortUsage                    portKind = kPortUsageOther,
+                               const PortDirection                direction =
+                                                                        kPortDirectionInputOutput);
         
         /*! @brief Clears the hidden flag for the entity. */
         void clearHidden(void);
@@ -133,7 +134,7 @@ namespace ChannelManager
 
         /*! @brief Return the behavioural model for the entity.
          @returns The behavioural model for the entity. */
-        inline yarp::os::ConstString getBehaviour(void)
+        inline MplusM::Common::YarpString getBehaviour(void)
         const
         {
             return _behaviour;
@@ -141,7 +142,7 @@ namespace ChannelManager
         
         /*! @brief Return the description of the entity.
          @returns The description of the entity. */
-        inline yarp::os::ConstString getDescription(void)
+        inline MplusM::Common::YarpString getDescription(void)
         const
         {
             return _description;
@@ -149,7 +150,7 @@ namespace ChannelManager
         
         /*! @brief Return the IP address of the container.
          @returns The IP address of the container. */
-        inline yarp::os::ConstString getIPAddress(void)
+        inline MplusM::Common::YarpString getIPAddress(void)
         const
         {
             return _IPAddress;
@@ -206,7 +207,7 @@ namespace ChannelManager
         
         /*! @brief Return the requests supported by the entity.
          @returns The requests supported by the entity. */
-        inline yarp::os::ConstString getRequests(void)
+        inline MplusM::Common::YarpString getRequests(void)
         const
         {
             return _requests;
@@ -337,16 +338,16 @@ namespace ChannelManager
         ComponentDragger _dragger;
         
         /*! @brief The behavioural model if a service. */
-        yarp::os::ConstString _behaviour;
+        MplusM::Common::YarpString _behaviour;
         
         /*! @brief The description of the container, if it is a service. */
-        yarp::os::ConstString _description;
+        MplusM::Common::YarpString _description;
         
         /*! @brief The IP address of the primary channel. */
-        yarp::os::ConstString _IPAddress;
+        MplusM::Common::YarpString _IPAddress;
                 
         /*! @brief The requests for the entity, if it is a service. */
-        yarp::os::ConstString _requests;
+        MplusM::Common::YarpString _requests;
         
 # if defined(USE_OGDF_POSITIONING)
         /*! @brief The node corresponding to the container. */

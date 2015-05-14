@@ -86,7 +86,7 @@ namespace ChannelManager
     public :
         
         /*! @brief A mapping from Strings to Strings. */
-        typedef std::map<String, String> StringMap;
+        typedef std::map<String, String> JuceStringMap;
         
         /*! @brief The constructor. */
         ChannelManagerApplication(void);
@@ -159,7 +159,7 @@ namespace ChannelManager
         
         /*! @brief Return the set of system environment variables.
          @returns The set of system environment variables. */
-        static ChannelManagerApplication::StringMap getEnvironmentVars(void);
+        static JuceStringMap getEnvironmentVars(void);
         
         /*! @brief Return the home directory of the current user.
          @returns The home directory of the current user. */
@@ -214,6 +214,12 @@ namespace ChannelManager
          @param appInfo The description of the executable.
          @returns @c true if the service was launched and @c false otherwise. */
         bool doLaunchAService(const ApplicationInfo & appInfo);
+        
+        /*! @brief Get the channel arguments for an adapter.
+         @param execName The name of the executable to be analyzed.
+         @param arguments The current set of arguments to be applied. */
+        void getChannelsForAdapter(const String & execName,
+                                   const String & arguments);
         
         /*! @brief Get the operational parameters for an application and add them to the list of
          applications.

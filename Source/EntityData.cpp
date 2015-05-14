@@ -59,6 +59,7 @@
 #endif // defined(__APPLE__)
 
 using namespace ChannelManager;
+using namespace MplusM;
 
 #if defined(__APPLE__)
 # pragma mark Private structures, constants and variables
@@ -80,11 +81,11 @@ using namespace ChannelManager;
 # pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
-EntityData::EntityData(const ContainerKind           kind,
-                       const yarp::os::ConstString & name,
-                       const yarp::os::ConstString & behaviour,
-                       const yarp::os::ConstString & description,
-                       const yarp::os::ConstString & requests) :
+EntityData::EntityData(const ContainerKind        kind,
+                       const Common::YarpString & name,
+                       const Common::YarpString & behaviour,
+                       const Common::YarpString & description,
+                       const Common::YarpString & requests) :
     _behaviour(behaviour), _description(description), _IPAddress(), _name(name),
     _requests(requests), _kind(kind)
 {
@@ -115,11 +116,11 @@ EntityData::~EntityData(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-PortData * EntityData::addPort(const yarp::os::ConstString & portName,
-                               const yarp::os::ConstString & portProtocol,
-                               const yarp::os::ConstString & protocolDescription,
-                               const PortUsage               portKind,
-                               const PortDirection           direction)
+PortData * EntityData::addPort(const Common::YarpString & portName,
+                               const Common::YarpString & portProtocol,
+                               const Common::YarpString & protocolDescription,
+                               const PortUsage            portKind,
+                               const PortDirection        direction)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S3s("portName = ", portName, "portProtocol = ", portProtocol, //####

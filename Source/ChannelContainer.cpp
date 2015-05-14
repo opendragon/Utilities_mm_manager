@@ -99,13 +99,13 @@ static const Colour & kHeadingTextColour(Colours::white);
 # pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
-ChannelContainer::ChannelContainer(const ContainerKind           kind,
-                                   const yarp::os::ConstString & title,
-                                   const yarp::os::ConstString & ipAddress,
-                                   const yarp::os::ConstString & behaviour,
-                                   const yarp::os::ConstString & description,
-                                   const yarp::os::ConstString & requests,
-                                   EntitiesPanel &               owner) :
+ChannelContainer::ChannelContainer(const ContainerKind        kind,
+                                   const Common::YarpString & title,
+                                   const Common::YarpString & ipAddress,
+                                   const Common::YarpString & behaviour,
+                                   const Common::YarpString & description,
+                                   const Common::YarpString & requests,
+                                   EntitiesPanel &            owner) :
     inherited(title.c_str()), _behaviour(behaviour), _description(description),
     _IPAddress(ipAddress), _requests(requests),
 #if defined(USE_OGDF_POSITIONING)
@@ -150,12 +150,12 @@ ChannelContainer::~ChannelContainer(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-ChannelEntry * ChannelContainer::addPort(const yarp::os::ConstString & portName,
-                                         const yarp::os::ConstString & portNumber,
-                                         const yarp::os::ConstString & portProtocol,
-                                         const yarp::os::ConstString & protocolDescription,
-                                         const PortUsage               portKind,
-                                         const PortDirection           direction)
+ChannelEntry * ChannelContainer::addPort(const Common::YarpString & portName,
+                                         const Common::YarpString & portNumber,
+                                         const Common::YarpString & portProtocol,
+                                         const Common::YarpString & protocolDescription,
+                                         const PortUsage            portKind,
+                                         const PortDirection        direction)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S4s("portName = ", portName, "portNumber = ", portNumber, "portProtocol = ", //####
@@ -275,7 +275,7 @@ void ChannelContainer::displayInformation(const bool moreDetails)
     OD_LOG_OBJENTER(); //####
     OD_LOG_B1("moreDetails = ", moreDetails); //####
     // Popup of description.
-    yarp::os::ConstString thePanelDescription;
+    Common::YarpString thePanelDescription;
     
     switch (_kind)
     {
@@ -301,7 +301,7 @@ void ChannelContainer::displayInformation(const bool moreDetails)
     bodyText += thePanelDescription.c_str();
     if (moreDetails)
     {
-        yarp::os::ConstString requests;
+        Common::YarpString requests;
         
         switch (_kind)
         {
@@ -402,11 +402,10 @@ StringArray ChannelContainer::getMetrics(void)
         {
             yarp::os::Bottle metrics;
             
-            if (MplusM::Utilities::GetMetricsForService(aPort->getPortName(), metrics,
-                                                        STANDARD_WAIT_TIME))
+            if (Utilities::GetMetricsForService(aPort->getPortName(), metrics, STANDARD_WAIT_TIME))
             {
-                String metricsString = MplusM::Utilities::ConvertMetricsToString(metrics,
-                                                     MplusM::Common::kOutputFlavourTabs).c_str();
+                String metricsString = Utilities::ConvertMetricsToString(metrics,
+                                                             Common::kOutputFlavourTabs).c_str();
                 
                 result.addLines(metricsString);
                 break;
@@ -429,8 +428,8 @@ bool ChannelContainer::getMetricsState(void)
         
         if (aPort && aPort->isService())
         {
-            if (MplusM::Utilities::GetMetricsStateForService(aPort->getPortName(), result,
-                                                             STANDARD_WAIT_TIME))
+            if (Utilities::GetMetricsStateForService(aPort->getPortName(), result,
+                                                     STANDARD_WAIT_TIME))
             {
                 break;
             }
@@ -700,8 +699,8 @@ void ChannelContainer::setMetricsState(const bool newState)
         
         if (aPort && aPort->isService())
         {
-            if (MplusM::Utilities::SetMetricsStateForService(aPort->getPortName(), newState,
-                                                             STANDARD_WAIT_TIME))
+            if (Utilities::SetMetricsStateForService(aPort->getPortName(), newState,
+                                                     STANDARD_WAIT_TIME))
             {
                 break;
             }
@@ -778,7 +777,7 @@ void ChannelContainer::stopTheService(void)
                                                             "Yes", String::empty, nullptr,
                                                             nullptr));
             }
-            if (doStop && MplusM::Utilities::StopAService(aPort->getPortName(), STANDARD_WAIT_TIME))
+            if (doStop && Utilities::StopAService(aPort->getPortName(), STANDARD_WAIT_TIME))
             {
                 ContentPanel * thePanel = _owner.getContent();
                 

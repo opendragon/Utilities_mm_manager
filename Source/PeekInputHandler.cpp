@@ -63,6 +63,7 @@
 #endif // defined(__APPLE__)
 
 using namespace ChannelManager;
+using namespace MplusM;
 
 #if defined(__APPLE__)
 # pragma mark Private structures, constants and variables
@@ -105,10 +106,10 @@ PeekInputHandler::~PeekInputHandler(void)
 # pragma warning(push)
 # pragma warning(disable: 4100)
 #endif // ! MAC_OR_LINUX_
-bool PeekInputHandler::handleInput(const yarp::os::Bottle &      input,
-                                   const yarp::os::ConstString & senderChannel,
-                                   yarp::os::ConnectionWriter *  replyMechanism,
-                                   const size_t                  numBytes)
+bool PeekInputHandler::handleInput(const yarp::os::Bottle &     input,
+                                   const Common::YarpString &   senderChannel,
+                                   yarp::os::ConnectionWriter * replyMechanism,
+                                   const size_t                 numBytes)
 {
 #if (! defined(OD_ENABLE_LOGGING))
 # if MAC_OR_LINUX_
@@ -132,7 +133,7 @@ bool PeekInputHandler::handleInput(const yarp::os::Bottle &      input,
             if (argValue.isString())
             {
                 ChannelManagerApplication * ourApp = ChannelManagerApplication::getApp();
-                yarp::os::ConstString       argAsString(argValue.toString());
+                Common::YarpString          argAsString(argValue.toString());
                 
                 if (ourApp)
                 {

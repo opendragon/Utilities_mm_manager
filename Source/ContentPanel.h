@@ -165,9 +165,9 @@ namespace ChannelManager
         void setUpContainerMenu(PopupMenu &        aMenu,
                                 ChannelContainer & aContainer);
         
-        /*! @brief Prepare the display menu for use.
+        /*! @brief Prepare the view menu for use.
          @param aMenu The popup menu to be configured. */
-        void setUpDisplayMenu(PopupMenu & aMenu);
+        void setUpViewMenu(PopupMenu & aMenu);
         
         /*! @brief Ignore the result of the next scan. */
         void skipScan(void);

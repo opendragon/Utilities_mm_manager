@@ -59,6 +59,7 @@
 #endif // defined(__APPLE__)
 
 using namespace ChannelManager;
+using namespace MplusM;
 using namespace std;
 
 #if defined(__APPLE__)
@@ -87,7 +88,7 @@ static const Colour & kWindowBackgroundColour(Colours::lightgrey);
 # pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
-ChannelManagerWindow::ChannelManagerWindow(const yarp::os::ConstString & title)  :
+ChannelManagerWindow::ChannelManagerWindow(const Common::YarpString & title)  :
     inherited1(), inherited2(title.c_str(), kWindowBackgroundColour, inherited2::allButtons),
     _contentPanel(new ContentPanel(this)), _scannerThread(nullptr)
 {

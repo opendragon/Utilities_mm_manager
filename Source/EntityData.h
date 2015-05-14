@@ -66,11 +66,11 @@ namespace ChannelManager
          @param behaviour The behavioural model if a service.
          @param description The description, if this is a service.
          @param requests The requests supported, if this is a service. */
-        EntityData(const ContainerKind           kind,
-                   const yarp::os::ConstString & name,
-                   const yarp::os::ConstString & behaviour,
-                   const yarp::os::ConstString & description,
-                   const yarp::os::ConstString & requests);
+        EntityData(const ContainerKind               kind,
+                   const MplusM::Common::YarpString & name,
+                   const MplusM::Common::YarpString & behaviour,
+                   const MplusM::Common::YarpString & description,
+                   const MplusM::Common::YarpString & requests);
         
         /*! @brief The destructor. */
         virtual ~EntityData(void);
@@ -82,15 +82,16 @@ namespace ChannelManager
          @param portKind What the port will be used for.
          @param direction The primary direction of the port.
          @returns The newly-created port. */
-        PortData * addPort(const yarp::os::ConstString & portName,
-                           const yarp::os::ConstString & portProtocol = "",
-                           const yarp::os::ConstString & protocolDescription = "",
-                           const PortUsage               portKind = kPortUsageOther,
-                           const PortDirection           direction = kPortDirectionInputOutput);
+        PortData * addPort(const MplusM::Common::YarpString & portName,
+                           const MplusM::Common::YarpString & portProtocol = "",
+                           const MplusM::Common::YarpString & protocolDescription = "",
+                           const PortUsage                    portKind = kPortUsageOther,
+                           const PortDirection                direction =
+                                                                        kPortDirectionInputOutput);
         
         /*! @brief Return the behavioural model for the entity.
          @returns The behavioural model for the entity. */
-        inline yarp::os::ConstString getBehaviour(void)
+        inline MplusM::Common::YarpString getBehaviour(void)
         const
         {
             return _behaviour;
@@ -98,7 +99,7 @@ namespace ChannelManager
         
         /*! @brief Return the description of the entity.
          @returns The description of the entity. */
-        inline yarp::os::ConstString getDescription(void)
+        inline MplusM::Common::YarpString getDescription(void)
         const
         {
             return _description;
@@ -114,7 +115,7 @@ namespace ChannelManager
         
         /*! @brief Return the IP address of the entity.
          @returns The IP address of the entity. */
-        inline yarp::os::ConstString getIPAddress(void)
+        inline MplusM::Common::YarpString getIPAddress(void)
         const
         {
             return _IPAddress;
@@ -122,7 +123,7 @@ namespace ChannelManager
         
         /*! @brief Return the description of the entity.
          @returns The description of the entity. */
-        inline yarp::os::ConstString getName(void)
+        inline MplusM::Common::YarpString getName(void)
         const
         {
             return _name;
@@ -141,7 +142,7 @@ namespace ChannelManager
         
         /*! @brief Return the requests supported by the entity.
          @returns The requests supported by the entity. */
-        inline yarp::os::ConstString getRequests(void)
+        inline MplusM::Common::YarpString getRequests(void)
         const
         {
             return _requests;
@@ -149,7 +150,7 @@ namespace ChannelManager
         
         /*! @brief Set the IP address of the entity.
          @param newAddress The IP address of the entity. */
-        inline void setIPAddress(yarp::os::ConstString & newAddress)
+        inline void setIPAddress(MplusM::Common::YarpString & newAddress)
         {
             _IPAddress = newAddress;
         } // setIPAddress
@@ -170,19 +171,19 @@ namespace ChannelManager
         Ports _ports;
         
         /*! @brief The behavioural model if a service. */
-        yarp::os::ConstString _behaviour;
+        MplusM::Common::YarpString _behaviour;
         
         /*! @brief The description of the entity, if it is a service. */
-        yarp::os::ConstString _description;
+        MplusM::Common::YarpString _description;
         
         /*! @brief The IP address of the primary channel. */
-        yarp::os::ConstString _IPAddress;
+        MplusM::Common::YarpString _IPAddress;
         
         /*! @brief The name of the entity. */
-        yarp::os::ConstString _name;
+        MplusM::Common::YarpString _name;
         
         /*! @brief The requests for the entity, if it is a service. */
-        yarp::os::ConstString _requests;
+        MplusM::Common::YarpString _requests;
         
         /*! @brief The kind of entity. */
         ContainerKind _kind;
