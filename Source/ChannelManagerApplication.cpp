@@ -911,7 +911,12 @@ void ChannelManagerApplication::loadApplicationLists(void)
     }
     for (int ii = 0, mm = lines.size(); mm > ii; ++ii)
     {
-        getParametersForApplication(lines[ii]);
+        String aLine(lines[ii]);
+        
+        if ('#' != aLine[0])
+        {
+            getParametersForApplication(aLine);
+        }
     }
     OD_LOG_OBJEXIT(); //####
 } // ChannelManagerApplication::loadApplicationLists
