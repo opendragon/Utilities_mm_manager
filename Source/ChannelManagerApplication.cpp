@@ -554,7 +554,7 @@ String ChannelManagerApplication::findPathToExecutable(const String & execName)
         {
             String temp(aFile.getFileNameWithoutExtension() + ".exe");
             
-            aFile = juce::File::createFileWithoutCheckingPath(temp));
+            aFile = juce::File::createFileWithoutCheckingPath(temp);
             if (aFile.existsAsFile())
             {
                 doCheck = true;
