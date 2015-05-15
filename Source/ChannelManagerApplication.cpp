@@ -344,7 +344,7 @@ void ChannelManagerApplication::doCleanupSoon(void)
     OD_LOG_OBJENTER(); //####
     if (_scanner)
     {
-        _scanner->doScanSoon();
+        _scanner->doCleanupSoon();
     }
     OD_LOG_OBJEXIT(); //####
 } // ChannelManagerApplication::doCleanupSoon
@@ -365,8 +365,12 @@ bool ChannelManagerApplication::doLaunchAnAdapter(const ApplicationInfo & appInf
 #if MAC_OR_LINUX_
     theLogger.warning("Adapter being launched.");
 #endif // MAC_OR_LINUX_
+
+    // Apply the '--channels' option to the executable to get the number of channels and their
+    // default values.
+    // Set up the text fields for the dialog box.
     
-    // we need to use a YarpStringVector to gather the arguments...
+    // getChannelsForAdapter()
     
     //ww.addTextEditor("NetworkPort", "0", "Network port [0 for the default port]:");
     
@@ -382,6 +386,11 @@ bool ChannelManagerApplication::doLaunchAnAdapter(const ApplicationInfo & appInf
         res = ww.runModalLoop();
         if (1 == res)
         {
+            // Get the command-line arguments, apply to the '--channels' option and check if any of
+            // the channels are already known - flag them if so and go again.
+            
+            // getChannelsForAdapter()
+            
 //            String portText = ww.getTextEditorContents("NetworkPort");
 //            
 //            portChoice = portText.getIntValue();
@@ -404,6 +413,8 @@ bool ChannelManagerApplication::doLaunchAnAdapter(const ApplicationInfo & appInf
     }
     if (1 == res)
     {
+        // If we get here, the command-line arguments are useable and the user has said 'go ahead'.
+        
 //        _registryServiceLauncher = new RegistryServiceLaunchThread(_registryServicePath,
 //                                                                   portChoice);
 //        if (_registryServiceLauncher)
@@ -434,13 +445,11 @@ bool ChannelManagerApplication::doLaunchOtherApplication(void)
     OD_LOG_OBJENTER(); //####
     bool      result = false;
     int       res;
-    PopupMenu mm;
 
-    setUpApplicationMenu(mm);
-    res = mm.show();
+    res = _applicationMenu.show();
     if (0 < res)
     {
-        const ApplicationInfo & appInfo = _appList.at(res - 1);
+        const ApplicationInfo & appInfo = _applicationList.at(res - 1);
         
         if (kApplicationAdapter == appInfo._kind)
         {
@@ -750,14 +759,15 @@ void ChannelManagerApplication::getChannelsForAdapter(const String & execName,
     OD_LOG_OBJENTER(); //####
     OD_LOG_S2s("execName = ", execName.toStdString(), "arguments = ", arguments.toStdString()); //####
     
-}
+    OD_LOG_OBJEXIT(); //####
+} // ChannelManagerApplication::getChannelsForAdapter
 
-
-
-void ChannelManagerApplication::getParametersForApplication(const String & execName)
+void ChannelManagerApplication::getParametersForApplication(const String & execName,
+                                                            int &          menuIndex)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("execName = ", execName.toStdString()); //####
+    OD_LOG_LL1("menuIndex = ", menuIndex); //####
     String execPath(findPathToExecutable(execName));
     
     if (0 < execPath.length())
@@ -793,12 +803,14 @@ void ChannelManagerApplication::getParametersForApplication(const String & execN
                     if (execKind == "Adapter")
                     {
                         theInfo._kind = kApplicationAdapter;
-                        _appList.push_back(theInfo);
+                        _applicationList.push_back(theInfo);
+                        _applicationMenu.addItem(++menuIndex, theInfo._description);
                     }
                     else if (execKind == "Service")
                     {
                         theInfo._kind = kApplicationService;
-                        _appList.push_back(theInfo);
+                        _applicationList.push_back(theInfo);
+                        _applicationMenu.addItem(++menuIndex, theInfo._description);
                     }
                 }
             }
@@ -902,6 +914,7 @@ void ChannelManagerApplication::initialise(const String & commandLine)
 #endif // defined(MpM_ReportOnConnections)
 
     Utilities::CheckForNameServerReporter();
+    loadApplicationLists();
     _mainWindow = new ChannelManagerWindow(ProjectInfo::projectName);
     if (Utilities::CheckForValidNetwork(true))
     {
@@ -950,7 +963,6 @@ void ChannelManagerApplication::initialise(const String & commandLine)
                 _scanner->startThread();
             }
         }
-        loadApplicationLists();
     }
     OD_LOG_OBJEXIT(); //####
 } // ChannelManagerApplication::initialise
@@ -979,13 +991,15 @@ void ChannelManagerApplication::loadApplicationLists(void)
     {
         customListFile.readLines(lines);
     }
-    for (int ii = 0, mm = lines.size(); mm > ii; ++ii)
+    _applicationMenu.addSectionHeader("Applications available:");
+    _applicationMenu.addSeparator();
+    for (int ii = 0, idx = 0, mm = lines.size(); mm > ii; ++ii)
     {
         String aLine(lines[ii]);
         
         if ('#' != aLine[0])
         {
-            getParametersForApplication(aLine);
+            getParametersForApplication(aLine, idx);
         }
     }
     OD_LOG_OBJEXIT(); //####
@@ -997,27 +1011,6 @@ bool ChannelManagerApplication::moreThanOneInstanceAllowed(void)
     OD_LOG_OBJEXIT_B(true); //####
     return true;
 } // ChannelManagerApplication::moreThanOneInstanceAllowed
-
-void ChannelManagerApplication::setUpApplicationMenu(PopupMenu & aMenu)
-{
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("aMenu = ", &aMenu); //####
-    int ii = 0;
-    
-    aMenu.addSectionHeader("Applications available:");
-    aMenu.addSeparator();
-    for (ApplicationList::const_iterator walker(_appList.begin()); _appList.end() != walker;
-         ++walker)
-    {
-        const ApplicationInfo * candidate(&*walker);
-        
-        if (candidate)
-        {
-            aMenu.addItem(++ii, candidate->_description);
-        }
-    }
-    OD_LOG_OBJEXIT(); //####
-} // ChannelManagerApplication::setUpApplicationMenu
 
 void ChannelManagerApplication::shutdown(void)
 {

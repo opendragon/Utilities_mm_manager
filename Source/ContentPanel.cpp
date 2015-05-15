@@ -574,14 +574,13 @@ bool ContentPanel::perform(const InvocationInfo & info)
     OD_LOG_OBJENTER(); //####
     bool                        wasProcessed = false;
     ChannelManagerApplication * ourApp = ChannelManagerApplication::getApp();
-    ScannerThread *             scanner = _containingWindow->getScannerThread();
     
     switch (info.commandID)
     {
         case ChannelManagerWindow::kCommandDoRepaint :
-            if (scanner)
+            if (ourApp)
             {
-                scanner->doCleanupSoon();
+                ourApp->doCleanupSoon();
             }
             requestWindowRepaint();
             wasProcessed = true;

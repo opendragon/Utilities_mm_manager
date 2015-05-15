@@ -149,7 +149,7 @@ namespace ChannelManager
         inline size_t getCountOfApplications(void)
         const
         {
-            return _appList.size();
+            return _applicationList.size();
         } // getCountOfApplications
         
         /*! @brief Return the value of a system environment variable.
@@ -223,8 +223,10 @@ namespace ChannelManager
         
         /*! @brief Get the operational parameters for an application and add them to the list of
          applications.
-         @param execName The name of the executable to be analyzed. */
-        void getParametersForApplication(const String & execName);
+         @param execName The name of the executable to be analyzed.
+         @param menuIndex The position in the application menu where the item is to go. */
+        void getParametersForApplication(const String & execName,
+                                         int &          menuIndex);
 
         /*! @brief Load the text files containing the standard and user-defined applications, and
          set up for later use. */
@@ -234,10 +236,6 @@ namespace ChannelManager
          private YARP network. */
         void restoreYarpConfiguration(void);
         
-        /*! @brief Prepare the application menu for use.
-         @param aMenu The popup menu to be configured. */
-        void setUpApplicationMenu(PopupMenu & aMenu);
-
         /*! @brief Check if the Registry Service can be launched and if the user wishes it to be.
          @param execPath The file system path to the Registry Service executable.
          @returns @c true if the user requests that the Registry Service be started and @ c false
@@ -281,7 +279,9 @@ namespace ChannelManager
         OwnedArray<GeneralServiceLaunchThread> _serviceLaunchers;
         
         /*! @brief The list of launchable applications. */
-        ApplicationList _appList;
+        ApplicationList _applicationList;
+        
+        PopupMenu _applicationMenu;
         
         /*! @brief The configured YARP address prior to launching a private YARP network. */
         String _configuredYarpAddress;
