@@ -51,6 +51,7 @@
 		E2FED85FB76A3966795E8416 /* juce_core.mm in Sources */ = {isa = PBXBuildFile; fileRef = ADC373CE4DEDF850BDE3A738 /* juce_core.mm */; };
 		E423C86693E599625A6112CC /* PortData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93AD4B4E9FBADD52BACEF145 /* PortData.cpp */; };
 		F33B431E9BA660F6B5034872 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA72840EFF14AF9F39FB65E /* Carbon.framework */; };
+		F606A0CC1B0A916D000EAFE6 /* AdapterLaunchThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F606A0CA1B0A916D000EAFE6 /* AdapterLaunchThread.cpp */; };
 		FFD5D4B5504E586A42099C7B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 657CE153E5F14918F42F08F0 /* AudioToolbox.framework */; };
 /* End PBXBuildFile section */
 
@@ -727,6 +728,8 @@
 		F3FEBC2C94CBA7320A4C0DBB /* juce_AnimatedPosition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_AnimatedPosition.h; path = ../../JuceLibraryCode/modules/juce_gui_basics/layout/juce_AnimatedPosition.h; sourceTree = SOURCE_ROOT; };
 		F5527A160F6C15091B8E42CD /* juce_FileChooserDialogBox.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_FileChooserDialogBox.cpp; path = ../../JuceLibraryCode/modules/juce_gui_basics/filebrowser/juce_FileChooserDialogBox.cpp; sourceTree = SOURCE_ROOT; };
 		F599A46ADB0DCF19D72CCE13 /* juce_Range.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_Range.h; path = ../../JuceLibraryCode/modules/juce_core/maths/juce_Range.h; sourceTree = SOURCE_ROOT; };
+		F606A0CA1B0A916D000EAFE6 /* AdapterLaunchThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AdapterLaunchThread.cpp; path = ../../Source/AdapterLaunchThread.cpp; sourceTree = "<group>"; };
+		F606A0CB1B0A916D000EAFE6 /* AdapterLaunchThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdapterLaunchThread.h; path = ../../Source/AdapterLaunchThread.h; sourceTree = "<group>"; };
 		F6468F9D5E354679B5C24AE5 /* juce_linux_FileChooser.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_linux_FileChooser.cpp; path = ../../JuceLibraryCode/modules/juce_gui_basics/native/juce_linux_FileChooser.cpp; sourceTree = SOURCE_ROOT; };
 		F6EBDB9D3464012E87CCB8FB /* juce_win32_Network.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_win32_Network.cpp; path = ../../JuceLibraryCode/modules/juce_core/native/juce_win32_Network.cpp; sourceTree = SOURCE_ROOT; };
 		F7C8A0BF0AA24FB4E5A9084F /* juce_TopLevelWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_TopLevelWindow.h; path = ../../JuceLibraryCode/modules/juce_gui_basics/windows/juce_TopLevelWindow.h; sourceTree = SOURCE_ROOT; };
@@ -966,6 +969,8 @@
 		295631B272BFFCD49E8CF0DB /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				F606A0CA1B0A916D000EAFE6 /* AdapterLaunchThread.cpp */,
+				F606A0CB1B0A916D000EAFE6 /* AdapterLaunchThread.h */,
 				F8A50B61D95A448FCB3E1B60 /* ChannelContainer.cpp */,
 				DBB0E9F53B7C2F3E1D92CDBE /* ChannelContainer.h */,
 				36EE2F28FE454ED89CD62E58 /* ChannelEntry.cpp */,
@@ -2142,6 +2147,7 @@
 				A8C9288DC71CCD3F2B2BA37B /* EntityData.cpp in Sources */,
 				E423C86693E599625A6112CC /* PortData.cpp in Sources */,
 				A8404C2628FCED0B0192326D /* ScannerThread.cpp in Sources */,
+				F606A0CC1B0A916D000EAFE6 /* AdapterLaunchThread.cpp in Sources */,
 				E2FED85FB76A3966795E8416 /* juce_core.mm in Sources */,
 				8293E78EF60A5024CA9EB2B7 /* juce_data_structures.mm in Sources */,
 				50F1CB5B2A0C22454AF41833 /* juce_events.mm in Sources */,

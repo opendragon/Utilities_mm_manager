@@ -140,7 +140,7 @@ void YarpLaunchThread::run(void)
             OD_LOG("(_yarpProcess->start(nameAndArgs, 0))"); //####
             const String childOutput(_yarpProcess->readAllProcessOutput());
             
-            _yarpProcess->waitForProcessToFinish(10000);
+            _yarpProcess->waitForProcessToFinish(-1);
         }
     }
     OD_LOG_OBJEXIT(); //####

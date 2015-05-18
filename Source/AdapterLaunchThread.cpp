@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       GeneralServiceLaunchThread.cpp
+//  File:       AdapterLaunchThread.cpp
 //
 //  Project:    M+M
 //
@@ -32,11 +32,11 @@
 //              ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 //              DAMAGE.
 //
-//  Created:    2015-05-12
+//  Created:    2015-05-18
 //
 //--------------------------------------------------------------------------------------------------
 
-#include "GeneralServiceLaunchThread.h"
+#include "AdapterLaunchThread.h"
 
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
@@ -53,7 +53,7 @@
 
 /*! @file
  
- @brief The class declaration for the background general service launcher. */
+ @brief The class declaration for the background adapter launcher. */
 #if defined(__APPLE__)
 # pragma clang diagnostic pop
 #endif // defined(__APPLE__)
@@ -86,64 +86,62 @@ using namespace std;
 # pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
-GeneralServiceLaunchThread::GeneralServiceLaunchThread(const String & pathToExecutable,
-                                                       const int      portNumber) :
-	inherited("General service launcher"), _serviceProcess(nullptr), _servicePath(pathToExecutable),
-    _servicePort(portNumber)
+AdapterLaunchThread::AdapterLaunchThread(const String &      pathToExecutable,
+                                         const StringArray & arguments) :
+	inherited("Adapter launcher"), _adapterProcess(nullptr), _adapterPath(pathToExecutable),
+    _arguments(arguments)
 {
     OD_LOG_ENTER(); //####
 	OD_LOG_S1s("pathToExecutable = ", pathToExecutable.toStdString()); //####
-    OD_LOG_LL1("portNumber = ", portNumber); //####
+    OD_LOG_P1("arguments = ", &arguments); //####
     OD_LOG_EXIT_P(this); //####
-} // GeneralServiceLaunchThread::GeneralServiceLaunchThread
+} // AdapterLaunchThread::AdapterLaunchThread
 
-GeneralServiceLaunchThread::~GeneralServiceLaunchThread(void)
+AdapterLaunchThread::~AdapterLaunchThread(void)
 {
     OD_LOG_OBJENTER(); //####
 	killChildProcess();
-	_serviceProcess = nullptr;
+	_adapterProcess = nullptr;
     OD_LOG_OBJEXIT(); //####
-} // GeneralServiceLaunchThread::~GeneralServiceLaunchThread
+} // AdapterLaunchThread::~AdapterLaunchThread
 
 #if defined(__APPLE__)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-void GeneralServiceLaunchThread::killChildProcess(void)
+void AdapterLaunchThread::killChildProcess(void)
 {
 	OD_LOG_OBJENTER(); //####
-	if (_serviceProcess)
+	if (_adapterProcess)
 	{
-		_serviceProcess->kill();
+		_adapterProcess->kill();
 	}
 	OD_LOG_OBJEXIT(); //####
-} // GeneralServiceLaunchThread::killChildProcess
+} // AdapterLaunchThread::killChildProcess
 
-void GeneralServiceLaunchThread::run(void)
+void AdapterLaunchThread::run(void)
 {
     OD_LOG_OBJENTER(); //####
-    _serviceProcess = new ChildProcess;
-    if (_serviceProcess)
+    _adapterProcess = new ChildProcess;
+    if (_adapterProcess)
     {
-        OD_LOG("(_serviceProcess)"); //####
-        StringArray nameAndArgs(_servicePath);
+        OD_LOG("(_adapterProcess)"); //####
+        StringArray nameAndArgs(_adapterPath);
 
-        if (0 < _servicePort)
+        if (0 < _arguments.size())
         {
-            OD_LOG("(0 < _servicePort)"); //####
-            nameAndArgs.add("--port");
-            nameAndArgs.add(String(_servicePort));
+            nameAndArgs.addArray(_arguments);
         }
-        if (_serviceProcess->start(nameAndArgs, 0))
+        if (_adapterProcess->start(nameAndArgs, 0))
         {
-            OD_LOG("(_serviceProcess->start(nameAndArgs, 0))"); //####
-            const String childOutput(_serviceProcess->readAllProcessOutput());
+            OD_LOG("(_adapterProcess->start(nameAndArgs, 0))"); //####
+            const String childOutput(_adapterProcess->readAllProcessOutput());
             
-            _serviceProcess->waitForProcessToFinish(-1);
+            _adapterProcess->waitForProcessToFinish(-1);
         }
     }
     OD_LOG_OBJEXIT(); //####
-} // GeneralServiceLaunchThread::run
+} // AdapterLaunchThread::run
 
 #if defined(__APPLE__)
 # pragma mark Global functions

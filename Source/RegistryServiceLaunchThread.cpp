@@ -88,7 +88,7 @@ using namespace std;
 
 RegistryServiceLaunchThread::RegistryServiceLaunchThread(const String & pathToExecutable,
                                                          const int      portNumber) :
-	inherited("YARP launcher"), _registryServiceProcess(nullptr),
+	inherited("Registry Service launcher"), _registryServiceProcess(nullptr),
     _registryServicePath(pathToExecutable), _registryServicePort(portNumber)
 {
     OD_LOG_ENTER(); //####
@@ -139,7 +139,7 @@ void RegistryServiceLaunchThread::run(void)
             OD_LOG("(_registryServiceProcess->start(nameAndArgs, 0))"); //####
             const String childOutput(_registryServiceProcess->readAllProcessOutput());
             
-            _registryServiceProcess->waitForProcessToFinish(10000);
+            _registryServiceProcess->waitForProcessToFinish(-1);
         }
     }
     OD_LOG_OBJEXIT(); //####

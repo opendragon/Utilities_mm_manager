@@ -1,10 +1,10 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       RegistryServiceLaunchThread.h
+//  File:       AdapterLaunchThread.h
 //
 //  Project:    M+M
 //
-//  Contains:   The class declaration for the background Registry Service launcher.
+//  Contains:   The class declaration for the background adapter launcher.
 //
 //  Written by: Norman Jaffe
 //
@@ -32,12 +32,12 @@
 //              ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 //              DAMAGE.
 //
-//  Created:    2015-05-07
+//  Created:    2015-05-18
 //
 //--------------------------------------------------------------------------------------------------
 
-#if (! defined(RegistryServiceLaunchThread_H_))
-# define RegistryServiceLaunchThread_H_ /* Header guard */
+#if (! defined(AdapterLaunchThread_H_))
+# define AdapterLaunchThread_H_ /* Header guard */
 
 # include "ChannelManagerDataTypes.h"
 
@@ -48,26 +48,26 @@
 # endif // defined(__APPLE__)
 /*! @file
  
- @brief The class declaration for the background Registry Service launcher. */
+ @brief The class declaration for the background adapter launcher. */
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
 
 namespace ChannelManager
 {
-    /*! @brief A background Registry Service launcher. */
-    class RegistryServiceLaunchThread : public Thread
+    /*! @brief A background adapter launcher. */
+    class AdapterLaunchThread : public Thread
     {
     public :
         
         /*! @brief The constructor.
          @param pathToExecutable The file system path for the executable.
-		 @param portNumber The network port number to use. */
-        RegistryServiceLaunchThread(const String & pathToExecutable,
-                                    const int      portNumber = 0);
-        
+         @param arguments The arguments to the adapter. */
+        AdapterLaunchThread(const String &      pathToExecutable,
+                            const StringArray & arguments);
+
         /*! @brief The destructor. */
-        virtual ~RegistryServiceLaunchThread(void);
+        virtual ~AdapterLaunchThread(void);
         
         /*! @brief Perform the background scan. */
         virtual void run(void);
@@ -88,19 +88,19 @@ namespace ChannelManager
         /*! @brief The class that this class is derived from. */
         typedef Thread inherited;
         
-        /*! @brief The running Registry Service process. */
-        ScopedPointer<ChildProcess> _registryServiceProcess;
+        /*! @brief The running background adapter process. */
+        ScopedPointer<ChildProcess> _adapterProcess;
         
         /*! @brief The file system path to the executable. */
-        String _registryServicePath;
+        String _adapterPath;
 
-		/*! @brief The network port number to use. */
-		int _registryServicePort;
+        /*! @brief The arguments to the executable. */
+        StringArray _arguments;
+
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AdapterLaunchThread)
         
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RegistryServiceLaunchThread)
-        
-    }; // RegistryServiceLaunchThread
+    }; // AdapterLaunchThread
     
 } // ChannelManager
 
-#endif // ! defined(RegistryServiceLaunchThread_H_)
+#endif // ! defined(AdapterLaunchThread_H_)

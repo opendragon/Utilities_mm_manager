@@ -55,7 +55,7 @@
 
 namespace ChannelManager
 {
-    /*! @brief A background YARP launcher. */
+    /*! @brief A background general service launcher. */
     class GeneralServiceLaunchThread : public Thread
     {
     public :
@@ -88,7 +88,7 @@ namespace ChannelManager
         /*! @brief The class that this class is derived from. */
         typedef Thread inherited;
         
-        /*! @brief The running YARP process. */
+        /*! @brief The running background service process. */
         ScopedPointer<ChildProcess> _serviceProcess;
         
         /*! @brief The file system path to the executable. */

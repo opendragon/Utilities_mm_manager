@@ -74,6 +74,7 @@
 
 namespace ChannelManager
 {
+    class AdapterLaunchThread;
     class GeneralServiceLaunchThread;
     class PeekInputHandler;
     class RegistryServiceLaunchThread;
@@ -216,18 +217,19 @@ namespace ChannelManager
         bool doLaunchAService(const ApplicationInfo & appInfo);
         
         /*! @brief Get the operational arguments for an application.
-         @param execName The name of the executable to be analyzed.
          @param theInfo The retrieved parameters.
          @returns @c true if the operational arguments were retrieved and @c false otherwise. */
-        bool getArgumentsForApplication(const String &    execName,
-                                        ApplicationInfo & theInfo);
+        bool getArgumentsForApplication(ApplicationInfo & theInfo);
 
         /*! @brief Get the channel arguments for an adapter.
-         @param execName The name of the executable to be analyzed.
-         @param arguments The current set of arguments to be applied. */
-        void getChannelsForAdapter(const String & execName,
-                                   const String & arguments);
-        
+         @param appInfo The description of the executable.
+         @param arguments The current set of arguments to be applied.
+         @param channels The channels that the adapter will be using.
+         @returns @c true if the channels were retrieved and @c false otherwise. */
+        bool getChannelsForAdapter(const ApplicationInfo & appInfo,
+                                   const StringArray &     arguments,
+                                   StringArray &           channels);
+
         /*! @brief Get the operational parameters for an application.
          @param execName The name of the executable to be analyzed.
          @param theInfo The retrieved parameters.
@@ -282,6 +284,9 @@ namespace ChannelManager
         /*! @brief The background private YARP launch thread. */
         ScopedPointer<YarpLaunchThread> _yarpLauncher;
         
+        /*! @brief The set of background general service launch threads. */
+        OwnedArray<AdapterLaunchThread> _adapterLaunchers;
+
         /*! @brief The set of background general service launch threads. */
         OwnedArray<GeneralServiceLaunchThread> _serviceLaunchers;
         

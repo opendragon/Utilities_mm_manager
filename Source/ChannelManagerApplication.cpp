@@ -37,6 +37,7 @@
 //--------------------------------------------------------------------------------------------------
 
 #include "ChannelManagerApplication.h"
+#include "AdapterLaunchThread.h"
 #include "EntitiesPanel.h"
 #include "GeneralServiceLaunchThread.h"
 #include "PeekInputHandler.h"
@@ -353,78 +354,166 @@ bool ChannelManagerApplication::doLaunchAnAdapter(const ApplicationInfo & appInf
 {
     OD_LOG_OBJENTER(); //####
     bool                     result = false;
+    String                   caption("Launching ");
+    Common::YarpStringVector services;
 #if MAC_OR_LINUX_
     yarp::os::impl::Logger & theLogger = Common::GetLogger();
 #endif // MAC_OR_LINUX_
-    int                      res = 0;
-    String                   appName(JUCEApplication::getInstance()->getApplicationName());
-    AlertWindow              ww(appName, "Please select the network port to be used to start the "
-                                "Registry Service (enter 0 to use the default port):",
-                                AlertWindow::NoIcon, _mainWindow);
-    
-#if MAC_OR_LINUX_
-    theLogger.warning("Adapter being launched.");
-#endif // MAC_OR_LINUX_
 
-    // Apply the '--channels' option to the executable to get the number of channels and their
-    // default values.
-    // Set up the text fields for the dialog box.
-    
-    // getChannelsForAdapter()
-    
-    //ww.addTextEditor("NetworkPort", "0", "Network port [0 for the default port]:");
-    
-    
-    
-    ww.addButton("OK", 1, KeyPress(KeyPress::returnKey, 0, 0));
-    ww.addButton("Cancel", 0, KeyPress(KeyPress::escapeKey, 0, 0));
-    
-    
-    
-    for (bool keepGoing = true; keepGoing; )
+    // First, check if the corresponding service is running:
+    caption += appInfo._description;
+    if (Utilities::GetServiceNamesFromCriteria(appInfo._criteriaOrOptions.toStdString(), services))
     {
-        res = ww.runModalLoop();
-        if (1 == res)
+        if (0 < services.size())
         {
-            // Get the command-line arguments, apply to the '--channels' option and check if any of
-            // the channels are already known - flag them if so and go again.
-            
-            // getChannelsForAdapter()
-            
-//            String portText = ww.getTextEditorContents("NetworkPort");
-//            
-//            portChoice = portText.getIntValue();
-//            if ((! portChoice) || Utilities::ValidPortNumber(portChoice))
-//            {
-//                keepGoing = false;
-//            }
-//            else
-//            {
-//                AlertWindow::showMessageBox(AlertWindow::WarningIcon, getApplicationName(),
-//                                            "The port number is invalid. "
-//                                            "Please enter a value between 1024 and 65535",
-//                                            String::empty, _mainWindow);
-//            }
+            int                                 res = 0;
+            AlertWindow                         ww(caption, "", AlertWindow::NoIcon, _mainWindow);
+            const Utilities::DescriptorVector & descriptors = appInfo._argDescriptions;
+            size_t                              numDescriptors = descriptors.size();
+            StringArray                         argsToUse;
+
+#if MAC_OR_LINUX_
+            theLogger.warning("Adapter being launched.");
+#endif // MAC_OR_LINUX_
+            if (0 < numDescriptors)
+            {
+                ww.setMessage("The adapter has one or more arguments, that need to be provided "
+                              "before it can be launched.");
+            }
+            else
+            {
+                ww.setMessage("The adapter has no arguments, so it can be launched right now.");
+            }
+            for (size_t ii = 0; numDescriptors > ii; ++ii)
+            {
+                Utilities::BaseArgumentDescriptor * aDescriptor = descriptors[ii];
+
+                if (aDescriptor)
+                {
+                    ww.addTextEditor(aDescriptor->argumentName().c_str(),
+                                     aDescriptor->getDefaultValue().c_str(),
+                                     aDescriptor->argumentDescription().c_str());
+                }
+            }
+            ww.addButton("OK", 1, KeyPress(KeyPress::returnKey, 0, 0));
+            ww.addButton("Cancel", 0, KeyPress(KeyPress::escapeKey, 0, 0));
+            for (bool keepGoing = true; keepGoing; )
+            {
+                res = ww.runModalLoop();
+                if (1 == res)
+                {
+                    StringArray channels;
+                    String      badArgs;
+                    String      badChannels;
+                    int         badCount = 0;
+
+                    argsToUse.clear();
+                    for (size_t ii = 0; numDescriptors > ii; ++ii)
+                    {
+                        Utilities::BaseArgumentDescriptor * aDescriptor = descriptors[ii];
+
+                        if (aDescriptor)
+                        {
+                            String anArg =
+                                    ww.getTextEditorContents(aDescriptor->argumentName().c_str());
+
+                            if (aDescriptor->validate(anArg.toStdString()))
+                            {
+                                argsToUse.add(anArg);
+                            }
+                            else
+                            {
+                                if (0 < badArgs.length())
+                                {
+                                    badArgs += "\n";
+                                }
+                                badArgs += aDescriptor->argumentName().c_str();
+                                ++badCount;
+                            }
+                        }
+                    }
+                    if (0 < badCount)
+                    {
+                        String message1((1 < badCount) ? "arguments are" : "argument is");
+                        String message2((1 < badCount) ? "arguments" : "argument");
+
+                        AlertWindow::showMessageBox(AlertWindow::WarningIcon, caption,
+                                                    String("The following ") + message1 +
+                                                    " invalid:\n" + badArgs + "\n" +
+                                                    String("Please correct the ") + message2 +
+                                                    " to the adapter and try again.", String::empty,
+                                                    _mainWindow);
+                    }
+                    else if (getChannelsForAdapter(appInfo, argsToUse, channels))
+                    {
+                        badCount = 0;
+                        for (int ii = 0, mm = channels.size(); mm > ii; ++ii)
+                        {
+                            String aChannel(channels[ii]);
+
+                            if (Utilities::CheckForChannel(aChannel.toStdString()))
+                            {
+                                if (0 < badChannels.length())
+                                {
+                                    badChannels += "\n";
+                                }
+                                badChannels += aChannel;
+                                ++badCount;
+                            }
+                        }
+                        if (0 < badCount)
+                        {
+                            String message1((1 < badCount) ? "channels are" : "channel is");
+
+                            AlertWindow::showMessageBox(AlertWindow::WarningIcon, caption,
+                                                        String("The following ") + message1 +
+                                                        " in use:\n" + badChannels + "\n"
+                                                        "Please correct the arguments to the "
+                                                        "adapter and try again.", String::empty,
+                                                        _mainWindow);
+                        }
+                        else
+                        {
+                            // We're good to go!
+                            keepGoing = false;
+                        }
+                    }
+                    else
+                    {
+                        AlertWindow::showMessageBox(AlertWindow::WarningIcon, caption,
+                                                    "There was a problem retrieving the channels "
+                                                    "for the adapter. "
+                                                    "Please try again.", String::empty,
+                                                    _mainWindow);
+                    }
+                }
+                else
+                {
+                    keepGoing = false;
+                }
+            }
+            if (1 == res)
+            {
+                AdapterLaunchThread * aLauncher = new AdapterLaunchThread(appInfo._applicationPath,
+                                                                          argsToUse);
+
+                if (aLauncher)
+                {
+                    _adapterLaunchers.add(aLauncher);
+                    aLauncher->startThread();
+                    doScanSoon();
+                }
+            }
         }
         else
         {
-            keepGoing = false;
+            AlertWindow::showMessageBox(AlertWindow::WarningIcon, caption,
+                                        "The service to which this adapter must attach is not "
+                                        "running on this YARP network. "
+                                        "It will not be possible to launch the adapter.",
+                                        String::empty, _mainWindow);
         }
     }
-    if (1 == res)
-    {
-        // If we get here, the command-line arguments are useable and the user has said 'go ahead'.
-        
-//        _registryServiceLauncher = new RegistryServiceLaunchThread(_registryServicePath,
-//                                                                   portChoice);
-//        if (_registryServiceLauncher)
-//        {
-//            _registryServiceLauncher->startThread();
-//            _registryServiceCanBeLaunched = false;
-//            result = true;
-//        }
-    }
-    
     OD_LOG_OBJEXIT_B(result); //####
     return result;
 } // ChannelManagerApplication::doLaunchAnAdapter
@@ -443,10 +532,9 @@ bool ChannelManagerApplication::doLaunchAService(const ApplicationInfo & appInfo
 bool ChannelManagerApplication::doLaunchOtherApplication(void)
 {
     OD_LOG_OBJENTER(); //####
-    bool      result = false;
-    int       res;
+    bool result = false;
+    int  res = _applicationMenu.show();
 
-    res = _applicationMenu.show();
     if (0 < res)
     {
         const ApplicationInfo & appInfo = _applicationList.at(res - 1);
@@ -669,49 +757,73 @@ const String ChannelManagerApplication::getApplicationVersion(void)
     return ProjectInfo::versionString;
 } // ChannelManagerApplication::getApplicationVersion
 
-bool ChannelManagerApplication::getArgumentsForApplication(const String &    execName,
-                                                           ApplicationInfo & theInfo)
+bool ChannelManagerApplication::getArgumentsForApplication(ApplicationInfo & theInfo)
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_S1s("execName = ", execName.toStdString()); //####
     OD_LOG_P1("theInfo = ", &theInfo); //####
-    bool   okSoFar = false;
-    String execPath(findPathToExecutable(execName));
+    bool         okSoFar = false;
+    ChildProcess runApplication;
+    StringArray  nameAndArgs(theInfo._applicationPath);
 
-    if (0 < execPath.length())
+    nameAndArgs.add("--args");
+    if (runApplication.start(nameAndArgs))
     {
-        ChildProcess runApplication;
-        StringArray  nameAndArgs(findPathToExecutable(execName));
+        const String childOutput(runApplication.readAllProcessOutput());
 
-        nameAndArgs.add("--args");
-        if (runApplication.start(nameAndArgs))
+        runApplication.waitForProcessToFinish(kThreadKillTime);
+        if (0 < childOutput.length())
         {
-            const String childOutput(runApplication.readAllProcessOutput());
+            StringArray aRecord(StringArray::fromTokens(childOutput, "\t", ""));
 
-            runApplication.waitForProcessToFinish(kThreadKillTime);
-            if (0 < childOutput.length())
+            // The input lines should be composed of tab-separated argument descriptions.
+            for (int ii = 0, mm = aRecord.size(); mm > ii; ++ii)
             {
-                StringArray aRecord(StringArray::fromTokens(childOutput, "\t", ""));
-
-                // The input lines should be composed of tab-separated argument descriptions.
-                for (int ii = 0, mm = aRecord.size(); mm > ii; ++ii)
-                {
-                    Common::YarpString                  argString(aRecord[ii].toStdString());
-                    Utilities::BaseArgumentDescriptor * argDesc =
+                Common::YarpString                  argString(aRecord[ii].toStdString());
+                Utilities::BaseArgumentDescriptor * argDesc =
                                                     Utilities::ConvertStringToArgument(argString);
 
-                    if (argDesc)
-                    {
-                        theInfo._argDescriptions.push_back(argDesc);
-                    }
+                if (argDesc)
+                {
+                    theInfo._argDescriptions.push_back(argDesc);
                 }
-                okSoFar = true;
             }
+            okSoFar = true;
         }
     }
     OD_LOG_OBJEXIT_B(okSoFar); //####
     return okSoFar;
 } // ChannelManagerApplication::getArgumentsForApplication
+
+bool ChannelManagerApplication::getChannelsForAdapter(const ApplicationInfo & appInfo,
+                                                      const StringArray &     arguments,
+                                                      StringArray &           channels)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P3("appInfo = ", &appInfo, "arguments = ", &arguments, "channels = ", &channels); //####
+    bool         okSoFar = false;
+    ChildProcess runApplication;
+    StringArray  nameAndArgs(appInfo._applicationPath);
+
+    nameAndArgs.add("--channels");
+    nameAndArgs.addArray(arguments);
+    if (runApplication.start(nameAndArgs))
+    {
+        const String childOutput(runApplication.readAllProcessOutput());
+
+        runApplication.waitForProcessToFinish(kThreadKillTime);
+        if (0 < childOutput.length())
+        {
+            channels = StringArray::fromTokens(childOutput, "\t", "");
+        }
+        else
+        {
+            channels.clear();
+        }
+        okSoFar = true;
+    }
+    OD_LOG_OBJEXIT_B(result); //####
+    return okSoFar;
+} // ChannelManagerApplication::getChannelsForAdapter
 
 String ChannelManagerApplication::getEnvironmentVar(const char * varName)
 {
@@ -796,15 +908,6 @@ String ChannelManagerApplication::getHomeDir(void)
     OD_LOG_EXIT_s(result.toStdString()); //####
     return result;
 } // ChannelManagerApplication::getHomeDir
-
-void ChannelManagerApplication::getChannelsForAdapter(const String & execName,
-                                                      const String & arguments)
-{
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_S2s("execName = ", execName.toStdString(), "arguments = ", arguments.toStdString()); //####
-    
-    OD_LOG_OBJEXIT(); //####
-} // ChannelManagerApplication::getChannelsForAdapter
 
 bool ChannelManagerApplication::getParametersForApplication(const String &    execName,
                                                             ApplicationInfo & theInfo)
@@ -1045,13 +1148,10 @@ void ChannelManagerApplication::loadApplicationLists(void)
         {
             ApplicationInfo theInfo;
 
-            if (getParametersForApplication(aLine, theInfo))
+            if (getParametersForApplication(aLine, theInfo) && getArgumentsForApplication(theInfo))
             {
-                if (getArgumentsForApplication(aLine, theInfo))
-                {
-                    _applicationList.push_back(theInfo);
-                    _applicationMenu.addItem(++idx, theInfo._description);
-                }
+                _applicationList.push_back(theInfo);
+                _applicationMenu.addItem(++idx, theInfo._description);
             }
         }
     }
@@ -1073,6 +1173,18 @@ void ChannelManagerApplication::shutdown(void)
 	{
 		_scanner->signalThreadShouldExit();
 	}
+    for (int ii = 0, mm = _adapterLaunchers.size(); mm > ii; ++ii)
+    {
+        AdapterLaunchThread * aLauncher = _adapterLaunchers[ii];
+
+        aLauncher->killChildProcess();
+    }
+    for (int ii = 0, mm = _serviceLaunchers.size(); mm > ii; ++ii)
+    {
+        GeneralServiceLaunchThread * aLauncher = _serviceLaunchers[ii];
+
+        aLauncher->killChildProcess();
+    }
     if (_registryServiceLauncher)
     {
         _registryServiceLauncher->killChildProcess();
@@ -1086,6 +1198,18 @@ void ChannelManagerApplication::shutdown(void)
         _scanner->stopThread(kThreadKillTime);
 		_scanner = nullptr; // shuts down thread
 	}
+    for (int ii = 0, mm = _adapterLaunchers.size(); mm > ii; ++ii)
+    {
+        AdapterLaunchThread * aLauncher = _adapterLaunchers[ii];
+
+        aLauncher->stopThread(kThreadKillTime);
+    }
+    for (int ii = 0, mm = _serviceLaunchers.size(); mm > ii; ++ii)
+    {
+        GeneralServiceLaunchThread * aLauncher = _serviceLaunchers[ii];
+
+        aLauncher->stopThread(kThreadKillTime);
+    }
     if (_registryServiceLauncher)
     {
         _registryServiceLauncher->stopThread(kThreadKillTime);
