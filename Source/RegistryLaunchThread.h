@@ -1,10 +1,10 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       GeneralServiceLaunchThread.h
+//  File:       RegistryLaunchThread.h
 //
 //  Project:    M+M
 //
-//  Contains:   The class declaration for the background general service launcher.
+//  Contains:   The class declaration for the background Registry Service launcher.
 //
 //  Written by: Norman Jaffe
 //
@@ -32,12 +32,12 @@
 //              ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 //              DAMAGE.
 //
-//  Created:    2015-05-12
+//  Created:    2015-05-07
 //
 //--------------------------------------------------------------------------------------------------
 
-#if (! defined(GeneralServiceLaunchThread_H_))
-# define GeneralServiceLaunchThread_H_ /* Header guard */
+#if (! defined(RegistryLaunchThread_H_))
+# define RegistryLaunchThread_H_ /* Header guard */
 
 # include "ChannelManagerDataTypes.h"
 
@@ -48,26 +48,26 @@
 # endif // defined(__APPLE__)
 /*! @file
  
- @brief The class declaration for the background general service launcher. */
+ @brief The class declaration for the background Registry Service launcher. */
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
 
 namespace ChannelManager
 {
-    /*! @brief A background general service launcher. */
-    class GeneralServiceLaunchThread : public Thread
+    /*! @brief A background Registry Service launcher. */
+    class RegistryLaunchThread : public Thread
     {
     public :
         
         /*! @brief The constructor.
          @param pathToExecutable The file system path for the executable.
 		 @param portNumber The network port number to use. */
-        GeneralServiceLaunchThread(const String & pathToExecutable,
-                                   const int      portNumber = 0);
-        
+        RegistryLaunchThread(const String & pathToExecutable,
+                             const int      portNumber = 0);
+
         /*! @brief The destructor. */
-        virtual ~GeneralServiceLaunchThread(void);
+        virtual ~RegistryLaunchThread(void);
         
         /*! @brief Perform the background scan. */
         virtual void run(void);
@@ -88,19 +88,19 @@ namespace ChannelManager
         /*! @brief The class that this class is derived from. */
         typedef Thread inherited;
         
-        /*! @brief The running background service process. */
-        ScopedPointer<ChildProcess> _serviceProcess;
+        /*! @brief The running Registry Service process. */
+        ScopedPointer<ChildProcess> _registryServiceProcess;
         
         /*! @brief The file system path to the executable. */
-        String _servicePath;
+        String _registryServicePath;
 
 		/*! @brief The network port number to use. */
-		int _servicePort;
+		int _registryServicePort;
         
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(GeneralServiceLaunchThread)
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RegistryLaunchThread)
         
-    }; // GeneralServiceLaunchThread
+    }; // RegistryLaunchThread
     
 } // ChannelManager
 
-#endif // ! defined(GeneralServiceLaunchThread_H_)
+#endif // ! defined(RegistryLaunchThread_H_)

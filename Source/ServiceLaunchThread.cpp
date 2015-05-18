@@ -1,10 +1,10 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       GeneralServiceLaunchThread.cpp
+//  File:       ServiceLaunchThread.cpp
 //
 //  Project:    M+M
 //
-//  Contains:   The class declaration for the background general service launcher.
+//  Contains:   The class declaration for the background service launcher.
 //
 //  Written by: Norman Jaffe
 //
@@ -36,7 +36,7 @@
 //
 //--------------------------------------------------------------------------------------------------
 
-#include "GeneralServiceLaunchThread.h"
+#include "ServiceLaunchThread.h"
 
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
@@ -53,7 +53,7 @@
 
 /*! @file
  
- @brief The class declaration for the background general service launcher. */
+ @brief The class declaration for the background service launcher. */
 #if defined(__APPLE__)
 # pragma clang diagnostic pop
 #endif // defined(__APPLE__)
@@ -86,30 +86,36 @@ using namespace std;
 # pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
-GeneralServiceLaunchThread::GeneralServiceLaunchThread(const String & pathToExecutable,
-                                                       const int      portNumber) :
-	inherited("General service launcher"), _serviceProcess(nullptr), _servicePath(pathToExecutable),
-    _servicePort(portNumber)
+ServiceLaunchThread::ServiceLaunchThread(const String &      pathToExecutable,
+                                         const String &      endpointName,
+                                         const String &      tag,
+                                         const String &      portNumber,
+                                         const StringArray & arguments) :
+	inherited("General service launcher"), _serviceProcess(nullptr), _serviceEndpoint(endpointName),
+    _servicePath(pathToExecutable), _servicePort(portNumber), _serviceTag(tag),
+    _arguments(arguments)
 {
     OD_LOG_ENTER(); //####
-	OD_LOG_S1s("pathToExecutable = ", pathToExecutable.toStdString()); //####
-    OD_LOG_LL1("portNumber = ", portNumber); //####
+	OD_LOG_S4s("pathToExecutable = ", pathToExecutable.toStdString(), "endpointName = ", //####
+               endpointName.toStdString(), "tag = ", tag.toStdString(), "portNumber = ", //####
+               portNumber.toStdString()); //####
+    OD_LOG_P1("arguments = ", &arguments); //####
     OD_LOG_EXIT_P(this); //####
-} // GeneralServiceLaunchThread::GeneralServiceLaunchThread
+} // ServiceLaunchThread::ServiceLaunchThread
 
-GeneralServiceLaunchThread::~GeneralServiceLaunchThread(void)
+ServiceLaunchThread::~ServiceLaunchThread(void)
 {
     OD_LOG_OBJENTER(); //####
 	killChildProcess();
 	_serviceProcess = nullptr;
     OD_LOG_OBJEXIT(); //####
-} // GeneralServiceLaunchThread::~GeneralServiceLaunchThread
+} // ServiceLaunchThread::~ServiceLaunchThread
 
 #if defined(__APPLE__)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-void GeneralServiceLaunchThread::killChildProcess(void)
+void ServiceLaunchThread::killChildProcess(void)
 {
 	OD_LOG_OBJENTER(); //####
 	if (_serviceProcess)
@@ -117,9 +123,9 @@ void GeneralServiceLaunchThread::killChildProcess(void)
 		_serviceProcess->kill();
 	}
 	OD_LOG_OBJEXIT(); //####
-} // GeneralServiceLaunchThread::killChildProcess
+} // ServiceLaunchThread::killChildProcess
 
-void GeneralServiceLaunchThread::run(void)
+void ServiceLaunchThread::run(void)
 {
     OD_LOG_OBJENTER(); //####
     _serviceProcess = new ChildProcess;
@@ -128,11 +134,27 @@ void GeneralServiceLaunchThread::run(void)
         OD_LOG("(_serviceProcess)"); //####
         StringArray nameAndArgs(_servicePath);
 
-        if (0 < _servicePort)
+        if (0 < _servicePort.length())
         {
-            OD_LOG("(0 < _servicePort)"); //####
+            OD_LOG("(0 < _servicePort.length())"); //####
             nameAndArgs.add("--port");
-            nameAndArgs.add(String(_servicePort));
+            nameAndArgs.add(_servicePort);
+        }
+        if (0 < _serviceTag.length())
+        {
+            OD_LOG("(0 < _serviceTag())"); //####
+            nameAndArgs.add("--tag");
+            nameAndArgs.add(_serviceTag);
+        }
+        if (0 < _serviceEndpoint.length())
+        {
+            OD_LOG("(0 < _serviceEndpoint())"); //####
+            nameAndArgs.add("--endpoint");
+            nameAndArgs.add(_serviceEndpoint);
+        }
+        if (0 < _arguments.size())
+        {
+            nameAndArgs.addArray(_arguments);
         }
         if (_serviceProcess->start(nameAndArgs, 0))
         {
@@ -143,7 +165,7 @@ void GeneralServiceLaunchThread::run(void)
         }
     }
     OD_LOG_OBJEXIT(); //####
-} // GeneralServiceLaunchThread::run
+} // ServiceLaunchThread::run
 
 #if defined(__APPLE__)
 # pragma mark Global functions

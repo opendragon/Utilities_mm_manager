@@ -75,10 +75,10 @@
 namespace ChannelManager
 {
     class AdapterLaunchThread;
-    class GeneralServiceLaunchThread;
     class PeekInputHandler;
-    class RegistryServiceLaunchThread;
+    class RegistryLaunchThread;
     class ScannerThread;
+    class ServiceLaunchThread;
     class YarpLaunchThread;
     
     /*! @brief The application object of the application. */
@@ -221,7 +221,7 @@ namespace ChannelManager
          @returns @c true if the operational arguments were retrieved and @c false otherwise. */
         bool getArgumentsForApplication(ApplicationInfo & theInfo);
 
-        /*! @brief Get the channel arguments for an adapter.
+        /*! @brief Get the channels for an adapter.
          @param appInfo The description of the executable.
          @param arguments The current set of arguments to be applied.
          @param channels The channels that the adapter will be using.
@@ -236,6 +236,21 @@ namespace ChannelManager
          @returns @c true if the operational parameters were retrieved and @c false otherwise. */
         bool getParametersForApplication(const String &    execName,
                                          ApplicationInfo & theInfo);
+
+        /*! @brief Get the primary channel for a service.
+         @param appInfo The description of the executable.
+         @param endpointName The endpoint to use, if not the default.
+         @param tag The tag to use, if any.
+         @param portNumber The network port number to use.
+         @param arguments The current set of arguments to be applied.
+         @param channel The channel that the service will be using.
+         @returns @c true if the channel was retrieved and @c false otherwise. */
+        bool getPrimaryChannelForService(const ApplicationInfo & appInfo,
+                                         const String &          endpointName,
+                                         const String &          tag,
+                                         const String &          portNumber,
+                                         const StringArray &     arguments,
+                                         String &                channelName);
 
         /*! @brief Load the text files containing the standard and user-defined applications, and
          set up for later use. */
@@ -279,7 +294,7 @@ namespace ChannelManager
         ScopedPointer<ScannerThread> _scanner;
         
         /*! @brief The background Registry Service launch thread. */
-        ScopedPointer<RegistryServiceLaunchThread> _registryServiceLauncher;
+        ScopedPointer<RegistryLaunchThread> _registryLauncher;
 
         /*! @brief The background private YARP launch thread. */
         ScopedPointer<YarpLaunchThread> _yarpLauncher;
@@ -288,7 +303,7 @@ namespace ChannelManager
         OwnedArray<AdapterLaunchThread> _adapterLaunchers;
 
         /*! @brief The set of background general service launch threads. */
-        OwnedArray<GeneralServiceLaunchThread> _serviceLaunchers;
+        OwnedArray<ServiceLaunchThread> _serviceLaunchers;
         
         /*! @brief The list of launchable applications. */
         ApplicationList _applicationList;

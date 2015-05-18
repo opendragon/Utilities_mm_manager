@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       RegistryServiceLaunchThread.cpp
+//  File:       RegistryLaunchThread.cpp
 //
 //  Project:    M+M
 //
@@ -36,7 +36,7 @@
 //
 //--------------------------------------------------------------------------------------------------
 
-#include "RegistryServiceLaunchThread.h"
+#include "RegistryLaunchThread.h"
 
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
@@ -86,8 +86,8 @@ using namespace std;
 # pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
-RegistryServiceLaunchThread::RegistryServiceLaunchThread(const String & pathToExecutable,
-                                                         const int      portNumber) :
+RegistryLaunchThread::RegistryLaunchThread(const String & pathToExecutable,
+                                           const int      portNumber) :
 	inherited("Registry Service launcher"), _registryServiceProcess(nullptr),
     _registryServicePath(pathToExecutable), _registryServicePort(portNumber)
 {
@@ -95,21 +95,21 @@ RegistryServiceLaunchThread::RegistryServiceLaunchThread(const String & pathToEx
 	OD_LOG_S1s("pathToExecutable = ", pathToExecutable.toStdString()); //####
     OD_LOG_LL1("portNumber = ", portNumber); //####
     OD_LOG_EXIT_P(this); //####
-} // RegistryServiceLaunchThread::RegistryServiceLaunchThread
+} // RegistryLaunchThread::RegistryLaunchThread
 
-RegistryServiceLaunchThread::~RegistryServiceLaunchThread(void)
+RegistryLaunchThread::~RegistryLaunchThread(void)
 {
     OD_LOG_OBJENTER(); //####
 	killChildProcess();
 	_registryServiceProcess = nullptr;
     OD_LOG_OBJEXIT(); //####
-} // RegistryServiceLaunchThread::~RegistryServiceLaunchThread
+} // RegistryLaunchThread::~RegistryLaunchThread
 
 #if defined(__APPLE__)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-void RegistryServiceLaunchThread::killChildProcess(void)
+void RegistryLaunchThread::killChildProcess(void)
 {
 	OD_LOG_OBJENTER(); //####
 	if (_registryServiceProcess)
@@ -117,9 +117,9 @@ void RegistryServiceLaunchThread::killChildProcess(void)
 		_registryServiceProcess->kill();
 	}
 	OD_LOG_OBJEXIT(); //####
-} // RegistryServiceLaunchThread::killChildProcess
+} // RegistryLaunchThread::killChildProcess
 
-void RegistryServiceLaunchThread::run(void)
+void RegistryLaunchThread::run(void)
 {
     OD_LOG_OBJENTER(); //####
     _registryServiceProcess = new ChildProcess;
@@ -143,7 +143,7 @@ void RegistryServiceLaunchThread::run(void)
         }
     }
     OD_LOG_OBJEXIT(); //####
-} // RegistryServiceLaunchThread::run
+} // RegistryLaunchThread::run
 
 #if defined(__APPLE__)
 # pragma mark Global functions
