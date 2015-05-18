@@ -215,18 +215,25 @@ namespace ChannelManager
          @returns @c true if the service was launched and @c false otherwise. */
         bool doLaunchAService(const ApplicationInfo & appInfo);
         
+        /*! @brief Get the operational arguments for an application.
+         @param execName The name of the executable to be analyzed.
+         @param theInfo The retrieved parameters.
+         @returns @c true if the operational arguments were retrieved and @c false otherwise. */
+        bool getArgumentsForApplication(const String &    execName,
+                                        ApplicationInfo & theInfo);
+
         /*! @brief Get the channel arguments for an adapter.
          @param execName The name of the executable to be analyzed.
          @param arguments The current set of arguments to be applied. */
         void getChannelsForAdapter(const String & execName,
                                    const String & arguments);
         
-        /*! @brief Get the operational parameters for an application and add them to the list of
-         applications.
+        /*! @brief Get the operational parameters for an application.
          @param execName The name of the executable to be analyzed.
-         @param menuIndex The position in the application menu where the item is to go. */
-        void getParametersForApplication(const String & execName,
-                                         int &          menuIndex);
+         @param theInfo The retrieved parameters.
+         @returns @c true if the operational parameters were retrieved and @c false otherwise. */
+        bool getParametersForApplication(const String &    execName,
+                                         ApplicationInfo & theInfo);
 
         /*! @brief Load the text files containing the standard and user-defined applications, and
          set up for later use. */

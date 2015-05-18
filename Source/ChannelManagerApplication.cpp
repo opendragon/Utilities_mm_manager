@@ -669,6 +669,50 @@ const String ChannelManagerApplication::getApplicationVersion(void)
     return ProjectInfo::versionString;
 } // ChannelManagerApplication::getApplicationVersion
 
+bool ChannelManagerApplication::getArgumentsForApplication(const String &    execName,
+                                                           ApplicationInfo & theInfo)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_S1s("execName = ", execName.toStdString()); //####
+    OD_LOG_P1("theInfo = ", &theInfo); //####
+    bool   okSoFar = false;
+    String execPath(findPathToExecutable(execName));
+
+    if (0 < execPath.length())
+    {
+        ChildProcess runApplication;
+        StringArray  nameAndArgs(findPathToExecutable(execName));
+
+        nameAndArgs.add("--args");
+        if (runApplication.start(nameAndArgs))
+        {
+            const String childOutput(runApplication.readAllProcessOutput());
+
+            runApplication.waitForProcessToFinish(kThreadKillTime);
+            if (0 < childOutput.length())
+            {
+                StringArray aRecord(StringArray::fromTokens(childOutput, "\t", ""));
+
+                // The input lines should be composed of tab-separated argument descriptions.
+                for (int ii = 0, mm = aRecord.size(); mm > ii; ++ii)
+                {
+                    Common::YarpString                  argString(aRecord[ii].toStdString());
+                    Utilities::BaseArgumentDescriptor * argDesc =
+                                                    Utilities::ConvertStringToArgument(argString);
+
+                    if (argDesc)
+                    {
+                        theInfo._argDescriptions.push_back(argDesc);
+                    }
+                }
+                okSoFar = true;
+            }
+        }
+    }
+    OD_LOG_OBJEXIT_B(okSoFar); //####
+    return okSoFar;
+} // ChannelManagerApplication::getArgumentsForApplication
+
 String ChannelManagerApplication::getEnvironmentVar(const char * varName)
 {
     OD_LOG_ENTER(); //####
@@ -693,7 +737,7 @@ ChannelManagerApplication::JuceStringMap ChannelManagerApplication::getEnvironme
     char *             varChar = *environ;
 #else // ! defined(__APPLE__)
     yarp::os::Property vars(yarp::os::impl::SystemInfo::getPlatformInfo().environmentVars);
-    YarpString         varsAsString(vars.toString());
+    Common::YarpString varsAsString(vars.toString());
     yarp::os::Bottle   varsAsBottle(varsAsString);
 #endif // ! defined(__APPLE__)
 
@@ -762,12 +806,13 @@ void ChannelManagerApplication::getChannelsForAdapter(const String & execName,
     OD_LOG_OBJEXIT(); //####
 } // ChannelManagerApplication::getChannelsForAdapter
 
-void ChannelManagerApplication::getParametersForApplication(const String & execName,
-                                                            int &          menuIndex)
+bool ChannelManagerApplication::getParametersForApplication(const String &    execName,
+                                                            ApplicationInfo & theInfo)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("execName = ", execName.toStdString()); //####
-    OD_LOG_LL1("menuIndex = ", menuIndex); //####
+    OD_LOG_P1("theInfo = ", &theInfo); //####
+    bool   okSoFar = false;
     String execPath(findPathToExecutable(execName));
     
     if (0 < execPath.length())
@@ -788,35 +833,34 @@ void ChannelManagerApplication::getParametersForApplication(const String & execN
                 // The input lines should be composed of three tab-separated items:
                 // 0) Type ('Service' or 'Adapter')
                 // 1) Allowed options (if 'Service') or matching criteria (if 'Adapter')
-                // 2) Expected arguments, if any
-                // 3) Description
-                if (4 <= aRecord.size())
+                // 2) Description
+                if (3 <= aRecord.size())
                 {
-                    ApplicationInfo theInfo;
-                    String          execKind(aRecord[0]);
+                    String execKind(aRecord[0]);
                     
-                    theInfo._applicationPath = nameAndArgs[0];
-                    theInfo._criteriaOrOptions = aRecord[1];
-                    theInfo._argumentList = aRecord[2];
-                    theInfo._description = aRecord[3];
-                    theInfo._shortName = execName;
                     if (execKind == "Adapter")
                     {
                         theInfo._kind = kApplicationAdapter;
-                        _applicationList.push_back(theInfo);
-                        _applicationMenu.addItem(++menuIndex, theInfo._description);
+                        okSoFar = true;
                     }
                     else if (execKind == "Service")
                     {
                         theInfo._kind = kApplicationService;
-                        _applicationList.push_back(theInfo);
-                        _applicationMenu.addItem(++menuIndex, theInfo._description);
+                        okSoFar = true;
+                    }
+                    if (okSoFar)
+                    {
+                        theInfo._applicationPath = nameAndArgs[0];
+                        theInfo._criteriaOrOptions = aRecord[1];
+                        theInfo._description = aRecord[2];
+                        theInfo._shortName = execName;
                     }
                 }
             }
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    OD_LOG_OBJEXIT_B(okSoFar); //####
+    return okSoFar;
 } // ChannelManagerApplication::getParametersForApplication
 
 String ChannelManagerApplication::getRealName(void)
@@ -999,7 +1043,16 @@ void ChannelManagerApplication::loadApplicationLists(void)
         
         if ('#' != aLine[0])
         {
-            getParametersForApplication(aLine, idx);
+            ApplicationInfo theInfo;
+
+            if (getParametersForApplication(aLine, theInfo))
+            {
+                if (getArgumentsForApplication(aLine, theInfo))
+                {
+                    _applicationList.push_back(theInfo);
+                    _applicationMenu.addItem(++idx, theInfo._description);
+                }
+            }
         }
     }
     OD_LOG_OBJEXIT(); //####

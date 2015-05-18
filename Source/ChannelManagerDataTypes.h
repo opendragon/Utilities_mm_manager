@@ -224,14 +224,14 @@ namespace ChannelManager
     /*! @brief The information used to launch an application. */
     struct ApplicationInfo
     {
+        /*! @brief The argument descriptions for the application. */
+        MplusM::Utilities::DescriptorVector _argDescriptions;
+
         /*! @brief The file system path to the application. */
         String _applicationPath;
  
         /*! @brief The matching criteria (if an Adapter) or supported options (if a Service). */
         String _criteriaOrOptions;
-        
-        /*! @brief The expected arguments, if any, for the application. */
-        String _argumentList;
         
         /*! @brief The description provided by the application. */
         String _description;
