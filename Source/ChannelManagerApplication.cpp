@@ -1050,22 +1050,30 @@ String ChannelManagerApplication::getEnvironmentVar(const char * varName)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_S1("varName = ", varName); //####
-    String                        result;
-    JuceStringMap                 envVars(getEnvironmentVars());
-    JuceStringMap::const_iterator it(envVars.find(varName));
+    String           result;
+    YarpStringVector keys;
+    YarpStringVector values;
+    YarpString       match(varName);
     
-    if (envVars.end() != it)
+    getEnvironmentVars(keys, values);
+    for (size_t ii = 0, mm = keys.size(); mm > ii; ++ii)
     {
-        result = it->second;
+        if (match == keys[ii])
+        {
+            result = values[ii].c_str();
+            break;
+        }
+        
     }
     OD_LOG_EXIT_s(result.toStdString()); //####
     return result;
 } // ChannelManagerApplication::getEnvironmentVar
 
-ChannelManagerApplication::JuceStringMap ChannelManagerApplication::getEnvironmentVars(void)
+void ChannelManagerApplication::getEnvironmentVars(YarpStringVector & keys,
+                                                   YarpStringVector & values)
 {
     OD_LOG_ENTER(); //####
-    JuceStringMap      result;
+    OD_LOG_P1("result = ", result);
 #if defined(__APPLE__)
     char *             varChar = *environ;
 #else // ! defined(__APPLE__)
@@ -1074,6 +1082,8 @@ ChannelManagerApplication::JuceStringMap ChannelManagerApplication::getEnvironme
     yarp::os::Bottle   varsAsBottle(varsAsString);
 #endif // ! defined(__APPLE__)
 
+    keys.clear();
+    values.clear();
 #if defined(__APPLE__)
     for (int ii = 0; varChar; ++ii)
     {
@@ -1082,8 +1092,8 @@ ChannelManagerApplication::JuceStringMap ChannelManagerApplication::getEnvironme
         
         if (std::string::npos != equalsSign)
         {
-            result.insert(JuceStringMap::value_type(tmpVariable.substr(0, equalsSign),
-                                                    tmpVariable.substr(equalsSign + 1)));
+            keys.push_back(tmpVariable.substr(0, equalsSign));
+            values.push_back(tmpVariable.substr(equalsSign + 1));
         }
         varChar = *(environ + ii);
     }
@@ -1108,8 +1118,8 @@ ChannelManagerApplication::JuceStringMap ChannelManagerApplication::getEnvironme
                     
                     if ((0 < keyString.length()) && (0 < valueString.length()))
                     {
-                        result.insert(JuceStringMap::value_type(keyString.c_str(),
-                                                                valueString.c_str()));
+                        keys.push_back(keyString);
+                        values.push_back(valueString);
                     }
                 }
             }
@@ -1117,7 +1127,6 @@ ChannelManagerApplication::JuceStringMap ChannelManagerApplication::getEnvironme
     }
 #endif // ! defined(__APPLE__)
     OD_LOG_EXIT(); //####
-    return result;
 } // ChannelManagerApplication::getEnvironmentVars
 
 String ChannelManagerApplication::getHomeDir(void)

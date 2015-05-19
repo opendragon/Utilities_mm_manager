@@ -86,9 +86,6 @@ namespace ChannelManager
     {
     public :
         
-        /*! @brief A mapping from Strings to Strings. */
-        typedef std::map<String, String> JuceStringMap;
-        
         /*! @brief The constructor. */
         ChannelManagerApplication(void);
         
@@ -158,9 +155,15 @@ namespace ChannelManager
          @returns The value of the system environment variable, or an empty value. */
         static String getEnvironmentVar(const char * varName);
         
-        /*! @brief Return the set of system environment variables.
-         @returns The set of system environment variables. */
-        static JuceStringMap getEnvironmentVars(void);
+        /*! @brief Collect the set of system environment variables.
+         
+         Note that the generated code for a std::map of String, String includes illegal instructions
+         when end() is referenced, so we are using a pair of simple vectors - performance is not
+         critical, since the environment variables are only used once.
+         @param keys The list of environment variable names.
+         @param values The list of environment variable values. */
+        static void getEnvironmentVars(YarpStringVector & keys,
+                                       YarpStringVector & values);
         
         /*! @brief Return the home directory of the current user.
          @returns The home directory of the current user. */
