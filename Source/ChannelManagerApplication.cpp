@@ -92,11 +92,6 @@ using namespace MplusM;
 using namespace std;
 
 #if defined(__APPLE__)
-/*! @brief The system environment variable table. */
-extern char * * environ;
-#endif // __APPLE__
-
-#if defined(__APPLE__)
 # pragma mark Private structures, constants and variables
 #endif // defined(__APPLE__)
 
@@ -1074,9 +1069,7 @@ void ChannelManagerApplication::getEnvironmentVars(YarpStringVector & keys,
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P1("result = ", result);
-#if defined(__APPLE__)
-    char *             varChar = *environ;
-#else // ! defined(__APPLE__)
+#if (! defined(__APPLE__))
     yarp::os::Property vars(yarp::os::impl::SystemInfo::getPlatformInfo().environmentVars);
     YarpString         varsAsString(vars.toString());
     yarp::os::Bottle   varsAsBottle(varsAsString);
@@ -1085,17 +1078,39 @@ void ChannelManagerApplication::getEnvironmentVars(YarpStringVector & keys,
     keys.clear();
     values.clear();
 #if defined(__APPLE__)
-    for (int ii = 0; varChar; ++ii)
+    // Since neither the 'environ' global variable nor the 'getenv()' function contain a useable
+    // set of environment variables, we will cheat - launch a command shell, indicating that it is
+    // an interactive, login shell, with a single command 'set'; this will cause various files to
+    // be loaded that set the shell environment... giving us a useable set of environment variables.
+    String       execPath("/bin/sh");
+    ChildProcess runApplication;
+    StringArray  nameAndArgs(execPath);
+    
+    nameAndArgs.add("-i");
+    nameAndArgs.add("-l");
+    nameAndArgs.add("-c");
+    nameAndArgs.add("set");
+    if (runApplication.start(nameAndArgs))
     {
-        std::string tmpVariable(varChar);
-        size_t      equalsSign = tmpVariable.find("=");
+        const String childOutput(runApplication.readAllProcessOutput());
         
-        if (std::string::npos != equalsSign)
+        runApplication.waitForProcessToFinish(kThreadKillTime);
+        if (0 < childOutput.length())
         {
-            keys.push_back(tmpVariable.substr(0, equalsSign));
-            values.push_back(tmpVariable.substr(equalsSign + 1));
+            StringArray aRecord(StringArray::fromTokens(childOutput, "\n", ""));
+            
+            for (int ii = 0, mm = aRecord.size(); mm > ii; ++ii)
+            {
+                std::string tmpVariable(aRecord[ii].toStdString());
+                size_t      equalsSign = tmpVariable.find("=");
+                
+                if (std::string::npos != equalsSign)
+                {
+                    keys.push_back(tmpVariable.substr(0, equalsSign));
+                    values.push_back(tmpVariable.substr(equalsSign + 1));
+                }
+            }
         }
-        varChar = *(environ + ii);
     }
 #else // ! defined(__APPLE__)
     for (int ii = 0, numVars = varsAsBottle.size(); numVars > ii; ++ii)
@@ -1151,7 +1166,7 @@ bool ChannelManagerApplication::getParametersForApplication(const String &    ex
     if (0 < execPath.length())
     {
         ChildProcess runApplication;
-        StringArray  nameAndArgs(findPathToExecutable(execName));
+        StringArray  nameAndArgs(execPath);
         
         nameAndArgs.add("--info");
         if (runApplication.start(nameAndArgs))
