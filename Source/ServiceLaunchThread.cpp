@@ -90,16 +90,18 @@ ServiceLaunchThread::ServiceLaunchThread(const String &      pathToExecutable,
                                          const String &      endpointName,
                                          const String &      tag,
                                          const String &      portNumber,
-                                         const StringArray & arguments) :
+                                         const StringArray & arguments,
+                                         const bool          needsGo) :
 	inherited("General service launcher"), _serviceProcess(nullptr), _serviceEndpoint(endpointName),
     _servicePath(pathToExecutable), _servicePort(portNumber), _serviceTag(tag),
-    _arguments(arguments)
+    _arguments(arguments), _needsGo(needsGo)
 {
     OD_LOG_ENTER(); //####
 	OD_LOG_S4s("pathToExecutable = ", pathToExecutable.toStdString(), "endpointName = ", //####
                endpointName.toStdString(), "tag = ", tag.toStdString(), "portNumber = ", //####
                portNumber.toStdString()); //####
     OD_LOG_P1("arguments = ", &arguments); //####
+    OD_LOG_B1("needsGo = ", needsGo); //####
     OD_LOG_EXIT_P(this); //####
 } // ServiceLaunchThread::ServiceLaunchThread
 
@@ -151,6 +153,11 @@ void ServiceLaunchThread::run(void)
             OD_LOG("(0 < _serviceEndpoint())"); //####
             nameAndArgs.add("--endpoint");
             nameAndArgs.add(_serviceEndpoint);
+        }
+        if (_needsGo)
+        {
+            OD_LOG("(_needsGo)"); //####
+            nameAndArgs.add("--go");
         }
         if (0 < _arguments.size())
         {

@@ -134,9 +134,9 @@ namespace ChannelManager
          @param services The set of detected services.
          @param checker A function that provides for early exit from loops.
          @param checkStuff The private data for the early exit function. */
-        void addServices(const MplusM::Common::YarpStringVector & services,
-                         MplusM::Common::CheckFunction            checker = nullptr,
-                         void *                                   checkStuff = nullptr);
+        void addServices(const YarpStringVector &      services,
+                         MplusM::Common::CheckFunction checker = nullptr,
+                         void *                        checkStuff = nullptr);
         
         /*! @brief Request access for reading from shared resources.
          @returns @c true if the read lock has been acquired and @c false otherwise. */
@@ -152,10 +152,10 @@ namespace ChannelManager
          @param checker A function that provides for early exit from loops.
          @param checkStuff The private data for the early exit function.
          @returns The allowed directions for the port. */
-        PortDirection determineDirection(ChannelEntry *                     oldEntry,
-                                         const MplusM::Common::YarpString & portName,
-                                         MplusM::Common::CheckFunction      checker = nullptr,
-                                         void *                             checkStuff = nullptr);
+        PortDirection determineDirection(ChannelEntry *                oldEntry,
+                                         const YarpString &            portName,
+                                         MplusM::Common::CheckFunction checker = nullptr,
+                                         void *                        checkStuff = nullptr);
         
         /*! @brief Identify the YARP network entities.
          @param detectedPorts The ports found by YARP.
@@ -213,11 +213,11 @@ namespace ChannelManager
         
         /*! @brief The name of the port used to determine if a port being checked can be used as an
          output. */
-        MplusM::Common::YarpString _inputOnlyPortName;
+        YarpString _inputOnlyPortName;
         
         /*! @brief The name of the port used to determine if a port being checked can be used as an
          input. */
-        MplusM::Common::YarpString _outputOnlyPortName;
+        YarpString _outputOnlyPortName;
         
 # if (defined(CHECK_FOR_STALE_PORTS) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS)))
         /*! @brief The time when the last stale removal occurred. */

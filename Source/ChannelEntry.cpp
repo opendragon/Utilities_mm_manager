@@ -456,9 +456,9 @@ static void drawConnection(Graphics &          gg,
  @param ignoreConstraints @c true if the protocols don't have to match.
  @returns @c true if the protocols permit a connection to be made and @c false
  otherwise. */
-static bool protocolsMatch(const Common::YarpString & sourceProtocol,
-                           const Common::YarpString & destinationProtocol,
-                           const bool                 ignoreConstraints)
+static bool protocolsMatch(const YarpString & sourceProtocol,
+                           const YarpString & destinationProtocol,
+                           const bool         ignoreConstraints)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_S2s("sourceProtocol = ", sourceProtocol, "destinationProtocol = ", //####
@@ -490,13 +490,13 @@ static bool protocolsMatch(const Common::YarpString & sourceProtocol,
 # pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
-ChannelEntry::ChannelEntry(ChannelContainer *         parent,
-                           const Common::YarpString & portName,
-                           const Common::YarpString & portNumber,
-                           const Common::YarpString & portProtocol,
-                           const Common::YarpString & protocolDescription,
-                           const PortUsage            portKind,
-                           const PortDirection        direction) :
+ChannelEntry::ChannelEntry(ChannelContainer *  parent,
+                           const YarpString &  portName,
+                           const YarpString &  portNumber,
+                           const YarpString &  portProtocol,
+                           const YarpString &  protocolDescription,
+                           const PortUsage     portKind,
+                           const PortDirection direction) :
     inherited(), _portName(portName), _portPortNumber(portNumber), _portProtocol(portProtocol),
     _protocolDescription(protocolDescription), _parent(parent), _direction(direction),
     _usage(portKind), _beingMonitored(false), _drawActivityMarker(false), _drawConnectMarker(false),
@@ -508,7 +508,7 @@ ChannelEntry::ChannelEntry(ChannelContainer *         parent,
                portProtocol, "protocolDescription = ", protocolDescription); //####
     OD_LOG_LL2("portKind = ", portKind, "direction = ", direction); //####
     Font &             textFont = getOwningPanel().getNormalFont();
-    Common::YarpString prefix;
+    YarpString prefix;
     
     switch (_direction)
     {
@@ -797,9 +797,9 @@ void ChannelEntry::displayInformation(const bool isChannel,
 {
     OD_LOG_ENTER(); //####
     OD_LOG_B2("isChannel = ", isChannel, "moreDetails = ", moreDetails); //####
-    Common::YarpString dirText;
-    Common::YarpString prefix;
-    Common::YarpString suffix;
+    YarpString dirText;
+    YarpString prefix;
+    YarpString suffix;
     
     switch (_direction)
     {
@@ -847,7 +847,7 @@ void ChannelEntry::displayInformation(const bool isChannel,
     }
     if (0 < getProtocol().length())
     {
-        suffix = Common::YarpString("\n\nProtocol = '") + getProtocol() + "'";
+        suffix = YarpString("\n\nProtocol = '") + getProtocol() + "'";
         if (moreDetails)
         {
             if (0 < getProtocolDescription().length())
@@ -857,7 +857,7 @@ void ChannelEntry::displayInformation(const bool isChannel,
             }
         }
     }
-    Common::YarpString bodyText("Port: ");
+    YarpString bodyText("Port: ");
     
     bodyText += getPortNumber() + "\n";
     bodyText += prefix + dirText + (isChannel ? " channel" : " port") + suffix;
@@ -965,7 +965,7 @@ const
     return result;
 } // ChannelEntry::getPositionInPanel
 
-bool ChannelEntry::hasOutgoingConnectionTo(const Common::YarpString & otherPort)
+bool ChannelEntry::hasOutgoingConnectionTo(const YarpString & otherPort)
 const
 {
     OD_LOG_OBJENTER(); //####
@@ -1033,7 +1033,7 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
         if (firstRemovePort != this)
         {
             // Check if we can end here.
-            Common::YarpString firstName(firstRemovePort->getPortName());
+            YarpString firstName(firstRemovePort->getPortName());
             
             // Check if we can end here.
             firstRemovePort->clearDisconnectMarker();
@@ -1061,8 +1061,8 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
         if (firstAddPort != this)
         {
             // Check if we can end here.
-            Common::YarpString firstName(firstAddPort->getPortName());
-            Common::YarpString firstProtocol(firstAddPort->getProtocol());
+            YarpString firstName(firstAddPort->getPortName());
+            YarpString firstProtocol(firstAddPort->getProtocol());
             
             // Check if we can end here.
             firstAddPort->clearConnectMarker();
@@ -1181,8 +1181,8 @@ void ChannelEntry::mouseUp(const MouseEvent & ee)
             if (endEntry && (endEntry != this))
             {
                 // Check if we can end here.
-                Common::YarpString secondName(endEntry->getPortName());
-                Common::YarpString secondProtocol(endEntry->getProtocol());
+                YarpString secondName(endEntry->getPortName());
+                YarpString secondProtocol(endEntry->getProtocol());
 
                 if ((kPortDirectionOutput != endEntry->getDirection()) &&
                     (kPortUsageService != endEntry->getUsage()) &&

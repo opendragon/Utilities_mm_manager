@@ -420,7 +420,7 @@ void EntitiesPanel::drawConnections(Graphics & gg)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::drawConnections
 
-ChannelContainer * EntitiesPanel::findKnownEntity(const Common::YarpString & name)
+ChannelContainer * EntitiesPanel::findKnownEntity(const YarpString & name)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("name = ", name); //####
@@ -432,7 +432,7 @@ ChannelContainer * EntitiesPanel::findKnownEntity(const Common::YarpString & nam
         
         if (anEntity)
         {
-            Common::YarpString entityName(anEntity->getName().toStdString().c_str());
+            YarpString entityName(anEntity->getName().toStdString().c_str());
             
             if (name == entityName)
             {
@@ -446,7 +446,7 @@ ChannelContainer * EntitiesPanel::findKnownEntity(const Common::YarpString & nam
     return result;
 } // EntitiesPanel::findKnownEntity
 
-ChannelEntry * EntitiesPanel::findKnownPort(const Common::YarpString & name)
+ChannelEntry * EntitiesPanel::findKnownPort(const YarpString & name)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("name = ", name); //####
@@ -471,7 +471,7 @@ void EntitiesPanel::forgetPort(ChannelEntry * aPort)
     OD_LOG_P1("aPort = ", aPort); //####
     if (aPort)
     {
-        Common::YarpString        aPortName(aPort->getName().toStdString().c_str());
+        YarpString                aPortName(aPort->getName().toStdString().c_str());
         ChannelEntryMap::iterator match(_knownPorts.find(aPortName));
         
         if (_knownPorts.end() == match)

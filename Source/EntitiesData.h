@@ -70,9 +70,9 @@ namespace ChannelManager
          @param inName The name of the destination port.
          @param outName The name of the source port.
          @param mode The mode of the connection. */
-        void addConnection(const MplusM::Common::YarpString & inName,
-                           const MplusM::Common::YarpString & outName,
-                           MplusM::Common::ChannelMode        mode);
+        void addConnection(const YarpString &          inName,
+                           const YarpString &          outName,
+                           MplusM::Common::ChannelMode mode);
          
         /*! @brief Add an entity to the list of known entities.
          @param anEntity The entity to be added. */

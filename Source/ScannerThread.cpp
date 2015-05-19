@@ -97,9 +97,9 @@ static const int64 kMinStaleInterval = 60000;
  @param ipAddress The IP address of the port.
  @param ipPort The IP port of the port. */
 static void findMatchingIpAddressAndPort(const Utilities::PortVector & detectedPorts,
-                                         const Common::YarpString &    portName,
-                                         Common::YarpString &          ipAddress,
-                                         Common::YarpString &          ipPort)
+                                         const YarpString &            portName,
+                                         YarpString &                  ipAddress,
+                                         YarpString &                  ipPort)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P3("detectedPorts = ", &detectedPorts, "ipAddress = ", &ipAddress, "ipPort = ", //####
@@ -109,7 +109,7 @@ static void findMatchingIpAddressAndPort(const Utilities::PortVector & detectedP
     for (Utilities::PortVector::const_iterator walker(detectedPorts.begin());
          detectedPorts.end() != walker; ++walker)
     {
-        Common::YarpString walkerName(walker->_portName);
+        YarpString walkerName(walker->_portName);
         
         if (portName == walkerName)
         {
@@ -126,16 +126,16 @@ static void findMatchingIpAddressAndPort(const Utilities::PortVector & detectedP
  @param combined The combined IP address and port number.
  @param ipAddress The IP address of the port.
  @param ipPort The IP port of the port. */
-static void splitCombinedAddressAndPort(const Common::YarpString & combined,
-                                        Common::YarpString &       ipAddress,
-                                        Common::YarpString &       ipPort)
+static void splitCombinedAddressAndPort(const YarpString & combined,
+                                        YarpString &       ipAddress,
+                                        YarpString &       ipPort)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_S1s("combined = ", combined); //####
     OD_LOG_P2("ipAddress = ", &ipAddress, "ipPort = ", &ipPort); //####
     size_t splitPos = combined.find(":");
     
-    if (Common::YarpString::npos == splitPos)
+    if (YarpString::npos == splitPos)
     {
         ipAddress = ipPort = "";
     }
@@ -237,8 +237,8 @@ void ScannerThread::addEntities(const Utilities::PortVector & detectedPorts)
          (_detectedServices.end() != outer) && (! threadShouldExit()); ++outer)
     {
         Utilities::ServiceDescriptor descriptor(outer->second);
-        Common::YarpString           ipAddress;
-        Common::YarpString           ipPort;
+        YarpString                   ipAddress;
+        YarpString                   ipPort;
         EntityData *                 anEntity = new EntityData(kContainerKindService,
                                                                descriptor._serviceName,
                                                                descriptor._kind,
@@ -282,30 +282,30 @@ void ScannerThread::addEntities(const Utilities::PortVector & detectedPorts)
          (_associatedPorts.end() != outer) && (! threadShouldExit()); ++outer)
     {
         // The key is 'ipaddress:port'
-        Common::YarpString                 ipAddress;
-        Common::YarpString                 ipPort;
+        YarpString                         ipAddress;
+        YarpString                         ipPort;
         PortData *                         aPort;
         EntityData *                       anEntity = new EntityData(kContainerKindClientOrAdapter,
                                                                      outer->first, "", "", "");
         const Utilities::PortAssociation & associates = outer->second._associates;
-        const Common::YarpStringVector &   assocInputs = associates._inputs;
-        const Common::YarpStringVector &   assocOutputs = associates._outputs;
+        const YarpStringVector &           assocInputs = associates._inputs;
+        const YarpStringVector &           assocOutputs = associates._outputs;
         
         splitCombinedAddressAndPort(outer->first, ipAddress, ipPort);
         anEntity->setIPAddress(ipAddress);
-        for (Common::YarpStringVector::const_iterator inner = assocInputs.begin();
+        for (YarpStringVector::const_iterator inner = assocInputs.begin();
              (assocInputs.end() != inner) && (! threadShouldExit()); ++inner)
         {
-            Common::YarpString innerPort;
+            YarpString innerPort;
             
             findMatchingIpAddressAndPort(detectedPorts, *inner, ipAddress, innerPort);
             aPort = anEntity->addPort(*inner, "", "", kPortUsageOther, kPortDirectionInput);
             aPort->setPortNumber(innerPort);
         }
-        for (Common::YarpStringVector::const_iterator inner = assocOutputs.begin();
+        for (YarpStringVector::const_iterator inner = assocOutputs.begin();
              (assocOutputs.end() != inner) && (! threadShouldExit()); ++inner)
         {
-            Common::YarpString innerPort;
+            YarpString innerPort;
             
             findMatchingIpAddressAndPort(detectedPorts, *inner, ipAddress, innerPort);
             aPort = anEntity->addPort(*inner, "", "", kPortUsageOther, kPortDirectionOutput);
@@ -321,11 +321,10 @@ void ScannerThread::addEntities(const Utilities::PortVector & detectedPorts)
          (_standalonePorts.end() != walker) && (! threadShouldExit()); ++walker)
     {
         // The key is 'ipaddress:port'
-        Common::YarpString ipAddress;
-        Common::YarpString ipPort;
-        EntityData *       anEntity = new EntityData(kContainerKindOther, walker->first, "", "",
-                                                     "");
-        PortUsage          usage;
+        YarpString   ipAddress;
+        YarpString   ipPort;
+        EntityData * anEntity = new EntityData(kContainerKindOther, walker->first, "", "", "");
+        PortUsage    usage;
         
         splitCombinedAddressAndPort(walker->first, ipAddress, ipPort);
         anEntity->setIPAddress(ipAddress);
@@ -364,7 +363,7 @@ void ScannerThread::addPortConnections(const Utilities::PortVector & detectedPor
     for (Utilities::PortVector::const_iterator outer(detectedPorts.begin());
          (detectedPorts.end() != outer) && (! threadShouldExit()); ++outer)
     {
-        Common::YarpString outerName(outer->_portName);
+        YarpString outerName(outer->_portName);
         
         if (_rememberedPorts.end() != _rememberedPorts.find(outerName))
         {
@@ -377,7 +376,7 @@ void ScannerThread::addPortConnections(const Utilities::PortVector & detectedPor
             for (Common::ChannelVector::const_iterator inner(outputs.begin());
                  (outputs.end() != inner) && (! threadShouldExit()); ++inner)
             {
-                Common::YarpString innerName(inner->_portName);
+                YarpString innerName(inner->_portName);
                 
                 if (_rememberedPorts.end() != _rememberedPorts.find(innerName))
                 {
@@ -401,7 +400,7 @@ void ScannerThread::addPortsWithAssociates(const Utilities::PortVector & detecte
     for (Utilities::PortVector::const_iterator outer(detectedPorts.begin());
          (detectedPorts.end() != outer) && (! threadShouldExit()); ++outer)
     {
-        Common::YarpString outerName(outer->_portName);
+        YarpString outerName(outer->_portName);
         
         if (_rememberedPorts.end() == _rememberedPorts.find(outerName))
         {
@@ -412,22 +411,21 @@ void ScannerThread::addPortsWithAssociates(const Utilities::PortVector & detecte
             {
                 if (associates._associates._primary)
                 {
-                    Common::YarpString caption(outer->_portIpAddress + ":" +
-                                               outer->_portPortNumber);
+                    YarpString caption(outer->_portIpAddress + ":" + outer->_portPortNumber);
                     
                     associates._name = outerName;
                     _associatedPorts[caption] = associates;
                     _rememberedPorts.insert(outerName);
-                    Common::YarpStringVector & assocInputs = associates._associates._inputs;
-                    Common::YarpStringVector & assocOutputs = associates._associates._outputs;
+                    YarpStringVector & assocInputs = associates._associates._inputs;
+                    YarpStringVector & assocOutputs = associates._associates._outputs;
                     
-                    for (Common::YarpStringVector::const_iterator inner = assocInputs.begin();
+                    for (YarpStringVector::const_iterator inner = assocInputs.begin();
                          (assocInputs.end() != inner) && (! threadShouldExit()); ++inner)
                     {
                         _rememberedPorts.insert(*inner);
                         yield();
                     }
-                    for (Common::YarpStringVector::const_iterator inner = assocOutputs.begin();
+                    for (YarpStringVector::const_iterator inner = assocOutputs.begin();
                          (assocOutputs.end() != inner) && (! threadShouldExit()); ++inner)
                     {
                         _rememberedPorts.insert(*inner);
@@ -451,14 +449,14 @@ void ScannerThread::addRegularPortEntities(const Utilities::PortVector & detecte
     for (Utilities::PortVector::const_iterator walker(detectedPorts.begin());
          (detectedPorts.end() != walker) && (! threadShouldExit()); ++walker)
     {
-        Common::YarpString walkerName(walker->_portName);
+        YarpString walkerName(walker->_portName);
         
         if (_rememberedPorts.end() == _rememberedPorts.find(walkerName))
         {
-            EntitiesPanel &    entitiesPanel(_window.getEntitiesPanel());
-            Common::YarpString caption(walker->_portIpAddress + ":" + walker->_portPortNumber);
-            NameAndDirection   info;
-            ChannelEntry *     oldEntry = entitiesPanel.findKnownPort(walkerName);
+            EntitiesPanel &  entitiesPanel(_window.getEntitiesPanel());
+            YarpString       caption(walker->_portIpAddress + ":" + walker->_portPortNumber);
+            NameAndDirection info;
+            ChannelEntry *   oldEntry = entitiesPanel.findKnownPort(walkerName);
             
             _rememberedPorts.insert(walkerName);
             info._name = walkerName;
@@ -470,17 +468,17 @@ void ScannerThread::addRegularPortEntities(const Utilities::PortVector & detecte
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::addRegularPortEntities
 
-void ScannerThread::addServices(const Common::YarpStringVector & services,
-                                Common::CheckFunction            checker,
-                                void *                           checkStuff)
+void ScannerThread::addServices(const YarpStringVector & services,
+                                Common::CheckFunction    checker,
+                                void *                   checkStuff)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P2("services = ", &services, "checkStuff = ", checkStuff); //####
     _detectedServices.clear();
-    for (Common::YarpStringVector::const_iterator outer(services.begin());
+    for (YarpStringVector::const_iterator outer(services.begin());
          (services.end() != outer) && (! threadShouldExit()); ++outer)
     {
-        Common::YarpString outerName(*outer);
+        YarpString outerName(*outer);
         
         if (_detectedServices.end() == _detectedServices.find(outerName))
         {
@@ -552,10 +550,10 @@ bool ScannerThread::conditionallyAcquireForWrite(void)
     return result;
 } // ScannerThread::conditionallyAcquireForWrite
 
-PortDirection ScannerThread::determineDirection(ChannelEntry *             oldEntry,
-                                                const Common::YarpString & portName,
-                                                Common::CheckFunction      checker,
-                                                void *                     checkStuff)
+PortDirection ScannerThread::determineDirection(ChannelEntry *        oldEntry,
+                                                const YarpString &    portName,
+                                                Common::CheckFunction checker,
+                                                void *                checkStuff)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("portName = ", portName); //####
@@ -730,8 +728,8 @@ bool ScannerThread::gatherEntities(Utilities::PortVector & detectedPorts,
     }
     if (okSoFar)
     {
-        bool                     servicesSeen;
-        Common::YarpStringVector services;
+        bool             servicesSeen;
+        YarpStringVector services;
 
         _associatedPorts.clear();
         _detectedServices.clear();
@@ -1008,8 +1006,8 @@ void ScannerThread::run(void)
                         
 #if MAC_OR_LINUX_
                         buff << ((loopEndTime - loopStartTime) / 1000.0);
-                        theLogger.info(Common::YarpString("actual interval = ") + buff.str() +
-                                       Common::YarpString(" seconds"));
+                        theLogger.info(YarpString("actual interval = ") + buff.str() +
+                                       YarpString(" seconds"));
 #else // ! MAC_OR_LINUX_
 #endif // ! MAC_OR_LINUX_
                         yield();

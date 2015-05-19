@@ -88,7 +88,7 @@ static const Colour & kWindowBackgroundColour(Colours::lightgrey);
 # pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
-ChannelManagerWindow::ChannelManagerWindow(const Common::YarpString & title)  :
+ChannelManagerWindow::ChannelManagerWindow(const YarpString & title)  :
     inherited1(), inherited2(title.c_str(), kWindowBackgroundColour, inherited2::allButtons),
     _contentPanel(new ContentPanel(this)), _scannerThread(nullptr)
 {

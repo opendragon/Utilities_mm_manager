@@ -104,7 +104,7 @@ extern char * * environ;
 static bool lExitRequested = false;
 
 /*! @brief The number of milliseconds before a thread is force-killed. */
-static const int kThreadKillTime = 5000;
+static const int kThreadKillTime = 3000;
 
 #if defined(__APPLE__)
 # pragma mark Global constants and variables
@@ -214,13 +214,13 @@ yarp::os::Network * ChannelManagerApplication::checkForYarpAndLaunchIfDesired(vo
         // If YARP is installed, give the option of running a private copy.
         if (validateYarp())
         {
-            char                     ipBuffer[INET_ADDRSTRLEN + 1];
-            const char *             ipAddressAsString = nullptr;
-            struct in_addr           serverAddress;
-            int                      serverPort = 10000;
-            String                   selectedIpAddress;
-            String                   serverPortAsString;
-            Common::YarpStringVector ipAddressVector;
+            char             ipBuffer[INET_ADDRSTRLEN + 1];
+            const char *     ipAddressAsString = nullptr;
+            struct in_addr   serverAddress;
+            int              serverPort = 10000;
+            String           selectedIpAddress;
+            String           serverPortAsString;
+            YarpStringVector ipAddressVector;
             
 #if MAC_OR_LINUX_
             theLogger.warning("Private YARP network being launched.");
@@ -247,7 +247,7 @@ yarp::os::Network * ChannelManagerApplication::checkForYarpAndLaunchIfDesired(vo
             
             for (unsigned ii = 0; ipAddressVector.size() > ii; ++ii)
             {
-                Common::YarpString anAddress(ipAddressVector[ii]);
+                YarpString anAddress(ipAddressVector[ii]);
                 
                 ipAddressArray.add(anAddress.c_str());
                 if (anAddress == ipAddressAsString)
@@ -356,7 +356,7 @@ bool ChannelManagerApplication::doLaunchAnAdapter(const ApplicationInfo & appInf
     OD_LOG_OBJENTER(); //####
     bool                     result = false;
     String                   caption("Launching ");
-    Common::YarpStringVector services;
+    YarpStringVector         services;
 #if MAC_OR_LINUX_
     yarp::os::impl::Logger & theLogger = Common::GetLogger();
 #endif // MAC_OR_LINUX_
@@ -553,8 +553,9 @@ bool ChannelManagerApplication::doLaunchAService(const ApplicationInfo & appInfo
     const char *                        portFieldName = "$$$port$$$";
     const char *                        tagFieldName = "$$$tag$$$";
     bool                                canSetEndpoint;
-    bool                                canSetPort = false;
-    bool                                canSetTag = false;
+    bool                                canSetPort;
+    bool                                canSetTag;
+    bool                                needsGo;
     int                                 res = 0;
     AlertWindow                         ww(caption, "", AlertWindow::NoIcon, _mainWindow);
     const Utilities::DescriptorVector & descriptors = appInfo._argDescriptions;
@@ -570,6 +571,7 @@ bool ChannelManagerApplication::doLaunchAService(const ApplicationInfo & appInfo
     canSetEndpoint = appInfo._criteriaOrOptions.contains("e");
     canSetPort = appInfo._criteriaOrOptions.contains("p");
     canSetTag = appInfo._criteriaOrOptions.contains("t");
+    needsGo = appInfo._criteriaOrOptions.contains("g");
     if ((0 < numDescriptors) || canSetEndpoint || canSetPort || canSetTag)
     {
         ww.setMessage("The service has one or more arguments, that need to be provided before it "
@@ -736,7 +738,7 @@ bool ChannelManagerApplication::doLaunchAService(const ApplicationInfo & appInfo
     {
         ServiceLaunchThread * aLauncher = new ServiceLaunchThread(appInfo._applicationPath,
                                                                   endpointToUse, tagToUse,
-                                                                  portToUse, argsToUse);
+                                                                  portToUse, argsToUse, needsGo);
 
         if (aLauncher)
         {
@@ -997,7 +999,7 @@ bool ChannelManagerApplication::getArgumentsForApplication(ApplicationInfo & the
             // The input lines should be composed of tab-separated argument descriptions.
             for (int ii = 0, mm = aRecord.size(); mm > ii; ++ii)
             {
-                Common::YarpString                  argString(aRecord[ii].toStdString());
+                YarpString                          argString(aRecord[ii].toStdString());
                 Utilities::BaseArgumentDescriptor * argDesc =
                                                     Utilities::ConvertStringToArgument(argString);
 
@@ -1068,7 +1070,7 @@ ChannelManagerApplication::JuceStringMap ChannelManagerApplication::getEnvironme
     char *             varChar = *environ;
 #else // ! defined(__APPLE__)
     yarp::os::Property vars(yarp::os::impl::SystemInfo::getPlatformInfo().environmentVars);
-    Common::YarpString varsAsString(vars.toString());
+    YarpString         varsAsString(vars.toString());
     yarp::os::Bottle   varsAsBottle(varsAsString);
 #endif // ! defined(__APPLE__)
 
@@ -1376,9 +1378,8 @@ void ChannelManagerApplication::initialise(const String & commandLine)
             _peeker->setReporter(reporter);
             _peeker->getReport(reporter);
 #endif // defined(MpM_ReportOnConnections)
-            Common::YarpString peekName = Common::GetRandomChannelName(HIDDEN_CHANNEL_PREFIX
-                                                                       "peek_/"
-                                                                       DEFAULT_CHANNEL_ROOT);
+            YarpString peekName = Common::GetRandomChannelName(HIDDEN_CHANNEL_PREFIX "peek_/"
+                                                               DEFAULT_CHANNEL_ROOT);
             
             if (_peeker->openWithRetries(peekName, STANDARD_WAIT_TIME))
             {
@@ -1421,14 +1422,25 @@ void ChannelManagerApplication::loadApplicationLists(void)
     {
         String aLine(lines[ii]);
         
-        if ('#' != aLine[0])
+        if (0 < aLine.length())
         {
-            ApplicationInfo theInfo;
-
-            if (getParametersForApplication(aLine, theInfo) && getArgumentsForApplication(theInfo))
+            if ('#' == aLine[0])
             {
-                _applicationList.push_back(theInfo);
-                _applicationMenu.addItem(++idx, theInfo._description);
+                if ((1 < aLine.length()) && ('-' == aLine[1]))
+                {
+                    _applicationMenu.addSeparator();
+                }
+            }
+            else
+            {
+                ApplicationInfo theInfo;
+                
+                if (getParametersForApplication(aLine, theInfo) &&
+                    getArgumentsForApplication(theInfo))
+                {
+                    _applicationList.push_back(theInfo);
+                    _applicationMenu.addItem(++idx, theInfo._description);
+                }
             }
         }
     }

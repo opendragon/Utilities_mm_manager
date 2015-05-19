@@ -77,10 +77,10 @@ namespace ChannelManager
          @param replyMechanism @c nullptr if no reply is expected and non-@c nullptr otherwise.
          @param numBytes The number of bytes available on the connection.
          @returns @c true if the input was correctly structured and successfully processed. */
-        virtual bool handleInput(const yarp::os::Bottle &           input,
-                                 const MplusM::Common::YarpString & senderChannel,
-                                 yarp::os::ConnectionWriter *       replyMechanism,
-                                 const size_t                       numBytes);
+        virtual bool handleInput(const yarp::os::Bottle &     input,
+                                 const YarpString &           senderChannel,
+                                 yarp::os::ConnectionWriter * replyMechanism,
+                                 const size_t                 numBytes);
         
     protected :
         

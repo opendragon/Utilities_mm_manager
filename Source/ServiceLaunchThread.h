@@ -65,12 +65,14 @@ namespace ChannelManager
          @param endpointName The endpoint to use, if not the default.
          @param tag The tag to use, if any.
          @param portNumber The network port number to use.
-         @param arguments The arguments to the service. */
+         @param arguments The arguments to the service.
+         @param needsGo @c true if a '--go' option should be used with the executable. */
         ServiceLaunchThread(const String &      pathToExecutable,
                             const String &      endpointName,
                             const String &      tag,
                             const String &      portNumber,
-                            const StringArray & arguments);
+                            const StringArray & arguments,
+                            const bool          needsGo);
 
         /*! @brief The destructor. */
         virtual ~ServiceLaunchThread(void);
@@ -112,6 +114,9 @@ namespace ChannelManager
         /*! @brief The arguments to the executable. */
         StringArray _arguments;
 
+        /*! @brief @c true if the '--go' option should be used. */
+        bool _needsGo;
+        
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ServiceLaunchThread)
         
     }; // ServiceLaunchThread

@@ -98,9 +98,9 @@ EntitiesData::~EntitiesData(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-void EntitiesData::addConnection(const Common::YarpString & inName,
-                                 const Common::YarpString & outName,
-                                 Common::ChannelMode        mode)
+void EntitiesData::addConnection(const YarpString &  inName,
+                                 const YarpString &  outName,
+                                 Common::ChannelMode mode)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S2s("inName = ", inName, "outName = ", outName); //####

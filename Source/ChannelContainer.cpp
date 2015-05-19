@@ -99,13 +99,13 @@ static const Colour & kHeadingTextColour(Colours::white);
 # pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
-ChannelContainer::ChannelContainer(const ContainerKind        kind,
-                                   const Common::YarpString & title,
-                                   const Common::YarpString & ipAddress,
-                                   const Common::YarpString & behaviour,
-                                   const Common::YarpString & description,
-                                   const Common::YarpString & requests,
-                                   EntitiesPanel &            owner) :
+ChannelContainer::ChannelContainer(const ContainerKind kind,
+                                   const YarpString &  title,
+                                   const YarpString &  ipAddress,
+                                   const YarpString &  behaviour,
+                                   const YarpString &  description,
+                                   const YarpString &  requests,
+                                   EntitiesPanel &     owner) :
     inherited(title.c_str()), _behaviour(behaviour), _description(description),
     _IPAddress(ipAddress), _requests(requests),
 #if defined(USE_OGDF_POSITIONING)
@@ -150,12 +150,12 @@ ChannelContainer::~ChannelContainer(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-ChannelEntry * ChannelContainer::addPort(const Common::YarpString & portName,
-                                         const Common::YarpString & portNumber,
-                                         const Common::YarpString & portProtocol,
-                                         const Common::YarpString & protocolDescription,
-                                         const PortUsage            portKind,
-                                         const PortDirection        direction)
+ChannelEntry * ChannelContainer::addPort(const YarpString &  portName,
+                                         const YarpString &  portNumber,
+                                         const YarpString &  portProtocol,
+                                         const YarpString &  protocolDescription,
+                                         const PortUsage     portKind,
+                                         const PortDirection direction)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S4s("portName = ", portName, "portNumber = ", portNumber, "portProtocol = ", //####
@@ -275,7 +275,7 @@ void ChannelContainer::displayInformation(const bool moreDetails)
     OD_LOG_OBJENTER(); //####
     OD_LOG_B1("moreDetails = ", moreDetails); //####
     // Popup of description.
-    Common::YarpString thePanelDescription;
+    YarpString thePanelDescription;
     
     switch (_kind)
     {
@@ -301,7 +301,7 @@ void ChannelContainer::displayInformation(const bool moreDetails)
     bodyText += thePanelDescription.c_str();
     if (moreDetails)
     {
-        Common::YarpString requests;
+        YarpString requests;
         
         switch (_kind)
         {

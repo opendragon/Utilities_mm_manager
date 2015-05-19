@@ -81,11 +81,11 @@ using namespace MplusM;
 # pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
-EntityData::EntityData(const ContainerKind        kind,
-                       const Common::YarpString & name,
-                       const Common::YarpString & behaviour,
-                       const Common::YarpString & description,
-                       const Common::YarpString & requests) :
+EntityData::EntityData(const ContainerKind kind,
+                       const YarpString &  name,
+                       const YarpString &  behaviour,
+                       const YarpString &  description,
+                       const YarpString &  requests) :
     _behaviour(behaviour), _description(description), _IPAddress(), _name(name),
     _requests(requests), _kind(kind)
 {
@@ -116,11 +116,11 @@ EntityData::~EntityData(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-PortData * EntityData::addPort(const Common::YarpString & portName,
-                               const Common::YarpString & portProtocol,
-                               const Common::YarpString & protocolDescription,
-                               const PortUsage            portKind,
-                               const PortDirection        direction)
+PortData * EntityData::addPort(const YarpString &  portName,
+                               const YarpString &  portProtocol,
+                               const YarpString &  protocolDescription,
+                               const PortUsage     portKind,
+                               const PortDirection direction)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S3s("portName = ", portName, "portProtocol = ", portProtocol, //####

@@ -107,7 +107,7 @@ PeekInputHandler::~PeekInputHandler(void)
 # pragma warning(disable: 4100)
 #endif // ! MAC_OR_LINUX_
 bool PeekInputHandler::handleInput(const yarp::os::Bottle &     input,
-                                   const Common::YarpString &   senderChannel,
+                                   const YarpString &           senderChannel,
                                    yarp::os::ConnectionWriter * replyMechanism,
                                    const size_t                 numBytes)
 {
@@ -133,7 +133,7 @@ bool PeekInputHandler::handleInput(const yarp::os::Bottle &     input,
             if (argValue.isString())
             {
                 ChannelManagerApplication * ourApp = ChannelManagerApplication::getApp();
-                Common::YarpString          argAsString(argValue.toString());
+                YarpString                  argAsString(argValue.toString());
                 
                 if (ourApp)
                 {

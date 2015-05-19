@@ -674,7 +674,7 @@ void ContentPanel::rememberPositionOfEntity(ChannelContainer * anEntity)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("anEntity = ", anEntity); //####
-    Common::YarpString entityName(anEntity->getName().toStdString());
+    YarpString entityName(anEntity->getName().toStdString());
 
     _rememberedPositions[entityName] = anEntity->getPositionInPanel();
     OD_LOG_OBJEXIT(); //####
@@ -713,8 +713,8 @@ void ContentPanel::saveEntityPositions(void)
              _rememberedPositions.end() != walker; ++walker)
         {
             std::stringstream  buff;
-            Common::YarpString tag = walker->first;
-            Position           where = walker->second;
+            YarpString tag = walker->first;
+            Position   where = walker->second;
 
             buff << "\t" << where.x << "\t" << where.y << std::endl;
             settingsFile.appendText(tag.c_str());
@@ -818,7 +818,7 @@ void ContentPanel::setEntityPositions(void)
                     {
                         OD_LOG("(aContainer->isNew() || aContainer->wasHidden())"); //####
                         // Check if the position was already known
-                        Common::YarpString          entityName(aContainer->getName().toStdString());
+                        YarpString                  entityName(aContainer->getName().toStdString());
                         PositionMap::const_iterator match(_rememberedPositions.find(entityName));
                         
                         if (_rememberedPositions.end() == match)
@@ -935,7 +935,7 @@ void ContentPanel::setEntityPositions(void)
                             if (aNode)
                             {
                                 // Check if the position was already known
-                                Common::YarpString entityName(aContainer->getName().toStdString());
+                                YarpString entityName(aContainer->getName().toStdString());
                                 
                                 if (_rememberedPositions.end() ==
                                                             _rememberedPositions.find(entityName))
@@ -965,7 +965,7 @@ void ContentPanel::setEntityPositions(void)
                 juce::Rectangle<float>      entityShape(aContainer->getLocalBounds().toFloat());
                 float                       hh = entityShape.getHeight();
                 float                       ww = entityShape.getWidth();
-                Common::YarpString          entityName(aContainer->getName().toStdString());
+                YarpString                  entityName(aContainer->getName().toStdString());
                 PositionMap::const_iterator match(_rememberedPositions.find(entityName));
 
                 if (_rememberedPositions.end() == match)
@@ -1000,7 +1000,7 @@ void ContentPanel::setEntityPositions(void)
             juce::Rectangle<float>      entityShape(aContainer->getLocalBounds().toFloat());
             float                       hh = entityShape.getHeight();
             float                       ww = entityShape.getWidth();
-            Common::YarpString          entityName(aContainer->getName().toStdString());
+            YarpString                  entityName(aContainer->getName().toStdString());
             PositionMap::const_iterator match(_rememberedPositions.find(entityName));
             
             if (_rememberedPositions.end() == match)

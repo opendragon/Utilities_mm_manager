@@ -262,10 +262,10 @@ namespace ChannelManager
     struct ConnectionDetails
     {
         /*! @brief The name of the destination port. */
-        MplusM::Common::YarpString _inPortName;
+        YarpString _inPortName;
         
         /*! @brief The name of the source port. */
-        MplusM::Common::YarpString _outPortName;
+        YarpString _outPortName;
         
         /*! @brief The mode of the connection. */
         MplusM::Common::ChannelMode _mode;
@@ -276,7 +276,7 @@ namespace ChannelManager
     struct NameAndDirection
     {
         /*! @brief The name of the port. */
-        MplusM::Common::YarpString _name;
+        YarpString _name;
         
         /*! @brief The direction of the port. */
         PortDirection _direction;
@@ -287,7 +287,7 @@ namespace ChannelManager
     struct PortAndAssociates
     {
         /*! @brief The name of the port. */
-        MplusM::Common::YarpString _name;
+        YarpString _name;
         
         /*! @brief The associates of the port. */
         MplusM::Utilities::PortAssociation _associates;
@@ -312,7 +312,7 @@ namespace ChannelManager
     typedef Point<float> Position;
     
     /*! @brief A mapping from port names to associates. */
-    typedef std::map<MplusM::Common::YarpString, PortAndAssociates> AssociatesMap;
+    typedef std::map<YarpString, PortAndAssociates> AssociatesMap;
     
     /*! @brief The set of connections to the channel. */
     typedef std::vector<ChannelInfo> ChannelConnections;
@@ -330,10 +330,10 @@ namespace ChannelManager
     typedef std::vector<EntityData *> EntitiesList;
     
     /*! @brief A mapping from strings to channels. */
-    typedef std::map<MplusM::Common::YarpString, ChannelEntry *> ChannelEntryMap;
+    typedef std::map<YarpString, ChannelEntry *> ChannelEntryMap;
     
     /*! @brief A mapping from strings to ports. */
-    typedef std::map<MplusM::Common::YarpString, PortData *> PortDataMap;
+    typedef std::map<YarpString, PortData *> PortDataMap;
     
     /*! @brief A collection of ports. */
     typedef std::vector<PortData *> Ports;
@@ -342,16 +342,16 @@ namespace ChannelManager
     typedef std::vector<PortInfo> PortConnections;
     
     /*! @brief A collection of port names. */
-    typedef std::set<MplusM::Common::YarpString> PortSet;
+    typedef std::set<YarpString> PortSet;
     
     /*! @brief A mapping from entity names to positions. */
-    typedef std::map<MplusM::Common::YarpString, Position> PositionMap;
+    typedef std::map<YarpString, Position> PositionMap;
     
     /*! @brief A mapping from strings to service descriptions. */
-    typedef std::map<MplusM::Common::YarpString, MplusM::Utilities::ServiceDescriptor> ServiceMap;
+    typedef std::map<YarpString, MplusM::Utilities::ServiceDescriptor> ServiceMap;
     
     /*! @brief A collection of singular port names. */
-    typedef std::map<MplusM::Common::YarpString, NameAndDirection> SingularPortMap;
+    typedef std::map<YarpString, NameAndDirection> SingularPortMap;
     
 } // ChannelManager
 

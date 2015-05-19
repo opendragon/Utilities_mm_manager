@@ -67,11 +67,11 @@ namespace ChannelManager
          @param protocolDescription The description of the protocol.
          @param portKind What the port will be used for.
          @param direction The primary direction of the port. */
-        PortData(const MplusM::Common::YarpString & portName,
-                 const MplusM::Common::YarpString & portProtocol,
-                 const MplusM::Common::YarpString & protocolDescription,
-                 const PortUsage                    portKind,
-                 const PortDirection                direction = kPortDirectionInput);
+        PortData(const YarpString &  portName,
+                 const YarpString &  portProtocol,
+                 const YarpString &  protocolDescription,
+                 const PortUsage     portKind,
+                 const PortDirection direction = kPortDirectionInput);
         
         /*! @brief The destructor. */
         virtual ~PortData(void);
@@ -114,7 +114,7 @@ namespace ChannelManager
         
         /*! @brief Return the name of the associated port.
          @returns The name of the associated port. */
-        inline MplusM::Common::YarpString getPortName(void)
+        inline YarpString getPortName(void)
         const
         {
             return _portName;
@@ -122,7 +122,7 @@ namespace ChannelManager
         
         /*! @brief Return the port number of the associated port.
          @returns The port number of the associated port. */
-        inline MplusM::Common::YarpString getPortNumber(void)
+        inline YarpString getPortNumber(void)
         const
         {
             return _portPortNumber;
@@ -130,7 +130,7 @@ namespace ChannelManager
         
         /*! @brief Return the protocol of the associated port.
          @returns The protocol of the associated port. */
-        inline MplusM::Common::YarpString getProtocol(void)
+        inline YarpString getProtocol(void)
         const
         {
             return _portProtocol;
@@ -138,7 +138,7 @@ namespace ChannelManager
         
         /*! @brief Return the description of the protocol for the associated port.
          @returns The description of the protocol for the associated port. */
-        inline MplusM::Common::YarpString getProtocolDescription(void)
+        inline YarpString getProtocolDescription(void)
         const
         {
             return _protocolDescription;
@@ -155,7 +155,7 @@ namespace ChannelManager
         /*! @brief Returns @c true if there is an outgoing connection to the named port.
          @param otherPort The name of the destination port.
          @returns @c true if there is an outgoing connection to the named port. */
-        bool hasOutgoingConnectionTo(const MplusM::Common::YarpString & otherPort)
+        bool hasOutgoingConnectionTo(const YarpString & otherPort)
         const;
         
         /*! @brief Mark all the connections as invalid. */
@@ -192,7 +192,7 @@ namespace ChannelManager
         
         /*! @brief Set the port number of the port.
          @param newPortNumber The port number of the port. */
-        inline void setPortNumber(const MplusM::Common::YarpString & newPortNumber)
+        inline void setPortNumber(const YarpString & newPortNumber)
         {
             _portPortNumber = newPortNumber;
         } // setPortNumber
@@ -216,16 +216,16 @@ namespace ChannelManager
         PortConnections _outputConnections;
         
         /*! @brief The name of the associated port. */
-        MplusM::Common::YarpString _portName;
+        YarpString _portName;
         
         /*! @brief The IP port number for the port. */
-        MplusM::Common::YarpString _portPortNumber;
+        YarpString _portPortNumber;
         
         /*! @brief The protocol of the associated port. */
-        MplusM::Common::YarpString _portProtocol;
+        YarpString _portProtocol;
         
         /*! @brief The description of the protocol of the associated port. */
-        MplusM::Common::YarpString _protocolDescription;
+        YarpString _protocolDescription;
         
         /*! @brief The primary direction for connections to the port. */
         PortDirection _direction;

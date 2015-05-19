@@ -108,12 +108,12 @@ namespace ChannelManager
         /*! @brief Find an entity in the currently-displayed list by name.
          @param name The name of the entity.
          @returns @c nullptr if the entity cannot be found and non-@c nullptr if it is found. */
-        ChannelContainer * findKnownEntity(const MplusM::Common::YarpString & name);
+        ChannelContainer * findKnownEntity(const YarpString & name);
         
         /*! @brief Find a port in the to-be-displayed list by name.
          @param name The name of the port.
          @returns @c nullptr if the port cannot be found and non-@c nullptr if it is found. */
-        ChannelEntry * findKnownPort(const MplusM::Common::YarpString & name);
+        ChannelEntry * findKnownPort(const YarpString & name);
         
         /*! @brief Remove a port from the set of known ports.
          @param aPort The port to be removed. */

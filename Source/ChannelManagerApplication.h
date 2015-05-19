@@ -243,7 +243,7 @@ namespace ChannelManager
          @param tag The tag to use, if any.
          @param portNumber The network port number to use.
          @param arguments The current set of arguments to be applied.
-         @param channel The channel that the service will be using.
+         @param channelName The channel that the service will be using.
          @returns @c true if the channel was retrieved and @c false otherwise. */
         bool getPrimaryChannelForService(const ApplicationInfo & appInfo,
                                          const String &          endpointName,
@@ -261,14 +261,12 @@ namespace ChannelManager
         void restoreYarpConfiguration(void);
         
         /*! @brief Check if the Registry Service can be launched and if the user wishes it to be.
-         @param execPath The file system path to the Registry Service executable.
          @returns @c true if the user requests that the Registry Service be started and @ c false
          if the YARP executable is invalid or the user does not want to launch the Registry
          Service. */
         bool validateRegistryService(void);
         
         /*! @brief Check if YARP can be launched and if the user wishes it to be.
-         @param execPath The file system path to the YARP executable.
          @returns @c true if the user requests that a private YARP network be set up and @ c false
          if the YARP executable is invalid or the user does not want a private YARP network. */
         bool validateYarp(void);
