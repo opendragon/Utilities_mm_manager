@@ -62,13 +62,6 @@
             ReferencedContainer = "container:Channel Manager.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
-      <EnvironmentVariables>
-         <EnvironmentVariable
-            key = "PATH"
-            value = "/usr/bin:/bin:/usr/sbin:/sbin:/opt/M+M/bin"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-      </EnvironmentVariables>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
