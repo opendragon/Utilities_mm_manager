@@ -379,6 +379,7 @@ static void drawConnection(Graphics &          gg,
     {
         AnchorSide sourceAnchor;
         AnchorSide destinationAnchor;
+        bool       isBidirectional = false;
         Position   sourcePosition(source->getPositionInPanel());
         Position   destinationPosition(destination->getPositionInPanel());
         Position   sourceCentre(source->getCentre() + sourcePosition);
@@ -417,6 +418,7 @@ static void drawConnection(Graphics &          gg,
                   endPoint.getY()); //####
         if (destination->isService())
         {
+            isBidirectional = true;
             thickness = kServiceConnectionWidth;
         }
         else if (destination->isInputOutput())
@@ -444,7 +446,14 @@ static void drawConnection(Graphics &          gg,
                 
         }
         drawBezier(gg, startPoint, endPoint, sourceCentre, destinationCentre, thickness);
-        drawSourceAnchor(gg, sourceAnchor, startPoint, 1);
+        if (isBidirectional)
+        {
+            drawTargetAnchor(gg, sourceAnchor, startPoint, 1);
+        }
+        else
+        {
+            drawSourceAnchor(gg, sourceAnchor, startPoint, 1);
+        }
         drawTargetAnchor(gg, destinationAnchor, endPoint, 1);
     }
     OD_LOG_EXIT(); //####
