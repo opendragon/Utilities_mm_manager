@@ -860,7 +860,7 @@ String ChannelManagerApplication::findPathToExecutable(const String & execName)
 #if (! MAC_OR_LINUX_)
         else
         {
-            String temp(aFile.getFileNameWithoutExtension() + ".exe");
+			String temp(aFile.getFullPathName() + ".exe");
             
             aFile = juce::File::createFileWithoutCheckingPath(temp);
             if (aFile.existsAsFile())
@@ -921,7 +921,7 @@ String ChannelManagerApplication::findPathToExecutable(const String & execName)
 #if (! MAC_OR_LINUX_)
                 else
                 {
-                    String temp(aFile.getFileNameWithoutExtension() + ".exe");
+                    String temp(aFile.getFullPathName() + ".exe");
 
                     aFile = juce::File::createFileWithoutCheckingPath(temp);
                     if (aFile.existsAsFile())
