@@ -294,7 +294,7 @@ StringArray ContentPanel::getMenuBarNames(void)
 # pragma warning(push)
 # pragma warning(disable: 4100)
 #endif // ! MAC_OR_LINUX_
-PopupMenu ContentPanel::getMenuForIndex(const int      menuIndex,
+PopupMenu ContentPanel::getMenuForIndex(int            menuIndex,
                                         const String & menuName)
 {
 #if (! defined(OD_ENABLE_LOGGING))
@@ -361,8 +361,8 @@ ApplicationCommandTarget * ContentPanel::getNextCommandTarget(void)
 # pragma warning(push)
 # pragma warning(disable: 4100)
 #endif // ! MAC_OR_LINUX_
-void ContentPanel::menuItemSelected(const int menuItemID,
-                                    const int topLevelMenuIndex)
+void ContentPanel::menuItemSelected(int menuItemID,
+                                    int topLevelMenuIndex)
 {
 #if (! defined(OD_ENABLE_LOGGING))
 # if MAC_OR_LINUX_

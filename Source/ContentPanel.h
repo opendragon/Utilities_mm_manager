@@ -118,15 +118,15 @@ namespace ChannelManager
          @param menuIndex The index of the top-level menu to show.
          @param menuName The name of the top-level menu item to show.
          @returns The popup menu corresponding to the given index and name. */
-        virtual PopupMenu getMenuForIndex(const int      menuIndex,
+        virtual PopupMenu getMenuForIndex(int            menuIndex,
                                           const String & menuName);
 
         /*! @brief Perform the selected menu item action.
          @param menuItemID The item ID of the menu item that was selected.
          @param topLevelMenuIndex The index of the top-level menu from which the item was
          selected. */
-        virtual void menuItemSelected(const int menuItemID,
-                                      const int topLevelMenuIndex);
+        virtual void menuItemSelected(int menuItemID,
+                                      int topLevelMenuIndex);
 
         /*! @brief Draw the content of the component.
          @param gg The graphics context in which to draw. */

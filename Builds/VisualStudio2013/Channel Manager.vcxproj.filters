@@ -1074,7 +1074,13 @@
     <ClCompile Include="..\..\Source\YarpLaunchThread.cpp">
       <Filter>Channel Manager\Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\RegistryServiceLaunchThread.cpp">
+    <ClCompile Include="..\..\Source\RegistryLaunchThread.cpp">
+      <Filter>Channel Manager\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\AdapterLaunchThread.cpp">
+      <Filter>Channel Manager\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\ServiceLaunchThread.cpp">
       <Filter>Channel Manager\Source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -2130,7 +2136,13 @@
     <ClInclude Include="..\..\Source\YarpLaunchThread.h">
       <Filter>Channel Manager\Source</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\RegistryServiceLaunchThread.h">
+    <ClInclude Include="..\..\Source\RegistryLaunchThread.h">
+      <Filter>Channel Manager\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\AdapterLaunchThread.h">
+      <Filter>Channel Manager\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\ServiceLaunchThread.h">
       <Filter>Channel Manager\Source</Filter>
     </ClInclude>
   </ItemGroup>

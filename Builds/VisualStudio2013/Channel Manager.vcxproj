@@ -133,6 +133,7 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\AdapterLaunchThread.cpp" />
     <ClCompile Include="..\..\Source\ChannelContainer.cpp" />
     <ClCompile Include="..\..\Source\ChannelEntry.cpp" />
     <ClCompile Include="..\..\Source\ChannelManagerApplication.cpp" />
@@ -144,7 +145,7 @@
     <ClCompile Include="..\..\Source\PeekInputHandler.cpp" />
     <ClCompile Include="..\..\Source\EntityData.cpp" />
     <ClCompile Include="..\..\Source\PortData.cpp" />
-    <ClCompile Include="..\..\Source\RegistryServiceLaunchThread.cpp" />
+    <ClCompile Include="..\..\Source\RegistryLaunchThread.cpp" />
     <ClCompile Include="..\..\Source\ScannerThread.cpp" />
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_core\text\juce_CharacterFunctions.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
@@ -968,9 +969,11 @@
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_graphics\juce_graphics.cpp" />
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_gui_basics\juce_gui_basics.cpp" />
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_gui_extra\juce_gui_extra.cpp" />
+    <ClCompile Include="..\..\Source\ServiceLaunchThread.cpp" />
     <ClCompile Include="..\..\Source\YarpLaunchThread.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\AdapterLaunchThread.h" />
     <ClInclude Include="..\..\Source\ChannelContainer.h" />
     <ClInclude Include="..\..\Source\ChannelEntry.h" />
     <ClInclude Include="..\..\Source\ChannelManagerApplication.h" />
@@ -982,7 +985,7 @@
     <ClInclude Include="..\..\Source\EntitiesPanel.h" />
     <ClInclude Include="..\..\Source\EntityData.h" />
     <ClInclude Include="..\..\Source\PortData.h" />
-    <ClInclude Include="..\..\Source\RegistryServiceLaunchThread.h" />
+    <ClInclude Include="..\..\Source\RegistryLaunchThread.h" />
     <ClInclude Include="..\..\Source\ScannerThread.h" />
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_core\text\juce_CharacterFunctions.h" />
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_core\text\juce_CharPointer_ASCII.h" />
@@ -1321,6 +1324,7 @@
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_gui_extra\juce_gui_extra.h" />
     <ClInclude Include="..\..\JuceLibraryCode\AppConfig.h" />
     <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h" />
+    <ClInclude Include="..\..\Source\ServiceLaunchThread.h" />
     <ClInclude Include="..\..\Source\YarpLaunchThread.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>

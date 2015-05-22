@@ -48,6 +48,10 @@
 #include <mpm/M+MEndpoint.h>
 #include <mpm/M+MRequests.h>
 
+#if (! MAC_OR_LINUX_)
+# include <io.h>
+#endif // ! MAC_OR_LINUX_
+
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
 
@@ -919,7 +923,7 @@ String ChannelManagerApplication::findPathToExecutable(const String & execName)
                 {
                     String temp(aFile.getFileNameWithoutExtension() + ".exe");
 
-                    aFile = juce::File::createFileWithoutCheckingPath(temp));
+                    aFile = juce::File::createFileWithoutCheckingPath(temp);
                     if (aFile.existsAsFile())
                     {
                         doCheck = true;
@@ -1298,7 +1302,7 @@ String ChannelManagerApplication::getRealName(void)
         free(buf);
     }
 #else // ! defined(__APPLE__)
-    result = yarp::os::impl::SystemInfo::getUserInfo().realName;
+    result = yarp::os::impl::SystemInfo::getUserInfo().realName.c_str();
 #endif // ! defined(__APPLE__)
     OD_LOG_EXIT_s(result.toStdString()); //####
     return result;
@@ -1333,7 +1337,7 @@ String ChannelManagerApplication::getUserName(void)
         free(buf);
     }
 #else // ! defined(__APPLE__)
-    result = yarp::os::impl::SystemInfo::getUserInfo().userName;
+    result = yarp::os::impl::SystemInfo::getUserInfo().userName.c_str();
 #endif // ! defined(__APPLE__)
     OD_LOG_EXIT_s(result.toStdString()); //####
     return result;
