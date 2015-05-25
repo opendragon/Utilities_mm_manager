@@ -395,27 +395,6 @@ static void drawConnection(Graphics &          gg,
         OD_LOG_D4("sourceCentre.x = ", sourceCentre.getX(), "sourceCentre.y = ", //####
                   sourceCentre.getY(), "destinationCentre.x = ", destinationCentre.getX(), //####
                   "destinationCentre.y = ", destinationCentre.getY()); //####
-        // Check if the destination is above the source, in which case we determine the anchors in
-        // the reverse order.
-        if (sourceCentre.getY() < destinationCentre.getY())
-        {
-            sourceAnchor = source->calculateClosestAnchor(startPoint, true, false,
-                                                          destinationCentre);
-            destinationAnchor = destination->calculateClosestAnchor(endPoint, false,
-                                                                kAnchorBottomCentre == sourceAnchor,
-                                                                    sourceCentre);
-        }
-        else
-        {
-            destinationAnchor = destination->calculateClosestAnchor(endPoint, false, false,
-                                                                    sourceCentre);
-            sourceAnchor = source->calculateClosestAnchor(startPoint, true,
-                                                          kAnchorBottomCentre == destinationAnchor,
-                                                          destinationCentre);
-        }
-        OD_LOG_D4("startPoint.x <- ", startPoint.getX(), "startPoint.y <- ", //####
-                  startPoint.getY(), "endPoint.x <- ", endPoint.getX(), "endPoint.y <- ", //####
-                  endPoint.getY()); //####
         if (destination->isService())
         {
             isBidirectional = true;
@@ -429,7 +408,29 @@ static void drawConnection(Graphics &          gg,
         {
             thickness = kNormalConnectionWidth;
         }
+        OD_LOG_B1("isBidirectional <- ", isBidirectional); //####
         OD_LOG_D1("thickness <- ", thickness); //####
+        // Check if the destination is above the source, in which case we determine the anchors in
+        // the reverse order.
+        if (sourceCentre.getY() < destinationCentre.getY())
+        {
+            sourceAnchor = source->calculateClosestAnchor(startPoint, ! isBidirectional, false,
+                                                          destinationCentre);
+            destinationAnchor = destination->calculateClosestAnchor(endPoint, false,
+                                                                kAnchorBottomCentre == sourceAnchor,
+                                                                    sourceCentre);
+        }
+        else
+        {
+            destinationAnchor = destination->calculateClosestAnchor(endPoint, false, false,
+                                                                    sourceCentre);
+            sourceAnchor = source->calculateClosestAnchor(startPoint, ! isBidirectional,
+                                                          kAnchorBottomCentre == destinationAnchor,
+                                                          destinationCentre);
+        }
+        OD_LOG_D4("startPoint.x <- ", startPoint.getX(), "startPoint.y <- ", //####
+                  startPoint.getY(), "endPoint.x <- ", endPoint.getX(), "endPoint.y <- ", //####
+                  endPoint.getY()); //####
         switch (mode)
         {
             case Common::kChannelModeTCP :

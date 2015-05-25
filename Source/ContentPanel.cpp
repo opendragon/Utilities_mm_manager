@@ -759,8 +759,10 @@ void ContentPanel::setContainerOfInterest(ChannelContainer * aContainer)
 void ContentPanel::setEntityPositions(void)
 {
     OD_LOG_OBJENTER(); //####
-    float         fullHeight = static_cast<float>(_entitiesPanel->getHeight());
-    float         fullWidth = static_cast<float>(_entitiesPanel->getWidth());
+    float         offsetX = getX();
+    float         offsetY = getY();
+    float         maxX = getWidth();
+    float         maxY = getHeight();
     Random        randomizer(Time::currentTimeMillis());
 #if defined(USE_OGDF_POSITIONING)
     ogdf::Graph * gg;
@@ -795,8 +797,8 @@ void ContentPanel::setEntityPositions(void)
             // nodes out.
             ga->width(phantomNode) = 1;
             ga->height(phantomNode) = 1;
-            ga->x(phantomNode) = (randomizer.nextFloat() * fullWidth);
-            ga->y(phantomNode) = (randomizer.nextFloat() * fullHeight);
+            ga->x(phantomNode) = offsetX + (randomizer.nextFloat() * maxX);
+            ga->y(phantomNode) = offsetY + (randomizer.nextFloat() * maxY);
             _entitiesPanel->clearNodeValues();
             for (size_t ii = 0, mm = _entitiesPanel->getNumberOfEntities(); mm > ii; ++ii)
             {
@@ -823,8 +825,8 @@ void ContentPanel::setEntityPositions(void)
                         
                         if (_rememberedPositions.end() == match)
                         {
-                            newX = (randomizer.nextFloat() * (fullWidth - ww));
-                            newY = (randomizer.nextFloat() * (fullHeight - hh));
+                            newX = offsetX + (randomizer.nextFloat() * (maxX - ww));
+                            newY = offsetY + (randomizer.nextFloat() * (maxY - hh));
                             positionsNeedUpdate = true;
                         }
                         else
@@ -970,8 +972,8 @@ void ContentPanel::setEntityPositions(void)
 
                 if (_rememberedPositions.end() == match)
                 {
-                    newX = (randomizer.nextFloat() * (fullWidth - ww));
-                    newY = (randomizer.nextFloat() * (fullHeight - hh));
+                    newX = offsetX + (randomizer.nextFloat() * (maxX - ww));
+                    newY = offsetY + (randomizer.nextFloat() * (maxY - hh));
                 }
                 else
                 {
@@ -1005,8 +1007,8 @@ void ContentPanel::setEntityPositions(void)
             
             if (_rememberedPositions.end() == match)
             {
-                newX = (randomizer.nextFloat() * (fullWidth - ww));
-                newY = (randomizer.nextFloat() * (fullHeight - hh));
+                newX = offsetX + (randomizer.nextFloat() * (maxX - ww));
+                newY = offsetY + (randomizer.nextFloat() * (maxY - hh));
             }
             else
             {
