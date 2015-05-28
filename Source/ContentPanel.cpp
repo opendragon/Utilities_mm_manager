@@ -754,10 +754,10 @@ void ContentPanel::setContainerOfInterest(ChannelContainer * aContainer)
 void ContentPanel::setEntityPositions(void)
 {
     OD_LOG_OBJENTER(); //####
-    float         offsetX = getX();
-    float         offsetY = getY();
-    float         maxX = getWidth();
-    float         maxY = getHeight();
+    float         offsetX = static_cast<float>(getX());
+	float         offsetY = static_cast<float>(getY());
+	float         maxX = static_cast<float>(getWidth());
+	float         maxY = static_cast<float>(getHeight());
     Random        randomizer(Time::currentTimeMillis());
 #if defined(USE_OGDF_POSITIONING)
     ogdf::Graph * gg;

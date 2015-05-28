@@ -133,7 +133,6 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Source\AdapterLaunchThread.cpp" />
     <ClCompile Include="..\..\Source\ChannelContainer.cpp" />
     <ClCompile Include="..\..\Source\ChannelEntry.cpp" />
     <ClCompile Include="..\..\Source\ChannelManagerApplication.cpp" />
@@ -973,7 +972,6 @@
     <ClCompile Include="..\..\Source\YarpLaunchThread.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Source\AdapterLaunchThread.h" />
     <ClInclude Include="..\..\Source\ChannelContainer.h" />
     <ClInclude Include="..\..\Source\ChannelEntry.h" />
     <ClInclude Include="..\..\Source\ChannelManagerApplication.h" />
