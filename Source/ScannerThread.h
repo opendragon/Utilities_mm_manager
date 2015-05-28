@@ -114,14 +114,6 @@ namespace ChannelManager
                                 MplusM::Common::CheckFunction         checker = nullptr,
                                 void *                                checkStuff = nullptr);
         
-        /*! @brief Add ports that have associates as 'adapter' entities to the to-be-displayed list.
-         @param detectedPorts The set of detected YARP ports.
-         @param checker A function that provides for early exit from loops.
-         @param checkStuff The private data for the early exit function. */
-        void addPortsWithAssociates(const MplusM::Utilities::PortVector & detectedPorts,
-                                    MplusM::Common::CheckFunction         checker = nullptr,
-                                    void *                                checkStuff = nullptr);
-        
         /*! @brief Add regular YARP ports as distinct entities to the to-be-displayed list.
          @param detectedPorts The set of detected YARP ports.
          @param checker A function that provides for early exit from loops.
@@ -199,9 +191,6 @@ namespace ChannelManager
         /*! @brief A set of known services. */
         ServiceMap _detectedServices;
         
-        /*! @brief A set of associated ports. */
-        AssociatesMap _associatedPorts;
-        
         /*! @brief A set of standalone ports. */
         SingularPortMap _standalonePorts;
         
@@ -225,10 +214,10 @@ namespace ChannelManager
 # endif // defined(CHECK_FOR_STALE_PORTS) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS))
 
         /*! @brief The port used to determine if a port being checked can be used as an output. */
-        MplusM::Common::AdapterChannel * _inputOnlyPort;
+        MplusM::Common::GeneralChannel * _inputOnlyPort;
         
         /*! @brief The port used to determine if a port being checked can be used as an input. */
-        MplusM::Common::AdapterChannel * _outputOnlyPort;
+        MplusM::Common::GeneralChannel * _outputOnlyPort;
         
         /*! @brief @c true if a port cleanup should be done as soon as possible and @c false
          otherwise. */

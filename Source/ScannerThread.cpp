@@ -158,7 +158,7 @@ static void splitCombinedAddressAndPort(const YarpString & combined,
 ScannerThread::ScannerThread(ChannelManagerWindow & window,
                              const bool             delayFirstScan) :
     inherited("port scanner"), _window(window), _rememberedPorts(), _detectedServices(),
-    _associatedPorts(), _standalonePorts(),
+    _standalonePorts(),
 #if (defined(CHECK_FOR_STALE_PORTS) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS)))
     _lastStaleTime(- (2 * kMinStaleInterval)),
 #endif // efined(CHECK_FOR_STALE_PORTS) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS))
@@ -176,12 +176,12 @@ ScannerThread::ScannerThread(ChannelManagerWindow & window,
                                                       "checkdirection/channel_");
     _outputOnlyPortName = Common::GetRandomChannelName(HIDDEN_CHANNEL_PREFIX
                                                        "checkdirection/channel_");
-    _inputOnlyPort = new Common::AdapterChannel(false);
+    _inputOnlyPort = new Common::GeneralChannel(false);
     if (_inputOnlyPort)
     {
         _inputOnlyPort->setInputMode(true);
         _inputOnlyPort->setOutputMode(false);
-        _outputOnlyPort = new Common::AdapterChannel(true);
+        _outputOnlyPort = new Common::GeneralChannel(true);
         if (_outputOnlyPort)
         {
             _outputOnlyPort->setInputMode(false);
@@ -206,19 +206,18 @@ ScannerThread::~ScannerThread(void)
 #if defined(MpM_DoExplicitClose)
         _inputOnlyPort->close();
 #endif // defined(MpM_DoExplicitClose)
-        Common::AdapterChannel::RelinquishChannel(_inputOnlyPort);
+        Common::GeneralChannel::RelinquishChannel(_inputOnlyPort);
     }
     if (_outputOnlyPort)
     {
 #if defined(MpM_DoExplicitClose)
         _outputOnlyPort->close();
 #endif // defined(MpM_DoExplicitClose)
-        Common::AdapterChannel::RelinquishChannel(_outputOnlyPort);
+        Common::GeneralChannel::RelinquishChannel(_outputOnlyPort);
     }
     _portsValid = false;
     _detectedServices.clear();
     _rememberedPorts.clear();
-    _associatedPorts.clear();
     _standalonePorts.clear();
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::~ScannerThread
@@ -237,9 +236,11 @@ void ScannerThread::addEntities(const Utilities::PortVector & detectedPorts)
          (_detectedServices.end() != outer) && (! threadShouldExit()); ++outer)
     {
         Utilities::ServiceDescriptor descriptor(outer->second);
+        bool                         isAdapter = (0 < descriptor._clientChannels.size());
         YarpString                   ipAddress;
         YarpString                   ipPort;
-        EntityData *                 anEntity = new EntityData(kContainerKindService,
+        EntityData *                 anEntity = new EntityData(isAdapter ? kContainerKindAdapter :
+                                                               kContainerKindService,
                                                                descriptor._serviceName,
                                                                descriptor._kind,
                                                                descriptor._description,
@@ -247,6 +248,7 @@ void ScannerThread::addEntities(const Utilities::PortVector & detectedPorts)
         PortData *                   aPort = anEntity->addPort(descriptor._channelName, "", "",
                                                                kPortUsageService,
                                                                kPortDirectionInput);
+        Common::ChannelVector &      clientChannels = descriptor._clientChannels;
         Common::ChannelVector &      inChannels = descriptor._inputChannels;
         Common::ChannelVector &      outChannels = descriptor._outputChannels;
         
@@ -275,45 +277,17 @@ void ScannerThread::addEntities(const Utilities::PortVector & detectedPorts)
             findMatchingIpAddressAndPort(detectedPorts, aChannel._portName, ipAddress, ipPort);
             aPort->setPortNumber(ipPort);
         }
-        _workingData.addEntity(anEntity);
-    }
-    // Convert the detected ports with associates into entities in the background list.
-    for (AssociatesMap::const_iterator outer(_associatedPorts.begin());
-         (_associatedPorts.end() != outer) && (! threadShouldExit()); ++outer)
-    {
-        // The key is 'ipaddress:port'
-        YarpString                         ipAddress;
-        YarpString                         ipPort;
-        PortData *                         aPort;
-        EntityData *                       anEntity = new EntityData(kContainerKindClientOrAdapter,
-                                                                     outer->first, "", "", "");
-        const Utilities::PortAssociation & associates = outer->second._associates;
-        const YarpStringVector &           assocInputs = associates._inputs;
-        const YarpStringVector &           assocOutputs = associates._outputs;
-        
-        splitCombinedAddressAndPort(outer->first, ipAddress, ipPort);
-        anEntity->setIPAddress(ipAddress);
-        for (YarpStringVector::const_iterator inner = assocInputs.begin();
-             (assocInputs.end() != inner) && (! threadShouldExit()); ++inner)
+        for (Common::ChannelVector::const_iterator inner = clientChannels.begin();
+             (clientChannels.end() != inner) && (! threadShouldExit()); ++inner)
         {
-            YarpString innerPort;
+            Common::ChannelDescription aChannel(*inner);
             
-            findMatchingIpAddressAndPort(detectedPorts, *inner, ipAddress, innerPort);
-            aPort = anEntity->addPort(*inner, "", "", kPortUsageOther, kPortDirectionInput);
-            aPort->setPortNumber(innerPort);
+            aPort = anEntity->addPort(aChannel._portName, aChannel._portProtocol,
+                                      aChannel._protocolDescription, kPortUsageClient,
+                                      kPortDirectionInputOutput);
+            findMatchingIpAddressAndPort(detectedPorts, aChannel._portName, ipAddress, ipPort);
+            aPort->setPortNumber(ipPort);
         }
-        for (YarpStringVector::const_iterator inner = assocOutputs.begin();
-             (assocOutputs.end() != inner) && (! threadShouldExit()); ++inner)
-        {
-            YarpString innerPort;
-            
-            findMatchingIpAddressAndPort(detectedPorts, *inner, ipAddress, innerPort);
-            aPort = anEntity->addPort(*inner, "", "", kPortUsageOther, kPortDirectionOutput);
-            aPort->setPortNumber(innerPort);
-        }
-        aPort = anEntity->addPort(outer->second._name, "", "", kPortUsageClient,
-                                  kPortDirectionInputOutput);
-        aPort->setPortNumber(ipPort);
         _workingData.addEntity(anEntity);
     }
     // Convert the detected standalone ports into entities in the background list.
@@ -390,55 +364,6 @@ void ScannerThread::addPortConnections(const Utilities::PortVector & detectedPor
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::addPortConnections
 
-void ScannerThread::addPortsWithAssociates(const Utilities::PortVector & detectedPorts,
-                                           Common::CheckFunction         checker,
-                                           void *                        checkStuff)
-{
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P2("detectedPorts = ", &detectedPorts, "checkStuff = ", checkStuff); //####
-    _associatedPorts.clear();
-    for (Utilities::PortVector::const_iterator outer(detectedPorts.begin());
-         (detectedPorts.end() != outer) && (! threadShouldExit()); ++outer)
-    {
-        YarpString outerName(outer->_portName);
-        
-        if (_rememberedPorts.end() == _rememberedPorts.find(outerName))
-        {
-            PortAndAssociates associates;
-            
-            if (Utilities::GetAssociatedPorts(outer->_portName, associates._associates,
-                                              STANDARD_WAIT_TIME, checker, checkStuff))
-            {
-                if (associates._associates._primary)
-                {
-                    YarpString caption(outer->_portIpAddress + ":" + outer->_portPortNumber);
-                    
-                    associates._name = outerName;
-                    _associatedPorts[caption] = associates;
-                    _rememberedPorts.insert(outerName);
-                    YarpStringVector & assocInputs = associates._associates._inputs;
-                    YarpStringVector & assocOutputs = associates._associates._outputs;
-                    
-                    for (YarpStringVector::const_iterator inner = assocInputs.begin();
-                         (assocInputs.end() != inner) && (! threadShouldExit()); ++inner)
-                    {
-                        _rememberedPorts.insert(*inner);
-                        yield();
-                    }
-                    for (YarpStringVector::const_iterator inner = assocOutputs.begin();
-                         (assocOutputs.end() != inner) && (! threadShouldExit()); ++inner)
-                    {
-                        _rememberedPorts.insert(*inner);
-                        yield();
-                    }
-                }
-            }
-        }
-        yield();
-    }
-    OD_LOG_OBJEXIT(); //####
-} // ScannerThread::addPortsWithAssociates
-
 void ScannerThread::addRegularPortEntities(const Utilities::PortVector & detectedPorts,
                                            Common::CheckFunction         checker,
                                            void *                        checkStuff)
@@ -489,6 +414,7 @@ void ScannerThread::addServices(const YarpStringVector & services,
             {
                 _detectedServices[outerName] = descriptor;
                 _rememberedPorts.insert(descriptor._channelName);
+                Common::ChannelVector & clientChannels = descriptor._clientChannels;
                 Common::ChannelVector & inChannels = descriptor._inputChannels;
                 Common::ChannelVector & outChannels = descriptor._outputChannels;
                 
@@ -501,7 +427,15 @@ void ScannerThread::addServices(const YarpStringVector & services,
                     yield();
                 }
                 for (Common::ChannelVector::const_iterator inner = outChannels.begin();
-                     (outChannels.end() != inner) && ( !threadShouldExit()); ++inner)
+                     (outChannels.end() != inner) && (! threadShouldExit()); ++inner)
+                {
+                    Common::ChannelDescription aChannel(*inner);
+                    
+                    _rememberedPorts.insert(aChannel._portName);
+                    yield();
+                }
+                for (Common::ChannelVector::const_iterator inner = clientChannels.begin();
+                     (clientChannels.end() != inner) && (! threadShouldExit()); ++inner)
                 {
                     Common::ChannelDescription aChannel(*inner);
                     
@@ -618,8 +552,7 @@ PortDirection ScannerThread::determineDirection(ChannelEntry *        oldEntry,
         }
         if (canDoInput)
         {
-            result = (canDoOutput ? kPortDirectionInputOutput :
-                      kPortDirectionInput);
+            result = (canDoOutput ? kPortDirectionInputOutput : kPortDirectionInput);
         }
         else if (canDoOutput)
         {
@@ -731,7 +664,6 @@ bool ScannerThread::gatherEntities(Utilities::PortVector & detectedPorts,
         bool             servicesSeen;
         YarpStringVector services;
 
-        _associatedPorts.clear();
         _detectedServices.clear();
         _rememberedPorts.clear();
         _rememberedPorts.insert(_inputOnlyPortName);
@@ -749,11 +681,6 @@ bool ScannerThread::gatherEntities(Utilities::PortVector & detectedPorts,
         {
             // Record the services to be displayed.
             addServices(services, checker, checkStuff);
-            // Record the ports that have associates.
-            if (Utilities::CheckListForRegistryService(detectedPorts))
-            {
-                addPortsWithAssociates(detectedPorts, checker, checkStuff);
-            }
         }
         // Record the ports that are standalone.
         addRegularPortEntities(detectedPorts, checker, checkStuff);

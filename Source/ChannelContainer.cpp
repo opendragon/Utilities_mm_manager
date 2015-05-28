@@ -279,16 +279,13 @@ void ChannelContainer::displayInformation(const bool moreDetails)
     
     switch (_kind)
     {
-        case kContainerKindClientOrAdapter :
-            thePanelDescription = "A client or adapter";
-            break;
-            
+        case kContainerKindAdapter :
         case kContainerKindService :
             thePanelDescription = getDescription();
             break;
             
         case kContainerKindOther :
-            thePanelDescription = "A standard port";
+            thePanelDescription = "A standard entity";
             break;
             
         default :
@@ -305,6 +302,7 @@ void ChannelContainer::displayInformation(const bool moreDetails)
         
         switch (_kind)
         {
+            case kContainerKindAdapter :
             case kContainerKindService :
                 requests = getRequests();
                 if (0 < requests.length())
@@ -765,17 +763,30 @@ void ChannelContainer::stopTheService(void)
             }
             else
             {
-                doStop = (1 == AlertWindow::showOkCancelBox(AlertWindow::QuestionIcon,
-                                                            "Are you sure that you want to stop "
-                                                            "this service?", "If you do, it may "
-                                                            "take a few moments to disappear from "
-                                                            "the display, depending on network "
-                                                            "traffic. "
-                                                            "Also, the service will not exit if it "
-                                                            "is waiting on a command prompt, until "
-                                                            "a command is issued.",
-                                                            "Yes", String::empty, nullptr,
-                                                            nullptr));
+                String containerType;
+                String titleText("Are you sure that you want to stop this ");
+                String messageText("If you do, it may take a few moments to disappear from the "
+                                   "display, depending on network traffic. "
+                                   "Also, the ");
+                
+                if (kContainerKindAdapter == _kind)
+                {
+                    containerType = "adapter";
+                }
+                else if (kContainerKindService == _kind)
+                {
+                    containerType = "service";
+                }
+                else
+                {
+                    containerType = "entity";
+                }
+                titleText += containerType + "?";
+                messageText += containerType + " will not exit if it is waiting on a command "
+                                "prompt, until a command is issued.";
+                doStop = (1 == AlertWindow::showOkCancelBox(AlertWindow::QuestionIcon, titleText,
+                                                            messageText, "Yes", String::empty,
+                                                            nullptr, nullptr));
             }
             if (doStop && Utilities::StopAService(aPort->getPortName(), STANDARD_WAIT_TIME))
             {

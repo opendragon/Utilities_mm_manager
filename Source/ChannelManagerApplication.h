@@ -74,7 +74,6 @@
 
 namespace ChannelManager
 {
-    class AdapterLaunchThread;
     class PeekInputHandler;
     class RegistryLaunchThread;
     class ScannerThread;
@@ -207,12 +206,6 @@ namespace ChannelManager
          @returns A pointer to the %Network object used for YARP access. */
         yarp::os::Network * checkForYarpAndLaunchIfDesired(void);
         
-        /*! @brief Ask the user for information required to launch an adapter and launch it if the
-         user requests.
-         @param appInfo The description of the executable.
-         @returns @c true if the adapter was launched and @c false otherwise. */
-        bool doLaunchAnAdapter(const ApplicationInfo & appInfo);
-        
         /*! @brief Ask the user for information required to launch a service and launch it if the
          user requests.
          @param appInfo The description of the executable.
@@ -223,15 +216,6 @@ namespace ChannelManager
          @param theInfo The retrieved parameters.
          @returns @c true if the operational arguments were retrieved and @c false otherwise. */
         bool getArgumentsForApplication(ApplicationInfo & theInfo);
-
-        /*! @brief Get the channels for an adapter.
-         @param appInfo The description of the executable.
-         @param arguments The current set of arguments to be applied.
-         @param channels The channels that the adapter will be using.
-         @returns @c true if the channels were retrieved and @c false otherwise. */
-        bool getChannelsForAdapter(const ApplicationInfo & appInfo,
-                                   const StringArray &     arguments,
-                                   StringArray &           channels);
 
         /*! @brief Get the operational parameters for an application.
          @param execName The name of the executable to be analyzed.
@@ -301,9 +285,6 @@ namespace ChannelManager
         ScopedPointer<YarpLaunchThread> _yarpLauncher;
         
         /*! @brief The set of background general service launch threads. */
-        OwnedArray<AdapterLaunchThread> _adapterLaunchers;
-
-        /*! @brief The set of background general service launch threads. */
         OwnedArray<ServiceLaunchThread> _serviceLaunchers;
         
         /*! @brief The list of launchable applications. */
@@ -321,7 +302,7 @@ namespace ChannelManager
 		String _yarpPath;
 
         /*! @brief A channel to watch the Registry Service status. */
-        MplusM::Common::AdapterChannel * _peeker;
+        MplusM::Common::GeneralChannel * _peeker;
         
         /*! @brief The input handler for the 'peek' channel. */
         PeekInputHandler * _peekHandler;

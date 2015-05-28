@@ -375,12 +375,7 @@ void ContentPanel::menuItemSelected(int menuItemID,
     
     if (_selectedChannel)
     {
-        ChannelContainer * theParent = _selectedChannel->getParent();
-        
-        if (theParent && (kContainerKindService == theParent->getKind()))
-        {
-            isChannel = true;
-        }
+        isChannel = _selectedChannel->isChannel();
     }
     switch (menuItemID)
     {
@@ -1032,13 +1027,12 @@ void ContentPanel::setUpChannelMenu(PopupMenu &    aMenu,
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P2("aMenu = ", &aMenu, "aChannel = ", &aChannel); //####
-    bool               isChannel = false;
+    bool               isChannel = aChannel.isChannel();
     bool               showMetrics = false;
     ChannelContainer * theParent = aChannel.getParent();
     
-    if (theParent && (kContainerKindService == theParent->getKind()))
+    if (isChannel)
     {
-        isChannel = true;
         showMetrics = theParent->getMetricsState();
     }
     aMenu.addItem(kPopupDisplayPortInfo, isChannel ? "Display channel information" :
@@ -1067,26 +1061,46 @@ void ContentPanel::setUpContainerMenu(PopupMenu &        aMenu,
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P2("aMenu = ", &aMenu, "aContainer = ", &aContainer); //####
-    bool isService = (kContainerKindService == aContainer.getKind());
+    bool   serviceLike;
+    String kindOfContainer;
     
-    aMenu.addItem(kPopupDisplayEntityInfo, isService ? "Display service information" :
-                  "Display entity information");
-    aMenu.addItem(kPopupDetailedDisplayEntityInfo, isService ?
-                  "Display detailed service information" : "Display detailed entity information");
-    if (isService)
+    switch (aContainer.getKind())
+    {
+        case kContainerKindAdapter :
+            kindOfContainer = "adapter";
+            serviceLike = true;
+            break;
+            
+        case kContainerKindService :
+            kindOfContainer = "service";
+            serviceLike = true;
+            break;
+            
+        default :
+            kindOfContainer = "entity";
+            serviceLike = false;
+            break;
+    }
+    
+    aMenu.addItem(kPopupDisplayEntityInfo, String("Display ") + kindOfContainer + " information");
+    aMenu.addItem(kPopupDetailedDisplayEntityInfo, String("Display detailed ") + kindOfContainer +
+                  " information");
+    if (serviceLike)
     {
         bool metricsEnabled = aContainer.getMetricsState();
         
         aMenu.addSeparator();
-        aMenu.addItem(kPopupDisplayChangeServiceMetrics, metricsEnabled ?
-                      "Disable service metrics collection" : "Enable service metrics collection");
-        aMenu.addItem(kPopupDisplayServiceMetrics, "Display service metrics", metricsEnabled);
+        aMenu.addItem(kPopupDisplayChangeServiceMetrics,
+                      String(metricsEnabled ? "Disable " : "Enable ") + kindOfContainer +
+                      " metrics collection");
+        aMenu.addItem(kPopupDisplayServiceMetrics, String("Display ") + kindOfContainer +
+                      " metrics", metricsEnabled);
     }
-    aMenu.addItem(kPopupHideEntity, isService ? "Hide the service" : "Hide the entity");
-    if (isService)
+    aMenu.addItem(kPopupHideEntity, String("Hide the ") + kindOfContainer);
+    if (serviceLike)
     {
         aMenu.addSeparator();
-        aMenu.addItem(kPopupStopService, "Stop the service");
+        aMenu.addItem(kPopupStopService, String("Stop the ") + kindOfContainer);
     }
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::setUpContainerMenu

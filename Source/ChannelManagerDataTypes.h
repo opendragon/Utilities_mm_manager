@@ -43,7 +43,7 @@
 #  include "../JuceLibraryCode/JuceHeader.h"
 # endif // ! defined(DOXYGEN)
 
-# include <mpm/M+MAdapterChannel.h>
+# include <mpm/M+MGeneralChannel.h>
 # include <mpm/M+MUtilities.h>
 
 # include <list>
@@ -147,13 +147,13 @@ namespace ChannelManager
     /*! @brief What kind of container. */
     enum ContainerKind
     {
-        /*! @brief The container is a client or adapter. */
-        kContainerKindClientOrAdapter,
+        /*! @brief The container is an adapter - a special form of service. */
+        kContainerKindAdapter,
         
         /*! @brief The container is a service. */
         kContainerKindService,
         
-        /*! @brief The container is neither a serice nor a client nor an adapter. */
+        /*! @brief The container is not a service. */
         kContainerKindOther,
         
         /*! @brief Force the size to be 4 bytes. */
@@ -230,8 +230,11 @@ namespace ChannelManager
         /*! @brief The file system path to the application. */
         String _applicationPath;
  
-        /*! @brief The matching criteria (if an Adapter) or supported options (if a Service). */
-        String _criteriaOrOptions;
+        /*! @brief The matching criteria (if an Adapter). */
+        String _criteria;
+        
+        /*! @brief The supported options (if a Service). */
+        String _options;
         
         /*! @brief The description provided by the application. */
         String _description;
@@ -283,17 +286,6 @@ namespace ChannelManager
         
     }; // NameAndDirection
     
-    /*! @brief The name and associates for a port. */
-    struct PortAndAssociates
-    {
-        /*! @brief The name of the port. */
-        YarpString _name;
-        
-        /*! @brief The associates of the port. */
-        MplusM::Utilities::PortAssociation _associates;
-        
-    }; // PortAndAssociates
-    
     /*! @brief The form of a port connection. */
     struct PortInfo
     {
@@ -310,9 +302,6 @@ namespace ChannelManager
     
     /*! @brief Coordinates on the display. */
     typedef Point<float> Position;
-    
-    /*! @brief A mapping from port names to associates. */
-    typedef std::map<YarpString, PortAndAssociates> AssociatesMap;
     
     /*! @brief The set of connections to the channel. */
     typedef std::vector<ChannelInfo> ChannelConnections;

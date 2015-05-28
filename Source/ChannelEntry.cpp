@@ -731,13 +731,8 @@ void ChannelEntry::clearDisconnectMarker(void)
 void ChannelEntry::displayAndProcessPopupMenu(void)
 {
     OD_LOG_OBJENTER(); //####
-    bool      isChannel = false;
     PopupMenu mm;
     
-    if (_parent && (kContainerKindService == _parent->getKind()))
-    {
-        isChannel = true;
-    }
     _parent->getOwner().getContent()->setUpChannelMenu(mm, *this);
     int result = mm.show();
     
@@ -750,7 +745,7 @@ void ChannelEntry::displayAndProcessPopupMenu(void)
             break;
             
         case kPopupDetailedDisplayPortInfo :
-            displayInformation(isChannel, true);
+            displayInformation(isChannel(), true);
             break;
             
         case kPopupDisplayChannelMetrics :
@@ -758,7 +753,7 @@ void ChannelEntry::displayAndProcessPopupMenu(void)
             break;
             
         case kPopupDisplayPortInfo :
-            displayInformation(isChannel, false);
+            displayInformation(isChannel(), false);
             break;
             
         default :
@@ -1024,6 +1019,25 @@ void ChannelEntry::invalidateConnections(void)
     }
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::invalidateConnections
+
+bool ChannelEntry::isChannel(void)
+const
+{
+    OD_LOG_ENTER(); //####
+    bool result = false;
+    
+    if (_parent)
+    {
+        ContainerKind parentKind = _parent->getKind();
+        
+        if ((kContainerKindAdapter == parentKind) || (kContainerKindService == parentKind))
+        {
+            result = true;
+        }
+    }
+    OD_LOG_EXIT_B(result); //####
+    return result;
+} // ChannelEntry::isChannel
 
 void ChannelEntry::mouseDown(const MouseEvent & ee)
 {

@@ -254,6 +254,11 @@ namespace ChannelManager
             return _beingMonitored;
         } // isBeingMonitored
 
+        /*! @brief Returns @c true if the port is a channel and @c false if it is a standard port.
+         @returns @c true if the port is a channel and @c false otherwise. */
+        bool isChannel(void)
+        const;
+        
         /*! @brief Returns @c true if the port entry is a secondary port of a service and @c false
          otherwise.
          @returns @c true if the port is a secondary port of a service and @c false otherwise. */
