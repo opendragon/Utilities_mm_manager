@@ -124,7 +124,7 @@ EntitiesPanel::EntitiesPanel(ContentPanel * theContainer,
                              const int      startingHeight) :
     inherited(), _knownPorts(), _knownEntities(), _defaultBoldFont(), _defaultNormalFont(),
     _firstAddPoint(nullptr), _firstRemovePoint(nullptr), _container(theContainer),
-    _dragConnectionActive(false)
+    _dragConnectionActive(false), _dragIsForced(false)
 {
     OD_LOG_ENTER(); //####
     _defaultBoldFont = new Font(kFontName, kFontSize, Font::bold);
@@ -322,7 +322,7 @@ void EntitiesPanel::clearAllVisitedFlags(void)
 void EntitiesPanel::clearDragInfo(void)
 {
     OD_LOG_OBJENTER(); //####
-    _dragConnectionActive = false;
+    _dragConnectionActive = _dragIsForced = false;
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::clearDragInfo
 
@@ -415,7 +415,8 @@ void EntitiesPanel::drawConnections(Graphics & gg)
     }
     if (_dragConnectionActive && _firstAddPoint)
     {
-        _firstAddPoint->drawDragLine(gg, _dragPosition, _firstAddPoint->wasUdpConnectionRequest());
+        _firstAddPoint->drawDragLine(gg, _dragPosition, _firstAddPoint->wasUdpConnectionRequest(),
+                                     _dragIsForced);
     }
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::drawConnections
@@ -757,12 +758,15 @@ void EntitiesPanel::resized(void)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::resized
 
-void EntitiesPanel::setDragInfo(const Position position)
+void EntitiesPanel::setDragInfo(const Position position,
+                                const bool     isForced)
 {
     OD_LOG_OBJENTER(); //####
+    OD_LOG_B1("isForced = ", isForced); //####
     if (_firstAddPoint)
     {
         _dragConnectionActive = true;
+        _dragIsForced = isForced;
         _dragPosition = position;
     }
     OD_LOG_OBJEXIT(); //####

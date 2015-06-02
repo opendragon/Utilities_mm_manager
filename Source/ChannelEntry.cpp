@@ -334,20 +334,22 @@ static void drawTargetAnchor(Graphics &       gg,
  beginning tangent.
  @param endCentre A reference point for the end of the curve, used to calculate the ending
  tangent.
- @param thickness The line thickness to be used. */
+ @param thickness The line thickness to be used.
+ @param isDashed @c true if the line should be dashed and @c false otherwise. */
 static void drawBezier(Graphics &       gg,
                        const Position & startPoint,
                        const Position & endPoint,
                        const Position & startCentre,
                        const Position & endCentre,
-                       const float      thickness)
+                       const float      thickness,
+                       const bool       isDashed)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P4("gg = ", &gg, "startPoint = ", &startPoint, "endPoint = ", &endPoint, //####
               "startCentre = ", &startCentre); //####
     OD_LOG_P1("endCentre = ", &endCentre); //####
     OD_LOG_D1("thickness = ", thickness); //####
-    Path     bPath;
+    Path     bezPath;
     float    controlLength = (startPoint.getDistanceFrom(endPoint) * kControlLengthScale);
     float    startAngle = atan2(startPoint.getY() - startCentre.getY(),
                                 startPoint.getX() - startCentre.getX());
@@ -356,9 +358,22 @@ static void drawBezier(Graphics &       gg,
     Position controlPoint1(controlLength * cos(startAngle), controlLength * sin(startAngle));
     Position controlPoint2(controlLength * cos(endAngle), controlLength * sin(endAngle));
     
-    bPath.startNewSubPath(startPoint);
-    bPath.cubicTo(startPoint + controlPoint1, endPoint + controlPoint2, endPoint);
-    gg.strokePath(bPath, PathStrokeType(thickness));
+    bezPath.startNewSubPath(startPoint);
+    bezPath.cubicTo(startPoint + controlPoint1, endPoint + controlPoint2, endPoint);
+    if (isDashed)
+    {
+        PathStrokeType strokeType(1);
+        const float    dashes[] = { 5, 5 };
+        const int      numDashes = (sizeof(dashes) / sizeof(*dashes));
+        Path           strokedPath;
+
+        strokeType.createDashedStroke(strokedPath, bezPath, dashes, numDashes);
+        gg.strokePath(strokedPath, PathStrokeType(thickness));
+    }
+    else
+    {
+        gg.strokePath(bezPath, PathStrokeType(thickness));
+    }
     OD_LOG_EXIT();//####
 } // drawBezier
 
@@ -366,15 +381,18 @@ static void drawBezier(Graphics &       gg,
  @param gg The graphics context in which to draw.
  @param source The originating entry.
  @param destination The terminating entry.
- @param mode The kind of connection. */
-static void drawConnection(Graphics &          gg,
-                           ChannelEntry *      source,
-                           ChannelEntry *      destination,
-                           Common::ChannelMode mode)
+ @param mode The kind of connection.
+ @param forced @c true if the protocols were overridden and @c false otherwise. */
+static void drawConnection(Graphics &                gg,
+                           ChannelEntry *            source,
+                           ChannelEntry *            destination,
+                           const Common::ChannelMode mode,
+                           const bool                forced)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P3("gg = ", &gg, "source = ", source, "destination = ", destination); //####
     OD_LOG_LL1("mode = ", static_cast<int>(mode)); //####
+    OD_LOG_B1("forced = ", forced); //####
     if (source && destination)
     {
         AnchorSide sourceAnchor;
@@ -446,7 +464,7 @@ static void drawConnection(Graphics &          gg,
                 break;
                 
         }
-        drawBezier(gg, startPoint, endPoint, sourceCentre, destinationCentre, thickness);
+        drawBezier(gg, startPoint, endPoint, sourceCentre, destinationCentre, thickness, forced);
         if (isBidirectional)
         {
             drawTargetAnchor(gg, sourceAnchor, startPoint, 1);
@@ -527,7 +545,10 @@ ChannelEntry::ChannelEntry(ChannelContainer *  parent,
             break;
             
 	    case kPortDirectionInputOutput :
-            prefix = ((kPortUsageClient == _usage) ? "C " : "I/O ");
+            // To avoid confusion, we'll display I/O ports as Output ports, since connecting them to
+            // Output ports is not allowed - they cannot be safely disconnected, as the connection
+            // is, effectively, output-to-output.
+            prefix = ((kPortUsageClient == _usage) ? "C " : "Out ");
             break;
             
 	    case kPortDirectionOutput :
@@ -561,11 +582,13 @@ ChannelEntry::~ChannelEntry(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-void ChannelEntry::addInputConnection(ChannelEntry *      other,
-                                      Common::ChannelMode mode)
+void ChannelEntry::addInputConnection(ChannelEntry *            other,
+                                      const Common::ChannelMode mode,
+                                      const bool                wasOverridden)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("other = ", other); //####
+    OD_LOG_B1("wasOverridden = ", wasOverridden); //####
     if (other)
     {
         bool canAdd = true;
@@ -594,6 +617,7 @@ void ChannelEntry::addInputConnection(ChannelEntry *      other,
             
             newConnection._otherChannel = other;
             newConnection._connectionMode = mode;
+            newConnection._forced = wasOverridden;
             newConnection._valid = true;
             _inputConnections.push_back(newConnection);
         }
@@ -601,11 +625,13 @@ void ChannelEntry::addInputConnection(ChannelEntry *      other,
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::addInputConnection
 
-void ChannelEntry::addOutputConnection(ChannelEntry *      other,
-                                       Common::ChannelMode mode)
+void ChannelEntry::addOutputConnection(ChannelEntry *            other,
+                                       const Common::ChannelMode mode,
+                                       const bool                wasOverridden)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("other = ", other); //####
+    OD_LOG_B1("wasOverridden = ", wasOverridden); //####
     if (other)
     {
         bool canAdd = true;
@@ -634,6 +660,7 @@ void ChannelEntry::addOutputConnection(ChannelEntry *      other,
             
             newConnection._otherChannel = other;
             newConnection._connectionMode = mode;
+            newConnection._forced = wasOverridden;
             newConnection._valid = true;
             _outputConnections.push_back(newConnection);
         }
@@ -872,10 +899,11 @@ void ChannelEntry::displayInformation(const bool isChannel,
 
 void ChannelEntry::drawDragLine(Graphics &       gg,
                                 const Position & position,
-                                const bool       isUDP)
+                                const bool       isUDP,
+                                const bool       isForced)
 {
     OD_LOG_ENTER(); //####
-    OD_LOG_B1("isUDP = ", isUDP); //####
+    OD_LOG_B2("isUDP = ", isUDP, "isForced = ", isForced); //####
     AnchorSide sourceAnchor;
     AnchorSide destinationAnchor;
     Position   sourceCentre(getCentre() + getPositionInPanel());
@@ -909,7 +937,8 @@ void ChannelEntry::drawDragLine(Graphics &       gg,
     {
         gg.setColour(kTcpConnectionColour);
     }
-    drawBezier(gg, startPoint, position, sourceCentre, destinationCentre, kNormalConnectionWidth);
+    drawBezier(gg, startPoint, position, sourceCentre, destinationCentre, kNormalConnectionWidth,
+               isForced);
     drawSourceAnchor(gg, sourceAnchor, startPoint, 1);
     drawTargetAnchor(gg, destinationAnchor, position, 1);
     OD_LOG_EXIT(); //####
@@ -933,7 +962,8 @@ void ChannelEntry::drawOutgoingConnections(Graphics & gg)
             
             if (selfIsVisible && otherIsVisible)
             {
-                drawConnection(gg, this, candidate->_otherChannel, candidate->_connectionMode);
+                drawConnection(gg, this, candidate->_otherChannel, candidate->_connectionMode,
+                               candidate->_forced);
             }
         }
     }
@@ -1085,14 +1115,15 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
         if (firstAddPort != this)
         {
             // Check if we can end here.
+            bool       protocolsOverridden = ee.mods.isCtrlDown();
             YarpString firstName(firstAddPort->getPortName());
             YarpString firstProtocol(firstAddPort->getProtocol());
             
             // Check if we can end here.
             firstAddPort->clearConnectMarker();
             firstAddPort->repaint();
-            if ((kPortDirectionOutput != _direction) && (kPortUsageService != _usage) &&
-                protocolsMatch(firstProtocol, _portProtocol, ee.mods.isCtrlDown()) &&
+            if ((kPortDirectionInput == _direction) && (kPortUsageService != _usage) &&
+                protocolsMatch(firstProtocol, _portProtocol, protocolsOverridden) &&
                 (! firstAddPort->hasOutgoingConnectionTo(getPortName())))
             {
                 if (Utilities::AddConnection(firstName, getPortName(), STANDARD_WAIT_TIME,
@@ -1101,8 +1132,8 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
                     Common::ChannelMode mode = (firstAddPort->_wasUdp ? Common::kChannelModeUDP :
                                                 Common::kChannelModeTCP);
                     
-                    firstAddPort->addOutputConnection(this, mode);
-                    addInputConnection(firstAddPort, mode);
+                    firstAddPort->addOutputConnection(this, mode, protocolsOverridden);
+                    addInputConnection(firstAddPort, mode, protocolsOverridden);
                     owningPanel.skipScan();
                     owningPanel.repaint();
                 }
@@ -1168,7 +1199,7 @@ void ChannelEntry::mouseDrag(const MouseEvent & ee)
         OD_LOG_D2("x = ", ee.position.getX(), "y = ", ee.position.getY()); //####
         EntitiesPanel & owningPanel(getOwningPanel());
         
-        owningPanel.setDragInfo(getPositionInPanel() + ee.position);
+        owningPanel.setDragInfo(getPositionInPanel() + ee.position, ee.mods.isCtrlDown());
         owningPanel.repaint();
         passOn = false;
     }
@@ -1205,12 +1236,13 @@ void ChannelEntry::mouseUp(const MouseEvent & ee)
             if (endEntry && (endEntry != this))
             {
                 // Check if we can end here.
+                bool       protocolsOverridden = ee.mods.isCtrlDown();
                 YarpString secondName(endEntry->getPortName());
                 YarpString secondProtocol(endEntry->getProtocol());
 
-                if ((kPortDirectionOutput != endEntry->getDirection()) &&
+                if ((kPortDirectionInput == endEntry->getDirection()) &&
                     (kPortUsageService != endEntry->getUsage()) &&
-                    protocolsMatch(getProtocol(), secondProtocol, ee.mods.isCtrlDown()) &&
+                    protocolsMatch(getProtocol(), secondProtocol, protocolsOverridden) &&
                     (! hasOutgoingConnectionTo(secondName)))
                 {
                     if (Utilities::AddConnection(getPortName(), secondName, STANDARD_WAIT_TIME,
@@ -1219,8 +1251,8 @@ void ChannelEntry::mouseUp(const MouseEvent & ee)
                         Common::ChannelMode mode = (_wasUdp ? Common::kChannelModeUDP :
                                                     Common::kChannelModeTCP);
                         
-                        addOutputConnection(endEntry, mode);
-                        endEntry->addInputConnection(this, mode);
+                        addOutputConnection(endEntry, mode, protocolsOverridden);
+                        endEntry->addInputConnection(this, mode, protocolsOverridden);
                         owningPanel.skipScan();
                     }
                 }

@@ -207,14 +207,14 @@ namespace ChannelManager
         /*! @brief The port is for a client or adapter. */
         kPortUsageClient,
         
-        /*! @brief The port is for a service. */
-        kPortUsageService,
-        
         /*! @brief The port is for input / output. */
         kPortUsageInputOutput,
         
         /*! @brief The port has no specific characterization. */
         kPortUsageOther,
+        
+        /*! @brief The port is for a service. */
+        kPortUsageService,
         
         /*! @brief Force the size to be 4 bytes. */
         kPortUsageUnknown = 0x7FFFFFF
@@ -255,6 +255,10 @@ namespace ChannelManager
             
         /*! @brief The kind of channel connection. */
         MplusM::Common::ChannelMode _connectionMode;
+        
+        /*! @brief @c true if the channel connection protocols were overridden and @c false
+         otherwise. */
+        bool _forced;
         
         /*! @brief @c true if the channel connection is valid and @c false otherwise. */
         bool _valid;

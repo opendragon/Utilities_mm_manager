@@ -230,8 +230,11 @@ namespace ChannelManager
         void resized(void);
         
         /*! @brief Update the dragging information.
-         @param position The location of the dragging connection. */
-        void setDragInfo(const Position position);
+         @param position The location of the dragging connection.
+         @param isForced @c true if the drag line should show a forced connection and @c false
+         otherwise. */
+        void setDragInfo(const Position position,
+                         const bool     isForced);
         
         /*! @brief Ignore the result of the next scan. */
         void skipScan(void);
@@ -286,6 +289,9 @@ namespace ChannelManager
         /*! @brief @c true if a drag-connection operation is active. */
         bool _dragConnectionActive;
         
+        /*! @brief @c true if the drag operation is for a forced connection. */
+        bool _dragIsForced;
+
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
 #  pragma clang diagnostic ignored "-Wunused-private-field"

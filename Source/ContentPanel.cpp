@@ -1214,8 +1214,8 @@ void ContentPanel::updatePanels(ScannerThread & scanner)
         {
             OD_LOG_S2s("thisPort.name = ", thisPort->getPortName(), //####
                        "otherPort.name = ", otherPort->getPortName()); //####
-            thisPort->addOutputConnection(otherPort, walker->_mode);
-            otherPort->addInputConnection(thisPort, walker->_mode);
+            thisPort->addOutputConnection(otherPort, walker->_mode, false);
+            otherPort->addInputConnection(thisPort, walker->_mode, false);
         }
     }
     if (_entitiesPanel->removeUnvisitedEntities())

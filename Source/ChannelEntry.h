@@ -84,15 +84,21 @@ namespace ChannelManager
         
         /*! @brief Add an input connection to the port.
          @param other The port that is to be connected.
-         @param mode The mode of the connection. */
-        void addInputConnection(ChannelEntry *              other,
-                                MplusM::Common::ChannelMode mode);
+         @param mode The mode of the connection.
+         @param wasOverridden @c true if the protocol matching was overridden and @c false
+         otherwise. */
+        void addInputConnection(ChannelEntry *                    other,
+                                const MplusM::Common::ChannelMode mode,
+                                const bool                        wasOverridden);
         
         /*! @brief Add an output connection to the port.
          @param other The port that is to be connected.
-         @param mode The mode of the connection. */
-        void addOutputConnection(ChannelEntry *              other,
-                                 MplusM::Common::ChannelMode mode);
+         @param mode The mode of the connection.
+         @param wasOverridden @c true if the protocol matching was overridden and @c false
+         otherwise. */
+        void addOutputConnection(ChannelEntry *                    other,
+                                 const MplusM::Common::ChannelMode mode,
+                                 const bool                        wasOverridden);
         
         /*! @brief Determine the anchor point that is the minimum distance from a given point.
          @param result The coordinates of the anchor point.
@@ -141,10 +147,12 @@ namespace ChannelManager
         /*! @brief Draw a drag line from an entry.
          @param gg The graphics context in which to draw.
          @param position The coordinates of the drag line endpoint.
-         @param isUDP @c true if the connection is UDP and @c false otherwise. */
+         @param isUDP @c true if the connection is UDP and @c false otherwise.
+         @param isForced @c true if the connection is forced and @c false otherwise. */
         void drawDragLine(Graphics &       gg,
                           const Position & position,
-                          const bool       isUDP);
+                          const bool       isUDP,
+                          const bool       isForced);
         
         /*! @brief Display the connections between containers.
          @param gg The graphics context in which to draw. */
