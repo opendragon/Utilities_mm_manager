@@ -606,14 +606,7 @@ bool ChannelManagerApplication::doLaunchOtherApplication(void)
     {
         const ApplicationInfo & appInfo = _applicationList.at(res - 1);
 
-//        if (kApplicationAdapter == appInfo._kind)
-//        {
-            result = doLaunchAService(appInfo);
-//        }
-//        else if (kApplicationService == appInfo._kind)
-//        {
-//            result = doLaunchAService(appInfo);
-//        }
+        result = doLaunchAService(appInfo);
     }
     OD_LOG_OBJEXIT_B(result); //####
     return result;
@@ -629,8 +622,9 @@ bool ChannelManagerApplication::doLaunchRegistry(void)
     int                      portChoice = 0;
     int                      res = 0;
     String                   appName(JUCEApplication::getInstance()->getApplicationName());
-    AlertWindow              ww(appName, "Please select the network port to be used to start the "
-                                "Registry Service (enter 0 to use the default port):",
+    AlertWindow              ww("Launching the Registry Service", "Please select the network port "
+                                "to be used to start the Registry Service\n(enter 0 to use the "
+                                "default port):",
                                 AlertWindow::QuestionIcon, _mainWindow);
     
 #if MAC_OR_LINUX_
@@ -653,7 +647,8 @@ bool ChannelManagerApplication::doLaunchRegistry(void)
             }
             else
             {
-                AlertWindow::showMessageBox(AlertWindow::WarningIcon, getApplicationName(),
+                AlertWindow::showMessageBox(AlertWindow::WarningIcon,
+                                            "Launching the Registry Service",
                                             "The port number is invalid. "
                                             "Please enter a value between 1024 and 65535",
                                             String::empty, _mainWindow);

@@ -362,13 +362,14 @@ static void drawBezier(Graphics &       gg,
     bezPath.cubicTo(startPoint + controlPoint1, endPoint + controlPoint2, endPoint);
     if (isDashed)
     {
-        PathStrokeType strokeType(1);
-        const float    dashes[] = { 5, 5 };
+        float          newThickness = sqrt(thickness);
+        PathStrokeType strokeType(newThickness);
+        const float    dashes[] = { 5, 10 };
         const int      numDashes = (sizeof(dashes) / sizeof(*dashes));
         Path           strokedPath;
 
         strokeType.createDashedStroke(strokedPath, bezPath, dashes, numDashes);
-        gg.strokePath(strokedPath, PathStrokeType(thickness));
+        gg.strokePath(strokedPath, PathStrokeType(newThickness));
     }
     else
     {
@@ -1172,6 +1173,7 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
         }
         else if (ee.mods.isPopupMenu())
         {
+            _parent->getOwner().getContent()->setChannelOfInterest(this);
             displayAndProcessPopupMenu();
             passOn = false;
         }

@@ -594,6 +594,7 @@ void ChannelContainer::mouseDown(const MouseEvent & ee)
     }
     else if (ee.mods.isPopupMenu())
     {
+        _owner.getContent()->setContainerOfInterest(this);
         displayAndProcessPopupMenu();
         doDrag = false;
     }
@@ -764,10 +765,10 @@ void ChannelContainer::stopTheService(void)
             else
             {
                 String containerType;
-                String titleText("Are you sure that you want to stop this ");
                 String messageText("If you do, it may take a few moments to disappear from the "
                                    "display, depending on network traffic. "
                                    "Also, the ");
+                String titleText("Are you sure that you want to stop this ");
                 
                 if (kContainerKindAdapter == _kind)
                 {
@@ -788,7 +789,7 @@ void ChannelContainer::stopTheService(void)
                                                             messageText, "Yes", String::empty,
                                                             nullptr, nullptr));
             }
-            if (doStop && Utilities::StopAService(aPort->getPortName(), STANDARD_WAIT_TIME))
+            if (doStop)
             {
                 ContentPanel * thePanel = _owner.getContent();
                 
@@ -796,8 +797,9 @@ void ChannelContainer::stopTheService(void)
                 {
                     thePanel->setChannelOfInterest(nullptr);
                     thePanel->setContainerOfInterest(nullptr);
-                    thePanel->requestWindowRepaint();
                 }
+                Utilities::StopAService(aPort->getPortName(), STANDARD_WAIT_TIME);
+                _owner.repaint();
             }
             break;
             
