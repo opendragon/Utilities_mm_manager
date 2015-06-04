@@ -491,6 +491,8 @@ void ContentPanel::paint(Graphics & gg)
         
         if (ofInterest == aContainer)
         {
+            float                  viewOffsetX = static_cast<float>(getViewPositionX());
+            float                  viewOffsetY = static_cast<float>(getViewPositionY());
             juce::Rectangle<float> selectionRectangle;
             const float            dashes[] = { 5, 5 };
             const int              numDashes = (sizeof(dashes) / sizeof(*dashes));
@@ -505,6 +507,8 @@ void ContentPanel::paint(Graphics & gg)
             {
                 selectionRectangle = _selectedContainer->getBounds().toFloat();
             }
+            // Correct for any active scrolling:
+            selectionRectangle.translate(- viewOffsetX, - viewOffsetY);
             selectionRectangle.expand(kSelectionOffset, kSelectionOffset);
             Point<float> topLeft(selectionRectangle.getTopLeft());
             Point<float> topRight(selectionRectangle.getTopRight());

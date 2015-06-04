@@ -55,6 +55,10 @@
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
 
+/*! @brief Set to @c TRUE to lock settings in order to do screen captures for the manual and
+ @c FALSE for normal behaviour. */
+# define SETTINGS_FOR_MANUAL FALSE
+
 namespace ChannelManager
 {
     class ChannelManagerWindow;

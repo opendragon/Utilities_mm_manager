@@ -621,7 +621,9 @@ void ChannelContainer::mouseDrag(const MouseEvent & ee)
     }
     if (doDrag)
     {
+#if (! SETTINGS_FOR_MANUAL)
         _dragger.dragComponent(this, ee, &_constrainer);
+#endif // ! SETTINGS_FOR_MANUAL
         _owner.repaint();
     }
     OD_LOG_OBJEXIT(); //####

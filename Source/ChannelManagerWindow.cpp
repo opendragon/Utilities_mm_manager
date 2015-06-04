@@ -66,6 +66,12 @@ using namespace std;
 # pragma mark Private structures, constants and variables
 #endif // defined(__APPLE__)
 
+/*! @brief The height of the fixed, small window used when doing screen captures for the manual. */
+#define SETTINGS_WINDOW_HEIGHT 320
+
+/*! @brief The width of the fixed, small window used when doing screen captures for the manual. */
+#define SETTINGS_WINDOW_WIDTH  640
+
 /*! @brief The command manager object used to dispatch command events. */
 static ScopedPointer<ApplicationCommandManager> lApplicationCommandManager;
 
@@ -96,7 +102,11 @@ ChannelManagerWindow::ChannelManagerWindow(const YarpString & title)  :
     setOpaque(true);
     setResizable(true, true);
     setContentOwned(_contentPanel, true);
+#if SETTINGS_FOR_MANUAL
+    centreWithSize(SETTINGS_WINDOW_WIDTH, SETTINGS_WINDOW_HEIGHT);
+#else // ! SETTINGS_FOR_MANUAL
     centreWithSize(getWidth(), getHeight());
+#endif // ! SETTINGS_FOR_MANUAL
     setVisible(true);
     addKeyListener(getApplicationCommandManager().getKeyMappings());
     triggerAsyncUpdate();
