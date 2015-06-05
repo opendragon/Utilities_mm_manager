@@ -546,10 +546,7 @@ ChannelEntry::ChannelEntry(ChannelContainer *  parent,
             break;
             
 	    case kPortDirectionInputOutput :
-            // To avoid confusion, we'll display I/O ports as Output ports, since connecting them to
-            // Output ports is not allowed - they cannot be safely disconnected, as the connection
-            // is, effectively, output-to-output.
-            prefix = ((kPortUsageClient == _usage) ? "C " : "Out ");
+            prefix = ((kPortUsageClient == _usage) ? "C " : "I/O ");
             break;
             
 	    case kPortDirectionOutput :
@@ -1123,7 +1120,7 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
             // Check if we can end here.
             firstAddPort->clearConnectMarker();
             firstAddPort->repaint();
-            if ((kPortDirectionInput == _direction) && (kPortUsageService != _usage) &&
+            if ((kPortDirectionOutput != _direction) && (kPortUsageService != _usage) &&
                 protocolsMatch(firstProtocol, _portProtocol, protocolsOverridden) &&
                 (! firstAddPort->hasOutgoingConnectionTo(getPortName())))
             {
@@ -1242,7 +1239,7 @@ void ChannelEntry::mouseUp(const MouseEvent & ee)
                 YarpString secondName(endEntry->getPortName());
                 YarpString secondProtocol(endEntry->getProtocol());
 
-                if ((kPortDirectionInput == endEntry->getDirection()) &&
+                if ((kPortDirectionOutput != endEntry->getDirection()) &&
                     (kPortUsageService != endEntry->getUsage()) &&
                     protocolsMatch(getProtocol(), secondProtocol, protocolsOverridden) &&
                     (! hasOutgoingConnectionTo(secondName)))
