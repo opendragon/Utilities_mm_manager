@@ -112,6 +112,54 @@ static const int kThreadKillTime = 3000;
 # pragma mark Local functions
 #endif // defined(__APPLE__)
 
+/*! @brief Compare two strings for case-insensitive equality.
+@param string1 The first string to be compared.
+@param string2 The second string to be compared.
+@returns @c true if the two strings are the same when case is ignored and @c false otherwise. */
+static bool caseInsensitiveMatch(const char * string1,
+	                             const char * string2)
+{
+	OD_LOG_ENTER(); //####
+	OD_LOG_S2("string1 = ", string1, "string2 = ", string2); //####
+	bool matched = true;
+
+	if (!string1)
+	{
+		AlertWindow::showMessageBox(AlertWindow::WarningIcon, "Bad first string pointer", String::empty, String::empty, nullptr);
+	}
+	if (!string2)
+	{
+		AlertWindow::showMessageBox(AlertWindow::WarningIcon, "Bad second string pointer", String::empty, String::empty, nullptr);
+	}
+	for ( ; matched; ++string1, ++string2)
+	{
+		if (*string1)
+		{
+			if (*string2)
+			{
+				matched = (toupper(*string1) == toupper(*string2));
+			}
+			else
+			{
+				// First string is longer.
+			}
+		}
+		else if (*string2)
+		{
+			// Second string is longer.
+			matched = false;
+		}
+		else
+		{
+			// Reached end-of-string on both strings.
+			break;
+		}
+
+	}
+	OD_LOG_EXIT_B(matched); //####
+	return matched;
+} // caseInsensitiveMatch
+
 #if defined(__APPLE__)
 # pragma mark Class methods
 #endif // defined(__APPLE__)
@@ -248,7 +296,7 @@ yarp::os::Network * ChannelManagerApplication::checkForYarpAndLaunchIfDesired(vo
                 YarpString anAddress(ipAddressVector[ii]);
                 
                 ipAddressArray.add(anAddress.c_str());
-                if (anAddress == ipAddressAsString)
+                if (ipAddressAsString && (anAddress == ipAddressAsString))
                 {
                     initialSelection = ii;
                 }
@@ -785,6 +833,7 @@ String ChannelManagerApplication::findPathToExecutable(const String & execName)
                     {
                         // We've found an executable that we can use!
                         result = temp;
+						pathVar = "";
                     }
                 }
             }
@@ -867,11 +916,13 @@ String ChannelManagerApplication::getEnvironmentVar(const char * varName)
     getEnvironmentVars(keys, values);
     for (size_t ii = 0, mm = keys.size(); mm > ii; ++ii)
     {
-        if (match == keys[ii])
-        {
-            result = values[ii].c_str();
-            break;
-        }
+		const char * keysAsChars = keys[ii].c_str();
+
+		if (caseInsensitiveMatch(varName, keysAsChars))
+		{
+			result = values[ii].c_str();
+			break;
+		}
         
     }
     OD_LOG_EXIT_s(result.toStdString()); //####
