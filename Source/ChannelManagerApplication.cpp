@@ -123,13 +123,15 @@ static bool caseInsensitiveMatch(const char * string1,
 	OD_LOG_S2("string1 = ", string1, "string2 = ", string2); //####
 	bool matched = true;
 
-	if (!string1)
+	if (! string1)
 	{
-		AlertWindow::showMessageBox(AlertWindow::WarningIcon, "Bad first string pointer", String::empty, String::empty, nullptr);
+		AlertWindow::showMessageBox(AlertWindow::WarningIcon, "Bad first string pointer",
+                                    String::empty, String::empty, nullptr);
 	}
-	if (!string2)
+	if (! string2)
 	{
-		AlertWindow::showMessageBox(AlertWindow::WarningIcon, "Bad second string pointer", String::empty, String::empty, nullptr);
+		AlertWindow::showMessageBox(AlertWindow::WarningIcon, "Bad second string pointer",
+                                    String::empty, String::empty, nullptr);
 	}
 	for ( ; matched; ++string1, ++string2)
 	{
