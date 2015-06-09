@@ -202,10 +202,10 @@ void EntitiesPanel::adjustSize(const bool andRepaint)
                 
                 if (haveValues)
                 {
-                    minX = min(minX, entityLeft);
-                    maxX = max(maxX, entityRight);
-                    minY = min(minY, entityTop);
-                    maxY = max(maxY, entityBottom);
+                    minX = jmin(minX, entityLeft);
+                    maxX = jmax(maxX, entityRight);
+                    minY = jmin(minY, entityTop);
+                    maxY = jmax(maxY, entityBottom);
                 }
                 else
                 {
@@ -222,10 +222,10 @@ void EntitiesPanel::adjustSize(const bool andRepaint)
             OD_LOG("(haveValues)"); //####
             OD_LOG_LL4("minX = ", minX, "maxX = ", maxX, "minY = ", minY, "maxY = ", maxY); //####
             juce::Rectangle<int> oldBounds(getBounds());
-            int                  minLeft = min(0, minX);
-            int                  maxRight = max(max(0, maxX + kGutter), minLeft + outerW);
-            int                  minTop = min(0, minY);
-            int                  maxBottom = max(max(0, maxY + kGutter), minTop + outerH);
+            int                  minLeft = jmin(0, minX);
+            int                  maxRight = jmax(jmax(0, maxX + kGutter), minLeft + outerW);
+            int                  minTop = jmin(0, minY);
+            int                  maxBottom = jmax(jmax(0, maxY + kGutter), minTop + outerH);
             juce::Rectangle<int> newBounds(minLeft, minTop, maxRight - minLeft, maxBottom - minTop);
             
             OD_LOG_LL4("minLeft = ", minLeft, "minTop = ", minTop, "maxRight = ", maxRight, //####
@@ -390,6 +390,7 @@ void EntitiesPanel::displayAndProcessPopupMenu(void)
                                             &ChannelManagerWindow::getApplicationCommandManager();
         PopupMenu                   mm;
         
+        mm.setLookAndFeel(&getLookAndFeel());
         _container->setUpViewMenu(mm);
         mm.addSeparator();
         mm.addCommandItem(commandManager, ChannelManagerWindow::kCommandLaunchRegistryService);

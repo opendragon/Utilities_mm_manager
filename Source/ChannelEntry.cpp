@@ -758,6 +758,7 @@ void ChannelEntry::displayAndProcessPopupMenu(void)
     OD_LOG_OBJENTER(); //####
     PopupMenu mm;
     
+    mm.setLookAndFeel(&getLookAndFeel());
     _parent->getOwner().getContent()->setUpChannelMenu(mm, *this);
     int result = mm.show();
     

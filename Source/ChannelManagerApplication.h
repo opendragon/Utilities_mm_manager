@@ -290,6 +290,7 @@ namespace ChannelManager
         /*! @brief The list of launchable applications. */
         ApplicationList _applicationList;
         
+        /*! @brief The popup menu used for the list of applications. */
         PopupMenu _applicationMenu;
         
         /*! @brief The configured YARP address prior to launching a private YARP network. */

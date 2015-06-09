@@ -309,6 +309,7 @@ PopupMenu ContentPanel::getMenuForIndex(int            menuIndex,
                                             &ChannelManagerWindow::getApplicationCommandManager();
     PopupMenu                   menu;
     
+    menu.setLookAndFeel(&getLookAndFeel());
     switch (menuIndex)
     {
         case 0 :
@@ -645,7 +646,7 @@ void ContentPanel::recallEntityPositions(void)
         StringArray stuffFromFile;
         
         settingsFile.readLines(stuffFromFile);
-        for (int ii = 0, max = stuffFromFile.size(); max > ii; ++ii)
+        for (int ii = 0, maxs = stuffFromFile.size(); maxs > ii; ++ii)
         {
             String aLine = stuffFromFile[ii];
             
@@ -1289,7 +1290,7 @@ void ChannelManager::DisplayInformationPanel(Component *    above,
     BorderSize<int> bt = aWindow->getBorderThickness();
     BorderSize<int> cb = aWindow->getContentComponentBorder();
     int             tw = aLabel->getFont().getStringWidth(title);
-    int             minW = max(tw, dimensions.getX());
+    int             minW = jmax(tw, dimensions.getX());
     int             calcW = minW + bt.getLeftAndRight() + cb.getLeftAndRight() + kExtraDisplayWidth;
     int             calcH = dimensions.getY() + bt.getTopAndBottom() + cb.getTopAndBottom();
     

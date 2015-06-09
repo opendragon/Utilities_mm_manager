@@ -163,7 +163,7 @@ ChannelEntry * ChannelContainer::addPort(const YarpString &  portName,
     int            countBefore = getNumPorts();
     ChannelEntry * aPort = new ChannelEntry(this, portName, portNumber, portProtocol,
                                             protocolDescription, portKind, direction);
-    float          newWidth = static_cast<float>(max(aPort->getWidth(), getWidth()));
+    float          newWidth = static_cast<float>(jmax(aPort->getWidth(), getWidth()));
     float          newHeight = aPort->getHeight() + getHeight() + lEntryGap;
     
     OD_LOG_LL2("newWidth = ", newWidth, "newHeight = ", newHeight); //####
@@ -234,6 +234,7 @@ void ChannelContainer::displayAndProcessPopupMenu(void)
     OD_LOG_OBJENTER(); //####
     PopupMenu mm;
 
+    mm.setLookAndFeel(&getLookAndFeel());
     getOwner().getContent()->setUpContainerMenu(mm, *this);
     int result = mm.show();
     

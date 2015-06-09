@@ -438,9 +438,17 @@ bool ChannelManagerApplication::doLaunchAService(const ApplicationInfo & appInfo
     }
     if (okSoFar)
     {
+        enum buttonValues
+        {
+            kButtonIsCancel,
+            kButtonIsOK,
+            kButtonIsAddField,
+            kButtonIsRemoveField // see description below
+        };
         const char *                        endpointFieldName = "$$$endpoint$$$";
         const char *                        portFieldName = "$$$port$$$";
         const char *                        tagFieldName = "$$$tag$$$";
+        bool                                canHaveExtraArguments = false;
         bool                                canSetEndpoint;
         bool                                canSetPort;
         bool                                canSetTag;
@@ -450,9 +458,13 @@ bool ChannelManagerApplication::doLaunchAService(const ApplicationInfo & appInfo
         const Utilities::DescriptorVector & descriptors = appInfo._argDescriptions;
         size_t                              numDescriptors = descriptors.size();
         String                              endpointToUse;
+        String                              extraArgName;
         String                              portToUse;
         String                              tagToUse;
         StringArray                         argsToUse;
+        Component *                         addArgumentsButton = nullptr;
+        Component *                         removeArgumentsButton = nullptr; // see description
+        std::vector<String>                 addedComponentNames;
         
 #if MAC_OR_LINUX_
         theLogger.warning((execType + " being launched.").toStdString());
@@ -489,24 +501,61 @@ bool ChannelManagerApplication::doLaunchAService(const ApplicationInfo & appInfo
             
             if (aDescriptor)
             {
-                String descriptionPrefix;
-                String description(aDescriptor->argumentDescription().c_str());
-                
-                if (aDescriptor->isOptional())
+                String argName(aDescriptor->argumentName().c_str());
+                String argDescription(aDescriptor->argumentDescription().c_str());
+
+                if (aDescriptor->isExtra())
                 {
-                    descriptionPrefix = "(Optional) ";
+                    if (! canHaveExtraArguments)
+                    {
+                        canHaveExtraArguments = true;
+                        extraArgName = argName;
+                        ww.addTextBlock(argDescription);
+                        ww.addButton(String("+ ") + argName, kButtonIsAddField,
+                                     KeyPress('+', ModifierKeys::commandModifier, 0));
+                        addArgumentsButton = ww.getChildComponent(ww.getNumChildComponents() - 1);
+                        ww.addButton(String("- ") + argName, kButtonIsRemoveField,
+                                     KeyPress('-', ModifierKeys::commandModifier, 0));
+                        // For some bizarre reason, if we don't add this button, the title of the
+                        // first text editor for the extra arguments is damaged, but not later ones.
+                        removeArgumentsButton =
+                                            ww.getChildComponent(ww.getNumChildComponents() - 1);
+                        removeArgumentsButton->setVisible(false);
+                    }
                 }
-                ww.addTextEditor(aDescriptor->argumentName().c_str(),
-                                 aDescriptor->getDefaultValue().c_str(),
-                                 descriptionPrefix + description);
+                else
+                {
+                    String descriptionPrefix;
+                    
+                    if (aDescriptor->isOptional())
+                    {
+                        descriptionPrefix = "(Optional) ";
+                    }
+                    ww.addTextEditor(argName, aDescriptor->getDefaultValue().c_str(),
+                                     descriptionPrefix + argDescription);
+                }
             }
         }
-        ww.addButton("OK", 1, KeyPress(KeyPress::returnKey, 0, 0));
-        ww.addButton("Cancel", 0, KeyPress(KeyPress::escapeKey, 0, 0));
+        ww.addButton("OK", kButtonIsOK, KeyPress(KeyPress::returnKey, 0, 0));
+        ww.addButton("Cancel", kButtonIsCancel, KeyPress(KeyPress::escapeKey, 0, 0));
         for (bool keepGoing = true; keepGoing; )
         {
             res = ww.runModalLoop();
-            if (1 == res)
+            if (canHaveExtraArguments && (kButtonIsAddField == res))
+            {
+                String compCountAsString(static_cast<int>(addedComponentNames.size() + 1));
+                String compName(extraArgName + "_" + compCountAsString);
+                String compTitle(extraArgName + " " + compCountAsString);
+                
+                ww.addTextEditor(compName, "", compTitle);
+                addedComponentNames.push_back(compName);
+            }
+            else if (canHaveExtraArguments && (kButtonIsRemoveField == res))
+            {
+                // disabled, since removing the text editor is not possible - the label component
+                // remains
+            }
+            else if (kButtonIsOK == res)
             {
                 StringArray channels;
                 String      badArgs;
@@ -518,14 +567,18 @@ bool ChannelManagerApplication::doLaunchAService(const ApplicationInfo & appInfo
                 {
                     Utilities::BaseArgumentDescriptor * aDescriptor = descriptors[ii];
                     
-                    if (aDescriptor)
+                    if (aDescriptor && (! aDescriptor->isExtra()))
                     {
                         String argName = aDescriptor->argumentName().c_str();
                         String anArg = ww.getTextEditorContents(argName);
                         
                         if (0 == anArg.length())
                         {
-                            if (! aDescriptor->isOptional())
+                            if (aDescriptor->isOptional())
+                            {
+                                argsToUse.add(aDescriptor->getDefaultValue().c_str());
+                            }
+                            else
                             {
                                 if (0 < badArgs.length())
                                 {
@@ -549,6 +602,12 @@ bool ChannelManagerApplication::doLaunchAService(const ApplicationInfo & appInfo
                             ++badCount;
                         }
                     }
+                }
+                // Add the extra arguments here.
+                for (std::vector<String>::const_iterator walker(addedComponentNames.begin());
+                     addedComponentNames.end() != walker; ++walker)
+                {
+                    argsToUse.add(ww.getTextEditorContents(*walker));
                 }
                 if (canSetEndpoint)
                 {
@@ -649,6 +708,7 @@ bool ChannelManagerApplication::doLaunchAService(const ApplicationInfo & appInfo
 bool ChannelManagerApplication::doLaunchOtherApplication(void)
 {
     OD_LOG_OBJENTER(); //####
+    _applicationMenu.setLookAndFeel(&_mainWindow->getLookAndFeel());
     bool result = false;
     int  res = _applicationMenu.show();
 
@@ -1069,7 +1129,7 @@ bool ChannelManagerApplication::getParametersForApplication(const String &    ex
                         theInfo._applicationPath = nameAndArgs[0];
                         theInfo._options = aRecord[1];
                         theInfo._criteria = aRecord[2];
-                        theInfo._description = aRecord[3];
+                        theInfo._description = aRecord[3].trim();
                         theInfo._shortName = execName;
                     }
                 }
@@ -1328,6 +1388,8 @@ void ChannelManagerApplication::loadApplicationLists(void)
             {
                 ApplicationInfo theInfo;
                 
+                // Strip off any trailing newlines.
+                aLine = aLine.trim();
                 if (getParametersForApplication(aLine, theInfo) &&
                     getArgumentsForApplication(theInfo))
                 {
