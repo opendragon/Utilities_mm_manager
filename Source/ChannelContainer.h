@@ -263,10 +263,6 @@ namespace ChannelManager
          @param ee Details about the position and status of the mouse event. */
         virtual void mouseDrag(const MouseEvent & ee);
         
-        /*! @brief Draw the content of the component.
-         @param gg The graphics context in which to draw. */
-        virtual void paint(Graphics & gg);
-        
         /*! @brief Remove connections that are invalid. */
         void removeInvalidConnections(void);
         
@@ -320,6 +316,10 @@ namespace ChannelManager
         
         /*! @brief Respond to a request for a popup menu. */
         void displayAndProcessPopupMenu(void);
+        
+        /*! @brief Draw the content of the component.
+         @param gg The graphics context in which to draw. */
+        virtual void paint(Graphics & gg);
         
     public :
     

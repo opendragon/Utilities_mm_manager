@@ -71,15 +71,15 @@ namespace ChannelManager
         /*! @brief The destructor. */
         virtual ~YarpLaunchThread(void);
         
-        /*! @brief Perform the background scan. */
-        virtual void run(void);
-        
 		/*! @brief Force the child process to terminate. */
 		void killChildProcess(void);
 
     protected :
         
     private :
+        
+        /*! @brief Perform the background scan. */
+        virtual void run(void);
         
     public :
     

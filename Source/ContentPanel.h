@@ -114,28 +114,6 @@ namespace ChannelManager
             return *_entitiesPanel;
         } // getEntitiesPanel
         
-        /*! @brief Return a list of the names of the menus.
-         @returns A list of the names of the menus. */
-        virtual StringArray getMenuBarNames(void);
-
-        /*! @brief Return the popup menu to display for a given top-level menu.
-         @param menuIndex The index of the top-level menu to show.
-         @param menuName The name of the top-level menu item to show.
-         @returns The popup menu corresponding to the given index and name. */
-        virtual PopupMenu getMenuForIndex(int            menuIndex,
-                                          const String & menuName);
-
-        /*! @brief Perform the selected menu item action.
-         @param menuItemID The item ID of the menu item that was selected.
-         @param topLevelMenuIndex The index of the top-level menu from which the item was
-         selected. */
-        virtual void menuItemSelected(int menuItemID,
-                                      int topLevelMenuIndex);
-
-        /*! @brief Draw the content of the component.
-         @param gg The graphics context in which to draw. */
-        void paint(Graphics & gg);
-        
         /*! @brief Restore the positions of all the entities in the panel. */
         void recallEntityPositions(void);
         
@@ -144,9 +122,6 @@ namespace ChannelManager
         
         /*! @brief Ask the containing window to do a repaint. */
         void requestWindowRepaint(void);
-        
-        /*! @brief Called when the component size has been changed. */
-        void resized(void);
         
         /*! @brief Record the positions of all the entities in the panel. */
         void saveEntityPositions(void);
@@ -176,10 +151,6 @@ namespace ChannelManager
         /*! @brief Ignore the result of the next scan. */
         void skipScan(void);
         
-        /*! @brief Called when the visible area changes.
-         @param newVisibleArea The new visible area. */
-        virtual void visibleAreaChanged(const juce::Rectangle<int> & newVisibleArea);
-        
     protected :
         
     private :
@@ -194,14 +165,39 @@ namespace ChannelManager
         virtual void getCommandInfo(CommandID                commandID,
                                     ApplicationCommandInfo & result);
         
+        /*! @brief Return a list of the names of the menus.
+         @returns A list of the names of the menus. */
+        virtual StringArray getMenuBarNames(void);
+        
+        /*! @brief Return the popup menu to display for a given top-level menu.
+         @param menuIndex The index of the top-level menu to show.
+         @param menuName The name of the top-level menu item to show.
+         @returns The popup menu corresponding to the given index and name. */
+        virtual PopupMenu getMenuForIndex(int            menuIndex,
+                                          const String & menuName);
+        
         /*! @brief Return the next target to try after this one.
          @returns The next target to try after this one. */
         virtual ApplicationCommandTarget * getNextCommandTarget(void);
+        
+        /*! @brief Perform the selected menu item action.
+         @param menuItemID The item ID of the menu item that was selected.
+         @param topLevelMenuIndex The index of the top-level menu from which the item was
+         selected. */
+        virtual void menuItemSelected(int menuItemID,
+                                      int topLevelMenuIndex);
+        
+        /*! @brief Draw the content of the component.
+         @param gg The graphics context in which to draw. */
+        virtual void paint(Graphics & gg);
         
         /*! @brief Perform the specified command.
          @param info The details for the command.
          @returns @c true if the command was handled and @c false if it was not. */
         virtual bool perform(const InvocationInfo & info);
+        
+        /*! @brief Called when the component size has been changed. */
+        virtual void resized(void);
         
         /*! @brief Set the entity positions, based on the scanned entities. */
         void setEntityPositions(void);
@@ -213,6 +209,10 @@ namespace ChannelManager
         /*! @brief Refresh the displayed entities and connections, based on the scanned entities.
          @param scanner The background scanning thread. */
         void updatePanels(ScannerThread & scanner);
+        
+        /*! @brief Called when the visible area changes.
+         @param newVisibleArea The new visible area. */
+        virtual void visibleAreaChanged(const juce::Rectangle<int> & newVisibleArea);
         
     public :
     

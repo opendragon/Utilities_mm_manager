@@ -92,9 +92,6 @@ namespace ChannelManager
             return _workingData;
         } // getEntitiesData
         
-        /*! @brief Perform the background scan. */
-        virtual void run(void);
-        
         /*! @brief Indicate that the scan data has been processed and the scan can proceed. */
         void scanCanProceed(void);
         
@@ -163,6 +160,9 @@ namespace ChannelManager
         
         /*! @brief Release access from writing to the shared resources. */
         void relinquishFromWrite(void);
+        
+        /*! @brief Perform the background scan. */
+        virtual void run(void);
         
         /*! @brief Tell the displayed panel to do a repaint. */
         void triggerRepaint(void);

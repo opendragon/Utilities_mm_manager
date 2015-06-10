@@ -37,6 +37,7 @@
 //--------------------------------------------------------------------------------------------------
 
 #include "ChannelManagerApplication.h"
+#include "ApplicationSettingsWindow.h"
 #include "EntitiesPanel.h"
 #include "PeekInputHandler.h"
 #include "RegistryLaunchThread.h"
@@ -399,12 +400,11 @@ void ChannelManagerApplication::doCleanupSoon(void)
     OD_LOG_OBJEXIT(); //####
 } // ChannelManagerApplication::doCleanupSoon
 
-bool ChannelManagerApplication::doLaunchAService(const ApplicationInfo & appInfo)
+void ChannelManagerApplication::doLaunchAService(const ApplicationInfo & appInfo)
 {
     OD_LOG_OBJENTER(); //####
     bool                     okSoFar = false;
-    bool                     result = false;
-    String                   caption("Launching ");
+    String                   caption("Launching the ");
     String                   execType;
     YarpStringVector         services;
 #if MAC_OR_LINUX_
@@ -438,260 +438,28 @@ bool ChannelManagerApplication::doLaunchAService(const ApplicationInfo & appInfo
     }
     if (okSoFar)
     {
-        enum buttonValues
-        {
-            kButtonIsCancel,
-            kButtonIsOK,
-            kButtonIsAddField,
-            kButtonIsRemoveField // see description below
-        };
-        const char *                        endpointFieldName = "$$$endpoint$$$";
-        const char *                        portFieldName = "$$$port$$$";
-        const char *                        tagFieldName = "$$$tag$$$";
-        bool                                canHaveExtraArguments = false;
-        bool                                canSetEndpoint;
-        bool                                canSetPort;
-        bool                                canSetTag;
-        bool                                needsGo;
-        int                                 res = 0;
-        AlertWindow                         ww(caption, "", AlertWindow::NoIcon, _mainWindow);
-        const Utilities::DescriptorVector & descriptors = appInfo._argDescriptions;
-        size_t                              numDescriptors = descriptors.size();
-        String                              endpointToUse;
-        String                              extraArgName;
-        String                              portToUse;
-        String                              tagToUse;
-        StringArray                         argsToUse;
-        Component *                         addArgumentsButton = nullptr;
-        Component *                         removeArgumentsButton = nullptr; // see description
-        std::vector<String>                 addedComponentNames;
-        
 #if MAC_OR_LINUX_
         theLogger.warning((execType + " being launched.").toStdString());
 #endif // MAC_OR_LINUX_
-        canSetEndpoint = appInfo._options.contains("e");
-        canSetPort = appInfo._options.contains("p");
-        canSetTag = appInfo._options.contains("t");
-        needsGo = appInfo._options.contains("g");
-        if ((0 < numDescriptors) || canSetEndpoint || canSetPort || canSetTag)
-        {
-            ww.setMessage(String("The ") + execType + " has one or more arguments, that need to be "
-                          "provided before it can be launched.");
-        }
-        else
-        {
-            ww.setMessage(String("The ") + execType + " has no arguments or options, so it can be "
-                          "launched right now.");
-        }
-        if (canSetEndpoint)
-        {
-            ww.addTextEditor(endpointFieldName, "", "(Optional) Endpoint to use");
-        }
-        if (canSetPort)
-        {
-            ww.addTextEditor(portFieldName, "", "(Optional) Network port to use");
-        }
-        if (canSetTag)
-        {
-            ww.addTextEditor(tagFieldName, "", String("(Optional) Tag for the ") + execType);
-        }
-        for (size_t ii = 0; numDescriptors > ii; ++ii)
-        {
-            Utilities::BaseArgumentDescriptor * aDescriptor = descriptors[ii];
-            
-            if (aDescriptor)
-            {
-                String argName(aDescriptor->argumentName().c_str());
-                String argDescription(aDescriptor->argumentDescription().c_str());
-
-                if (aDescriptor->isExtra())
-                {
-                    if (! canHaveExtraArguments)
-                    {
-                        canHaveExtraArguments = true;
-                        extraArgName = argName;
-                        ww.addTextBlock(argDescription);
-                        ww.addButton(String("+ ") + argName, kButtonIsAddField,
-                                     KeyPress('+', ModifierKeys::commandModifier, 0));
-                        addArgumentsButton = ww.getChildComponent(ww.getNumChildComponents() - 1);
-                        ww.addButton(String("- ") + argName, kButtonIsRemoveField,
-                                     KeyPress('-', ModifierKeys::commandModifier, 0));
-                        // For some bizarre reason, if we don't add this button, the title of the
-                        // first text editor for the extra arguments is damaged, but not later ones.
-                        removeArgumentsButton =
-                                            ww.getChildComponent(ww.getNumChildComponents() - 1);
-                        removeArgumentsButton->setVisible(false);
-                    }
-                }
-                else
-                {
-                    String descriptionPrefix;
-                    
-                    if (aDescriptor->isOptional())
-                    {
-                        descriptionPrefix = "(Optional) ";
-                    }
-                    ww.addTextEditor(argName, aDescriptor->getDefaultValue().c_str(),
-                                     descriptionPrefix + argDescription);
-                }
-            }
-        }
-        ww.addButton("OK", kButtonIsOK, KeyPress(KeyPress::returnKey, 0, 0));
-        ww.addButton("Cancel", kButtonIsCancel, KeyPress(KeyPress::escapeKey, 0, 0));
-        for (bool keepGoing = true; keepGoing; )
-        {
-            res = ww.runModalLoop();
-            if (canHaveExtraArguments && (kButtonIsAddField == res))
-            {
-                String compCountAsString(static_cast<int>(addedComponentNames.size() + 1));
-                String compName(extraArgName + "_" + compCountAsString);
-                String compTitle(extraArgName + " " + compCountAsString);
-                
-                ww.addTextEditor(compName, "", compTitle);
-                addedComponentNames.push_back(compName);
-            }
-            else if (canHaveExtraArguments && (kButtonIsRemoveField == res))
-            {
-                // disabled, since removing the text editor is not possible - the label component
-                // remains
-            }
-            else if (kButtonIsOK == res)
-            {
-                StringArray channels;
-                String      badArgs;
-                String      primaryChannel;
-                int         badCount = 0;
-                
-                argsToUse.clear();
-                for (size_t ii = 0; numDescriptors > ii; ++ii)
-                {
-                    Utilities::BaseArgumentDescriptor * aDescriptor = descriptors[ii];
-                    
-                    if (aDescriptor && (! aDescriptor->isExtra()))
-                    {
-                        String argName = aDescriptor->argumentName().c_str();
-                        String anArg = ww.getTextEditorContents(argName);
-                        
-                        if (0 == anArg.length())
-                        {
-                            if (aDescriptor->isOptional())
-                            {
-                                argsToUse.add(aDescriptor->getDefaultValue().c_str());
-                            }
-                            else
-                            {
-                                if (0 < badArgs.length())
-                                {
-                                    badArgs += "\n";
-                                }
-                                badArgs += aDescriptor->argumentName().c_str();
-                                ++badCount;
-                            }
-                        }
-                        else if (aDescriptor->validate(anArg.toStdString()))
-                        {
-                            argsToUse.add(anArg);
-                        }
-                        else
-                        {
-                            if (0 < badArgs.length())
-                            {
-                                badArgs += "\n";
-                            }
-                            badArgs += aDescriptor->argumentName().c_str();
-                            ++badCount;
-                        }
-                    }
-                }
-                // Add the extra arguments here.
-                for (std::vector<String>::const_iterator walker(addedComponentNames.begin());
-                     addedComponentNames.end() != walker; ++walker)
-                {
-                    argsToUse.add(ww.getTextEditorContents(*walker));
-                }
-                if (canSetEndpoint)
-                {
-                    endpointToUse = ww.getTextEditorContents(endpointFieldName);
-                    if ((0 < endpointToUse.length()) &&
-                        (! Common::Endpoint::CheckEndpointName(endpointToUse.toStdString())))
-                    {
-                        if (0 < badArgs.length())
-                        {
-                            badArgs += "\n";
-                        }
-                        badArgs += "Endpoint";
-                        ++badCount;
-                    }
-                }
-                if (canSetPort)
-                {
-                    portToUse = ww.getTextEditorContents(portFieldName);
-                    int    portChoice = portToUse.getIntValue();
-                    
-                    if ((0 != portChoice) && (! Utilities::ValidPortNumber(portChoice)))
-                    {
-                        if (0 < badArgs.length())
-                        {
-                            badArgs += "\n";
-                        }
-                        badArgs += "Port";
-                        ++badCount;
-                    }
-                }
-                if (canSetTag)
-                {
-                    tagToUse = ww.getTextEditorContents(tagFieldName);
-                }
-                if (0 < badCount)
-                {
-                    String message1((1 < badCount) ? "arguments are" : "argument is");
-                    String message2((1 < badCount) ? "arguments" : "argument");
-                    
-                    AlertWindow::showMessageBox(AlertWindow::WarningIcon, caption,
-                                                String("The following ") + message1 +
-                                                " invalid:\n" + badArgs + "\n" +
-                                                String("Please correct the ") + message2 +
-                                                " to the " + execType + " and try again.",
-                                                String::empty, _mainWindow);
-                }
-                else if (getPrimaryChannelForService(appInfo, endpointToUse, tagToUse, portToUse,
-                                                     argsToUse, primaryChannel))
-                {
-                    if (Utilities::CheckForChannel(primaryChannel.toStdString()))
-                    {
-                        AlertWindow::showMessageBox(AlertWindow::WarningIcon, caption,
-                                                    String("The primary channel\n") +
-                                                    primaryChannel +
-                                                    "\nof the " + execType + " is in use.\n"
-                                                    "Please correct the arguments to the " +
-                                                    execType + " and try again.", String::empty,
-                                                    _mainWindow);
-                    }
-                    else
-                    {
-                        // We're good to go!
-                        keepGoing = false;
-                    }
-                }
-                else
-                {
-                    AlertWindow::showMessageBox(AlertWindow::WarningIcon, caption,
-                                                "There was a problem retrieving the primary "
-                                                "channel for the " + execType + ". "
-                                                "Please try again.", String::empty, _mainWindow);
-                }
-            }
-            else
-            {
-                keepGoing = false;
-            }
-        }
-        if (1 == res)
+        String                                   endpointToUse;
+        String                                   portToUse;
+        String                                   tagToUse;
+        StringArray                              argsToUse;
+        ScopedPointer<ApplicationSettingsWindow>
+                                            settingsWindow(new ApplicationSettingsWindow(caption,
+                                                                                         execType,
+                                                                                         appInfo,
+                                                                                     endpointToUse,
+                                                                                         tagToUse,
+                                                                                     portToUse,
+                                                                                     argsToUse));
+        
+        if (ApplicationSettingsWindow::kSettingsAccept == settingsWindow->runModalLoop())
         {
             ServiceLaunchThread * aLauncher = new ServiceLaunchThread(appInfo._applicationPath,
                                                                       endpointToUse, tagToUse,
                                                                       portToUse, argsToUse,
-                                                                      needsGo);
+                                                                  appInfo._options.contains("g"));
             
             if (aLauncher)
             {
@@ -701,25 +469,22 @@ bool ChannelManagerApplication::doLaunchAService(const ApplicationInfo & appInfo
             }
         }
     }
-    OD_LOG_OBJEXIT_B(result); //####
-    return result;
+    OD_LOG_OBJEXIT(); //####
 } // ChannelManagerApplication::doLaunchAService
 
-bool ChannelManagerApplication::doLaunchOtherApplication(void)
+void ChannelManagerApplication::doLaunchOtherApplication(void)
 {
     OD_LOG_OBJENTER(); //####
     _applicationMenu.setLookAndFeel(&_mainWindow->getLookAndFeel());
-    bool result = false;
-    int  res = _applicationMenu.show();
+    int res = _applicationMenu.show();
 
     if (0 < res)
     {
         const ApplicationInfo & appInfo = _applicationList.at(res - 1);
 
-        result = doLaunchAService(appInfo);
+        doLaunchAService(appInfo);
     }
-    OD_LOG_OBJEXIT_B(result); //####
-    return result;
+    OD_LOG_OBJEXIT(); //####
 } // ChannelManagerApplication::doLaunchOtherApplication
 
 bool ChannelManagerApplication::doLaunchRegistry(void)
@@ -1109,7 +874,7 @@ bool ChannelManagerApplication::getParametersForApplication(const String &    ex
                 // 0) Type ('Service' or 'Adapter')
                 // 1) Allowed options
                 // 2) Matching criteria
-                // 3) Description (if 'Adapter')
+                // 3) Description
                 if (4 <= aRecord.size())
                 {
                     String execKind(aRecord[0]);
@@ -1605,6 +1370,34 @@ bool ChannelManagerApplication::validateYarp(void)
 #if defined(__APPLE__)
 # pragma mark Global functions
 #endif // defined(__APPLE__)
+
+void ChannelManager::CalculateTextArea(Point<int> &   dimensions,
+                                       const Font &   aFont,
+                                       const String & aString)
+{
+    OD_LOG_ENTER(); //####
+    OD_LOG_P2("dimensions = ", &dimensions, "aFont = ", &aFont); //####
+    OD_LOG_S1s("aString = ", aString.toStdString()); //####
+    float       maxWidth = 0;
+    StringArray asLines;
+    
+    asLines.addLines(aString);
+    int numRows = asLines.size();
+    
+    for (int ii = 0; ii < numRows; ++ii)
+    {
+        const String & aRow = asLines[ii];
+        float          aWidth = aFont.getStringWidthFloat(aRow);
+        
+        if (maxWidth < aWidth)
+        {
+            maxWidth = aWidth;
+        }
+    }
+    dimensions = Point<int>(static_cast<int>(maxWidth + 0.5),
+                            static_cast<int>((numRows * aFont.getHeight()) + 0.5));
+    OD_LOG_EXIT(); //####
+} // ChannelManager::CalculateTextArea
 
 #if (! MAC_OR_LINUX_)
 # pragma warning(push)

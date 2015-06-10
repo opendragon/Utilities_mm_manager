@@ -303,22 +303,6 @@ namespace ChannelManager
             return (kPortUsageService == _usage);
         } // isService
         
-        /*! @brief Called when a mouse button is pressed.
-         @param ee Details about the position and status of the mouse event. */
-        virtual void mouseDown(const MouseEvent & ee);
-        
-        /*! @brief Called when the mouse is moved while a button is held down.
-         @param ee Details about the position and status of the mouse event. */
-        virtual void mouseDrag(const MouseEvent & ee);
-        
-        /*! @brief Called when a mouse button is released.
-         @param ee Details about the position and status of the mouse event. */
-        virtual void mouseUp(const MouseEvent & ee);
-        
-        /*! @brief Draw the content of the component.
-         @param gg The graphics context in which to draw. */
-        virtual void paint(Graphics & gg);
-        
         /*! @brief Remove an input connection from a port.
          @param other The port that is to be disconnected. */
         void removeInputConnection(ChannelEntry * other);
@@ -364,6 +348,22 @@ namespace ChannelManager
         
         /*! @brief Respond to a request for a popup menu. */
         void displayAndProcessPopupMenu(void);
+        
+        /*! @brief Called when a mouse button is pressed.
+         @param ee Details about the position and status of the mouse event. */
+        virtual void mouseDown(const MouseEvent & ee);
+        
+        /*! @brief Called when the mouse is moved while a button is held down.
+         @param ee Details about the position and status of the mouse event. */
+        virtual void mouseDrag(const MouseEvent & ee);
+        
+        /*! @brief Called when a mouse button is released.
+         @param ee Details about the position and status of the mouse event. */
+        virtual void mouseUp(const MouseEvent & ee);
+        
+        /*! @brief Draw the content of the component.
+         @param gg The graphics context in which to draw. */
+        virtual void paint(Graphics & gg);
         
         /*! @brief Remove all connections. */
         void removeAllConnections(void);

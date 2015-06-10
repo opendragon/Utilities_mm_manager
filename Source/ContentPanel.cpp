@@ -122,38 +122,6 @@ static const int kExtraDisplayWidth = 32;
 # pragma mark Local functions
 #endif // defined(__APPLE__)
 
-/*! @brief Determine the maximum dimensions of a text string.
- @param dimensions The calculated maximum width and height.
- @param aFont The font to use for the calculations.
- @param aString The string to be analyzed. */
-void calculateTextArea(Point<int> &   dimensions,
-                       const Font &   aFont,
-                       const String & aString)
-{
-    OD_LOG_ENTER(); //####
-    OD_LOG_P2("dimensions = ", &dimensions, "aFont = ", &aFont); //####
-    OD_LOG_S1s("aString = ", aString.toStdString()); //####
-    float       maxWidth = 0;
-    StringArray asLines;
-    
-    asLines.addLines(aString);
-    int numRows = asLines.size();
-    
-    for (int ii = 0; ii < numRows; ++ii)
-    {
-        const String & aRow = asLines[ii];
-        float          aWidth = aFont.getStringWidthFloat(aRow);
-        
-        if (maxWidth < aWidth)
-        {
-            maxWidth = aWidth;
-        }
-    }
-    dimensions = Point<int>(static_cast<int>(maxWidth + 0.5),
-                            static_cast<int>((numRows * aFont.getHeight()) + 0.5));
-    OD_LOG_EXIT(); //####
-} // calculateTextArea
-
 /*! @brief Returns the absolute path to the settings file.
  @returns The absolute path to the settings file. */
 static String getPathToSettingsFile(void)
@@ -1270,16 +1238,14 @@ void ChannelManager::DisplayInformationPanel(Component *    above,
     OD_LOG_P1("above = ", above); //####
     OD_LOG_S2s("bodyText = ", bodyText.toStdString(), "title = ", title.toStdString()); //####
     DialogWindow::LaunchOptions options;
-    String                      monoFontName = Font::getDefaultMonospacedFontName();
-    Font                        monoFont(monoFontName, 16, Font::plain);
+    Font                        monoFont(Font::getDefaultMonospacedFontName(), 16, Font::plain);
     Label *                     aLabel = new Label;
+    Point<int>                  dimensions;
     
     aLabel->setFont(monoFont);
     aLabel->setText(bodyText, dontSendNotification);
     options.content.setOwned(aLabel);
-    Point<int> dimensions;
-    
-    calculateTextArea(dimensions, aLabel->getFont(), bodyText);
+    CalculateTextArea(dimensions, aLabel->getFont(), bodyText);
     options.content->setSize(dimensions.getX(), dimensions.getY());
     options.dialogTitle = title;
     options.escapeKeyTriggersCloseButton = true;

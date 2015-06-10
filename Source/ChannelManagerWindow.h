@@ -101,9 +101,6 @@ namespace ChannelManager
         /*! @brief The destructor. */
         virtual ~ChannelManagerWindow(void);
         
-        /*! @brief This method is called when the user tries to close the window. */
-        void closeButtonPressed(void);
-        
         /*! @brief Returns the command manager object used to dispatch command events.
          @returns The command manager object used to dispatch command events. */
         static ApplicationCommandManager & getApplicationCommandManager(void);
@@ -121,15 +118,18 @@ namespace ChannelManager
             return _scannerThread;
         } // getScannerThread
         
-        /*! @brief Called back to perform operations. */
-        virtual void handleAsyncUpdate(void);
-
         /*! @brief Set up the reference to the background scanning thread. */
         void setScannerThread(ScannerThread * theScanner);
         
     protected :
         
     private :
+        
+        /*! @brief This method is called when the user tries to close the window. */
+        virtual void closeButtonPressed(void);
+        
+        /*! @brief Called back to perform operations. */
+        virtual void handleAsyncUpdate(void);
         
     public :
     

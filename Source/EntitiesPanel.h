@@ -190,18 +190,6 @@ namespace ChannelManager
         ChannelEntry * locateEntry(const Position & location)
         const;
         
-        /*! @brief Called when a mouse button is pressed.
-         @param ee Details about the position and status of the mouse event. */
-        virtual void mouseDown(const MouseEvent & ee);
-        
-        /*! @brief Called when a mouse button is released.
-         @param ee Details about the position and status of the mouse event. */
-        virtual void mouseUp(const MouseEvent& ee);
-        
-        /*! @brief Draw the content of the component.
-         @param gg The graphics context in which to draw. */
-        void paint(Graphics & gg);
-        
         /*! @brief Restore the positions of all the entities in the panel. */
         void recallPositions(void);
         
@@ -226,9 +214,6 @@ namespace ChannelManager
          @returns @c true if an entity was removed and @c false otherwise. */
         bool removeUnvisitedEntities(void);
         
-        /*! @brief Called when the component size has been changed. */
-        void resized(void);
-        
         /*! @brief Update the dragging information.
          @param position The location of the dragging connection.
          @param isForced @c true if the drag line should show a forced connection and @c false
@@ -252,6 +237,21 @@ namespace ChannelManager
         /*! @brief Display the connections between containers.
          @param gg The graphics context in which to draw. */
         void drawConnections(Graphics & gg);
+        
+        /*! @brief Called when a mouse button is pressed.
+         @param ee Details about the position and status of the mouse event. */
+        virtual void mouseDown(const MouseEvent & ee);
+        
+        /*! @brief Called when a mouse button is released.
+         @param ee Details about the position and status of the mouse event. */
+        virtual void mouseUp(const MouseEvent& ee);
+        
+        /*! @brief Draw the content of the component.
+         @param gg The graphics context in which to draw. */
+        virtual void paint(Graphics & gg);
+        
+        /*! @brief Called when the component size has been changed. */
+        virtual void resized(void);
         
     public :
     

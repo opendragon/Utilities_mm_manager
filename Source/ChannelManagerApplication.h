@@ -91,10 +91,6 @@ namespace ChannelManager
         /*! @brief The destructor. */
         virtual ~ChannelManagerApplication(void);
         
-        /*! @brief Called when an attempt was made to launch another instance of the application.
-         @param commandLine The arguments passed to the new instance. */
-        void anotherInstanceStarted(const String & commandLine);
-        
         /*! @brief Returns @c true if there is a Registry Service executable available but no
          running Registry Service was detected.
          @returns @c true if the Registry Service can be launched and @c false otherwise. */
@@ -111,9 +107,8 @@ namespace ChannelManager
         void doCleanupSoon(void);
         
         /*! @brief Ask the user to select an application, provide information required to launch the
-         application and launch it if the user requests.
-         @returns @c true if the application was launched and @c false otherwise. */
-        bool doLaunchOtherApplication(void);
+         application and launch it if the user requests. */
+        void doLaunchOtherApplication(void);
         
         /*! @brief Ask the user for information required to launch the Registry Service and launch
          it if the user requests.
@@ -132,14 +127,6 @@ namespace ChannelManager
         /*! @brief Return the application object.
          @returns The application object. */
         static ChannelManagerApplication * getApp(void);
-        
-        /*! @brief Return the application name.
-         @returns The application's name. */
-        virtual const String getApplicationName(void);
-        
-        /*! @brief Return the application version number.
-         @returns The application's version number. */
-        virtual const String getApplicationVersion(void);
         
         /*! @brief Return the number of launchable applications.
          @returns The number of launchable applications. */
@@ -168,62 +155,6 @@ namespace ChannelManager
          @returns The home directory of the current user. */
         String getHomeDir(void);
         
-        /*! @brief Return the real name of the current user.
-         @returns The real name of the current user. */
-        String getRealName(void);
-        
-        /*! @brief Return the name of the current user.
-         @returns The set of name of the current user. */
-        String getUserName(void);
-        
-        /*! @brief Called when the application starts.
-         @param commandLine The parameters passed to the application. */
-        virtual void initialise(const String & commandLine);
-        
-        /*! @brief Return @c true if multiple instances of the application are allowed and @c false
-         otherwise.
-         @returns @c true if multiple instanaces of the application are allowed and @c false
-         otherwise. */
-        virtual bool moreThanOneInstanceAllowed(void);
-        
-        /*! @brief Called to allow the application to clear up before exiting. */
-        virtual void shutdown(void);
-        
-        /*! @brief Called when the operating system is trying to close the application. */
-        virtual void systemRequestedQuit(void);
-        
-    protected :
-        
-    private :
-        
-        /*! @brief If the Registry Service is not currently running, give the user the option to
-         launch it.
-         @returns @c true if the Registry Service was launched and @c false otherwise. */
-        bool checkForRegistryServiceAndLaunchIfDesired(void);
-        
-        /*! @brief If YARP is not currently running, give the user the option to launch a private
-         copy.
-         @returns A pointer to the %Network object used for YARP access. */
-        yarp::os::Network * checkForYarpAndLaunchIfDesired(void);
-        
-        /*! @brief Ask the user for information required to launch a service and launch it if the
-         user requests.
-         @param appInfo The description of the executable.
-         @returns @c true if the service was launched and @c false otherwise. */
-        bool doLaunchAService(const ApplicationInfo & appInfo);
-        
-        /*! @brief Get the operational arguments for an application.
-         @param theInfo The retrieved parameters.
-         @returns @c true if the operational arguments were retrieved and @c false otherwise. */
-        bool getArgumentsForApplication(ApplicationInfo & theInfo);
-
-        /*! @brief Get the operational parameters for an application.
-         @param execName The name of the executable to be analyzed.
-         @param theInfo The retrieved parameters.
-         @returns @c true if the operational parameters were retrieved and @c false otherwise. */
-        bool getParametersForApplication(const String &    execName,
-                                         ApplicationInfo & theInfo);
-
         /*! @brief Get the primary channel for a service.
          @param appInfo The description of the executable.
          @param endpointName The endpoint to use, if not the default.
@@ -238,14 +169,81 @@ namespace ChannelManager
                                          const String &          portNumber,
                                          const StringArray &     arguments,
                                          String &                channelName);
+        
+        /*! @brief Return the real name of the current user.
+         @returns The real name of the current user. */
+        String getRealName(void);
+        
+        /*! @brief Return the name of the current user.
+         @returns The set of name of the current user. */
+        String getUserName(void);
+        
+    protected :
+        
+    private :
+        
+        /*! @brief Called when an attempt was made to launch another instance of the application.
+         @param commandLine The arguments passed to the new instance. */
+        virtual void anotherInstanceStarted(const String & commandLine);
+        
+        /*! @brief If the Registry Service is not currently running, give the user the option to
+         launch it.
+         @returns @c true if the Registry Service was launched and @c false otherwise. */
+        bool checkForRegistryServiceAndLaunchIfDesired(void);
+        
+        /*! @brief If YARP is not currently running, give the user the option to launch a private
+         copy.
+         @returns A pointer to the %Network object used for YARP access. */
+        yarp::os::Network * checkForYarpAndLaunchIfDesired(void);
+        
+        /*! @brief Ask the user for information required to launch a service and launch it if the
+         user requests.
+         @param appInfo The description of the executable. */
+        void doLaunchAService(const ApplicationInfo & appInfo);
+        
+        /*! @brief Return the application name.
+         @returns The application's name. */
+        virtual const String getApplicationName(void);
+        
+        /*! @brief Return the application version number.
+         @returns The application's version number. */
+        virtual const String getApplicationVersion(void);
+        
+        /*! @brief Get the operational arguments for an application.
+         @param theInfo The retrieved parameters.
+         @returns @c true if the operational arguments were retrieved and @c false otherwise. */
+        bool getArgumentsForApplication(ApplicationInfo & theInfo);
 
+        /*! @brief Get the operational parameters for an application.
+         @param execName The name of the executable to be analyzed.
+         @param theInfo The retrieved parameters.
+         @returns @c true if the operational parameters were retrieved and @c false otherwise. */
+        bool getParametersForApplication(const String &    execName,
+                                         ApplicationInfo & theInfo);
+
+        /*! @brief Called when the application starts.
+         @param commandLine The parameters passed to the application. */
+        virtual void initialise(const String & commandLine);
+        
         /*! @brief Load the text files containing the standard and user-defined applications, and
          set up for later use. */
         void loadApplicationLists(void);
         
+        /*! @brief Return @c true if multiple instances of the application are allowed and @c false
+         otherwise.
+         @returns @c true if multiple instanaces of the application are allowed and @c false
+         otherwise. */
+        virtual bool moreThanOneInstanceAllowed(void);
+        
         /*! @brief Put back the YARP configuration settings that were in effect prior to launching a
          private YARP network. */
         void restoreYarpConfiguration(void);
+        
+        /*! @brief Called to allow the application to clear up before exiting. */
+        virtual void shutdown(void);
+        
+        /*! @brief Called when the operating system is trying to close the application. */
+        virtual void systemRequestedQuit(void);
         
         /*! @brief Check if the Registry Service can be launched and if the user wishes it to be.
          @returns @c true if the user requests that the Registry Service be started and @ c false
@@ -316,6 +314,14 @@ namespace ChannelManager
         bool _registryServiceCanBeLaunched;
         
     }; // ChannelManagerApplication
+    
+    /*! @brief Determine the maximum dimensions of a text string.
+     @param dimensions The calculated maximum width and height.
+     @param aFont The font to use for the calculations.
+     @param aString The string to be analyzed. */
+    void CalculateTextArea(Point<int> &   dimensions,
+                           const Font &   aFont,
+                           const String & aString);
     
 } // ChannelManager
 

@@ -282,7 +282,7 @@ void ChannelContainer::displayInformation(const bool moreDetails)
     {
         case kContainerKindAdapter :
         case kContainerKindService :
-            thePanelDescription = getDescription();
+            thePanelDescription = YarpString("The ") + getDescription();
             break;
             
         case kContainerKindOther :
