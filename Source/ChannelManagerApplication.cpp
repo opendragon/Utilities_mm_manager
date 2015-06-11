@@ -37,12 +37,12 @@
 //--------------------------------------------------------------------------------------------------
 
 #include "ChannelManagerApplication.h"
-#include "ApplicationSettingsWindow.h"
 #include "EntitiesPanel.h"
 #include "PeekInputHandler.h"
 #include "RegistryLaunchThread.h"
 #include "ScannerThread.h"
 #include "ServiceLaunchThread.h"
+#include "SettingsWindow.h"
 #include "YarpLaunchThread.h"
 
 #include <mpm/M+MEndpoint.h>
@@ -439,22 +439,17 @@ void ChannelManagerApplication::doLaunchAService(const ApplicationInfo & appInfo
     if (okSoFar)
     {
 #if MAC_OR_LINUX_
-        theLogger.warning((execType + " being launched.").toStdString());
+        theLogger.warning((appInfo._description + " being launched.").toStdString());
 #endif // MAC_OR_LINUX_
-        String                                   endpointToUse;
-        String                                   portToUse;
-        String                                   tagToUse;
-        StringArray                              argsToUse;
-        ScopedPointer<ApplicationSettingsWindow>
-                                            settingsWindow(new ApplicationSettingsWindow(caption,
-                                                                                         execType,
-                                                                                         appInfo,
-                                                                                     endpointToUse,
-                                                                                         tagToUse,
-                                                                                     portToUse,
-                                                                                     argsToUse));
+        String                        endpointToUse;
+        String                        portToUse;
+        String                        tagToUse;
+        StringArray                   argsToUse;
+        ScopedPointer<SettingsWindow> settings(new SettingsWindow(caption, execType, appInfo,
+                                                                  endpointToUse, tagToUse,
+                                                                  portToUse, argsToUse));
         
-        if (ApplicationSettingsWindow::kSettingsAccept == settingsWindow->runModalLoop())
+        if (SettingsWindow::kSettingsOK == settings->runModalLoop())
         {
             ServiceLaunchThread * aLauncher = new ServiceLaunchThread(appInfo._applicationPath,
                                                                       endpointToUse, tagToUse,

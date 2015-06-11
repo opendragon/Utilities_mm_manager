@@ -165,7 +165,7 @@ namespace ChannelManager
     enum EntityPopupMenuSelection
     {
         /*! @brief Change the state of service metrics collection. */
-        kPopupDisplayChangeServiceMetrics  = 0x2100,
+        kPopupDisplayChangeServiceMetrics = 0x2100,
         
         /*! @brief Display detailed information request. */
         kPopupDetailedDisplayEntityInfo,

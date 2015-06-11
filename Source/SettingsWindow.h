@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       ApplicationSettingsWindow.h
+//  File:       SettingsWindow.h
 //
 //  Project:    M+M
 //
@@ -37,10 +37,11 @@
 //
 //--------------------------------------------------------------------------------------------------
 
-#if (! defined(ApplicationSettingsWindow_H_))
-# define ApplicationSettingsWindow_H_ /* Header guard */
+#if (! defined(SettingsWindow_H_))
+# define SettingsWindow_H_ /* Header guard */
 
 # include "ChannelManagerDataTypes.h"
+# include "TextEditorErrorResponder.h"
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -57,10 +58,13 @@
 
 namespace ChannelManager
 {
-    /*! @brief The main window of the application. */
-    class ApplicationSettingsWindow : private AsyncUpdater,
-                                      private ButtonListener,
-                                      public DocumentWindow
+    class TextEditorWithCaption;
+    
+    /*! @brief The application settings window of the application. */
+    class SettingsWindow : private AsyncUpdater,
+                           private ButtonListener,
+                           public DocumentWindow,
+                           public TextEditorErrorResponder
     {
     public :
         
@@ -71,10 +75,13 @@ namespace ChannelManager
             kSettingsCancel,
             
             /*! @brief 'OK' was requested. */
-            kSettingsAccept,
+            kSettingsOK,
             
             /*! @brief '+ argument' was requested. */
             kSettingsAddField,
+            
+            /*! @brief '...' was requested. */
+            kSettingsFileRequest,
             
             /*! @brief '- argument' was requested. */
             kSettingsRemoveField
@@ -88,16 +95,16 @@ namespace ChannelManager
          @param tagToUse The resulting tag for the application.
          @param portToUse The resulting port for the application.
          @param argsToUse The resulting arguments for the application. */
-        ApplicationSettingsWindow(const String &          title,
-                                  const String &          execType,
-                                  const ApplicationInfo & appInfo,
-                                  String &                endpointToUse,
-                                  String &                tagToUse,
-                                  String &                portToUse,
-                                  StringArray &           argsToUse);
+        SettingsWindow(const String &          title,
+                       const String &          execType,
+                       const ApplicationInfo & appInfo,
+                       String &                endpointToUse,
+                       String &                tagToUse,
+                       String &                portToUse,
+                       StringArray &           argsToUse);
         
         /*! @brief The destructor. */
-        virtual ~ApplicationSettingsWindow(void);
+        virtual ~SettingsWindow(void);
         
     protected :
         
@@ -113,12 +120,17 @@ namespace ChannelManager
          @param aButton The button that was clicked. */
         virtual void buttonClicked(Button * aButton);
 
-        /*! @brief This method is called when the user tries to close the window. */
-        virtual void closeButtonPressed(void);
-        
         /*! @brief Check the values of the fields against their specifications.
          @returns @c true if all the fields are valid and @c false otherwise. */
         bool fieldsAreValid(void);
+        
+        /*! @brief Called when this component has just acquired the keyboard focus.
+         @param cause The type of event that caused the change in focus. */
+        virtual void focusGained(FocusChangeType cause);
+        
+        /*! @brief Called when this component has just lost the keyboard focus.
+         @param cause The type of event that caused the change in focus. */
+        virtual void focusLost(FocusChangeType cause);
         
         /*! @brief Called back to perform operations. */
         virtual void handleAsyncUpdate(void);
@@ -134,6 +146,10 @@ namespace ChannelManager
         /*! @brief Remove the most recently added extra field. */
         void removeMostRecentlyAddedExtraField(void);
         
+        /*! @brief Report an error in a field.
+         @param fieldOfInterest The field to be reported. */
+        virtual void reportErrorInField(TextEditorWithCaption & fieldOfInterest);
+        
         /*! @brief Called when the component size has been changed. */
         virtual void resized(void);
         
@@ -143,17 +159,27 @@ namespace ChannelManager
         void setUpStandardFields(int & widthSoFar,
                                  int & heightSoFar);
         
+        /*! @brief Tell all the text editor fields to ignore the next focus loss, so redundant
+         validation is not done. */
+        void tellAllFieldsToIgnoreNextFocusLoss(void);
+        
     public :
     
     protected :
     
     private :
         
-        /*! @brief The second class that this class is derived from. */
+        /*! @brief The first class that this class is derived from. */
         typedef AsyncUpdater inherited1;
         
-        /*! @brief The first class that this class is derived from. */
-        typedef DocumentWindow inherited2;
+        /*! @brief The second class that this class is derived from. */
+        typedef ButtonListener inherited2;
+        
+        /*! @brief The third class that this class is derived from. */
+        typedef DocumentWindow inherited3;
+        
+        /*! @brief The fourth class that this class is derived from. */
+        typedef TextEditorErrorResponder inherited4;
         
         /*! @brief The descriptive text at the top of the window. */
         Label _topText;
@@ -167,8 +193,14 @@ namespace ChannelManager
         /*! @brief The provided argument descriptions. */
         const MplusM::Utilities::DescriptorVector & _descriptors;
         
-        /*! @brief The monospaced font to use. */
-        Font _monoFont;
+        /*! @brief The content area to hold everything. */
+        Component _contentArea;
+        
+        /*! @brief The monospaced font for error text. */
+        Font _errorFont;
+        
+        /*! @brief The regular monospaced font to use. */
+        Font _regularFont;
         
         /*! @brief The kind of application being configured. */
         String _execType;
@@ -176,29 +208,14 @@ namespace ChannelManager
         /*! @brief The root name for extra arguments. */
         String _extraArgRootName;
         
-        /*! @brief The set of labels for the extra fields. */
-        OwnedArray<Label> _extraFieldLabels;
-        
         /*! @brief The set of extra fields. */
-        OwnedArray<TextEditor> _extraFieldEditors;
-        
-        /*! @brief The set of labels for standard fields. */
-        OwnedArray<Label> _standardFieldLabels;
+        OwnedArray<TextEditorWithCaption> _extraFieldEditors;
         
         /*! @brief The set of standard fields. */
-        OwnedArray<TextEditor> _standardFieldEditors;
-        
-        /*! @brief The caption for the endpoint text entry field. */
-        ScopedPointer<Label> _endpointCaption;
+        OwnedArray<TextEditorWithCaption> _standardFieldEditors;
         
         /*! @brief The caption for the 'extra arguments' area of the window. */
         ScopedPointer<Label> _extraArgumentsCaption;
-        
-        /*! @brief The caption for the port text entry field. */
-        ScopedPointer<Label> _portCaption;
-        
-        /*! @brief The caption for the tag text entry field. */
-        ScopedPointer<Label> _tagCaption;
         
         /*! @brief The '+ arguments' button. */
         ScopedPointer<TextButton> _addArgumentsButton;
@@ -207,13 +224,19 @@ namespace ChannelManager
         ScopedPointer<TextButton> _removeArgumentsButton;
         
         /*! @brief The endpoint text entry field. */
-        ScopedPointer<TextEditor> _endpointEditor;
+        ScopedPointer<TextEditorWithCaption> _endpointEditor;
         
         /*! @brief The port text entry field. */
-        ScopedPointer<TextEditor> _portEditor;
+        ScopedPointer<TextEditorWithCaption> _portEditor;
         
         /*! @brief The the tag text entry field. */
-        ScopedPointer<TextEditor> _tagEditor;
+        ScopedPointer<TextEditorWithCaption> _tagEditor;
+        
+        /*! @brief An argument descriptor for endpoints. */
+        ScopedPointer<MplusM::Utilities::BaseArgumentDescriptor> _endpointDescriptor;
+
+        /*! @brief An argument descriptor for ports. */
+        ScopedPointer<MplusM::Utilities::BaseArgumentDescriptor> _portDescriptor;
         
         /*! @brief The options for the application. */
         const ApplicationInfo & _appInfo;
@@ -229,6 +252,9 @@ namespace ChannelManager
 
         /*! @brief Set to the arguments provided by the user. */
         StringArray & _argsToUse;
+        
+        /*! @brief The width of the standard file popup invocation button. */
+        int _fileButtonWidth;
         
         /*! @brief The height to use for text editor fields. */
         float _adjustedEditorHeight;
@@ -246,10 +272,13 @@ namespace ChannelManager
         /*! @brief @c true if a tag can be applied and @c false if the port names are fixed. */
         bool _canSetTag;
 
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ApplicationSettingsWindow)
+        /*! @brief @c true if one or more of the text fields are for file paths. */
+        bool _hasFileField;
         
-    }; // ApplicationSettingsWindow
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SettingsWindow)
+        
+    }; // SettingsWindow
     
-} // ApplicationSettings
+} // ChannelManager
 
-#endif // ! defined(ApplicationSettingsWindow_H_)
+#endif // ! defined(SettingsWindow_H_)

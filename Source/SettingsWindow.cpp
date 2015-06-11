@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       ApplicationSettingsWindow.cpp
+//  File:       SettingsWindow.cpp
 //
 //  Project:    M+M
 //
@@ -37,10 +37,14 @@
 //
 //--------------------------------------------------------------------------------------------------
 
-#include "ApplicationSettingsWindow.h"
+#include "SettingsWindow.h"
 #include "ChannelManagerApplication.h"
+#include "TextEditorWithCaption.h"
+#include "TextValidator.h"
 
+#include <mpm/M+MChannelArgumentDescriptor.h>
 #include <mpm/M+MEndpoint.h>
+#include <mpm/M+MPortArgumentDescriptor.h>
 
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
@@ -76,6 +80,15 @@ static const int kButtonGap = 10;
 /*! @brief The amount to add to the height of text editor fields. */
 static const int kEditorHeightAdjustment = 4;
 
+/*! @brief The amount to inset text entry fields. */
+static const int kFieldInset = (2 * kButtonGap);
+
+/*! @brief The font size for text. */
+static const int kFontSize = 16;
+
+/*! @brief The amount to inset labels. */
+static const int kLabelInset = (3 * kButtonGap);
+
 /*! @brief The overhead for the buttons on the title bar. */
 static const int kTitleBarMinWidth = 80;
 
@@ -84,6 +97,9 @@ static const Colour & kWindowBackgroundColour(Colours::whitesmoke);
 
 /*! @brief The internal name for the endpoint text entry field. */
 static const String kEndpointFieldName("$$$endpoint$$$");
+
+/*! @brief The text of the file popup invocation button. */
+static const String kFileButtonText("...");
 
 /*! @brief The internal name for the port text entry field. */
 static const String kPortFieldName("$$$port$$$");
@@ -107,49 +123,55 @@ static const String kTagFieldName("$$$tag$$$");
 # pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
-ApplicationSettingsWindow::ApplicationSettingsWindow(const String &          title,
-                                                     const String &          execType,
-                                                     const ApplicationInfo & appInfo,
-                                                     String &                endpointToUse,
-                                                     String &                tagToUse,
-                                                     String &                portToUse,
-                                                     StringArray &           argsToUse)  :
-    inherited1(), inherited2(title, kWindowBackgroundColour, inherited2::closeButton),
+SettingsWindow::SettingsWindow(const String &          title,
+                               const String &          execType,
+                               const ApplicationInfo & appInfo,
+                               String &                endpointToUse,
+                               String &                tagToUse,
+                               String &                portToUse,
+                               StringArray &           argsToUse)  :
+    inherited1(), inherited2(), inherited3(title, kWindowBackgroundColour, 0), inherited4(),
     _topText("topText"), _cancelButton("Cancel"), _okButton("OK"),
     _descriptors(appInfo._argDescriptions),
-    _monoFont(Font::getDefaultMonospacedFontName(), 16, Font::plain), _execType(execType),
-    _endpointCaption(nullptr), _extraArgumentsCaption(nullptr), _portCaption(nullptr),
-    _tagCaption(nullptr), _addArgumentsButton(nullptr), _removeArgumentsButton(nullptr),
-    _endpointEditor(nullptr), _portEditor(nullptr), _tagEditor(nullptr), _appInfo(appInfo),
+    _errorFont(Font::getDefaultMonospacedFontName(), kFontSize, Font::italic + Font::bold),
+    _regularFont(Font::getDefaultMonospacedFontName(), kFontSize, Font::plain), _execType(execType),
+    _extraArgumentsCaption(nullptr), _addArgumentsButton(nullptr), _removeArgumentsButton(nullptr),
+    _endpointEditor(nullptr), _portEditor(nullptr), _tagEditor(nullptr),
+    _endpointDescriptor(new Utilities::ChannelArgumentDescriptor(kEndpointFieldName.toStdString(),
+                                                                 "", "", true, nullptr)),
+    _portDescriptor(new Utilities::PortArgumentDescriptor(kPortFieldName.toStdString(), "", 0, true,
+                                                          false, nullptr)), _appInfo(appInfo),
     _endpointToUse(endpointToUse), _portToUse(portToUse), _tagToUse(tagToUse),
     _argsToUse(argsToUse), _canHaveExtraArguments(false), _canSetEndpoint(false),
-    _canSetPort(false), _canSetTag(false)
+    _canSetPort(false), _canSetTag(false), _hasFileField(false)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_S2s("title = ", title, "execType = ", execType); //####
     OD_LOG_P4("appInfo = ", &appInfo, "endpointToUse = ", &endpointToUse, "tagToUse = ", //####
               &tagToUse, "portToUse = ", &portToUse); //####
     OD_LOG_P1("argsToUse = ", &argsToUse); //####
+    _contentArea.setSize(100, 100);
+    setContentNonOwned(&_contentArea, true);
     BorderSize<int> bt = getBorderThickness();
     BorderSize<int> cb = getContentComponentBorder();
     int             heightSoFar = 0;
     int             widthSoFar = 0;
 
-    _adjustedEditorHeight = _monoFont.getHeight() + kEditorHeightAdjustment;
+    _adjustedEditorHeight = _regularFont.getHeight() + kEditorHeightAdjustment;
     _argsToUse.clear();
     _canSetEndpoint = appInfo._options.contains("e");
     _canSetPort = appInfo._options.contains("p");
     _canSetTag = appInfo._options.contains("t");
     setUpStandardFields(widthSoFar, heightSoFar);
     int buttonRowHeight = jmax(_cancelButton.getHeight(), _okButton.getHeight());
-    int titleW = _monoFont.getStringWidth(getName()) + kTitleBarMinWidth;
+    int titleW = _regularFont.getStringWidth(getName()) + kTitleBarMinWidth;
     int topW = widthSoFar + kButtonGap;
     int minW = jmax(topW, jmax(titleW,
                                _cancelButton.getWidth() + _okButton.getWidth() + (3 * kButtonGap)));
     int calcW = minW + bt.getLeftAndRight() + cb.getLeftAndRight();
     int calcH = heightSoFar + bt.getTopAndBottom() + cb.getTopAndBottom();
     
-    centreWithSize(calcW, calcH);
+    centreWithSize(calcW + 20, calcH + 20);
     adjustFields();
     setOpaque(true);
     setResizable(false, false);
@@ -157,39 +179,37 @@ ApplicationSettingsWindow::ApplicationSettingsWindow(const String &          tit
     addKeyListener(ChannelManagerWindow::getApplicationCommandManager().getKeyMappings());
     triggerAsyncUpdate();
     OD_LOG_EXIT_P(this); //####
-} // ApplicationSettingsWindow::ApplicationSettingsWindow
+} // SettingsWindow::SettingsWindow
 
-ApplicationSettingsWindow::~ApplicationSettingsWindow(void)
+SettingsWindow::~SettingsWindow(void)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_OBJEXIT(); //####
-} // ApplicationSettingsWindow::~ApplicationSettingsWindow
+} // SettingsWindow::~SettingsWindow
 
 #if defined(__APPLE__)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-void ApplicationSettingsWindow::addAnExtraField(void)
+void SettingsWindow::addAnExtraField(void)
 {
     OD_LOG_ENTER(); //####
-    String     compCountAsString(static_cast<int>(_extraFieldEditors.size() + 1));
-    String     compName(_extraArgRootName + "_" + compCountAsString);
-    String     compTitle(_extraArgRootName + " " + compCountAsString);
-    Label *    newLabel = new Label("", compTitle);
-    Point<int> dimensions;
+    Component *             content = getContentComponent();
+    String                  compCountAsString(static_cast<int>(_extraFieldEditors.size() + 1));
+    Point<int>              dimensions;
+    TextEditorWithCaption * newEditor = new TextEditorWithCaption(*this, _regularFont, _errorFont,
+                                                                  nullptr, _extraArgRootName + "_" +
+                                                                  compCountAsString);
+    Label *                 newLabel = newEditor->getCaption();
     
-    _extraFieldLabels.add(newLabel);
-    newLabel->setFont(_monoFont);
-    ChannelManager::CalculateTextArea(dimensions, _monoFont, newLabel->getText());
-    newLabel->setBounds(2 * kButtonGap, 0, dimensions.getX(), dimensions.getY());
-    Component::addAndMakeVisible(newLabel);
-    TextEditor * newEditor = new TextEditor(compName);
-
+    newLabel->setText(_extraArgRootName + " " + compCountAsString, dontSendNotification);
     _extraFieldEditors.add(newEditor);
-    newEditor->setFont(_monoFont);
-    newEditor->setBounds(newLabel->getX(), 0, 0, static_cast<int>(_adjustedEditorHeight));
+    ChannelManager::CalculateTextArea(dimensions, _regularFont, newLabel->getText());
+    newLabel->setBounds(kLabelInset, 0, dimensions.getX(), dimensions.getY());
+    content->addAndMakeVisible(newLabel);
+    newEditor->setBounds(kFieldInset, 0, 0, static_cast<int>(_adjustedEditorHeight));
     newEditor->setSelectAllWhenFocused(true);
-    Component::addAndMakeVisible(newEditor);
+    content->addAndMakeVisible(newEditor);
     recalculateArea();
     adjustFields();
     if (_removeArgumentsButton)
@@ -197,32 +217,34 @@ void ApplicationSettingsWindow::addAnExtraField(void)
         _removeArgumentsButton->setVisible(true);
     }
     OD_LOG_EXIT(); //####
-} // ApplicationSettingsWindow::addAnExtraField
+} // SettingsWindow::addAnExtraField
 
-void ApplicationSettingsWindow::adjustFields(void)
+void SettingsWindow::adjustFields(void)
 {
     OD_LOG_OBJENTER(); //####
-    int newButtonTop = getHeight() - (_cancelButton.getHeight() + kButtonGap);
-    int newFieldWidth = getWidth() - (4 * kButtonGap);
+    Component * content = getContentComponent();
+    int         newButtonTop = content->getHeight() - (_cancelButton.getHeight() + kButtonGap);
+    int         newFieldWidth = content->getWidth() - (2 * kFieldInset);
     
+    if (_hasFileField)
+    {
+        newFieldWidth -= (kButtonGap + _fileButtonWidth);
+    }
     _cancelButton.setTopLeftPosition(getWidth() - (_cancelButton.getWidth() + kButtonGap),
                                      newButtonTop);
     _okButton.setTopLeftPosition(_cancelButton.getX() - (_okButton.getWidth() + kButtonGap),
                                  newButtonTop);
     if (_endpointEditor)
     {
-        _endpointEditor->setBounds(_endpointEditor->getX(), _endpointEditor->getY(), newFieldWidth,
-                                   _endpointEditor->getHeight());
+        _endpointEditor->setSize(newFieldWidth, _endpointEditor->getHeight());
     }
     if (_portEditor)
     {
-        _portEditor->setBounds(_portEditor->getX(), _portEditor->getY(), newFieldWidth,
-                               _portEditor->getHeight());
+        _portEditor->setSize(newFieldWidth, _portEditor->getHeight());
     }
     if (_tagEditor)
     {
-        _tagEditor->setBounds(_tagEditor->getX(), _tagEditor->getY(), newFieldWidth,
-                              _tagEditor->getHeight());
+        _tagEditor->setSize(newFieldWidth, _tagEditor->getHeight());
     }
     if (_addArgumentsButton)
     {
@@ -238,64 +260,81 @@ void ApplicationSettingsWindow::adjustFields(void)
     }
     for (int ii = 0, maxf = _standardFieldEditors.size(); maxf > ii; ++ii)
     {
-        TextEditor * anEditor = _standardFieldEditors[ii];
+        TextEditorWithCaption * anEditor = _standardFieldEditors[ii];
         
-        anEditor->setBounds(anEditor->getX(), anEditor->getY(), newFieldWidth,
-                            anEditor->getHeight());
+        if (anEditor)
+        {
+            TextButton * aButton = anEditor->getButton();
+            
+            if (aButton)
+            {
+                anEditor->setSize(newFieldWidth, anEditor->getHeight());
+                if (aButton)
+                {
+                    Label * aLabel = anEditor->getCaption();
+                    int     span = anEditor->getY() + anEditor->getHeight() - aLabel->getY();
+                    int     offset = span - aButton->getHeight();
+                    
+                    aButton->setTopLeftPosition(anEditor->getX() + newFieldWidth + kButtonGap,
+                                                aLabel->getY() + (offset / 2));
+                }
+            }
+        }
     }
     for (int ii = 0, maxf = _extraFieldEditors.size(); maxf > ii; ++ii)
     {
-        TextEditor * anEditor = _extraFieldEditors[ii];
+        TextEditorWithCaption * anEditor = _extraFieldEditors[ii];
         
-        anEditor->setBounds(anEditor->getX(), anEditor->getY(), newFieldWidth,
-                            anEditor->getHeight());
+        anEditor->setSize(newFieldWidth, anEditor->getHeight());
     }
     OD_LOG_OBJEXIT(); //####
-} // ApplicationSettingsWindow::adjustFields
+} // SettingsWindow::adjustFields
 
-void ApplicationSettingsWindow::buttonClicked(Button * aButton)
+void SettingsWindow::buttonClicked(Button * aButton)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("aButton = ", aButton); //####
-    Component * parent = aButton->getParentComponent();
-    int         commandId = aButton->getCommandID();
+    int commandId = aButton->getCommandID();
     
-    if (parent)
+    tellAllFieldsToIgnoreNextFocusLoss();
+    switch (commandId)
     {
-        switch (commandId)
-        {
-            case kSettingsAddField :
-                addAnExtraField();
-                break;
+        case kSettingsAddField :
+            addAnExtraField();
+            break;
+            
+        case kSettingsRemoveField :
+            removeMostRecentlyAddedExtraField();
+            break;
+            
+        case kSettingsOK :
+            if (fieldsAreValid())
+            {
+                exitModalState(commandId);
+            }
+            break;
+            
+        case kSettingsFileRequest :
+            for (int ii = 0, maxf = _standardFieldEditors.size(); maxf > ii; ++ii)
+            {
+                TextEditorWithCaption * anEditor = _standardFieldEditors[ii];
                 
-            case kSettingsRemoveField :
-                removeMostRecentlyAddedExtraField();
-                break;
-                
-            case kSettingsAccept :
-                if (fieldsAreValid())
+                if (anEditor && (anEditor->getButton() == aButton))
                 {
-                    parent->exitModalState(commandId);
+                    anEditor->makeFileSelection();
                 }
-                break;
-                
-            default :
-                parent->exitModalState(commandId);
-                break;
-                
-        }
+            }
+            break;
+            
+        default :
+            exitModalState(commandId);
+            break;
+            
     }
     OD_LOG_OBJEXIT(); //####
-} // ApplicationSettingsWindow::buttonClicked
+} // SettingsWindow::buttonClicked
 
-void ApplicationSettingsWindow::closeButtonPressed(void)
-{
-    OD_LOG_OBJENTER(); //####
-    setVisible(false);
-    OD_LOG_OBJEXIT(); //####
-} // ApplicationSettingsWindow::closeButtonPressed
-
-bool ApplicationSettingsWindow::fieldsAreValid(void)
+bool SettingsWindow::fieldsAreValid(void)
 {
     OD_LOG_ENTER(); //####
     int    badCount = 0;
@@ -306,63 +345,32 @@ bool ApplicationSettingsWindow::fieldsAreValid(void)
     // endpoint, port or tag values.
     for (int ii = 0, maxf = _standardFieldEditors.size(); maxf > ii; ++ii)
     {
-        TextEditor * anEditor = _standardFieldEditors[ii];
-        int          descriptorIndex = anEditor->getComponentID().getIntValue();
-
-        if ((0 <= descriptorIndex) && (descriptorIndex < static_cast<int>(_descriptors.size())))
+        TextEditorWithCaption * anEditor = _standardFieldEditors[ii];
+        
+        if (anEditor && (! anEditor->validateField(&_argsToUse)))
         {
-            Utilities::BaseArgumentDescriptor * aDescriptor = _descriptors[descriptorIndex];
-            
-            if (aDescriptor && (! aDescriptor->isExtra()))
+            if (0 < badArgs.length())
             {
-                String argName = aDescriptor->argumentName().c_str();
-                String anArg = anEditor->getText();
-                
-                cerr << anArg << endl;
-                if (0 == anArg.length())
-                {
-                    if (aDescriptor->isOptional())
-                    {
-                        _argsToUse.add(aDescriptor->getDefaultValue().c_str());
-                    }
-                    else
-                    {
-                        if (0 < badArgs.length())
-                        {
-                            badArgs += "\n";
-                        }
-                        badArgs += aDescriptor->argumentName().c_str();
-                        ++badCount;
-                    }
-                }
-                else if (aDescriptor->validate(anArg.toStdString()))
-                {
-                    _argsToUse.add(anArg);
-                }
-                else
-                {
-                    if (0 < badArgs.length())
-                    {
-                        badArgs += "\n";
-                    }
-                    badArgs += aDescriptor->argumentName().c_str();
-                    ++badCount;
-                }
+                badArgs += "\n";
             }
+            badArgs += anEditor->getName();
+            ++badCount;
         }
     }
     // Add the extra arguments here.
     for (int ii = 0, maxf = _extraFieldEditors.size(); maxf > ii; ++ii)
     {
-        TextEditor * anEditor = _extraFieldEditors[ii];
+        TextEditorWithCaption * anEditor = _extraFieldEditors[ii];
 
         _argsToUse.add(anEditor->getText());
     }
     if (_canSetEndpoint)
     {
-        _endpointToUse = _endpointEditor->getText();
-        if ((0 < _endpointToUse.length()) &&
-            (! Common::Endpoint::CheckEndpointName(_endpointToUse.toStdString())))
+        if (_endpointEditor->validateField())
+        {
+            _endpointToUse = _endpointEditor->getText();
+        }
+        else
         {
             if (0 < badArgs.length())
             {
@@ -374,10 +382,11 @@ bool ApplicationSettingsWindow::fieldsAreValid(void)
     }
     if (_canSetPort)
     {
-        _portToUse = _portEditor->getText();
-        int portChoice = _portToUse.getIntValue();
-        
-        if ((0 != portChoice) && (! Utilities::ValidPortNumber(portChoice)))
+        if (_portEditor->validateField())
+        {
+            _portToUse = _portEditor->getText();
+        }
+        else
         {
             if (0 < badArgs.length())
             {
@@ -429,14 +438,26 @@ bool ApplicationSettingsWindow::fieldsAreValid(void)
     }
     OD_LOG_EXIT_B(0 == badCount); //####
     return (0 == badCount);
-} // ApplicationSettingsWindow::fieldsAreValid
+} // SettingsWindow::fieldsAreValid
 
-void ApplicationSettingsWindow::resized(void)
+void SettingsWindow::focusGained(FocusChangeType cause)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_OBJEXIT(); //####
+} // SettingsWindow::focusGained
+
+void SettingsWindow::focusLost(FocusChangeType cause)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_OBJEXIT(); //####
+} // SettingsWindow::focusLost
+
+void SettingsWindow::resized(void)
 {
     OD_LOG_OBJENTER(); //####
     Button * close = getCloseButton();
     
-    inherited2::resized();
+    inherited3::resized();
     if (close)
     {
         const KeyPress esc(KeyPress::escapeKey, 0, 0);
@@ -447,9 +468,9 @@ void ApplicationSettingsWindow::resized(void)
         }
     }
     OD_LOG_OBJEXIT(); //####
-} // ApplicationSettingsWindow::resized
+} // SettingsWindow::resized
 
-void ApplicationSettingsWindow::handleAsyncUpdate(void)
+void SettingsWindow::handleAsyncUpdate(void)
 {
     OD_LOG_OBJENTER(); //####
     ApplicationCommandManager & commandManager =
@@ -457,9 +478,9 @@ void ApplicationSettingsWindow::handleAsyncUpdate(void)
 
     commandManager.registerAllCommandsForTarget(JUCEApplication::getInstance());
     OD_LOG_OBJEXIT(); //####
-} // ApplicationSettingsWindow::handleAsyncUpdate
+} // SettingsWindow::handleAsyncUpdate
 
-bool ApplicationSettingsWindow::keyPressed(const KeyPress & key)
+bool SettingsWindow::keyPressed(const KeyPress & key)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("key = ", &key); //####
@@ -467,18 +488,28 @@ bool ApplicationSettingsWindow::keyPressed(const KeyPress & key)
     
     if (key == KeyPress::escapeKey)
     {
-        closeButtonPressed();
+        tellAllFieldsToIgnoreNextFocusLoss();
+        exitModalState(kSettingsCancel);
+        result = true;
+    }
+    else if (key == KeyPress::returnKey)
+    {
+        tellAllFieldsToIgnoreNextFocusLoss();
+        if (fieldsAreValid())
+        {
+            exitModalState(kSettingsOK);
+        }
         result = true;
     }
     else
     {
-        result = inherited2::keyPressed(key);
+        result = inherited3::keyPressed(key);
     }
     OD_LOG_OBJEXIT_B(result); //####
     return result;
-} // ApplicationSettingsWindow::keyPressed
+} // SettingsWindow::keyPressed
 
-void ApplicationSettingsWindow::recalculateArea(void)
+void SettingsWindow::recalculateArea(void)
 {
     OD_LOG_ENTER(); //####
     int buttonHeight = getLookAndFeel().getAlertWindowButtonHeight();
@@ -489,20 +520,26 @@ void ApplicationSettingsWindow::recalculateArea(void)
     widthSoFar = jmax(widthSoFar, _topText.getWidth());
     if (_canSetEndpoint)
     {
-        heightSoFar = _endpointCaption->getY() + _endpointCaption->getHeight();
-        widthSoFar = jmax(widthSoFar, _endpointCaption->getWidth());
+        Label * aCaption = _endpointEditor->getCaption();
+        
+        heightSoFar = aCaption->getY() + aCaption->getHeight();
+        widthSoFar = jmax(widthSoFar, aCaption->getWidth());
         heightSoFar = _endpointEditor->getY() + _endpointEditor->getHeight() + (kButtonGap / 2);
     }
     if (_canSetPort)
     {
-        heightSoFar = _portCaption->getY() + _portCaption->getHeight();
-        widthSoFar = jmax(widthSoFar, _portCaption->getWidth());
+        Label * aCaption = _portEditor->getCaption();
+
+        heightSoFar = aCaption->getY() + aCaption->getHeight();
+        widthSoFar = jmax(widthSoFar, aCaption->getWidth());
         heightSoFar = _portEditor->getY() + _portEditor->getHeight() + (kButtonGap / 2);
     }
     if (_canSetTag)
     {
-        heightSoFar = _tagCaption->getY() + _tagCaption->getHeight();
-        widthSoFar = jmax(widthSoFar, _tagCaption->getWidth());
+        Label * aCaption = _tagEditor->getCaption();
+        
+        heightSoFar = aCaption->getY() + aCaption->getHeight();
+        widthSoFar = jmax(widthSoFar, aCaption->getWidth());
         heightSoFar = _tagEditor->getY() + _tagEditor->getHeight() + (kButtonGap / 2);
     }
     for (size_t ii = 0, numDescriptors = _descriptors.size(), jj = 0; numDescriptors > ii; ++ii)
@@ -521,32 +558,39 @@ void ApplicationSettingsWindow::recalculateArea(void)
             }
             else
             {
-                Label *      aLabel = _standardFieldLabels[static_cast<int>(jj)];
-                TextEditor * anEditor = _standardFieldEditors[static_cast<int>(jj)];
+                TextEditorWithCaption * anEditor = _standardFieldEditors[static_cast<int>(jj)];
                 
-                heightSoFar = aLabel->getY() + aLabel->getHeight();
-                widthSoFar = jmax(widthSoFar, aLabel->getWidth());
-                heightSoFar = anEditor->getY() + anEditor->getHeight() + (kButtonGap / 2);
-                ++jj;
+                if (anEditor)
+                {
+                    Label * aLabel = anEditor->getCaption();
+                    
+                    if (aLabel)
+                    {
+                        heightSoFar = aLabel->getY() + aLabel->getHeight();
+                        widthSoFar = jmax(widthSoFar, aLabel->getWidth());
+                        heightSoFar = anEditor->getY() + anEditor->getHeight() + (kButtonGap / 2);
+                        ++jj;
+                    }
+                }
             }
         }
     }
     for (size_t ii = 0, numExtra = _extraFieldEditors.size(); numExtra > ii; ++ii)
     {
-        Label *      aLabel = _extraFieldLabels[static_cast<int>(ii)];
-        TextEditor * anEditor = _extraFieldEditors[static_cast<int>(ii)];
+        TextEditorWithCaption * anEditor = _extraFieldEditors[static_cast<int>(ii)];
+        Label *                 aLabel = anEditor->getCaption();
         
-        aLabel->setTopLeftPosition(2 * kButtonGap, heightSoFar);
+        aLabel->setTopLeftPosition(kLabelInset, heightSoFar);
         heightSoFar = aLabel->getY() + aLabel->getHeight();
         widthSoFar = jmax(widthSoFar, aLabel->getWidth());
-        anEditor->setTopLeftPosition(aLabel->getX(), heightSoFar);
+        anEditor->setTopLeftPosition(kFieldInset, heightSoFar);
         heightSoFar = anEditor->getY() + anEditor->getHeight() + (kButtonGap / 2);
     }
     heightSoFar += buttonHeight;
     BorderSize<int> bt = getBorderThickness();
     BorderSize<int> cb = getContentComponentBorder();
     int             buttonRowHeight = jmax(_cancelButton.getHeight(), _okButton.getHeight());
-    int             titleW = _monoFont.getStringWidth(getName()) + kTitleBarMinWidth;
+    int             titleW = _regularFont.getStringWidth(getName()) + kTitleBarMinWidth;
     int             topW = widthSoFar + kButtonGap;
     int             minW = jmax(topW, jmax(titleW,
                                            _cancelButton.getWidth() + _okButton.getWidth() +
@@ -554,41 +598,69 @@ void ApplicationSettingsWindow::recalculateArea(void)
     int             calcW = minW + bt.getLeftAndRight() + cb.getLeftAndRight();
     int             calcH = heightSoFar + bt.getTopAndBottom() + cb.getTopAndBottom();
     
-    setSize(calcW, calcH);
+    setContentComponentSize(calcW, calcH);
     OD_LOG_EXIT(); //####
-} // ApplicationSettingsWindow::recalculateArea
+} // SettingsWindow::recalculateArea
 
-void ApplicationSettingsWindow::removeMostRecentlyAddedExtraField(void)
+void SettingsWindow::removeMostRecentlyAddedExtraField(void)
 {
     OD_LOG_ENTER(); //####
-    TextEditor * lastEditor = _extraFieldEditors.getLast();
+    Component *             content = getContentComponent();
+    TextEditorWithCaption * lastEditor = _extraFieldEditors.getLast();
+    Label *                 lastLabel = lastEditor->getCaption();
     
     _extraFieldEditors.removeLast();
-    Component::removeChildComponent(lastEditor);
-    Label * lastLabel = _extraFieldLabels.getLast();
-    
-    _extraFieldLabels.removeLast();
-    Component::removeChildComponent(lastLabel);
+    content->removeChildComponent(lastEditor);
+    content->removeChildComponent(lastLabel);
     recalculateArea();
     adjustFields();
     if (_removeArgumentsButton)
     {
-        _removeArgumentsButton->setVisible(0 < _extraFieldLabels.size());
+        _removeArgumentsButton->setVisible(0 < _extraFieldEditors.size());
     }
     OD_LOG_EXIT(); //####
-} // ApplicationSettingsWindow::removeMostRecentlyAddedExtraField
+} // SettingsWindow::removeMostRecentlyAddedExtraField
 
-void ApplicationSettingsWindow::setUpStandardFields(int & widthSoFar,
-                                                    int & heightSoFar)
+void SettingsWindow::reportErrorInField(TextEditorWithCaption & fieldOfInterest)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("fieldOfInterest = ", &fieldOfInterest); //####
+    String nameToDisplay;
+    
+    if (&fieldOfInterest == _endpointEditor)
+    {
+        nameToDisplay = "Endpoint";
+    }
+    else if (&fieldOfInterest == _portEditor)
+    {
+        nameToDisplay = "Port";
+    }
+    else
+    {
+        nameToDisplay = fieldOfInterest.getName();
+    }
+    AlertWindow::showMessageBox(AlertWindow::WarningIcon, getName(),
+                                String("The ") + nameToDisplay + " argument is invalid.\n"
+                                "Please correct the argument and try again.", String::empty,
+                                this);
+    OD_LOG_OBJEXIT(); //####
+} // SettingsWindow::reportErrorInField
+
+void SettingsWindow::setUpStandardFields(int & widthSoFar,
+                                         int & heightSoFar)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P2("widthSoFar = ", &widthSoFar, "heightSoFar = ", &heightSoFar); //####
-    int        buttonHeight = getLookAndFeel().getAlertWindowButtonHeight();
-    Point<int> dimensions;
-    size_t     numDescriptors = _descriptors.size();
-
+    Component *               content = getContentComponent();
+    int                       buttonHeight = getLookAndFeel().getAlertWindowButtonHeight();
+    Point<int>                dimensions;
+    size_t                    numDescriptors = _descriptors.size();
+    ScopedPointer<TextButton> fileButton(new TextButton(kFileButtonText));
+    
+    fileButton->changeWidthToFitText(buttonHeight);
+    _fileButtonWidth = fileButton->getWidth();
     widthSoFar = heightSoFar = 0;
-    _topText.setFont(_monoFont);
+    _topText.setFont(_regularFont);
     if ((0 < numDescriptors) || _canSetEndpoint || _canSetPort || _canSetTag)
     {
         _topText.setText(String("The ") + _execType + " has one or more arguments, that need to be "
@@ -599,63 +671,81 @@ void ApplicationSettingsWindow::setUpStandardFields(int & widthSoFar,
         _topText.setText(String("The ") + _execType + " has no arguments or options, so it can be "
                          "launched right now.", dontSendNotification);
     }
-    ChannelManager::CalculateTextArea(dimensions, _monoFont, _topText.getText());
+    ChannelManager::CalculateTextArea(dimensions, _regularFont, _topText.getText());
     _topText.setBounds(kButtonGap, kButtonGap + getTitleBarHeight(), dimensions.getX() + kButtonGap,
                        dimensions.getY());
-    Component::addAndMakeVisible(&_topText, 0);
+    content->addAndMakeVisible(&_topText, 0);
     heightSoFar = _topText.getY() + _topText.getHeight() + (kButtonGap / 2);
     widthSoFar = jmax(widthSoFar, _topText.getWidth());
     if (_canSetEndpoint)
     {
-        _endpointCaption = new Label("", "(Optional) Endpoint to use");
-        _endpointCaption->setFont(_monoFont);
-        ChannelManager::CalculateTextArea(dimensions, _monoFont, _endpointCaption->getText());
-        _endpointCaption->setBounds(2 * kButtonGap, heightSoFar, dimensions.getX(),
-                                    dimensions.getY());
-        Component::addAndMakeVisible(_endpointCaption);
-        heightSoFar = _endpointCaption->getY() + _endpointCaption->getHeight();
-        widthSoFar = jmax(widthSoFar, _endpointCaption->getWidth());
-        _endpointEditor = new TextEditor(kEndpointFieldName);
-        _endpointEditor->setFont(_monoFont);
-        _endpointEditor->setBounds(_endpointCaption->getX(), heightSoFar, widthSoFar - kButtonGap,
+        /*! @brief The text field validator for endpoints. */
+        _endpointEditor = new TextEditorWithCaption(*this, _regularFont, _errorFont,
+                                                    new TextValidator(*_endpointDescriptor),
+                                                    kEndpointFieldName);
+        Label * aCaption = _endpointEditor->getCaption();
+        
+        aCaption->setText("(Optional) Endpoint to use", dontSendNotification);
+        ChannelManager::CalculateTextArea(dimensions, _regularFont, aCaption->getText());
+        aCaption->setBounds(kLabelInset, heightSoFar, dimensions.getX(), dimensions.getY());
+        content->addAndMakeVisible(aCaption);
+        heightSoFar = aCaption->getY() + aCaption->getHeight();
+        widthSoFar = jmax(widthSoFar, aCaption->getWidth());
+        
+        _endpointEditor->setBounds(kFieldInset, heightSoFar, widthSoFar - kFieldInset,
                                    static_cast<int>(_adjustedEditorHeight));
         _endpointEditor->setSelectAllWhenFocused(true);
-        Component::addAndMakeVisible(_endpointEditor);
+        content->addAndMakeVisible(_endpointEditor);
         heightSoFar = _endpointEditor->getY() + _endpointEditor->getHeight() + (kButtonGap / 2);
     }
     if (_canSetPort)
     {
-        _portCaption = new Label("", "(Optional) Network port to use");
-        _portCaption->setFont(_monoFont);
-        ChannelManager::CalculateTextArea(dimensions, _monoFont, _portCaption->getText());
-        _portCaption->setBounds(2 * kButtonGap, heightSoFar, dimensions.getX(), dimensions.getY());
-        Component::addAndMakeVisible(_portCaption);
-        heightSoFar = _portCaption->getY() + _portCaption->getHeight();
-        widthSoFar = jmax(widthSoFar, _portCaption->getWidth());
-        _portEditor = new TextEditor(kEndpointFieldName);
-        _portEditor->setFont(_monoFont);
-        _portEditor->setBounds(_portCaption->getX(), heightSoFar, widthSoFar - kButtonGap,
+        /*! @brief The text field validator for ports. */
+        _portEditor = new TextEditorWithCaption(*this, _regularFont, _errorFont,
+                                                new TextValidator(*_portDescriptor),
+                                                kPortFieldName);
+        Label * aCaption = _portEditor->getCaption();
+
+        aCaption->setText("(Optional) Network port to use", dontSendNotification);
+        ChannelManager::CalculateTextArea(dimensions, _regularFont, aCaption->getText());
+        aCaption->setBounds(kLabelInset, heightSoFar, dimensions.getX(), dimensions.getY());
+        content->addAndMakeVisible(aCaption);
+        heightSoFar = aCaption->getY() + aCaption->getHeight();
+        widthSoFar = jmax(widthSoFar, aCaption->getWidth());
+        _portEditor->setBounds(kFieldInset, heightSoFar, widthSoFar - kFieldInset,
                                static_cast<int>(_adjustedEditorHeight));
         _portEditor->setSelectAllWhenFocused(true);
-        Component::addAndMakeVisible(_portEditor);
+        content->addAndMakeVisible(_portEditor);
         heightSoFar = _portEditor->getY() + _portEditor->getHeight() + (kButtonGap / 2);
     }
     if (_canSetTag)
     {
-        _tagCaption = new Label("", String("(Optional) Tag for the ") + _execType);
-        _tagCaption->setFont(_monoFont);
-        ChannelManager::CalculateTextArea(dimensions, _monoFont, _tagCaption->getText());
-        _tagCaption->setBounds(2 * kButtonGap, heightSoFar, dimensions.getX(), dimensions.getY());
-        Component::addAndMakeVisible(_tagCaption);
-        heightSoFar = _tagCaption->getY() + _tagCaption->getHeight();
-        widthSoFar = jmax(widthSoFar, _tagCaption->getWidth());
-        _tagEditor = new TextEditor(kEndpointFieldName);
-        _tagEditor->setFont(_monoFont);
-        _tagEditor->setBounds(_tagCaption->getX(), heightSoFar, widthSoFar - kButtonGap,
+        _tagEditor = new TextEditorWithCaption(*this, _regularFont, _errorFont, nullptr,
+                                               kTagFieldName);
+        Label * aCaption = _tagEditor->getCaption();
+        
+        aCaption->setText(String("(Optional) Tag for the ") + _execType, dontSendNotification);
+        ChannelManager::CalculateTextArea(dimensions, _regularFont, aCaption->getText());
+        aCaption->setBounds(kLabelInset, heightSoFar, dimensions.getX(), dimensions.getY());
+        content->addAndMakeVisible(aCaption);
+        heightSoFar = aCaption->getY() + aCaption->getHeight();
+        widthSoFar = jmax(widthSoFar, aCaption->getWidth());
+        _tagEditor->setBounds(kFieldInset, heightSoFar, widthSoFar - kFieldInset,
                                static_cast<int>(_adjustedEditorHeight));
         _tagEditor->setSelectAllWhenFocused(true);
-        Component::addAndMakeVisible(_tagEditor);
+        content->addAndMakeVisible(_tagEditor);
         heightSoFar = _tagEditor->getY() + _tagEditor->getHeight() + (kButtonGap / 2);
+    }
+    // Check for one or more file descriptors
+    for (size_t ii = 0; numDescriptors > ii; ++ii)
+    {
+        bool                                forOutput;
+        Utilities::BaseArgumentDescriptor * aDescriptor = _descriptors[ii];
+        
+        if (aDescriptor && aDescriptor->isForFiles(forOutput))
+        {
+            _hasFileField = true;
+        }
     }
     for (size_t ii = 0; numDescriptors > ii; ++ii)
     {
@@ -673,12 +763,12 @@ void ApplicationSettingsWindow::setUpStandardFields(int & widthSoFar,
                     _canHaveExtraArguments = true;
                     _extraArgRootName = argName;
                     _extraArgumentsCaption = new Label("", argDescription);
-                    _extraArgumentsCaption->setFont(_monoFont);
-                    ChannelManager::CalculateTextArea(dimensions, _monoFont,
+                    _extraArgumentsCaption->setFont(_regularFont);
+                    ChannelManager::CalculateTextArea(dimensions, _regularFont,
                                                       _extraArgumentsCaption->getText());
-                    _extraArgumentsCaption->setBounds(2 * kButtonGap, heightSoFar,
+                    _extraArgumentsCaption->setBounds(kLabelInset, heightSoFar,
                                                       dimensions.getX(), dimensions.getY());
-                    Component::addAndMakeVisible(_extraArgumentsCaption);
+                    content->addAndMakeVisible(_extraArgumentsCaption);
                     heightSoFar = _extraArgumentsCaption->getY() +
                                     _extraArgumentsCaption->getHeight() + (kButtonGap / 2);
                     widthSoFar = jmax(widthSoFar, _extraArgumentsCaption->getWidth());
@@ -688,7 +778,7 @@ void ApplicationSettingsWindow::setUpStandardFields(int & widthSoFar,
                     _addArgumentsButton->setCommandToTrigger(nullptr, kSettingsAddField, false);
                     _addArgumentsButton->addListener(this);
                     _addArgumentsButton->changeWidthToFitText(buttonHeight);
-                    Component::addAndMakeVisible(_addArgumentsButton, 0);
+                    content->addAndMakeVisible(_addArgumentsButton, 0);
                     _removeArgumentsButton = new TextButton(String("- ") + argName);
                     _removeArgumentsButton->setWantsKeyboardFocus(true);
                     _removeArgumentsButton->setMouseClickGrabsKeyboardFocus(false);
@@ -696,37 +786,48 @@ void ApplicationSettingsWindow::setUpStandardFields(int & widthSoFar,
                                                                 false);
                     _removeArgumentsButton->addListener(this);
                     _removeArgumentsButton->changeWidthToFitText(buttonHeight);
-                    Component::addChildComponent(_removeArgumentsButton);
+                    content->addChildComponent(_removeArgumentsButton);
                 }
             }
             else
             {
-                String descriptionPrefix;
+                bool                    forOutput;
+                String                  descriptionPrefix;
+                TextValidator *         newValidator = new TextValidator(*aDescriptor);
+                TextEditorWithCaption * newEditor = new TextEditorWithCaption(*this, _regularFont,
+                                                                              _errorFont,
+                                                                              newValidator,
+                                                                              argName);
+                Label *                 newLabel = newEditor->getCaption();
                 
                 if (aDescriptor->isOptional())
                 {
                     descriptionPrefix = "(Optional) ";
                 }
-                Label * newLabel = new Label("", descriptionPrefix + argDescription);
-
-                _standardFieldLabels.add(newLabel);
-                newLabel->setFont(_monoFont);
-                ChannelManager::CalculateTextArea(dimensions, _monoFont, newLabel->getText());
-                newLabel->setBounds(2 * kButtonGap, heightSoFar, dimensions.getX(),
-                                    dimensions.getY());
-                Component::addAndMakeVisible(newLabel);
+                newLabel->setText(descriptionPrefix + argDescription, dontSendNotification);
+                ChannelManager::CalculateTextArea(dimensions, _regularFont, newLabel->getText());
+                newLabel->setBounds(kLabelInset, heightSoFar, dimensions.getX(), dimensions.getY());
+                content->addAndMakeVisible(newLabel);
                 heightSoFar = newLabel->getY() + newLabel->getHeight();
                 widthSoFar = jmax(widthSoFar, newLabel->getWidth());
-                TextEditor * newEditor = new TextEditor(argName);
-                
                 _standardFieldEditors.add(newEditor);
-                newEditor->setFont(_monoFont);
-                newEditor->setBounds(newLabel->getX(), heightSoFar, widthSoFar - kButtonGap,
-                                      static_cast<int>(_adjustedEditorHeight));
+                newEditor->setBounds(kFieldInset, heightSoFar, widthSoFar - kFieldInset,
+                                     static_cast<int>(_adjustedEditorHeight));
                 newEditor->setText(aDescriptor->getDefaultValue().c_str(), false);
-                newEditor->setComponentID(String(static_cast<int>(ii)));
                 newEditor->setSelectAllWhenFocused(true);
-                Component::addAndMakeVisible(newEditor);
+                content->addAndMakeVisible(newEditor);
+                if (aDescriptor->isForFiles(forOutput))
+                {
+                    TextButton * newButton = new TextButton(kFileButtonText);
+
+                    newButton->setWantsKeyboardFocus(true);
+                    newButton->setMouseClickGrabsKeyboardFocus(false);
+                    newButton->setCommandToTrigger(nullptr, kSettingsFileRequest, false);
+                    newButton->addListener(this);
+                    newButton->changeWidthToFitText(buttonHeight);
+                    newEditor->setButton(newButton);
+                    content->addAndMakeVisible(newEditor->getButton());
+                }
                 heightSoFar = newEditor->getY() + newEditor->getHeight() + (kButtonGap / 2);
             }
         }
@@ -737,17 +838,53 @@ void ApplicationSettingsWindow::setUpStandardFields(int & widthSoFar,
     _cancelButton.addListener(this);
     _cancelButton.changeWidthToFitText(buttonHeight);
     _cancelButton.setTopLeftPosition(0, heightSoFar + kButtonGap);
-    Component::addAndMakeVisible(&_cancelButton, 0);
+    content->addAndMakeVisible(&_cancelButton, 0);
     _okButton.setWantsKeyboardFocus(true);
     _okButton.setMouseClickGrabsKeyboardFocus(false);
-    _okButton.setCommandToTrigger(nullptr, kSettingsAccept, false);
+    _okButton.setCommandToTrigger(nullptr, kSettingsOK, false);
     _okButton.addListener(this);
     _okButton.changeWidthToFitText(buttonHeight);
     _okButton.setTopLeftPosition(0, heightSoFar + kButtonGap);
-    Component::addAndMakeVisible(&_okButton, 0);
+    content->addAndMakeVisible(&_okButton, 0);
     heightSoFar += buttonHeight;
     OD_LOG_OBJEXIT(); //####
-} // ApplicationSettingsWindow::setUpStandardFields
+} // SettingsWindow::setUpStandardFields
+
+void SettingsWindow::tellAllFieldsToIgnoreNextFocusLoss(void)
+{
+    OD_LOG_ENTER(); //####
+    if (_endpointEditor)
+    {
+        _endpointEditor->ignoreNextFocusLoss();
+    }
+    if (_portEditor)
+    {
+        _portEditor->ignoreNextFocusLoss();
+    }
+    if (_tagEditor)
+    {
+        _tagEditor->ignoreNextFocusLoss();
+    }
+    for (int ii = 0, maxf = _standardFieldEditors.size(); maxf > ii; ++ii)
+    {
+        TextEditorWithCaption * anEditor = _standardFieldEditors[ii];
+        
+        if (anEditor)
+        {
+            anEditor->ignoreNextFocusLoss();
+        }
+    }
+    for (int ii = 0, maxf = _extraFieldEditors.size(); maxf > ii; ++ii)
+    {
+        TextEditorWithCaption * anEditor = _standardFieldEditors[ii];
+
+        if (anEditor)
+        {
+            anEditor->ignoreNextFocusLoss();
+        }
+    }
+    OD_LOG_EXIT(); //####
+} // SettingsWindow::tellAllFieldsToIgnoreNextFocusLoss
 
 #if defined(__APPLE__)
 # pragma mark Global functions

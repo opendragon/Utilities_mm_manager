@@ -1054,7 +1054,6 @@ void ContentPanel::setUpContainerMenu(PopupMenu &        aMenu,
             serviceLike = false;
             break;
     }
-    
     aMenu.addItem(kPopupDisplayEntityInfo, String("Display ") + kindOfContainer + " information");
     aMenu.addItem(kPopupDetailedDisplayEntityInfo, String("Display detailed ") + kindOfContainer +
                   " information");
