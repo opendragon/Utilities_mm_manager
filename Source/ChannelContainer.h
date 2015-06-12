@@ -42,7 +42,14 @@
 # include "ChannelManagerDataTypes.h"
 
 # if defined(USE_OGDF_POSITIONING)
+#  if (! MAC_OR_LINUX_)
+#   pragma warning(push)
+#   pragma warning(disable: 4512)
+#  endif // ! MAC_OR_LINUX_
 #  include <ogdf/basic/Graph.h>
+#  if (! MAC_OR_LINUX_)
+#   pragma warning(pop)
+#  endif // ! MAC_OR_LINUX_
 # endif // defined(USE_OGDF_POSITIONING)
 
 # if defined(__APPLE__)

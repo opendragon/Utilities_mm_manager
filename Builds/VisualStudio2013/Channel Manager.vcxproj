@@ -969,6 +969,10 @@
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_gui_basics\juce_gui_basics.cpp" />
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_gui_extra\juce_gui_extra.cpp" />
     <ClCompile Include="..\..\Source\ServiceLaunchThread.cpp" />
+    <ClCompile Include="..\..\Source\SettingsWindow.cpp" />
+    <ClCompile Include="..\..\Source\TextEditorErrorResponder.cpp" />
+    <ClCompile Include="..\..\Source\TextEditorWithCaption.cpp" />
+    <ClCompile Include="..\..\Source\TextValidator.cpp" />
     <ClCompile Include="..\..\Source\YarpLaunchThread.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -1323,6 +1327,10 @@
     <ClInclude Include="..\..\JuceLibraryCode\AppConfig.h" />
     <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h" />
     <ClInclude Include="..\..\Source\ServiceLaunchThread.h" />
+    <ClInclude Include="..\..\Source\SettingsWindow.h" />
+    <ClInclude Include="..\..\Source\TextEditorErrorResponder.h" />
+    <ClInclude Include="..\..\Source\TextEditorWithCaption.h" />
+    <ClInclude Include="..\..\Source\TextValidator.h" />
     <ClInclude Include="..\..\Source\YarpLaunchThread.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>

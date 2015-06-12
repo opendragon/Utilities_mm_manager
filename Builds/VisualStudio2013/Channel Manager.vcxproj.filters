@@ -1080,6 +1080,18 @@
     <ClCompile Include="..\..\Source\ServiceLaunchThread.cpp">
       <Filter>Channel Manager\Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\SettingsWindow.cpp">
+      <Filter>Channel Manager\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\TextEditorErrorResponder.cpp">
+      <Filter>Channel Manager\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\TextEditorWithCaption.cpp">
+      <Filter>Channel Manager\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\TextValidator.cpp">
+      <Filter>Channel Manager\Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\ChannelContainer.h">
@@ -2137,6 +2149,18 @@
       <Filter>Channel Manager\Source</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\ServiceLaunchThread.h">
+      <Filter>Channel Manager\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\SettingsWindow.h">
+      <Filter>Channel Manager\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\TextEditorErrorResponder.h">
+      <Filter>Channel Manager\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\TextEditorWithCaption.h">
+      <Filter>Channel Manager\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\TextValidator.h">
       <Filter>Channel Manager\Source</Filter>
     </ClInclude>
   </ItemGroup>

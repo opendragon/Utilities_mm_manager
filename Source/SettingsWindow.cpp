@@ -74,6 +74,9 @@ using namespace std;
 # pragma mark Private structures, constants and variables
 #endif // defined(__APPLE__)
 
+/*! @brief The font size for text. */
+static const float kFontSize = 16;
+
 /*! @brief The horizontal gap between buttons. */
 static const int kButtonGap = 10;
 
@@ -82,9 +85,6 @@ static const int kEditorHeightAdjustment = 4;
 
 /*! @brief The amount to inset text entry fields. */
 static const int kFieldInset = (2 * kButtonGap);
-
-/*! @brief The font size for text. */
-static const int kFontSize = 16;
 
 /*! @brief The amount to inset labels. */
 static const int kLabelInset = (3 * kButtonGap);
@@ -163,7 +163,6 @@ SettingsWindow::SettingsWindow(const String &          title,
     _canSetPort = appInfo._options.contains("p");
     _canSetTag = appInfo._options.contains("t");
     setUpStandardFields(widthSoFar, heightSoFar);
-    int buttonRowHeight = jmax(_cancelButton.getHeight(), _okButton.getHeight());
     int titleW = _regularFont.getStringWidth(getName()) + kTitleBarMinWidth;
     int topW = widthSoFar + kButtonGap;
     int minW = jmax(topW, jmax(titleW,
@@ -442,17 +441,37 @@ bool SettingsWindow::fieldsAreValid(void)
     return (0 == badCount);
 } // SettingsWindow::fieldsAreValid
 
+#if (! MAC_OR_LINUX_)
+# pragma warning(push)
+# pragma warning(disable: 4100)
+#endif // ! MAC_OR_LINUX_
 void SettingsWindow::focusGained(FocusChangeType cause)
 {
-    OD_LOG_OBJENTER(); //####
+#if MAC_OR_LINUX_
+# pragma unused(cause)
+#endif // MAC_OR_LINUX_
+	OD_LOG_OBJENTER(); //####
     OD_LOG_OBJEXIT(); //####
 } // SettingsWindow::focusGained
+#if (! MAC_OR_LINUX_)
+# pragma warning(pop)
+#endif // ! MAC_OR_LINUX_
 
+#if (! MAC_OR_LINUX_)
+# pragma warning(push)
+# pragma warning(disable: 4100)
+#endif // ! MAC_OR_LINUX_
 void SettingsWindow::focusLost(FocusChangeType cause)
 {
-    OD_LOG_OBJENTER(); //####
+#if MAC_OR_LINUX_
+# pragma unused(cause)
+#endif // MAC_OR_LINUX_
+	OD_LOG_OBJENTER(); //####
     OD_LOG_OBJEXIT(); //####
 } // SettingsWindow::focusLost
+#if (! MAC_OR_LINUX_)
+# pragma warning(pop)
+#endif // ! MAC_OR_LINUX_
 
 void SettingsWindow::resized(void)
 {
@@ -591,7 +610,6 @@ void SettingsWindow::recalculateArea(void)
     heightSoFar += buttonHeight;
     BorderSize<int> bt = getBorderThickness();
     BorderSize<int> cb = getContentComponentBorder();
-    int             buttonRowHeight = jmax(_cancelButton.getHeight(), _okButton.getHeight());
     int             titleW = _regularFont.getStringWidth(getName()) + kTitleBarMinWidth;
     int             topW = widthSoFar + kButtonGap;
     int             minW = jmax(topW, jmax(titleW,

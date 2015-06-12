@@ -145,15 +145,32 @@ void TextEditorWithCaption::addPopupMenuItems(PopupMenu &        menuToAddTo,
     OD_LOG_OBJEXIT(); //####
 } // TextEditorWithCaption::addPopupMenuItems
 
+#if (! MAC_OR_LINUX_)
+# pragma warning(push)
+# pragma warning(disable: 4100)
+#endif // ! MAC_OR_LINUX_
 void TextEditorWithCaption::focusGained(FocusChangeType cause)
 {
-    OD_LOG_OBJENTER(); //####
+#if MAC_OR_LINUX_
+# pragma unused(cause)
+#endif // MAC_OR_LINUX_
+	OD_LOG_OBJENTER(); //####
     OD_LOG_OBJEXIT(); //####
 } // TextEditorWithCaption::focusGained
+#if (! MAC_OR_LINUX_)
+# pragma warning(pop)
+#endif // ! MAC_OR_LINUX_
 
+#if (! MAC_OR_LINUX_)
+# pragma warning(push)
+# pragma warning(disable: 4100)
+#endif // ! MAC_OR_LINUX_
 void TextEditorWithCaption::focusLost(FocusChangeType cause)
 {
-    OD_LOG_OBJENTER(); //####
+#if MAC_OR_LINUX_
+# pragma unused(cause)
+#endif // MAC_OR_LINUX_
+	OD_LOG_OBJENTER(); //####
     if (_ignoreNextFocusLoss)
     {
         _ignoreNextFocusLoss = false;
@@ -164,6 +181,9 @@ void TextEditorWithCaption::focusLost(FocusChangeType cause)
     }
     OD_LOG_OBJEXIT(); //####
 } // TextEditorWithCaption::focusLost
+#if (! MAC_OR_LINUX_)
+# pragma warning(pop)
+#endif // ! MAC_OR_LINUX_
 
 void TextEditorWithCaption::ignoreNextFocusLoss(void)
 {

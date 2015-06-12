@@ -51,8 +51,15 @@
 #include <odl/ODLogging.h>
 
 #if defined(USE_OGDF_POSITIONING)
+# if (! MAC_OR_LINUX_)
+#  pragma warning(push)
+#  pragma warning(disable: 4100)
+# endif // ! MAC_OR_LINUX_
 # include <ogdf/basic/GraphAttributes.h>
 # include <ogdf/energybased/FMMMLayout.h>
+# if (! MAC_OR_LINUX_)
+#  pragma warning(pop)
+# endif // ! MAC_OR_LINUX_
 #endif // defined(USE_OGDF_POSITIONING)
 
 #if defined(__APPLE__)
