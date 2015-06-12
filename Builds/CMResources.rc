@@ -3,7 +3,7 @@
 #include <windows.h>
 
 VS_VERSION_INFO VERSIONINFO
-FILEVERSION  1,5,3,0
+FILEVERSION  1,5,4,0
 BEGIN
   BLOCK "StringFileInfo"
   BEGIN
@@ -11,10 +11,10 @@ BEGIN
     BEGIN
       VALUE "CompanyName",  "H Plus Technologies Ltd. and Simon Fraser University\0"
       VALUE "FileDescription",  "Channel Manager\0"
-      VALUE "FileVersion",  "1.5.3\0"
+      VALUE "FileVersion",  "1.5.4\0"
       VALUE "LegalCopyright", "(c) 2015 by H Plus Technologies Ltd. and Simon Fraser University\0"
       VALUE "ProductName",  "Channel Manager\0"
-      VALUE "ProductVersion",  "1.5.3\0"
+      VALUE "ProductVersion",  "1.5.4\0"
     END
   END
 
