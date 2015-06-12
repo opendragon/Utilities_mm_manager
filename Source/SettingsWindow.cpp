@@ -322,7 +322,9 @@ void SettingsWindow::buttonClicked(Button * aButton)
                 if (anEditor && (anEditor->getButton() == aButton))
                 {
                     anEditor->makeFileSelection();
+                    break;
                 }
+                
             }
             break;
             

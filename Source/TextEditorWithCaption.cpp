@@ -213,13 +213,40 @@ void TextEditorWithCaption::makeFileSelection(void)
         
         if (_validator->isForFiles(forOutput))
         {
+            ignoreNextFocusLoss();
             if (forOutput)
             {
-                cerr << "select output file" << endl;
+                FileChooser fc("Choose a file to write to...", File::getCurrentWorkingDirectory(),
+                               "*", false);
+                
+                if (fc.browseForFileToSave(true))
+                {
+                    File   chosenFile = fc.getResult();
+                    String filePath = chosenFile.getFullPathName();
+                    
+                    setText(chosenFile.getFullPathName());
+                    if (! validateField())
+                    {
+                        _responder.reportErrorInField(*this);
+                    }
+                }
             }
             else
             {
-                cerr << "select input file" << endl;
+                FileChooser fc("Choose a file to open...", File::getCurrentWorkingDirectory(), "*",
+                               false);
+                
+                if (fc.browseForFileToOpen())
+                {
+                    File   chosenFile = fc.getResult();
+                    String filePath = chosenFile.getFullPathName();
+                    
+                    setText(chosenFile.getFullPathName());
+                    if (! validateField())
+                    {
+                        _responder.reportErrorInField(*this);
+                    }
+                }
             }
         }
     }
