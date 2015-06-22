@@ -137,6 +137,7 @@ SettingsWindow::SettingsWindow(const String &          title,
     _topText("topText"), _cancelButton("Cancel"), _okButton("OK"),
     _descriptors(appInfo._argDescriptions),
     _errorFont(Font::getDefaultMonospacedFontName(), kFontSize, Font::italic + Font::bold),
+    _extraFont(Font::getDefaultMonospacedFontName(), kFontSize, Font::underlined),
     _regularFont(Font::getDefaultMonospacedFontName(), kFontSize, Font::plain), _execType(execType),
     _extraArgumentsCaption(nullptr), _addArgumentsButton(nullptr), _removeArgumentsButton(nullptr),
     _endpointEditor(nullptr), _portEditor(nullptr), _tagEditor(nullptr),
@@ -268,18 +269,15 @@ void SettingsWindow::adjustFields(void)
         {
             TextButton * aButton = anEditor->getButton();
             
+            anEditor->setSize(newFieldWidth, anEditor->getHeight());
             if (aButton)
             {
-                anEditor->setSize(newFieldWidth, anEditor->getHeight());
-                if (aButton)
-                {
-                    Label * aLabel = anEditor->getCaption();
-                    int     span = anEditor->getY() + anEditor->getHeight() - aLabel->getY();
-                    int     offset = span - aButton->getHeight();
-                    
-                    aButton->setTopLeftPosition(anEditor->getX() + newFieldWidth + kButtonGap,
-                                                aLabel->getY() + (offset / 2));
-                }
+                Label * aLabel = anEditor->getCaption();
+                int     span = anEditor->getY() + anEditor->getHeight() - aLabel->getY();
+                int     offset = span - aButton->getHeight();
+                
+                aButton->setTopLeftPosition(anEditor->getX() + newFieldWidth + kButtonGap,
+                                            aLabel->getY() + (offset / 2));
             }
         }
     }
@@ -536,9 +534,10 @@ bool SettingsWindow::keyPressed(const KeyPress & key)
 void SettingsWindow::recalculateArea(void)
 {
     OD_LOG_ENTER(); //####
-    int buttonHeight = getLookAndFeel().getAlertWindowButtonHeight();
-    int heightSoFar = 0;
-    int widthSoFar = 0;
+    int    buttonHeight = getLookAndFeel().getAlertWindowButtonHeight();
+    int    heightSoFar = 0;
+    int    widthSoFar = 0;
+    size_t numExtra = _extraFieldEditors.size();
     
     heightSoFar = _topText.getY() + _topText.getHeight() + (kButtonGap / 2);
     widthSoFar = jmax(widthSoFar, _topText.getWidth());
@@ -574,7 +573,8 @@ void SettingsWindow::recalculateArea(void)
             
             if (aDescriptor->isExtra())
             {
-                heightSoFar = _extraArgumentsCaption->getY() + _extraArgumentsCaption->getHeight();
+                heightSoFar = _extraArgumentsCaption->getY() + _extraArgumentsCaption->getHeight() +
+                                (kButtonGap / 2);
                 widthSoFar = jmax(widthSoFar, _extraArgumentsCaption->getWidth());
             }
             else
@@ -595,7 +595,7 @@ void SettingsWindow::recalculateArea(void)
             }
         }
     }
-    for (size_t ii = 0, numExtra = _extraFieldEditors.size(); numExtra > ii; ++ii)
+    for (size_t ii = 0; numExtra > ii; ++ii)
     {
         TextEditorWithCaption * anEditor = _extraFieldEditors[static_cast<int>(ii)];
         Label *                 aLabel = anEditor->getCaption();
@@ -606,7 +606,10 @@ void SettingsWindow::recalculateArea(void)
         anEditor->setTopLeftPosition(kFieldInset, heightSoFar);
         heightSoFar = anEditor->getY() + anEditor->getHeight() + (kButtonGap / 2);
     }
-    heightSoFar += buttonHeight;
+    if (0 < numExtra)
+    {
+        heightSoFar += buttonHeight - kButtonGap;
+    }
     BorderSize<int> bt = getBorderThickness();
     BorderSize<int> cb = getContentComponentBorder();
     int             titleW = _regularFont.getStringWidth(getName()) + kTitleBarMinWidth;
@@ -727,7 +730,8 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
 
         aCaption->setText("(Optional) Network port to use", dontSendNotification);
         ChannelManager::CalculateTextArea(dimensions, _regularFont, aCaption->getText());
-        aCaption->setBounds(kLabelInset, heightSoFar, dimensions.getX() + kLabelInset, dimensions.getY());
+        aCaption->setBounds(kLabelInset, heightSoFar, dimensions.getX() + kLabelInset,
+                            dimensions.getY());
         content->addAndMakeVisible(aCaption);
 		heightSoFar = aCaption->getY() + aCaption->getHeight() + kLabelToFieldGap;
         widthSoFar = jmax(widthSoFar, aCaption->getWidth());
@@ -745,12 +749,13 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
         
         aCaption->setText(String("(Optional) Tag for the ") + _execType, dontSendNotification);
         ChannelManager::CalculateTextArea(dimensions, _regularFont, aCaption->getText());
-		aCaption->setBounds(kLabelInset, heightSoFar, dimensions.getX() + kLabelInset, dimensions.getY());
+		aCaption->setBounds(kLabelInset, heightSoFar, dimensions.getX() + kLabelInset,
+                            dimensions.getY());
         content->addAndMakeVisible(aCaption);
 		heightSoFar = aCaption->getY() + aCaption->getHeight() + kLabelToFieldGap;
         widthSoFar = jmax(widthSoFar, aCaption->getWidth());
         _tagEditor->setBounds(kFieldInset, heightSoFar, widthSoFar - kFieldInset,
-                               static_cast<int>(_adjustedEditorHeight));
+                              static_cast<int>(_adjustedEditorHeight));
         _tagEditor->setSelectAllWhenFocused(true);
         content->addAndMakeVisible(_tagEditor);
         heightSoFar = _tagEditor->getY() + _tagEditor->getHeight() + (kButtonGap / 2);
@@ -782,7 +787,7 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
                     _canHaveExtraArguments = true;
                     _extraArgRootName = argName;
                     _extraArgumentsCaption = new Label("", argDescription);
-                    _extraArgumentsCaption->setFont(_regularFont);
+                    _extraArgumentsCaption->setFont(_extraFont);
                     ChannelManager::CalculateTextArea(dimensions, _regularFont,
                                                       _extraArgumentsCaption->getText());
                     _extraArgumentsCaption->setBounds(kLabelInset, heightSoFar,

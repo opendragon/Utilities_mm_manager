@@ -199,6 +199,9 @@ namespace ChannelManager
         /*! @brief The monospaced font for error text. */
         Font _errorFont;
         
+        /*! @brief The monospaced font for the 'extra' label. */
+        Font _extraFont;
+        
         /*! @brief The regular monospaced font to use. */
         Font _regularFont;
         
