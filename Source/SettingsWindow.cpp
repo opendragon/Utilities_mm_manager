@@ -83,6 +83,9 @@ static const int kButtonGap = 10;
 /*! @brief The amount to add to the height of text editor fields. */
 static const int kEditorHeightAdjustment = 4;
 
+/*! @brief The extra space around the content in the window. */
+static const int kExtraSpaceInWindow = 20;
+
 /*! @brief The amount to inset text entry fields. */
 static const int kFieldInset = (2 * kButtonGap);
 
@@ -167,14 +170,11 @@ SettingsWindow::SettingsWindow(const String &          title,
     _canSetPort = appInfo._options.contains("p");
     _canSetTag = appInfo._options.contains("t");
     setUpStandardFields(widthSoFar, heightSoFar);
-    int titleW = _regularFont.getStringWidth(getName()) + kTitleBarMinWidth;
-    int topW = widthSoFar + kButtonGap;
-    int minW = jmax(topW, jmax(titleW,
-                               _cancelButton.getWidth() + _okButton.getWidth() + (3 * kButtonGap)));
+	int minW = jmax(widthSoFar, _cancelButton.getWidth() + _okButton.getWidth() + (3 * kButtonGap));
     int calcW = minW + bt.getLeftAndRight() + cb.getLeftAndRight();
     int calcH = heightSoFar + bt.getTopAndBottom() + cb.getTopAndBottom();
     
-    centreWithSize(calcW + 20, calcH + 20);
+	centreWithSize(calcW + kExtraSpaceInWindow, calcH + kExtraSpaceInWindow);
     adjustFields();
     setOpaque(true);
     setResizable(false, false);
@@ -534,12 +534,12 @@ bool SettingsWindow::keyPressed(const KeyPress & key)
 void SettingsWindow::recalculateArea(void)
 {
     OD_LOG_ENTER(); //####
-    int    buttonHeight = getLookAndFeel().getAlertWindowButtonHeight();
+	bool   hasExtra = false;
     int    heightSoFar = 0;
     int    widthSoFar = 0;
     size_t numExtra = _extraFieldEditors.size();
     
-    heightSoFar = _topText.getY() + _topText.getHeight() + (kButtonGap / 2);
+    heightSoFar = _topText.getY() + _topText.getHeight() + kButtonGap;
     widthSoFar = jmax(widthSoFar, _topText.getWidth());
     if (_canSetEndpoint)
     {
@@ -576,6 +576,7 @@ void SettingsWindow::recalculateArea(void)
                 heightSoFar = _extraArgumentsCaption->getY() + _extraArgumentsCaption->getHeight() +
                                 (kButtonGap / 2);
                 widthSoFar = jmax(widthSoFar, _extraArgumentsCaption->getWidth());
+				hasExtra = true;
             }
             else
             {
@@ -606,21 +607,17 @@ void SettingsWindow::recalculateArea(void)
         anEditor->setTopLeftPosition(kFieldInset, heightSoFar);
         heightSoFar = anEditor->getY() + anEditor->getHeight() + (kButtonGap / 2);
     }
-    if (0 < numExtra)
-    {
-        heightSoFar += buttonHeight - kButtonGap;
-    }
-    BorderSize<int> bt = getBorderThickness();
+	if (hasExtra && (! numExtra))
+	{
+		// Correct for extra space after the 'extra' label.
+		heightSoFar -= kButtonGap;
+	}
     BorderSize<int> cb = getContentComponentBorder();
-    int             titleW = _regularFont.getStringWidth(getName()) + kTitleBarMinWidth;
-    int             topW = widthSoFar + kButtonGap;
-    int             minW = jmax(topW, jmax(titleW,
-                                           _cancelButton.getWidth() + _okButton.getWidth() +
-                                           (3 * kButtonGap)));
-    int             calcW = minW + bt.getLeftAndRight() + cb.getLeftAndRight();
-    int             calcH = heightSoFar + bt.getTopAndBottom() + cb.getTopAndBottom();
+	int             minW = jmax(widthSoFar, _cancelButton.getWidth() + _okButton.getWidth() +
+                                           (3 * kButtonGap));
     
-    setContentComponentSize(calcW, calcH);
+	setContentComponentSize(minW + kExtraSpaceInWindow + cb.getLeftAndRight(),
+							heightSoFar + kExtraSpaceInWindow + cb.getTopAndBottom());
     OD_LOG_EXIT(); //####
 } // SettingsWindow::recalculateArea
 
@@ -697,7 +694,7 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
     _topText.setBounds(kButtonGap, kButtonGap + getTitleBarHeight(), dimensions.getX() + kButtonGap,
                        dimensions.getY());
     content->addAndMakeVisible(&_topText, 0);
-    heightSoFar = _topText.getY() + _topText.getHeight() + (kButtonGap / 2);
+    heightSoFar = _topText.getY() + _topText.getHeight() + kButtonGap;
     widthSoFar = jmax(widthSoFar, _topText.getWidth());
     if (_canSetEndpoint)
     {
