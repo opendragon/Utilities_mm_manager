@@ -717,7 +717,8 @@ bool ChannelManagerApplication::getArgumentsForApplication(ApplicationInfo & the
             // The input lines should be composed of tab-separated argument descriptions.
             for (int ii = 0, mm = aRecord.size(); mm > ii; ++ii)
             {
-                YarpString                          argString(aRecord[ii].toStdString());
+				String                              trimmedRecord(aRecord[ii].trim());
+				YarpString                          argString(trimmedRecord.toStdString());
                 Utilities::BaseArgumentDescriptor * argDesc =
                                                     Utilities::ConvertStringToArgument(argString);
 
