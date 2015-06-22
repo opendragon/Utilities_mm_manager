@@ -89,6 +89,9 @@ static const int kFieldInset = (2 * kButtonGap);
 /*! @brief The amount to inset labels. */
 static const int kLabelInset = (3 * kButtonGap);
 
+/*! @brief The amount of space between a field and its label. */
+static const int kLabelToFieldGap = 2;
+
 /*! @brief The overhead for the buttons on the title bar. */
 static const int kTitleBarMinWidth = 80;
 
@@ -204,7 +207,7 @@ void SettingsWindow::addAnExtraField(void)
     newLabel->setText(_extraArgRootName + " " + compCountAsString, dontSendNotification);
     _extraFieldEditors.add(newEditor);
     ChannelManager::CalculateTextArea(dimensions, _regularFont, newLabel->getText());
-    newLabel->setBounds(kLabelInset, 0, dimensions.getX(), dimensions.getY());
+    newLabel->setBounds(kLabelInset, 0, dimensions.getX() + kLabelInset, dimensions.getY());
     content->addAndMakeVisible(newLabel);
     newEditor->setBounds(kFieldInset, 0, 0, static_cast<int>(_adjustedEditorHeight));
     newEditor->setSelectAllWhenFocused(true);
@@ -543,7 +546,6 @@ void SettingsWindow::recalculateArea(void)
     {
         Label * aCaption = _endpointEditor->getCaption();
         
-        heightSoFar = aCaption->getY() + aCaption->getHeight();
         widthSoFar = jmax(widthSoFar, aCaption->getWidth());
         heightSoFar = _endpointEditor->getY() + _endpointEditor->getHeight() + (kButtonGap / 2);
     }
@@ -551,7 +553,6 @@ void SettingsWindow::recalculateArea(void)
     {
         Label * aCaption = _portEditor->getCaption();
 
-        heightSoFar = aCaption->getY() + aCaption->getHeight();
         widthSoFar = jmax(widthSoFar, aCaption->getWidth());
         heightSoFar = _portEditor->getY() + _portEditor->getHeight() + (kButtonGap / 2);
     }
@@ -559,7 +560,6 @@ void SettingsWindow::recalculateArea(void)
     {
         Label * aCaption = _tagEditor->getCaption();
         
-        heightSoFar = aCaption->getY() + aCaption->getHeight();
         widthSoFar = jmax(widthSoFar, aCaption->getWidth());
         heightSoFar = _tagEditor->getY() + _tagEditor->getHeight() + (kButtonGap / 2);
     }
@@ -587,7 +587,6 @@ void SettingsWindow::recalculateArea(void)
                     
                     if (aLabel)
                     {
-                        heightSoFar = aLabel->getY() + aLabel->getHeight();
                         widthSoFar = jmax(widthSoFar, aLabel->getWidth());
                         heightSoFar = anEditor->getY() + anEditor->getHeight() + (kButtonGap / 2);
                         ++jj;
@@ -602,7 +601,7 @@ void SettingsWindow::recalculateArea(void)
         Label *                 aLabel = anEditor->getCaption();
         
         aLabel->setTopLeftPosition(kLabelInset, heightSoFar);
-        heightSoFar = aLabel->getY() + aLabel->getHeight();
+        heightSoFar = aLabel->getY() + aLabel->getHeight() + kLabelToFieldGap;
         widthSoFar = jmax(widthSoFar, aLabel->getWidth());
         anEditor->setTopLeftPosition(kFieldInset, heightSoFar);
         heightSoFar = anEditor->getY() + anEditor->getHeight() + (kButtonGap / 2);
@@ -707,11 +706,11 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
         
         aCaption->setText("(Optional) Endpoint to use", dontSendNotification);
         ChannelManager::CalculateTextArea(dimensions, _regularFont, aCaption->getText());
-        aCaption->setBounds(kLabelInset, heightSoFar, dimensions.getX(), dimensions.getY());
+        aCaption->setBounds(kLabelInset, heightSoFar, dimensions.getX() + kLabelInset,
+							dimensions.getY());
         content->addAndMakeVisible(aCaption);
-        heightSoFar = aCaption->getY() + aCaption->getHeight();
+		heightSoFar = aCaption->getY() + aCaption->getHeight() + kLabelToFieldGap;
         widthSoFar = jmax(widthSoFar, aCaption->getWidth());
-        
         _endpointEditor->setBounds(kFieldInset, heightSoFar, widthSoFar - kFieldInset,
                                    static_cast<int>(_adjustedEditorHeight));
         _endpointEditor->setSelectAllWhenFocused(true);
@@ -728,9 +727,9 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
 
         aCaption->setText("(Optional) Network port to use", dontSendNotification);
         ChannelManager::CalculateTextArea(dimensions, _regularFont, aCaption->getText());
-        aCaption->setBounds(kLabelInset, heightSoFar, dimensions.getX(), dimensions.getY());
+        aCaption->setBounds(kLabelInset, heightSoFar, dimensions.getX() + kLabelInset, dimensions.getY());
         content->addAndMakeVisible(aCaption);
-        heightSoFar = aCaption->getY() + aCaption->getHeight();
+		heightSoFar = aCaption->getY() + aCaption->getHeight() + kLabelToFieldGap;
         widthSoFar = jmax(widthSoFar, aCaption->getWidth());
         _portEditor->setBounds(kFieldInset, heightSoFar, widthSoFar - kFieldInset,
                                static_cast<int>(_adjustedEditorHeight));
@@ -746,9 +745,9 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
         
         aCaption->setText(String("(Optional) Tag for the ") + _execType, dontSendNotification);
         ChannelManager::CalculateTextArea(dimensions, _regularFont, aCaption->getText());
-        aCaption->setBounds(kLabelInset, heightSoFar, dimensions.getX(), dimensions.getY());
+		aCaption->setBounds(kLabelInset, heightSoFar, dimensions.getX() + kLabelInset, dimensions.getY());
         content->addAndMakeVisible(aCaption);
-        heightSoFar = aCaption->getY() + aCaption->getHeight();
+		heightSoFar = aCaption->getY() + aCaption->getHeight() + kLabelToFieldGap;
         widthSoFar = jmax(widthSoFar, aCaption->getWidth());
         _tagEditor->setBounds(kFieldInset, heightSoFar, widthSoFar - kFieldInset,
                                static_cast<int>(_adjustedEditorHeight));
@@ -787,7 +786,8 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
                     ChannelManager::CalculateTextArea(dimensions, _regularFont,
                                                       _extraArgumentsCaption->getText());
                     _extraArgumentsCaption->setBounds(kLabelInset, heightSoFar,
-                                                      dimensions.getX(), dimensions.getY());
+													  dimensions.getX() + kLabelInset,
+													  dimensions.getY());
                     content->addAndMakeVisible(_extraArgumentsCaption);
                     heightSoFar = _extraArgumentsCaption->getY() +
                                     _extraArgumentsCaption->getHeight() + (kButtonGap / 2);
@@ -826,9 +826,10 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
                 }
                 newLabel->setText(descriptionPrefix + argDescription, dontSendNotification);
                 ChannelManager::CalculateTextArea(dimensions, _regularFont, newLabel->getText());
-                newLabel->setBounds(kLabelInset, heightSoFar, dimensions.getX(), dimensions.getY());
+				newLabel->setBounds(kLabelInset, heightSoFar, dimensions.getX() + kLabelInset,
+									dimensions.getY());
                 content->addAndMakeVisible(newLabel);
-                heightSoFar = newLabel->getY() + newLabel->getHeight();
+				heightSoFar = newLabel->getY() + newLabel->getHeight() + kLabelToFieldGap;
                 widthSoFar = jmax(widthSoFar, newLabel->getWidth());
                 _standardFieldEditors.add(newEditor);
                 newEditor->setBounds(kFieldInset, heightSoFar, widthSoFar - kFieldInset,

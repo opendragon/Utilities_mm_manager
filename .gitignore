@@ -37,3 +37,5 @@ Builds/MacOSX/build
 *.xcuserstate
 *.xccheckout
 sloc_hashes
+Builds/VisualStudio2013/Debug/CMResources.res
+Builds/VisualStudio2013/Release/CMResources.res
