@@ -522,26 +522,26 @@ void SettingsWindow::recalculateArea(void)
     size_t numExtra = _extraFieldEditors.size();
     
     heightSoFar = _topText.getY() + _topText.getHeight() + kButtonGap;
-    widthSoFar = jmax(widthSoFar, _topText.getWidth());
+    widthSoFar = jmax(widthSoFar, _topText.getX() + _topText.getWidth());
     if (_canSetEndpoint)
     {
         Label * aCaption = _endpointEditor->getCaption();
         
-        widthSoFar = jmax(widthSoFar, aCaption->getWidth());
+        widthSoFar = jmax(widthSoFar, aCaption->getX() + aCaption->getWidth());
         heightSoFar = _endpointEditor->getY() + _endpointEditor->getHeight() + (kButtonGap / 2);
     }
     if (_canSetPort)
     {
         Label * aCaption = _portEditor->getCaption();
 
-        widthSoFar = jmax(widthSoFar, aCaption->getWidth());
+        widthSoFar = jmax(widthSoFar, aCaption->getX() + aCaption->getWidth());
         heightSoFar = _portEditor->getY() + _portEditor->getHeight() + (kButtonGap / 2);
     }
     if (_canSetTag)
     {
         Label * aCaption = _tagEditor->getCaption();
         
-        widthSoFar = jmax(widthSoFar, aCaption->getWidth());
+        widthSoFar = jmax(widthSoFar, aCaption->getX() + aCaption->getWidth());
         heightSoFar = _tagEditor->getY() + _tagEditor->getHeight() + (kButtonGap / 2);
     }
     for (size_t ii = 0, numDescriptors = _descriptors.size(), jj = 0; numDescriptors > ii; ++ii)
@@ -555,9 +555,12 @@ void SettingsWindow::recalculateArea(void)
             
             if (aDescriptor->isExtra())
             {
+#if 0
+#endif//0
                 heightSoFar = _extraArgumentsCaption->getY() + _extraArgumentsCaption->getHeight() +
                                 (kButtonGap / 2);
-                widthSoFar = jmax(widthSoFar, _extraArgumentsCaption->getWidth());
+                widthSoFar = jmax(widthSoFar, _extraArgumentsCaption->getX() +
+                                  _extraArgumentsCaption->getWidth());
 				hasExtra = true;
             }
             else
@@ -570,7 +573,7 @@ void SettingsWindow::recalculateArea(void)
                     
                     if (aLabel)
                     {
-                        widthSoFar = jmax(widthSoFar, aLabel->getWidth());
+                        widthSoFar = jmax(widthSoFar, aLabel->getX() + aLabel->getWidth());
                         heightSoFar = anEditor->getY() + anEditor->getHeight() + (kButtonGap / 2);
                         ++jj;
                     }
@@ -585,7 +588,7 @@ void SettingsWindow::recalculateArea(void)
         
         aLabel->setTopLeftPosition(kLabelInset, heightSoFar);
         heightSoFar = aLabel->getY() + aLabel->getHeight() + kLabelToFieldGap;
-        widthSoFar = jmax(widthSoFar, aLabel->getWidth());
+        widthSoFar = jmax(widthSoFar, aLabel->getX() + aLabel->getWidth());
         anEditor->setTopLeftPosition(kFieldInset, heightSoFar);
         heightSoFar = anEditor->getY() + anEditor->getHeight() + (kButtonGap / 2);
     }
@@ -695,7 +698,7 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
                        dimensions.getY());
     content->addAndMakeVisible(&_topText, 0);
     heightSoFar = _topText.getY() + _topText.getHeight() + kButtonGap;
-    widthSoFar = jmax(widthSoFar, _topText.getWidth());
+    widthSoFar = jmax(widthSoFar, _topText.getX() + _topText.getWidth());
     if (_canSetEndpoint)
     {
         /*! @brief The text field validator for endpoints. */
@@ -710,7 +713,7 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
 							dimensions.getY());
         content->addAndMakeVisible(aCaption);
 		heightSoFar = aCaption->getY() + aCaption->getHeight() + kLabelToFieldGap;
-        widthSoFar = jmax(widthSoFar, aCaption->getWidth());
+        widthSoFar = jmax(widthSoFar, aCaption->getX() + aCaption->getWidth());
         _endpointEditor->setBounds(kFieldInset, heightSoFar, widthSoFar - kFieldInset,
                                    static_cast<int>(_adjustedEditorHeight));
         _endpointEditor->setSelectAllWhenFocused(true);
@@ -731,7 +734,7 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
                             dimensions.getY());
         content->addAndMakeVisible(aCaption);
 		heightSoFar = aCaption->getY() + aCaption->getHeight() + kLabelToFieldGap;
-        widthSoFar = jmax(widthSoFar, aCaption->getWidth());
+        widthSoFar = jmax(widthSoFar, aCaption->getX() + aCaption->getWidth());
         _portEditor->setBounds(kFieldInset, heightSoFar, widthSoFar - kFieldInset,
                                static_cast<int>(_adjustedEditorHeight));
         _portEditor->setSelectAllWhenFocused(true);
@@ -750,7 +753,7 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
                             dimensions.getY());
         content->addAndMakeVisible(aCaption);
 		heightSoFar = aCaption->getY() + aCaption->getHeight() + kLabelToFieldGap;
-        widthSoFar = jmax(widthSoFar, aCaption->getWidth());
+        widthSoFar = jmax(widthSoFar, aCaption->getX() + aCaption->getWidth());
         _tagEditor->setBounds(kFieldInset, heightSoFar, widthSoFar - kFieldInset,
                               static_cast<int>(_adjustedEditorHeight));
         _tagEditor->setSelectAllWhenFocused(true);
@@ -766,7 +769,9 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
         if (aDescriptor && aDescriptor->isForFiles(forOutput))
         {
             _hasFileField = true;
+            break;
         }
+
     }
     for (size_t ii = 0; numDescriptors > ii; ++ii)
     {
@@ -783,6 +788,18 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
                 {
                     _canHaveExtraArguments = true;
                     _extraArgRootName = argName;
+
+#if 0
+                    // Note - use a Group Component here, instead of the label?
+                    GroupComponent * aGroup = new GroupComponent("", argDescription);
+
+                    aGroup->setBounds(kFieldInset, heightSoFar,
+                                      widthSoFar - (kButtonGap + kFieldInset),
+                                      static_cast<int>(_regularFont.getHeight()) + kButtonGap);
+                    content->addAndMakeVisible(aGroup);
+                    heightSoFar = aGroup->getY() + aGroup->getHeight() + (kButtonGap / 2);
+                    widthSoFar = jmax(widthSoFar, aGroup->getX() + aGroup->getWidth());
+#else //0
                     _extraArgumentsCaption = new Label("", argDescription);
                     _extraArgumentsCaption->setFont(_extraFont);
                     ChannelManager::CalculateTextArea(dimensions, _regularFont,
@@ -793,7 +810,10 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
                     content->addAndMakeVisible(_extraArgumentsCaption);
                     heightSoFar = _extraArgumentsCaption->getY() +
                                     _extraArgumentsCaption->getHeight() + (kButtonGap / 2);
-                    widthSoFar = jmax(widthSoFar, _extraArgumentsCaption->getWidth());
+                    widthSoFar = jmax(widthSoFar, _extraArgumentsCaption->getX() +
+                                      _extraArgumentsCaption->getWidth());
+#endif//0
+
                     _addArgumentsButton = new TextButton(String("+ ") + argName);
                     _addArgumentsButton->setWantsKeyboardFocus(true);
                     _addArgumentsButton->setMouseClickGrabsKeyboardFocus(false);
@@ -832,7 +852,7 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
 									dimensions.getY());
                 content->addAndMakeVisible(newLabel);
 				heightSoFar = newLabel->getY() + newLabel->getHeight() + kLabelToFieldGap;
-                widthSoFar = jmax(widthSoFar, newLabel->getWidth());
+                widthSoFar = jmax(widthSoFar, newLabel->getX() + newLabel->getWidth());
                 _standardFieldEditors.add(newEditor);
                 newEditor->setBounds(kFieldInset, heightSoFar, widthSoFar - kFieldInset,
                                      static_cast<int>(_adjustedEditorHeight));
