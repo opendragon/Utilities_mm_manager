@@ -261,9 +261,9 @@ void SettingsWindow::adjustFields(void)
                                                (_removeArgumentsButton->getWidth() + kButtonGap),
                                                    newButtonTop);
     }
-    for (int ii = 0, maxf = _standardFieldEditors.size(); maxf > ii; ++ii)
+    for (size_t ii = 0, maxf = _standardFieldEditors.size(); maxf > ii; ++ii)
     {
-        TextEditorWithCaption * anEditor = _standardFieldEditors[ii];
+        TextEditorWithCaption * anEditor = _standardFieldEditors[static_cast<int>(ii)];
         
         if (anEditor)
         {
@@ -281,9 +281,9 @@ void SettingsWindow::adjustFields(void)
             }
         }
     }
-    for (int ii = 0, maxf = _extraFieldEditors.size(); maxf > ii; ++ii)
+    for (size_t ii = 0, maxf = _extraFieldEditors.size(); maxf > ii; ++ii)
     {
-        TextEditorWithCaption * anEditor = _extraFieldEditors[ii];
+        TextEditorWithCaption * anEditor = _extraFieldEditors[static_cast<int>(ii)];
         
         anEditor->setSize(newFieldWidth, anEditor->getHeight());
     }
@@ -315,9 +315,9 @@ void SettingsWindow::buttonClicked(Button * aButton)
             break;
             
         case kSettingsFileRequest :
-            for (int ii = 0, maxf = _standardFieldEditors.size(); maxf > ii; ++ii)
+            for (size_t ii = 0, maxf = _standardFieldEditors.size(); maxf > ii; ++ii)
             {
-                TextEditorWithCaption * anEditor = _standardFieldEditors[ii];
+                TextEditorWithCaption * anEditor = _standardFieldEditors[static_cast<int>(ii)];
                 
                 if (anEditor && (anEditor->getButton() == aButton))
                 {
@@ -345,9 +345,9 @@ bool SettingsWindow::fieldsAreValid(void)
     
     // Counterintuitively, we check the values from the descriptors first, before checking the
     // endpoint, port or tag values.
-    for (int ii = 0, maxf = _standardFieldEditors.size(); maxf > ii; ++ii)
+    for (size_t ii = 0, maxf = _standardFieldEditors.size(); maxf > ii; ++ii)
     {
-        TextEditorWithCaption * anEditor = _standardFieldEditors[ii];
+        TextEditorWithCaption * anEditor = _standardFieldEditors[static_cast<int>(ii)];
         
         if (anEditor && (! anEditor->validateField(&_argsToUse)))
         {
@@ -360,9 +360,9 @@ bool SettingsWindow::fieldsAreValid(void)
         }
     }
     // Add the extra arguments here.
-    for (int ii = 0, maxf = _extraFieldEditors.size(); maxf > ii; ++ii)
+    for (size_t ii = 0, maxf = _extraFieldEditors.size(); maxf > ii; ++ii)
     {
-        TextEditorWithCaption * anEditor = _extraFieldEditors[ii];
+        TextEditorWithCaption * anEditor = _extraFieldEditors[static_cast<int>(ii)];
 
         _argsToUse.add(anEditor->getText());
     }
@@ -473,24 +473,6 @@ void SettingsWindow::focusLost(FocusChangeType cause)
 #if (! MAC_OR_LINUX_)
 # pragma warning(pop)
 #endif // ! MAC_OR_LINUX_
-
-void SettingsWindow::resized(void)
-{
-    OD_LOG_OBJENTER(); //####
-    Button * close = getCloseButton();
-    
-    inherited3::resized();
-    if (close)
-    {
-        const KeyPress esc(KeyPress::escapeKey, 0, 0);
-        
-        if (! close->isRegisteredForShortcut(esc))
-        {
-            close->addShortcut(esc);
-        }
-    }
-    OD_LOG_OBJEXIT(); //####
-} // SettingsWindow::resized
 
 void SettingsWindow::handleAsyncUpdate(void)
 {
@@ -613,11 +595,11 @@ void SettingsWindow::recalculateArea(void)
 		heightSoFar -= kButtonGap;
 	}
     BorderSize<int> cb = getContentComponentBorder();
-	int             minW = jmax(widthSoFar, _cancelButton.getWidth() + _okButton.getWidth() +
-                                           (3 * kButtonGap));
+    int             minW = jmax(widthSoFar, _cancelButton.getWidth() + _okButton.getWidth() +
+                                (3 * kButtonGap));
     
-	setContentComponentSize(minW + kExtraSpaceInWindow + cb.getLeftAndRight(),
-							heightSoFar + kExtraSpaceInWindow + cb.getTopAndBottom());
+    setContentComponentSize(minW + kExtraSpaceInWindow + cb.getLeftAndRight(),
+                            heightSoFar + kExtraSpaceInWindow + cb.getTopAndBottom());
     OD_LOG_EXIT(); //####
 } // SettingsWindow::recalculateArea
 
@@ -664,6 +646,24 @@ void SettingsWindow::reportErrorInField(TextEditorWithCaption & fieldOfInterest)
                                 this);
     OD_LOG_OBJEXIT(); //####
 } // SettingsWindow::reportErrorInField
+
+void SettingsWindow::resized(void)
+{
+    OD_LOG_OBJENTER(); //####
+    Button * close = getCloseButton();
+    
+    inherited3::resized();
+    if (close)
+    {
+        const KeyPress esc(KeyPress::escapeKey, 0, 0);
+        
+        if (! close->isRegisteredForShortcut(esc))
+        {
+            close->addShortcut(esc);
+        }
+    }
+    OD_LOG_OBJEXIT(); //####
+} // SettingsWindow::resized
 
 void SettingsWindow::setUpStandardFields(int & widthSoFar,
                                          int & heightSoFar)
@@ -789,7 +789,7 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
                                                       _extraArgumentsCaption->getText());
                     _extraArgumentsCaption->setBounds(kLabelInset, heightSoFar,
 													  dimensions.getX() + kLabelInset,
-													  dimensions.getY());
+                                                      dimensions.getY());
                     content->addAndMakeVisible(_extraArgumentsCaption);
                     heightSoFar = _extraArgumentsCaption->getY() +
                                     _extraArgumentsCaption->getHeight() + (kButtonGap / 2);
@@ -888,18 +888,18 @@ void SettingsWindow::tellAllFieldsToIgnoreNextFocusLoss(void)
     {
         _tagEditor->ignoreNextFocusLoss();
     }
-    for (int ii = 0, maxf = _standardFieldEditors.size(); maxf > ii; ++ii)
+    for (size_t ii = 0, maxf = _standardFieldEditors.size(); maxf > ii; ++ii)
     {
-        TextEditorWithCaption * anEditor = _standardFieldEditors[ii];
+        TextEditorWithCaption * anEditor = _standardFieldEditors[static_cast<int>(ii)];
         
         if (anEditor)
         {
             anEditor->ignoreNextFocusLoss();
         }
     }
-    for (int ii = 0, maxf = _extraFieldEditors.size(); maxf > ii; ++ii)
+    for (size_t ii = 0, maxf = _extraFieldEditors.size(); maxf > ii; ++ii)
     {
-        TextEditorWithCaption * anEditor = _standardFieldEditors[ii];
+        TextEditorWithCaption * anEditor = _extraFieldEditors[static_cast<int>(ii)];
 
         if (anEditor)
         {
