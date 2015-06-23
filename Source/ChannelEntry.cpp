@@ -1308,7 +1308,8 @@ void ChannelEntry::paint(Graphics & gg)
     {
         float          hh = getHeight() - (2 * kActivityInset);
         float          halfSize = static_cast<float>(hh / 2.0);
-        Position       markerPos(getWidth() - static_cast<float>(hh + kActivityInset), kActivityInset);
+        Position       markerPos(getWidth() - static_cast<float>(hh + kActivityInset),
+                                 kActivityInset);
         Position       markerCentre(markerPos + Position(halfSize, halfSize));
         ColourGradient theGradient(kFirstActivityMarkerColour, markerCentre.getX(),
                                    markerCentre.getY(), kSecondActivityMarkerColour,
