@@ -352,7 +352,7 @@ void EntitiesPanel::clearMarkers(void)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::clearMarkers
 
-#if defined(USE_OGDF_POSITIONING)
+#if defined(USE_OGDF_POSITIONING_)
 void EntitiesPanel::clearNodeValues(void)
 {
     OD_LOG_OBJENTER(); //####
@@ -368,7 +368,7 @@ void EntitiesPanel::clearNodeValues(void)
     
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::clearNodeValues
-#endif // defined(USE_OGDF_POSITIONING)
+#endif // defined(USE_OGDF_POSITIONING_)
 
 void EntitiesPanel::clearOutData(void)
 {

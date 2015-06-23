@@ -57,7 +57,7 @@
 
 /*! @brief Set to @c TRUE to lock settings in order to do screen captures for the manual and
  @c FALSE for normal behaviour. */
-# define SETTINGS_FOR_MANUAL FALSE
+# define SETTINGS_FOR_MANUAL_ FALSE
 
 namespace ChannelManager
 {
@@ -253,9 +253,9 @@ namespace ChannelManager
         /*! @brief @c true if a container was clicked and @c false otherwise. */
         bool _containerClicked;
         
-# if (defined(USE_OGDF_POSITIONING) && defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY))
+# if (defined(USE_OGDF_POSITIONING_) && defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY_))
         bool _initialPositioningDone;
-# endif // defined(USE_OGDF_POSITIONING) && defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY)
+# endif // defined(USE_OGDF_POSITIONING_) && defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY_)
         
         /*! @brief @c true if the background is inverted and @c false otherwise. */
         bool _invertBackground;

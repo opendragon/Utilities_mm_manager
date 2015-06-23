@@ -199,9 +199,6 @@ namespace ChannelManager
         /*! @brief The monospaced font for error text. */
         Font _errorFont;
         
-        /*! @brief The monospaced font for the 'extra' label. */
-        Font _extraFont;
-        
         /*! @brief The regular monospaced font to use. */
         Font _regularFont;
         
@@ -217,8 +214,8 @@ namespace ChannelManager
         /*! @brief The set of standard fields. */
         OwnedArray<TextEditorWithCaption> _standardFieldEditors;
         
-        /*! @brief The caption for the 'extra arguments' area of the window. */
-        ScopedPointer<Label> _extraArgumentsCaption;
+        /*! @brief The 'extra arguments' area of the window. */
+        ScopedPointer<GroupComponent> _extraArgumentsGroup;
         
         /*! @brief The '+ arguments' button. */
         ScopedPointer<TextButton> _addArgumentsButton;

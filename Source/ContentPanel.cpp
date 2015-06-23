@@ -50,7 +50,7 @@
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
 
-#if defined(USE_OGDF_POSITIONING)
+#if defined(USE_OGDF_POSITIONING_)
 # if (! MAC_OR_LINUX_)
 #  pragma warning(push)
 #  pragma warning(disable: 4100)
@@ -60,7 +60,7 @@
 # if (! MAC_OR_LINUX_)
 #  pragma warning(pop)
 # endif // ! MAC_OR_LINUX_
-#endif // defined(USE_OGDF_POSITIONING)
+#endif // defined(USE_OGDF_POSITIONING_)
 
 #if defined(__APPLE__)
 # pragma clang diagnostic push
@@ -153,9 +153,9 @@ ContentPanel::ContentPanel(ChannelManagerWindow * containingWindow) :
     _menuBar(new MenuBarComponent(this)), _containingWindow(containingWindow),
     _selectedChannel(nullptr), _selectedContainer(nullptr), _channelClicked(false),
     _containerClicked(false),
-#if (defined(USE_OGDF_POSITIONING) && defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY))
+#if (defined(USE_OGDF_POSITIONING_) && defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY_))
     _initialPositioningDone(false),
-#endif // defined(USE_OGDF_POSITIONING) && defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY)
+#endif // defined(USE_OGDF_POSITIONING_) && defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY_)
     _invertBackground(false), _skipNextScan(false), _whiteBackground(false)
 {
     OD_LOG_ENTER(); //####
@@ -739,12 +739,12 @@ void ContentPanel::setEntityPositions(void)
 	float         maxX = static_cast<float>(getWidth());
 	float         maxY = static_cast<float>(getHeight());
     Random        randomizer(Time::currentTimeMillis());
-#if defined(USE_OGDF_POSITIONING)
+#if defined(USE_OGDF_POSITIONING_)
     ogdf::Graph * gg;
-#endif // defined(USE_OGDF_POSITIONING)
+#endif // defined(USE_OGDF_POSITIONING_)
     
-#if defined(USE_OGDF_POSITIONING)
-# if defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY)
+#if defined(USE_OGDF_POSITIONING_)
+# if defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY_)
     if (_initialPositioningDone)
     {
         gg = nullptr;
@@ -754,9 +754,9 @@ void ContentPanel::setEntityPositions(void)
         _initialPositioningDone = true;
         gg = new ogdf::Graph;
     }
-# else // ! defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY)
+# else // ! defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY_)
     gg = new ogdf::Graph;
-# endif // ! defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY)
+# endif // ! defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY_)
     if (gg)
     {
         ScopedPointer<ogdf::GraphAttributes> ga(new ogdf::GraphAttributes(*gg));
@@ -964,7 +964,7 @@ void ContentPanel::setEntityPositions(void)
             }
         }
     }
-#else // ! defined(USE_OGDF_POSITIONING)
+#else // ! defined(USE_OGDF_POSITIONING_)
     for (size_t ii = 0, mm = _entitiesPanel->getNumberOfEntities(); mm > ii; ++ii)
     {
         ChannelContainer * aContainer = _entitiesPanel->getEntity(ii);
@@ -998,7 +998,7 @@ void ContentPanel::setEntityPositions(void)
             }
         }
     }
-#endif // ! defined(USE_OGDF_POSITIONING)
+#endif // ! defined(USE_OGDF_POSITIONING_)
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::setEntityPositions
 

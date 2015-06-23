@@ -41,7 +41,7 @@
 
 # include "ChannelManagerDataTypes.h"
 
-# if defined(USE_OGDF_POSITIONING)
+# if defined(USE_OGDF_POSITIONING_)
 #  if (! MAC_OR_LINUX_)
 #   pragma warning(push)
 #   pragma warning(disable: 4512)
@@ -50,7 +50,7 @@
 #  if (! MAC_OR_LINUX_)
 #   pragma warning(pop)
 #  endif // ! MAC_OR_LINUX_
-# endif // defined(USE_OGDF_POSITIONING)
+# endif // defined(USE_OGDF_POSITIONING_)
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -179,12 +179,12 @@ namespace ChannelManager
          service or if it is a service that is not collecting measurements. */
         bool getMetricsState(void);
         
-# if defined(USE_OGDF_POSITIONING)
+# if defined(USE_OGDF_POSITIONING_)
         /*! @brief Return the node corresponding to the entity.
          @returns The node corresponding to the entity. */
         ogdf::node getNode(void)
         const;
-# endif // defined(USE_OGDF_POSITIONING)
+# endif // defined(USE_OGDF_POSITIONING_)
         
         /*! @brief Returns the number of ports in this panel.
          @returns The number of ports in this panel. */
@@ -286,11 +286,11 @@ namespace ChannelManager
          @param newState The requested state of service metrics collection. */
         void setMetricsState(const bool newState);
         
-# if defined(USE_OGDF_POSITIONING)
+# if defined(USE_OGDF_POSITIONING_)
         /*! @brief Sets the node corresponding to the entity.
          @param newNode The new value for the node corresponding to the entity. */
         void setNode(ogdf::node newNode);
-# endif // defined(USE_OGDF_POSITIONING)
+# endif // defined(USE_OGDF_POSITIONING_)
         
         /*! @brief Marks the entity as not newly created. */
         void setOld(void);
@@ -355,10 +355,10 @@ namespace ChannelManager
         /*! @brief The requests for the entity, if it is a service. */
         YarpString _requests;
         
-# if defined(USE_OGDF_POSITIONING)
+# if defined(USE_OGDF_POSITIONING_)
         /*! @brief The node corresponding to the container. */
         ogdf::node _node;
-# endif // defined(USE_OGDF_POSITIONING)
+# endif // defined(USE_OGDF_POSITIONING_)
         
         /*! @brief The owner of the container. */
         EntitiesPanel & _owner;

@@ -78,10 +78,10 @@ using namespace std;
 /*! @brief The minimum time between background scans in milliseconds. */
 static const int64 kMinScanInterval = 5000;
 
-#if (defined(CHECK_FOR_STALE_PORTS) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS)))
+#if (defined(CHECK_FOR_STALE_PORTS_) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS_)))
 /*! @brief The minimum time between removing stale entries, in milliseconds. */
 static const int64 kMinStaleInterval = 60000;
-#endif // defined(CHECK_FOR_STALE_PORTS) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS))
+#endif // defined(CHECK_FOR_STALE_PORTS_) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS_))
 
 #if defined(__APPLE__)
 # pragma mark Global constants and variables
@@ -159,14 +159,14 @@ ScannerThread::ScannerThread(ChannelManagerWindow & window,
                              const bool             delayFirstScan) :
     inherited("port scanner"), _window(window), _rememberedPorts(), _detectedServices(),
     _standalonePorts(),
-#if (defined(CHECK_FOR_STALE_PORTS) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS)))
+#if (defined(CHECK_FOR_STALE_PORTS_) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS_)))
     _lastStaleTime(- (2 * kMinStaleInterval)),
-#endif // efined(CHECK_FOR_STALE_PORTS) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS))
+#endif // efined(CHECK_FOR_STALE_PORTS_) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS_))
     _inputOnlyPort(nullptr), _outputOnlyPort(nullptr), _cleanupSoon(false),
     _delayScan(delayFirstScan),
-#if (defined(CHECK_FOR_STALE_PORTS) && defined(DO_SINGLE_CHECK_FOR_STALE_PORTS))
+#if (defined(CHECK_FOR_STALE_PORTS_) && defined(DO_SINGLE_CHECK_FOR_STALE_PORTS_))
     _initialStaleCheckDone(false),
-#endif // defined(CHECK_FOR_STALE_PORTS) && defined(DO_SINGLE_CHECK_FOR_STALE_PORTS)
+#endif // defined(CHECK_FOR_STALE_PORTS_) && defined(DO_SINGLE_CHECK_FOR_STALE_PORTS_)
     _portsValid(false), _scanCanProceed(true), _scanIsComplete(false), _scanSoon(false)
 {
     OD_LOG_ENTER(); //####
@@ -455,7 +455,7 @@ bool ScannerThread::checkAndClearIfScanIsComplete(void)
     for (bool locked = conditionallyAcquireForRead(); ! locked;
          locked = conditionallyAcquireForRead())
     {
-        Utilities::GoToSleep(SHORT_SLEEP);
+        Utilities::GoToSleep(SHORT_SLEEP_);
     }
     bool result = _scanIsComplete;
     
@@ -586,7 +586,7 @@ void ScannerThread::doCleanupSoon(void)
         }
         else
         {
-            Utilities::GoToSleep(SHORT_SLEEP);
+            Utilities::GoToSleep(SHORT_SLEEP_);
         }
     }
     if (locked)
@@ -612,7 +612,7 @@ void ScannerThread::doScanSoon(void)
         }
         else
         {
-            Utilities::GoToSleep(SHORT_SLEEP);
+            Utilities::GoToSleep(SHORT_SLEEP_);
         }
     }
     if (locked)
@@ -630,26 +630,26 @@ bool ScannerThread::gatherEntities(Utilities::PortVector & detectedPorts,
     OD_LOG_OBJENTER(); //####
     OD_LOG_P2("detectedPorts = ", &detectedPorts, "checkStuff = ", checkStuff); //####
     bool  okSoFar;
-#if (defined(CHECK_FOR_STALE_PORTS) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS)))
+#if (defined(CHECK_FOR_STALE_PORTS_) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS_)))
     int64 now = Time::currentTimeMillis();
-#endif //defined(CHECK_FOR_STALE_PORTS) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS))
+#endif //defined(CHECK_FOR_STALE_PORTS_) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS_))
     
     // Mark our utility ports as known.
-#if defined(CHECK_FOR_STALE_PORTS)
-# if defined(DO_SINGLE_CHECK_FOR_STALE_PORTS)
+#if defined(CHECK_FOR_STALE_PORTS_)
+# if defined(DO_SINGLE_CHECK_FOR_STALE_PORTS_)
     if (! _initialStaleCheckDone)
     {
         Utilities::RemoveStalePorts();
         _initialStaleCheckDone = true;
     }
-# else // ! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS)
+# else // ! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS_)
     if ((_lastStaleTime + kMinStaleInterval) <= now)
     {
         Utilities::RemoveStalePorts();
         _lastStaleTime = now;
     }
-# endif // ! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS)
-#endif // defined(CHECK_FOR_STALE_PORTS)
+# endif // ! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS_)
+#endif // defined(CHECK_FOR_STALE_PORTS_)
     if (Utilities::GetDetectedPortList(detectedPorts))
     {
         okSoFar = true;
@@ -725,15 +725,15 @@ void ScannerThread::run(void)
             _cleanupSoon = false;
             OD_LOG_B1("_cleanupSoon <- ", _cleanupSoon); //####
             relinquishFromWrite();
-#if defined(CHECK_FOR_STALE_PORTS)
+#if defined(CHECK_FOR_STALE_PORTS_)
             Utilities::RemoveStalePorts();
-#endif // defined(CHECK_FOR_STALE_PORTS)
+#endif // defined(CHECK_FOR_STALE_PORTS_)
         }
         else if (_delayScan)
         {
             bool shouldCleanupSoon = false;
             bool shouldScanSoon = false;
-            int  kk = (LONG_SLEEP / VERY_SHORT_SLEEP);
+            int  kk = (LONG_SLEEP_ / VERY_SHORT_SLEEP_);
             
             _delayScan = false;
             do
@@ -742,7 +742,7 @@ void ScannerThread::run(void)
                 
                 for ( ; (! locked) && (! needToLeave); locked = conditionallyAcquireForRead())
                 {
-                    for (int ii = 0, mm = (MIDDLE_SLEEP / VERY_SHORT_SLEEP);
+                    for (int ii = 0, mm = (MIDDLE_SLEEP_ / VERY_SHORT_SLEEP_);
                          (mm > ii) && (0 <= kk) && (! needToLeave); ++ii, --kk)
                     {
                         if (threadShouldExit())
@@ -752,7 +752,7 @@ void ScannerThread::run(void)
                         }
                         else
                         {
-                            Utilities::GoToSleep(VERY_SHORT_SLEEP);
+                            Utilities::GoToSleep(VERY_SHORT_SLEEP_);
                         }
                     }
                 }
@@ -768,7 +768,7 @@ void ScannerThread::run(void)
                     if (0 <= kk)
                     {
                         --kk;
-                        Utilities::GoToSleep(VERY_SHORT_SLEEP);
+                        Utilities::GoToSleep(VERY_SHORT_SLEEP_);
                     }
                 }
                 if (needToLeave || shouldCleanupSoon || shouldScanSoon)
@@ -799,7 +799,7 @@ void ScannerThread::run(void)
             
             do
             {
-                for (int ii = 0, mm = (MIDDLE_SLEEP / VERY_SHORT_SLEEP);
+                for (int ii = 0, mm = (MIDDLE_SLEEP_ / VERY_SHORT_SLEEP_);
                      (mm > ii) && (! needToLeave) && (! _cleanupSoon); ++ii)
                 {
                     if (threadShouldExit())
@@ -809,7 +809,7 @@ void ScannerThread::run(void)
                     }
                     else
                     {
-                        Utilities::GoToSleep(VERY_SHORT_SLEEP);
+                        Utilities::GoToSleep(VERY_SHORT_SLEEP_);
                     }
                 }
                 if (needToLeave)
@@ -823,7 +823,7 @@ void ScannerThread::run(void)
                 
                 for ( ; (! locked) && (! needToLeave); locked = conditionallyAcquireForRead())
                 {
-                    for (int ii = 0, mm = (MIDDLE_SLEEP / VERY_SHORT_SLEEP);
+                    for (int ii = 0, mm = (MIDDLE_SLEEP_ / VERY_SHORT_SLEEP_);
                          (mm > ii) && (! needToLeave) && (! _cleanupSoon); ++ii)
                     {
                         if (threadShouldExit())
@@ -833,7 +833,7 @@ void ScannerThread::run(void)
                         }
                         else
                         {
-                            Utilities::GoToSleep(VERY_SHORT_SLEEP);
+                            Utilities::GoToSleep(VERY_SHORT_SLEEP_);
                         }
                     }
                 }
@@ -871,7 +871,7 @@ void ScannerThread::run(void)
                         // Add a bit of delay.
                         bool shouldCleanupSoon = false;
                         bool shouldScanSoon = false;
-                        int  kk = static_cast<int>(delayAmount / VERY_SHORT_SLEEP);
+                        int  kk = static_cast<int>(delayAmount / VERY_SHORT_SLEEP_);
                         
                         do
                         {
@@ -880,7 +880,7 @@ void ScannerThread::run(void)
                             for ( ; (! locked) && (! needToLeave);
                                  locked = conditionallyAcquireForRead())
                             {
-                                for (int ii = 0, mm = (MIDDLE_SLEEP / VERY_SHORT_SLEEP);
+                                for (int ii = 0, mm = (MIDDLE_SLEEP_ / VERY_SHORT_SLEEP_);
                                      (mm > ii) && (0 <= kk) && (! needToLeave); ++ii, --kk)
                                 {
                                     if (threadShouldExit())
@@ -890,7 +890,7 @@ void ScannerThread::run(void)
                                     }
                                     else
                                     {
-                                        Utilities::GoToSleep(VERY_SHORT_SLEEP);
+                                        Utilities::GoToSleep(VERY_SHORT_SLEEP_);
                                     }
                                 }
                             }
@@ -906,7 +906,7 @@ void ScannerThread::run(void)
                                 if (0 <= kk)
                                 {
                                     --kk;
-                                    Utilities::GoToSleep(VERY_SHORT_SLEEP);
+                                    Utilities::GoToSleep(VERY_SHORT_SLEEP_);
                                 }
                                 if (threadShouldExit())
                                 {
@@ -946,7 +946,7 @@ void ScannerThread::run(void)
         {
             bool shouldCleanupSoon = false;
             bool shouldScanSoon = false;
-            int  kk = (LONG_SLEEP / VERY_SHORT_SLEEP);
+            int  kk = (LONG_SLEEP_ / VERY_SHORT_SLEEP_);
 
             do
             {
@@ -954,7 +954,7 @@ void ScannerThread::run(void)
                 
                 for ( ; (! locked) && (! needToLeave); locked = conditionallyAcquireForRead())
                 {
-                    for (int ii = 0, mm = (MIDDLE_SLEEP / VERY_SHORT_SLEEP);
+                    for (int ii = 0, mm = (MIDDLE_SLEEP_ / VERY_SHORT_SLEEP_);
                          (mm > ii) && (0 <= kk) && (! needToLeave); ++ii, --kk)
                     {
                         if (threadShouldExit())
@@ -964,7 +964,7 @@ void ScannerThread::run(void)
                         }
                         else
                         {
-                            Utilities::GoToSleep(VERY_SHORT_SLEEP);
+                            Utilities::GoToSleep(VERY_SHORT_SLEEP_);
                         }
                     }
                 }
@@ -980,7 +980,7 @@ void ScannerThread::run(void)
                     if (0 <= kk)
                     {
                         --kk;
-                        Utilities::GoToSleep(VERY_SHORT_SLEEP);
+                        Utilities::GoToSleep(VERY_SHORT_SLEEP_);
                     }
                 }
                 if (needToLeave || shouldCleanupSoon || shouldScanSoon)

@@ -74,6 +74,9 @@ using namespace std;
 # pragma mark Private structures, constants and variables
 #endif // defined(__APPLE__)
 
+/*! @brief The colour to be used for the window background. */
+static const Colour & kWindowBackgroundColour(Colours::whitesmoke);
+
 /*! @brief The font size for text. */
 static const float kFontSize = 16;
 
@@ -97,9 +100,6 @@ static const int kLabelToFieldGap = 2;
 
 /*! @brief The overhead for the buttons on the title bar. */
 static const int kTitleBarMinWidth = 80;
-
-/*! @brief The colour to be used for the window background. */
-static const Colour & kWindowBackgroundColour(Colours::whitesmoke);
 
 /*! @brief The internal name for the endpoint text entry field. */
 static const String kEndpointFieldName("$$$endpoint$$$");
@@ -140,9 +140,8 @@ SettingsWindow::SettingsWindow(const String &          title,
     _topText("topText"), _cancelButton("Cancel"), _okButton("OK"),
     _descriptors(appInfo._argDescriptions),
     _errorFont(Font::getDefaultMonospacedFontName(), kFontSize, Font::italic + Font::bold),
-    _extraFont(Font::getDefaultMonospacedFontName(), kFontSize, Font::underlined),
     _regularFont(Font::getDefaultMonospacedFontName(), kFontSize, Font::plain), _execType(execType),
-    _extraArgumentsCaption(nullptr), _addArgumentsButton(nullptr), _removeArgumentsButton(nullptr),
+    _extraArgumentsGroup(nullptr), _addArgumentsButton(nullptr), _removeArgumentsButton(nullptr),
     _endpointEditor(nullptr), _portEditor(nullptr), _tagEditor(nullptr),
     _endpointDescriptor(new Utilities::ChannelArgumentDescriptor(kEndpointFieldName.toStdString(),
                                                                  "", "", true, nullptr)),
@@ -197,7 +196,7 @@ SettingsWindow::~SettingsWindow(void)
 void SettingsWindow::addAnExtraField(void)
 {
     OD_LOG_ENTER(); //####
-    Component *             content = getContentComponent();
+    Component *             content = _extraArgumentsGroup;
     String                  compCountAsString(static_cast<int>(_extraFieldEditors.size() + 1));
     Point<int>              dimensions;
     TextEditorWithCaption * newEditor = new TextEditorWithCaption(*this, _regularFont, _errorFont,
@@ -281,11 +280,20 @@ void SettingsWindow::adjustFields(void)
             }
         }
     }
-    for (size_t ii = 0, maxf = _extraFieldEditors.size(); maxf > ii; ++ii)
+    if (_extraArgumentsGroup)
     {
-        TextEditorWithCaption * anEditor = _extraFieldEditors[static_cast<int>(ii)];
+        int groupWidth = _cancelButton.getX() + _cancelButton.getWidth() -
+                            (_extraArgumentsGroup->getX() + kButtonGap);
+        int innerWidth = groupWidth - (kFieldInset + (2 * kButtonGap));
         
-        anEditor->setSize(newFieldWidth, anEditor->getHeight());
+        for (size_t ii = 0, maxf = _extraFieldEditors.size(); maxf > ii; ++ii)
+        {
+            TextEditorWithCaption * anEditor = _extraFieldEditors[static_cast<int>(ii)];
+            Label *                 aLabel = anEditor->getCaption();
+            
+            anEditor->setSize(innerWidth, anEditor->getHeight());
+        }
+        _extraArgumentsGroup->setSize(groupWidth, _extraArgumentsGroup->getHeight());
     }
     OD_LOG_OBJEXIT(); //####
 } // SettingsWindow::adjustFields
@@ -516,7 +524,6 @@ bool SettingsWindow::keyPressed(const KeyPress & key)
 void SettingsWindow::recalculateArea(void)
 {
     OD_LOG_ENTER(); //####
-	bool   hasExtra = false;
     int    heightSoFar = 0;
     int    widthSoFar = 0;
     size_t numExtra = _extraFieldEditors.size();
@@ -553,17 +560,7 @@ void SettingsWindow::recalculateArea(void)
             String argName(aDescriptor->argumentName().c_str());
             String argDescription(aDescriptor->argumentDescription().c_str());
             
-            if (aDescriptor->isExtra())
-            {
-#if 0
-#endif//0
-                heightSoFar = _extraArgumentsCaption->getY() + _extraArgumentsCaption->getHeight() +
-                                (kButtonGap / 2);
-                widthSoFar = jmax(widthSoFar, _extraArgumentsCaption->getX() +
-                                  _extraArgumentsCaption->getWidth());
-				hasExtra = true;
-            }
-            else
+            if (! aDescriptor->isExtra())
             {
                 TextEditorWithCaption * anEditor = _standardFieldEditors[static_cast<int>(jj)];
                 
@@ -581,22 +578,36 @@ void SettingsWindow::recalculateArea(void)
             }
         }
     }
-    for (size_t ii = 0; numExtra > ii; ++ii)
+    if (_extraArgumentsGroup)
     {
-        TextEditorWithCaption * anEditor = _extraFieldEditors[static_cast<int>(ii)];
-        Label *                 aLabel = anEditor->getCaption();
-        
-        aLabel->setTopLeftPosition(kLabelInset, heightSoFar);
-        heightSoFar = aLabel->getY() + aLabel->getHeight() + kLabelToFieldGap;
-        widthSoFar = jmax(widthSoFar, aLabel->getX() + aLabel->getWidth());
-        anEditor->setTopLeftPosition(kFieldInset, heightSoFar);
-        heightSoFar = anEditor->getY() + anEditor->getHeight() + (kButtonGap / 2);
+        int innerHeight = static_cast<int>(_regularFont.getHeight()) + (kButtonGap / 2);
+        int innerWidth = (2 * jmax(kFieldInset, kLabelInset));
+
+        _extraArgumentsGroup->setTopLeftPosition(kFieldInset, heightSoFar);
+        for (size_t ii = 0; numExtra > ii; ++ii)
+        {
+            TextEditorWithCaption * anEditor = _extraFieldEditors[static_cast<int>(ii)];
+            Label *                 aLabel = anEditor->getCaption();
+            
+            aLabel->setTopLeftPosition(kLabelInset, innerHeight);
+            innerHeight = aLabel->getY() + aLabel->getHeight() + kLabelToFieldGap;
+            innerWidth = jmax(innerWidth, aLabel->getX() + aLabel->getWidth());
+            anEditor->setTopLeftPosition(kFieldInset, innerHeight);
+            innerHeight = anEditor->getY() + anEditor->getHeight() + (kButtonGap / 2);
+        }
+        if (0 < numExtra)
+        {
+            innerHeight += (3 * kButtonGap / 4);
+        }
+        else
+        {
+            innerHeight += (kButtonGap / 2);
+        }
+        _extraArgumentsGroup->setSize(innerWidth, innerHeight);
+        heightSoFar = _extraArgumentsGroup->getY() + _extraArgumentsGroup->getHeight();
+        widthSoFar = jmax(widthSoFar, _extraArgumentsGroup->getX() +
+                          _extraArgumentsGroup->getWidth());
     }
-	if (hasExtra && (! numExtra))
-	{
-		// Correct for extra space after the 'extra' label.
-		heightSoFar -= kButtonGap;
-	}
     BorderSize<int> cb = getContentComponentBorder();
     int             minW = jmax(widthSoFar, _cancelButton.getWidth() + _okButton.getWidth() +
                                 (3 * kButtonGap));
@@ -609,7 +620,7 @@ void SettingsWindow::recalculateArea(void)
 void SettingsWindow::removeMostRecentlyAddedExtraField(void)
 {
     OD_LOG_ENTER(); //####
-    Component *             content = getContentComponent();
+    Component *             content = _extraArgumentsGroup;
     TextEditorWithCaption * lastEditor = _extraFieldEditors.getLast();
     Label *                 lastLabel = lastEditor->getCaption();
     
@@ -788,32 +799,16 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
                 {
                     _canHaveExtraArguments = true;
                     _extraArgRootName = argName;
-
-#if 0
-                    // Note - use a Group Component here, instead of the label?
-                    GroupComponent * aGroup = new GroupComponent("", argDescription);
-
-                    aGroup->setBounds(kFieldInset, heightSoFar,
-                                      widthSoFar - (kButtonGap + kFieldInset),
-                                      static_cast<int>(_regularFont.getHeight()) + kButtonGap);
-                    content->addAndMakeVisible(aGroup);
-                    heightSoFar = aGroup->getY() + aGroup->getHeight() + (kButtonGap / 2);
-                    widthSoFar = jmax(widthSoFar, aGroup->getX() + aGroup->getWidth());
-#else //0
-                    _extraArgumentsCaption = new Label("", argDescription);
-                    _extraArgumentsCaption->setFont(_extraFont);
-                    ChannelManager::CalculateTextArea(dimensions, _regularFont,
-                                                      _extraArgumentsCaption->getText());
-                    _extraArgumentsCaption->setBounds(kLabelInset, heightSoFar,
-													  dimensions.getX() + kLabelInset,
-                                                      dimensions.getY());
-                    content->addAndMakeVisible(_extraArgumentsCaption);
-                    heightSoFar = _extraArgumentsCaption->getY() +
-                                    _extraArgumentsCaption->getHeight() + (kButtonGap / 2);
-                    widthSoFar = jmax(widthSoFar, _extraArgumentsCaption->getX() +
-                                      _extraArgumentsCaption->getWidth());
-#endif//0
-
+                    _extraArgumentsGroup = new GroupComponent("", argDescription);
+                    _extraArgumentsGroup->setBounds(kFieldInset, heightSoFar,
+                                                    widthSoFar - (kButtonGap + kFieldInset),
+                                                    static_cast<int>(_regularFont.getHeight()) +
+                                                    kButtonGap);
+                    content->addAndMakeVisible(_extraArgumentsGroup);
+                    heightSoFar = _extraArgumentsGroup->getY() + _extraArgumentsGroup->getHeight() +
+                                    (kButtonGap / 2);
+                    widthSoFar = jmax(widthSoFar, _extraArgumentsGroup->getX() +
+                                      _extraArgumentsGroup->getWidth());
                     _addArgumentsButton = new TextButton(String("+ ") + argName);
                     _addArgumentsButton->setWantsKeyboardFocus(true);
                     _addArgumentsButton->setMouseClickGrabsKeyboardFocus(false);

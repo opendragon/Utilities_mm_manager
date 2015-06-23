@@ -68,12 +68,6 @@ using namespace std;
 # pragma mark Private structures, constants and variables
 #endif // defined(__APPLE__)
 
-/*! @brief The amount of space between each row of the entries in the container. */
-static const float lEntryGap = 1;
-
-/*! @brief The amount of space to the left of the text being displayed. */
-static const float lTextInset = 2;
-
 /*! @brief The colour to be used for the gap between entries. */
 static const Colour & kGapFillColour(Colours::grey);
 
@@ -82,6 +76,12 @@ static const Colour & kHeadingBackgroundColour(Colours::darkgrey);
 
 /*! @brief The colour to be used for text in the entry. */
 static const Colour & kHeadingTextColour(Colours::white);
+
+/*! @brief The amount of space between each row of the entries in the container. */
+static const float kEntryGap = 1;
+
+/*! @brief The amount of space to the left of the text being displayed. */
+static const float kTextInset = 2;
 
 #if defined(__APPLE__)
 # pragma mark Global constants and variables
@@ -108,9 +108,9 @@ ChannelContainer::ChannelContainer(const ContainerKind kind,
                                    EntitiesPanel &     owner) :
     inherited(title.c_str()), _behaviour(behaviour), _description(description),
     _IPAddress(ipAddress), _requests(requests),
-#if defined(USE_OGDF_POSITIONING)
+#if defined(USE_OGDF_POSITIONING_)
     _node(nullptr),
-#endif // defined(USE_OGDF_POSITIONING)
+#endif // defined(USE_OGDF_POSITIONING_)
     _owner(owner), _kind(kind), _hidden(false), _newlyCreated(true), _selected(false),
     _visited(false)
 {
@@ -164,10 +164,10 @@ ChannelEntry * ChannelContainer::addPort(const YarpString &  portName,
     ChannelEntry * aPort = new ChannelEntry(this, portName, portNumber, portProtocol,
                                             protocolDescription, portKind, direction);
     float          newWidth = static_cast<float>(jmax(aPort->getWidth(), getWidth()));
-    float          newHeight = aPort->getHeight() + getHeight() + lEntryGap;
+    float          newHeight = aPort->getHeight() + getHeight() + kEntryGap;
     
     OD_LOG_LL2("newWidth = ", newWidth, "newHeight = ", newHeight); //####
-    aPort->setTopLeftPosition(0, static_cast<int>(getHeight() + lEntryGap));
+    aPort->setTopLeftPosition(0, static_cast<int>(getHeight() + kEntryGap));
     setSize(static_cast<int>(newWidth), static_cast<int>(newHeight));
     addAndMakeVisible(aPort);
     for (int ii = 0; countBefore >= ii; ++ii)
@@ -439,7 +439,7 @@ bool ChannelContainer::getMetricsState(void)
     return result;
 } // ChannelContainer::getMetricsState
 
-#if defined(USE_OGDF_POSITIONING)
+#if defined(USE_OGDF_POSITIONING_)
 ogdf::node ChannelContainer::getNode(void)
 const
 {
@@ -447,7 +447,7 @@ const
     OD_LOG_OBJEXIT_P(_node); //####
     return _node;
 } // ChannelContainer::getNode
-#endif // defined(USE_OGDF_POSITIONING)
+#endif // defined(USE_OGDF_POSITIONING_)
 
 ChannelEntry * ChannelContainer::getPort(const int num)
 const
@@ -482,8 +482,8 @@ float ChannelContainer::getTextInset(void)
 const
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_OBJEXIT_D(lTextInset); //####
-    return lTextInset;
+    OD_LOG_OBJEXIT_D(kTextInset); //####
+    return kTextInset;
 } // ChannelContainer::getTextInset
 
 bool ChannelContainer::hasPort(const ChannelEntry * aPort)
@@ -622,9 +622,9 @@ void ChannelContainer::mouseDrag(const MouseEvent & ee)
     }
     if (doDrag)
     {
-#if (! SETTINGS_FOR_MANUAL)
+#if (! SETTINGS_FOR_MANUAL_)
         _dragger.dragComponent(this, ee, &_constrainer);
-#endif // ! SETTINGS_FOR_MANUAL
+#endif // ! SETTINGS_FOR_MANUAL_
         _owner.repaint();
     }
     OD_LOG_OBJEXIT(); //####
@@ -712,14 +712,14 @@ void ChannelContainer::setMetricsState(const bool newState)
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::setMetricsState
 
-#if defined(USE_OGDF_POSITIONING)
+#if defined(USE_OGDF_POSITIONING_)
 void ChannelContainer::setNode(ogdf::node newNode)
 {
     OD_LOG_OBJENTER(); //####
     _node = newNode;
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::setNode
-#endif // defined(USE_OGDF_POSITIONING)
+#endif // defined(USE_OGDF_POSITIONING_)
 
 void ChannelContainer::setOld(void)
 {

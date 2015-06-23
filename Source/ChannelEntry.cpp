@@ -68,27 +68,6 @@ using namespace std;
 # pragma mark Private structures, constants and variables
 #endif // defined(__APPLE__)
 
-/*! @brief The horizontal and vertical length of the arrow 'arm'. */
-static const float kArrowSize = 7;
-
-/*! @brief The scale factor to apply to get the length of the control vector. */
-static const float kControlLengthScale = 0.25;
-
-/*! @brief The width and height of the marker displayed during movement. */
-static const float kMarkerSide = 10;
-
-/*! @brief The line width for an input / output connection. */
-static const float kInputOutputConnectionWidth = 4;
-
-/*! @brief The line width for a normal connection. */
-static const float kNormalConnectionWidth = 2;
-
-/*! @brief The line width for a normal connection. */
-static const float kServiceConnectionWidth = 6;
-
-/*! @brief The scale factor to apply to get the size of the target box. */
-static const float kTargetBoxScale = 0.25;
-
 /*! @brief The colour to be used for the entry background. */
 static const Colour & kEntryBackgroundColour(Colours::black);
 
@@ -115,6 +94,27 @@ static const Colour & kUdpConnectionColour(Colours::purple);
 
 /*! @brief The inset for the activity indicator. */
 static const float kActivityInset = 2;
+
+/*! @brief The horizontal and vertical length of the arrow 'arm'. */
+static const float kArrowSize = 7;
+
+/*! @brief The scale factor to apply to get the length of the control vector. */
+static const float kControlLengthScale = 0.25;
+
+/*! @brief The width and height of the marker displayed during movement. */
+static const float kMarkerSide = 10;
+
+/*! @brief The line width for an input / output connection. */
+static const float kInputOutputConnectionWidth = 4;
+
+/*! @brief The line width for a normal connection. */
+static const float kNormalConnectionWidth = 2;
+
+/*! @brief The line width for a normal connection. */
+static const float kServiceConnectionWidth = 6;
+
+/*! @brief The scale factor to apply to get the size of the target box. */
+static const float kTargetBoxScale = 0.25;
 
 #if defined(__APPLE__)
 # pragma mark Global constants and variables

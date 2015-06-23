@@ -63,25 +63,25 @@
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
 
-# define CHECK_FOR_STALE_PORTS /* Check for 'stale' ports in the scanner. */
+# define CHECK_FOR_STALE_PORTS_ /* Check for 'stale' ports in the scanner. */
 
-# define DO_SINGLE_CHECK_FOR_STALE_PORTS /* Perform an initial check for stale ports. */
+# define DO_SINGLE_CHECK_FOR_STALE_PORTS_ /* Perform an initial check for stale ports. */
 
 /*! @brief A longer sleep, in milliseconds. */
-# define LONG_SLEEP (VERY_SHORT_SLEEP * 100)
+# define LONG_SLEEP_ (VERY_SHORT_SLEEP_ * 100)
 
 /*! @brief A slightly longer sleep, in milliseconds. */
-# define MIDDLE_SLEEP (VERY_SHORT_SLEEP * 7)
+# define MIDDLE_SLEEP_ (VERY_SHORT_SLEEP_ * 7)
 
 /*! @brief The minimum time for a thread to sleep, in milliseconds. */
-# define SHORT_SLEEP (VERY_SHORT_SLEEP * 4)
+# define SHORT_SLEEP_ (VERY_SHORT_SLEEP_ * 4)
 
-# define USE_OGDF_FOR_FIRST_POSITIONING_ONLY /* Use OGDF for the initial entity placement. */
+# define USE_OGDF_FOR_FIRST_POSITIONING_ONLY_ /* Use OGDF for the initial entity placement. */
 
-# define USE_OGDF_POSITIONING /* Use OGDF for new entity placement.*/
+# define USE_OGDF_POSITIONING_ /* Use OGDF for new entity placement.*/
 
 /*! @brief A very short sleep, in milliseconds. */
-# define VERY_SHORT_SLEEP 5
+# define VERY_SHORT_SLEEP_ 5
 
 namespace ChannelManager
 {

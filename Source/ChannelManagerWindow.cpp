@@ -66,17 +66,21 @@ using namespace std;
 # pragma mark Private structures, constants and variables
 #endif // defined(__APPLE__)
 
-/*! @brief The height of the fixed, small window used when doing screen captures for the manual. */
-#define SETTINGS_WINDOW_HEIGHT 320
+/*! @brief The colour to be used for the window background. */
+static const Colour & kWindowBackgroundColour(Colours::lightgrey);
 
+#if SETTINGS_FOR_MANUAL_
+/*! @brief The height of the fixed, small window used when doing screen captures for the manual. */
+static const int kSettingsWindowHeight = 320;
+#endif // SETTINGS_FOR_MANUAL_
+
+#if SETTINGS_FOR_MANUAL_
 /*! @brief The width of the fixed, small window used when doing screen captures for the manual. */
-#define SETTINGS_WINDOW_WIDTH  640
+static const int kSettingsWindowWidth = 640;
+#endif // SETTINGS_FOR_MANUAL_
 
 /*! @brief The command manager object used to dispatch command events. */
 static ScopedPointer<ApplicationCommandManager> lApplicationCommandManager;
-
-/*! @brief The colour to be used for the window background. */
-static const Colour & kWindowBackgroundColour(Colours::lightgrey);
 
 #if defined(__APPLE__)
 # pragma mark Global constants and variables
@@ -102,11 +106,11 @@ ChannelManagerWindow::ChannelManagerWindow(const YarpString & title)  :
     setOpaque(true);
     setResizable(true, true);
     setContentOwned(_contentPanel, true);
-#if SETTINGS_FOR_MANUAL
-    centreWithSize(SETTINGS_WINDOW_WIDTH, SETTINGS_WINDOW_HEIGHT);
-#else // ! SETTINGS_FOR_MANUAL
+#if SETTINGS_FOR_MANUAL_
+    centreWithSize(kSettingsWindowWidth, kSettingsWindowHeight);
+#else // ! SETTINGS_FOR_MANUAL_
     centreWithSize(getWidth(), getHeight());
-#endif // ! SETTINGS_FOR_MANUAL
+#endif // ! SETTINGS_FOR_MANUAL_
     setVisible(true);
     addKeyListener(getApplicationCommandManager().getKeyMappings());
     triggerAsyncUpdate();

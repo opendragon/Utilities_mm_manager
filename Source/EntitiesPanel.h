@@ -97,10 +97,10 @@ namespace ChannelManager
         /*! @brief Clear any connect / disconnect markers. */
         void clearMarkers(void);
         
-# if defined(USE_OGDF_POSITIONING)
+# if defined(USE_OGDF_POSITIONING_)
         /*! @brief Clear any node values. */
         void clearNodeValues(void);
-# endif // defined(USE_OGDF_POSITIONING)
+# endif // defined(USE_OGDF_POSITIONING_)
         
         /*! @brief Release all data held by the panel. */
         void clearOutData(void);

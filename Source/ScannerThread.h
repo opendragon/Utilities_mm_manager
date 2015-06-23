@@ -208,10 +208,10 @@ namespace ChannelManager
          input. */
         YarpString _outputOnlyPortName;
         
-# if (defined(CHECK_FOR_STALE_PORTS) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS)))
+# if (defined(CHECK_FOR_STALE_PORTS_) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS_)))
         /*! @brief The time when the last stale removal occurred. */
         int64 _lastStaleTime;
-# endif // defined(CHECK_FOR_STALE_PORTS) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS))
+# endif // defined(CHECK_FOR_STALE_PORTS_) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS_))
 
         /*! @brief The port used to determine if a port being checked can be used as an output. */
         MplusM::Common::GeneralChannel * _inputOnlyPort;
@@ -226,10 +226,10 @@ namespace ChannelManager
         /*! @brief @c true if the next scan is to be delayed. */
         bool _delayScan;
         
-# if (defined(CHECK_FOR_STALE_PORTS) && defined(DO_SINGLE_CHECK_FOR_STALE_PORTS))
+# if (defined(CHECK_FOR_STALE_PORTS_) && defined(DO_SINGLE_CHECK_FOR_STALE_PORTS_))
         /*! @brief @c true if the initial stale removal occurred and @c false otherwise. */
         bool _initialStaleCheckDone;
-# endif // defined(CHECK_FOR_STALE_PORTS) && defined(DO_SINGLE_CHECK_FOR_STALE_PORTS)
+# endif // defined(CHECK_FOR_STALE_PORTS_) && defined(DO_SINGLE_CHECK_FOR_STALE_PORTS_)
         
         /*! @brief @c true if the port direction resources are available. */
         bool _portsValid;
