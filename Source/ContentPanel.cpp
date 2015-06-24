@@ -687,9 +687,9 @@ void ContentPanel::saveEntityPositions(void)
         for (PositionMap::const_iterator walker(_rememberedPositions.begin());
              _rememberedPositions.end() != walker; ++walker)
         {
-            std::stringstream  buff;
-            YarpString tag = walker->first;
-            Position   where = walker->second;
+            std::stringstream buff;
+            YarpString        tag = walker->first;
+            Position          where = walker->second;
 
             buff << "\t" << where.x << "\t" << where.y << std::endl;
             settingsFile.appendText(tag.c_str());
