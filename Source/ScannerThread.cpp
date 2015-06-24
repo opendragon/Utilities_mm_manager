@@ -172,9 +172,9 @@ ScannerThread::ScannerThread(ChannelManagerWindow & window,
     OD_LOG_ENTER(); //####
     OD_LOG_S1s("name = ", name); //####
     OD_LOG_P1("window = ", &window); //####
-    _inputOnlyPortName = Common::GetRandomChannelName(HIDDEN_CHANNEL_PREFIX
+    _inputOnlyPortName = Common::GetRandomChannelName(HIDDEN_CHANNEL_PREFIX_
                                                       "checkdirection/channel_");
-    _outputOnlyPortName = Common::GetRandomChannelName(HIDDEN_CHANNEL_PREFIX
+    _outputOnlyPortName = Common::GetRandomChannelName(HIDDEN_CHANNEL_PREFIX_
                                                        "checkdirection/channel_");
     _inputOnlyPort = new Common::GeneralChannel(false);
     if (_inputOnlyPort)
@@ -186,8 +186,8 @@ ScannerThread::ScannerThread(ChannelManagerWindow & window,
         {
             _outputOnlyPort->setInputMode(false);
             _outputOnlyPort->setOutputMode(true);
-            if (_inputOnlyPort->openWithRetries(_inputOnlyPortName, STANDARD_WAIT_TIME) &&
-                _outputOnlyPort->openWithRetries(_outputOnlyPortName, STANDARD_WAIT_TIME))
+            if (_inputOnlyPort->openWithRetries(_inputOnlyPortName, STANDARD_WAIT_TIME_) &&
+                _outputOnlyPort->openWithRetries(_outputOnlyPortName, STANDARD_WAIT_TIME_))
             {
                 _portsValid = true;
                 _window.setScannerThread(this);
@@ -244,6 +244,7 @@ void ScannerThread::addEntities(const Utilities::PortVector & detectedPorts)
                                                                descriptor._serviceName,
                                                                descriptor._kind,
                                                                descriptor._description,
+                                                               descriptor._extraInfo,
                                                                descriptor._requestsDescription);
         PortData *                   aPort = anEntity->addPort(descriptor._channelName, "", "",
                                                                kPortUsageService,
@@ -297,7 +298,7 @@ void ScannerThread::addEntities(const Utilities::PortVector & detectedPorts)
         // The key is 'ipaddress:port'
         YarpString   ipAddress;
         YarpString   ipPort;
-        EntityData * anEntity = new EntityData(kContainerKindOther, walker->first, "", "", "");
+        EntityData * anEntity = new EntityData(kContainerKindOther, walker->first, "", "", "", "");
         PortUsage    usage;
         
         splitCombinedAddressAndPort(walker->first, ipAddress, ipPort);
@@ -409,7 +410,7 @@ void ScannerThread::addServices(const YarpStringVector & services,
         {
             Utilities::ServiceDescriptor descriptor;
             
-            if (Utilities::GetNameAndDescriptionForService(*outer, descriptor, STANDARD_WAIT_TIME,
+            if (Utilities::GetNameAndDescriptionForService(*outer, descriptor, STANDARD_WAIT_TIME_,
                                                            checker, checkStuff))
             {
                 _detectedServices[outerName] = descriptor;
@@ -520,30 +521,30 @@ PortDirection ScannerThread::determineDirection(ChannelEntry *        oldEntry,
             default :
                 // Determine by doing a test connection.
                 if (Utilities::NetworkConnectWithRetries(_outputOnlyPortName, portName,
-                                                         STANDARD_WAIT_TIME, false, checker,
+                                                         STANDARD_WAIT_TIME_, false, checker,
                                                          checkStuff))
                 {
                     canDoInput = true;
                     if (! Utilities::NetworkDisconnectWithRetries(_outputOnlyPortName, portName,
-                                                                  STANDARD_WAIT_TIME, checker,
+                                                                  STANDARD_WAIT_TIME_, checker,
                                                                   checkStuff))
                     {
                         OD_LOG("(! Utilities::NetworkDisconnectWithRetries(" //####
-                               "lOutputOnlyPortName, portName, STANDARD_WAIT_TIME, " //####
+                               "lOutputOnlyPortName, portName, STANDARD_WAIT_TIME_, " //####
                                "checker, checkStuff))"); //####
                     }
                 }
                 if (Utilities::NetworkConnectWithRetries(portName, _inputOnlyPortName,
-                                                         STANDARD_WAIT_TIME, false, checker,
+                                                         STANDARD_WAIT_TIME_, false, checker,
                                                          checkStuff))
                 {
                     canDoOutput = true;
                     if (! Utilities::NetworkDisconnectWithRetries(portName,  _inputOnlyPortName,
-                                                                  STANDARD_WAIT_TIME, checker,
+                                                                  STANDARD_WAIT_TIME_, checker,
                                                                   checkStuff))
                     {
                         OD_LOG("(! Utilities::NetworkDisconnectWithRetries(portName, " //####
-                               "lInputOnlyPortName, STANDARD_WAIT_TIME, checker, " //####
+                               "lInputOnlyPortName, STANDARD_WAIT_TIME_, checker, " //####
                                "checkStuff))"); //####
                     }
                 }

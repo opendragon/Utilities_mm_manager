@@ -80,15 +80,17 @@ namespace ChannelManager
          @param kind The kind of entity.
          @param title The title of the entity.
          @param ipAddress The IP address of the entity.
-         @param behaviour The behavioural model if a service.
-         @param description The description, if this is a service.
-         @param requests The requests supported, if this is a service.
+         @param behaviour The behavioural model if a service or an adapter.
+         @param description The description, if this is a service or an adapter.
+         @param extraInfo The extra information, if this is a service or an adapter.
+         @param requests The requests supported, if this is a service or an adapter.
          @param owner The owner of the entity. */
         ChannelContainer(const ContainerKind kind,
                          const YarpString &  title,
                          const YarpString &  ipAddress,
                          const YarpString &  behaviour,
                          const YarpString &  description,
+                         const YarpString &  extraInfo,
                          const YarpString &  requests,
                          EntitiesPanel &     owner);
         
@@ -154,6 +156,14 @@ namespace ChannelManager
             return _description;
         } // getDescription
         
+        /*! @brief Return the extra information for the entity.
+         @returns The extra information for the entity. */
+        inline YarpString getExtraInformation(void)
+        const
+        {
+            return _extraInfo;
+        } // getExtraInformation
+
         /*! @brief Return the IP address of the container.
          @returns The IP address of the container. */
         inline YarpString getIPAddress(void)
@@ -343,16 +353,19 @@ namespace ChannelManager
         /*! @brief Used to take care of the logic for dragging the component. */
         ComponentDragger _dragger;
         
-        /*! @brief The behavioural model if a service. */
+        /*! @brief The behavioural model if a service or an adapter. */
         YarpString _behaviour;
         
-        /*! @brief The description of the container, if it is a service. */
+        /*! @brief The description of the container, if it is a service or an adapter. */
         YarpString _description;
         
+        /*! @brief The extra information for the container, if it is a service or an adapter. */
+        YarpString _extraInfo;
+
         /*! @brief The IP address of the primary channel. */
         YarpString _IPAddress;
                 
-        /*! @brief The requests for the entity, if it is a service. */
+        /*! @brief The requests for the entity, if it is a service or an adapter. */
         YarpString _requests;
         
 # if defined(USE_OGDF_POSITIONING_)

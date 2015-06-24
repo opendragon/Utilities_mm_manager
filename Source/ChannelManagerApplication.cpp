@@ -387,11 +387,11 @@ void ChannelManagerApplication::connectPeekChannel(void)
     OD_LOG_OBJENTER(); //####
     if (_peeker)
     {
-        if (! Utilities::NetworkConnectWithRetries(MpM_REGISTRY_STATUS_NAME, _peeker->name(),
-                                                   STANDARD_WAIT_TIME))
+        if (! Utilities::NetworkConnectWithRetries(MpM_REGISTRY_STATUS_NAME_, _peeker->name(),
+                                                   STANDARD_WAIT_TIME_))
         {
             OD_LOG("(! Utilities::NetworkConnectWithRetries(MpM_REGISTRY_STATUS_NAME, " //####
-                   "_peeker->name(), STANDARD_WAIT_TIME))"); //####
+                   "_peeker->name(), STANDARD_WAIT_TIME_))"); //####
         }
     }
     OD_LOG_OBJEXIT(); //####
@@ -1085,7 +1085,7 @@ void ChannelManagerApplication::initialise(const String & commandLine)
     {
         if (! Utilities::CheckForRegistryService())
         {
-            _registryServicePath = findPathToExecutable(MpM_REGISTRY_EXECUTABLE_NAME);
+            _registryServicePath = findPathToExecutable(MpM_REGISTRY_EXECUTABLE_NAME_);
             launchedRegistry = checkForRegistryServiceAndLaunchIfDesired();
         }
         EntitiesPanel & entities = _mainWindow->getEntitiesPanel();
@@ -1099,10 +1099,10 @@ void ChannelManagerApplication::initialise(const String & commandLine)
             _peeker->setReporter(reporter);
             _peeker->getReport(reporter);
 #endif // defined(MpM_ReportOnConnections)
-            YarpString peekName = Common::GetRandomChannelName(HIDDEN_CHANNEL_PREFIX "peek_/"
-                                                               DEFAULT_CHANNEL_ROOT);
+            YarpString peekName = Common::GetRandomChannelName(HIDDEN_CHANNEL_PREFIX_ "peek_/"
+                                                               DEFAULT_CHANNEL_ROOT_);
             
-            if (_peeker->openWithRetries(peekName, STANDARD_WAIT_TIME))
+            if (_peeker->openWithRetries(peekName, STANDARD_WAIT_TIME_))
             {
                 _peeker->setReader(*_peekHandler);
                 _scanner = new ScannerThread(*_mainWindow, launchedRegistry);

@@ -159,8 +159,8 @@ void EntitiesPanel::addEntity(ChannelContainer * anEntity)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("anEntity = ", anEntity); //####
-    char buffer1[DATE_TIME_BUFFER_SIZE];
-    char buffer2[DATE_TIME_BUFFER_SIZE];
+    char buffer1[DATE_TIME_BUFFER_SIZE_];
+    char buffer2[DATE_TIME_BUFFER_SIZE_];
     
     Utilities::GetDateAndTime(buffer1, sizeof(buffer1), buffer2, sizeof(buffer2));
     std::cerr << buffer1 << " " << buffer2 << " Adding entity " << anEntity->getName() << std::endl;
@@ -733,8 +733,8 @@ bool EntitiesPanel::removeUnvisitedEntities(void)
             anEntity = *walker;
             if (anEntity && (! anEntity->wasVisited()))
             {
-                char buffer1[DATE_TIME_BUFFER_SIZE];
-                char buffer2[DATE_TIME_BUFFER_SIZE];
+                char buffer1[DATE_TIME_BUFFER_SIZE_];
+                char buffer2[DATE_TIME_BUFFER_SIZE_];
                 
                 Utilities::GetDateAndTime(buffer1, sizeof(buffer1), buffer2, sizeof(buffer2));
                 std::cerr << buffer1 << " " << buffer2 << " Removing unvisited entity " <<

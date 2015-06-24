@@ -85,13 +85,15 @@ EntityData::EntityData(const ContainerKind kind,
                        const YarpString &  name,
                        const YarpString &  behaviour,
                        const YarpString &  description,
+                       const YarpString &  extraInfo,
                        const YarpString &  requests) :
-    _behaviour(behaviour), _description(description), _IPAddress(), _name(name),
-    _requests(requests), _kind(kind)
+    _behaviour(behaviour), _description(description), _extraInfo(extraInfo), _IPAddress(),
+    _name(name), _requests(requests), _kind(kind)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_S4s("name = ", name, "behaviour = ", behaviour, "description = ", description, //####
-               "requests = ", requests); //####
+               "extraInfo = ", extraInfo); //####
+    OD_LOG_S1s("requests = ", requests); //####
     OD_LOG_EXIT_P(this); //####
 } // EntityData::EntityData
 

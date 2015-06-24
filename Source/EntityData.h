@@ -65,11 +65,13 @@ namespace ChannelManager
          @param name The name of the entity.
          @param behaviour The behavioural model if a service.
          @param description The description, if this is a service.
+         @param extraInfo The extra information for the entity.
          @param requests The requests supported, if this is a service. */
         EntityData(const ContainerKind kind,
                    const YarpString &  name,
                    const YarpString &  behaviour,
                    const YarpString &  description,
+                   const YarpString &  extraInfo,
                    const YarpString &  requests);
         
         /*! @brief The destructor. */
@@ -104,6 +106,14 @@ namespace ChannelManager
             return _description;
         } // getDescription
         
+        /*! @brief Return the extra information for the entity.
+         @returns The extra information for the entity. */
+        inline YarpString getExtraInformation(void)
+        const
+        {
+            return _extraInfo;
+        } // getExtraInformation
+
         /*! @brief Return the kind of container.
          @returns The kind of container. */
         inline ContainerKind getKind(void)
@@ -169,19 +179,22 @@ namespace ChannelManager
         /*! @brief The collection of ports for the entity. */
         Ports _ports;
         
-        /*! @brief The behavioural model if a service. */
+        /*! @brief The behavioural model if a service or an adapter. */
         YarpString _behaviour;
         
-        /*! @brief The description of the entity, if it is a service. */
+        /*! @brief The description of the entity, if it is a service or an adapter. */
         YarpString _description;
         
+        /*! @brief The extra information for the entity, if it is a service or an adapter. */
+        YarpString _extraInfo;
+
         /*! @brief The IP address of the primary channel. */
         YarpString _IPAddress;
         
         /*! @brief The name of the entity. */
         YarpString _name;
         
-        /*! @brief The requests for the entity, if it is a service. */
+        /*! @brief The requests for the entity, if it is a service or an adapter. */
         YarpString _requests;
         
         /*! @brief The kind of entity. */

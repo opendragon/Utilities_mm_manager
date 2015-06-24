@@ -1153,6 +1153,7 @@ void ContentPanel::updatePanels(ScannerThread & scanner)
                                                                     anEntity->getIPAddress(),
                                                                     anEntity->getBehaviour(),
                                                                     anEntity->getDescription(),
+                                                                    anEntity->getExtraInformation(),
                                                                     anEntity->getRequests(),
                                                                     *_entitiesPanel);
                 

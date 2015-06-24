@@ -1125,7 +1125,7 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
                 protocolsMatch(firstProtocol, _portProtocol, protocolsOverridden) &&
                 (! firstAddPort->hasOutgoingConnectionTo(getPortName())))
             {
-                if (Utilities::AddConnection(firstName, getPortName(), STANDARD_WAIT_TIME,
+                if (Utilities::AddConnection(firstName, getPortName(), STANDARD_WAIT_TIME_,
                                              firstAddPort->_wasUdp, CheckForExit))
                 {
                     Common::ChannelMode mode = (firstAddPort->_wasUdp ? Common::kChannelModeUDP :
@@ -1245,7 +1245,7 @@ void ChannelEntry::mouseUp(const MouseEvent & ee)
                     protocolsMatch(getProtocol(), secondProtocol, protocolsOverridden) &&
                     (! hasOutgoingConnectionTo(secondName)))
                 {
-                    if (Utilities::AddConnection(getPortName(), secondName, STANDARD_WAIT_TIME,
+                    if (Utilities::AddConnection(getPortName(), secondName, STANDARD_WAIT_TIME_,
                                                  _wasUdp, CheckForExit))
                     {
                         Common::ChannelMode mode = (_wasUdp ? Common::kChannelModeUDP :

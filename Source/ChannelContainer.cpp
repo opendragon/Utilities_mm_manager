@@ -104,10 +104,11 @@ ChannelContainer::ChannelContainer(const ContainerKind kind,
                                    const YarpString &  ipAddress,
                                    const YarpString &  behaviour,
                                    const YarpString &  description,
+                                   const YarpString &  extraInfo,
                                    const YarpString &  requests,
                                    EntitiesPanel &     owner) :
     inherited(title.c_str()), _behaviour(behaviour), _description(description),
-    _IPAddress(ipAddress), _requests(requests),
+    _extraInfo(extraInfo), _IPAddress(ipAddress), _requests(requests),
 #if defined(USE_OGDF_POSITIONING_)
     _node(nullptr),
 #endif // defined(USE_OGDF_POSITIONING_)
@@ -116,8 +117,8 @@ ChannelContainer::ChannelContainer(const ContainerKind kind,
 {
     OD_LOG_ENTER(); //####
     OD_LOG_S4s("title = ", title, "behaviour = ", behaviour, "description = ", description, //####
-               "requests = ", requests); //####
-    OD_LOG_S1s("ipAddress = ", ipAddress); //####
+               "extraInfo = ", extraInfo); //####
+    OD_LOG_S2s("requests = ", requests, "ipAddress = ", ipAddress); //####
     Font & headerFont = _owner.getNormalFont();
     
     _titleHeight = static_cast<int>(headerFont.getHeight());
@@ -299,8 +300,14 @@ void ChannelContainer::displayInformation(const bool moreDetails)
     bodyText += thePanelDescription.c_str();
     if (moreDetails)
     {
+        YarpString extraInfo = getExtraInformation();
         YarpString requests;
-        
+
+        if (0 < extraInfo.length())
+        {
+            bodyText += "\n";
+            bodyText += extraInfo.c_str();
+        }
         switch (_kind)
         {
             case kContainerKindAdapter :
@@ -401,7 +408,7 @@ StringArray ChannelContainer::getMetrics(void)
         {
             yarp::os::Bottle metrics;
             
-            if (Utilities::GetMetricsForService(aPort->getPortName(), metrics, STANDARD_WAIT_TIME))
+            if (Utilities::GetMetricsForService(aPort->getPortName(), metrics, STANDARD_WAIT_TIME_))
             {
                 String metricsString = Utilities::ConvertMetricsToString(metrics,
                                                              Common::kOutputFlavourTabs).c_str();
@@ -428,7 +435,7 @@ bool ChannelContainer::getMetricsState(void)
         if (aPort && aPort->isService())
         {
             if (Utilities::GetMetricsStateForService(aPort->getPortName(), result,
-                                                     STANDARD_WAIT_TIME))
+                                                     STANDARD_WAIT_TIME_))
             {
                 break;
             }
@@ -702,7 +709,7 @@ void ChannelContainer::setMetricsState(const bool newState)
         if (aPort && aPort->isService())
         {
             if (Utilities::SetMetricsStateForService(aPort->getPortName(), newState,
-                                                     STANDARD_WAIT_TIME))
+                                                     STANDARD_WAIT_TIME_))
             {
                 break;
             }
@@ -801,7 +808,7 @@ void ChannelContainer::stopTheService(void)
                     thePanel->setChannelOfInterest(nullptr);
                     thePanel->setContainerOfInterest(nullptr);
                 }
-                Utilities::StopAService(aPort->getPortName(), STANDARD_WAIT_TIME);
+                Utilities::StopAService(aPort->getPortName(), STANDARD_WAIT_TIME_);
                 _owner.repaint();
             }
             break;
