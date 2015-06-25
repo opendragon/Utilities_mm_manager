@@ -289,7 +289,6 @@ void SettingsWindow::adjustFields(void)
         for (size_t ii = 0, maxf = _extraFieldEditors.size(); maxf > ii; ++ii)
         {
             TextEditorWithCaption * anEditor = _extraFieldEditors[static_cast<int>(ii)];
-            Label *                 aLabel = anEditor->getCaption();
             
             anEditor->setSize(innerWidth, anEditor->getHeight());
         }
