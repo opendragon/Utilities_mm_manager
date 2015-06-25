@@ -1307,7 +1307,7 @@ void ChannelEntry::paint(Graphics & gg)
     if (_drawActivityMarker)
     {
         float          hh = getHeight() - (2 * kActivityInset);
-        float          halfSize = static_cast<float>(hh / 2.0);
+        float          halfSize = static_cast<float>(hh / 2);
         Position       markerPos(getWidth() - static_cast<float>(hh + kActivityInset),
                                  kActivityInset);
         Position       markerCentre(markerPos + Position(halfSize, halfSize));

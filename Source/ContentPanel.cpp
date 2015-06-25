@@ -899,7 +899,7 @@ void ContentPanel::setEntityPositions(void)
                     fmmm->allowedPositions(ogdf::FMMMLayout::apAll);
                     fmmm->initialPlacementMult(ogdf::FMMMLayout::ipmAdvanced);
                     fmmm->initialPlacementForces(ogdf::FMMMLayout::ipfKeepPositions);
-                    fmmm->repForcesStrength(2.0);
+                    fmmm->repForcesStrength(2);
                     fmmm->call(*ga);
                     for (size_t ii = 0, mm = _entitiesPanel->getNumberOfEntities(); mm > ii; ++ii)
                     {

@@ -99,7 +99,7 @@ using namespace std;
 static const char * kFontName = "Courier New";
 
 /*! @brief The size of the font to be used for text. */
-static const float kFontSize = 15.0;
+static const float kFontSize = 15;
 
 /*! @brief The outer 'gutter' for the entities. */
 static const int kGutter = 10;
