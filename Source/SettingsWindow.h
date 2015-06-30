@@ -40,7 +40,6 @@
 #if (! defined(SettingsWindow_H_))
 # define SettingsWindow_H_ /* Header guard */
 
-# include "ChannelManagerDataTypes.h"
 # include "TextEditorErrorResponder.h"
 
 # if defined(__APPLE__)

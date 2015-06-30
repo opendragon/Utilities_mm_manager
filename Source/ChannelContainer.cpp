@@ -37,6 +37,7 @@
 //--------------------------------------------------------------------------------------------------
 
 #include "ChannelContainer.h"
+
 #include "ChannelEntry.h"
 #include "ContentPanel.h"
 #include "EntitiesPanel.h"

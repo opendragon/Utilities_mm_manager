@@ -38,6 +38,7 @@
 //--------------------------------------------------------------------------------------------------
 
 #include "PeekInputHandler.h"
+
 #include "ChannelManagerApplication.h"
 
 #include <mpm/M+MRequests.h>

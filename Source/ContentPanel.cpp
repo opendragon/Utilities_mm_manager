@@ -38,10 +38,10 @@
 //--------------------------------------------------------------------------------------------------
 
 #include "ContentPanel.h"
+
 #include "ChannelContainer.h"
 #include "ChannelEntry.h"
 #include "ChannelManagerApplication.h"
-#include "ChannelManagerWindow.h"
 #include "EntitiesPanel.h"
 #include "EntityData.h"
 #include "PortData.h"

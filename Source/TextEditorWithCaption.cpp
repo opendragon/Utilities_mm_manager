@@ -37,6 +37,7 @@
 //--------------------------------------------------------------------------------------------------
 
 #include "TextEditorWithCaption.h"
+
 #include "TextEditorErrorResponder.h"
 #include "TextValidator.h"
 

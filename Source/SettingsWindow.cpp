@@ -38,6 +38,7 @@
 //--------------------------------------------------------------------------------------------------
 
 #include "SettingsWindow.h"
+
 #include "ChannelManagerApplication.h"
 #include "TextEditorWithCaption.h"
 #include "TextValidator.h"
