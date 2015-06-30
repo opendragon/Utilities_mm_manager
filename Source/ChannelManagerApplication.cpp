@@ -973,7 +973,7 @@ String ChannelManagerApplication::getRealName(void)
     String          result;
 #if defined(__APPLE__)
     struct passwd   pwd;
-    struct passwd * pwdPtr = NULL;
+    struct passwd * pwdPtr = nullptr;
     char *          buf;
     long            bufSize = sysconf(_SC_GETPW_R_SIZE_MAX);
 #endif // defined(__APPLE__)
@@ -1008,7 +1008,7 @@ String ChannelManagerApplication::getUserName(void)
     String          result;
 #if defined(__APPLE__)
     struct passwd   pwd;
-    struct passwd * pwdPtr = NULL;
+    struct passwd * pwdPtr = nullptr;
     char *          buf;
     long            bufSize = sysconf(_SC_GETPW_R_SIZE_MAX);
 #endif // defined(__APPLE__)
