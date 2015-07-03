@@ -2,7 +2,7 @@
 //
 //  File:       TextValidator.h
 //
-//  Project:    M+M
+//  Project:    m+m
 //
 //  Contains:   The class declaration for a text validating object.
 //
@@ -41,7 +41,7 @@
 
 # include "ChannelManagerDataTypes.h"
 
-# include <mpm/M+MBaseArgumentDescriptor.h>
+# include <m+m/m+mBaseArgumentDescriptor.h>
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push

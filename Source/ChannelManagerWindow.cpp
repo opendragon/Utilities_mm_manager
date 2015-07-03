@@ -2,7 +2,7 @@
 //
 //  File:       ChannelManagerWindow.cpp
 //
-//  Project:    M+M
+//  Project:    m+m
 //
 //  Contains:   The class definition for the primary window of the channel manager application.
 //

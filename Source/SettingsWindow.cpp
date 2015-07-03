@@ -2,7 +2,7 @@
 //
 //  File:       SettingsWindow.cpp
 //
-//  Project:    M+M
+//  Project:    m+m
 //
 //  Contains:   The class definition for the application settings window of the channel manager
 //              application.
@@ -43,9 +43,9 @@
 #include "TextEditorWithCaption.h"
 #include "TextValidator.h"
 
-#include <mpm/M+MChannelArgumentDescriptor.h>
-#include <mpm/M+MEndpoint.h>
-#include <mpm/M+MPortArgumentDescriptor.h>
+#include <m+m/m+mChannelArgumentDescriptor.h>
+#include <m+m/m+mEndpoint.h>
+#include <m+m/m+mPortArgumentDescriptor.h>
 
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>

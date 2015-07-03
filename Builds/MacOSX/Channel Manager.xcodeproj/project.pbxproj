@@ -34,7 +34,7 @@
 		D5E4B7287BEFC863C05F9AA2 /* EntitiesData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 55A7DDCB784682304EC9B39F /* EntitiesData.cpp */; };
 		D955E9BBD7DF44ED871C3B3C /* ChannelContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F8A50B61D95A448FCB3E1B60 /* ChannelContainer.cpp */; };
 		DEEF248165B3103CD7681805 /* juce_gui_extra.mm in Sources */ = {isa = PBXBuildFile; fileRef = 01BE58DF625AAE46E21A507C /* juce_gui_extra.mm */; };
-		DF0ADB381A1A76C70096548B /* libmpmCommon.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0ADB341A1A76C70096548B /* libmpmCommon.dylib */; };
+		DF0ADB381A1A76C70096548B /* libm+mCommon.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0ADB341A1A76C70096548B /* libm+mCommon.dylib */; };
 		DF0ADB391A1A76C70096548B /* libodLogging.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0ADB351A1A76C70096548B /* libodLogging.dylib */; };
 		DF0B256719FAE7C2001AEB0C /* libACE.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0B256119FAE7C2001AEB0C /* libACE.dylib */; };
 		DF0B256A19FAE7C2001AEB0C /* libOGDF.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0B256419FAE7C2001AEB0C /* libOGDF.a */; };
@@ -643,7 +643,7 @@
 		DE8E1A68B0178FA206709260 /* juce_TabbedComponent.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_TabbedComponent.cpp; path = ../../JuceLibraryCode/modules/juce_gui_basics/layout/juce_TabbedComponent.cpp; sourceTree = SOURCE_ROOT; };
 		DED798D95F292C6200817C4B /* juce_TreeView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_TreeView.h; path = ../../JuceLibraryCode/modules/juce_gui_basics/widgets/juce_TreeView.h; sourceTree = SOURCE_ROOT; };
 		DEE123C22DE88328C8D6C046 /* juce_AsyncUpdater.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_AsyncUpdater.h; path = ../../JuceLibraryCode/modules/juce_events/broadcasters/juce_AsyncUpdater.h; sourceTree = SOURCE_ROOT; };
-		DF0ADB341A1A76C70096548B /* libmpmCommon.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libmpmCommon.dylib; path = "../../../../../../../opt/M+M/lib/libmpmCommon.dylib"; sourceTree = "<group>"; };
+		DF0ADB341A1A76C70096548B /* libm+mCommon.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libm+mCommon.dylib"; path = "../../../../../../../opt/M+M/lib/libm+mCommon.dylib"; sourceTree = "<group>"; };
 		DF0ADB351A1A76C70096548B /* libodLogging.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libodLogging.dylib; path = "../../../../../../../opt/M+M/lib/libodLogging.dylib"; sourceTree = "<group>"; };
 		DF0ADB3C1A1A77EF0096548B /* libYARP_init.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libYARP_init.1.dylib; path = "/Users/M_M/Documents/git.repositories/Utilities_Channel Manager/Builds/MacOSX/../../../../../../../opt/M+M/lib/libYARP_init.1.dylib"; sourceTree = "<absolute>"; };
 		DF0ADB3D1A1A77EF0096548B /* libYARP_OS.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libYARP_OS.1.dylib; path = "/Users/M_M/Documents/git.repositories/Utilities_Channel Manager/Builds/MacOSX/../../../../../../../opt/M+M/lib/libYARP_OS.1.dylib"; sourceTree = "<absolute>"; };
@@ -790,7 +790,7 @@
 				1D91CF6FA1BDD5E3BC596806 /* QTKit.framework in Frameworks */,
 				03F3FFBB1BE66A71A22A9A5D /* QuartzCore.framework in Frameworks */,
 				DFDC7E4D1A7BFF6E00BE0557 /* libYARP_name.1.dylib in Frameworks */,
-				DF0ADB381A1A76C70096548B /* libmpmCommon.dylib in Frameworks */,
+				DF0ADB381A1A76C70096548B /* libm+mCommon.dylib in Frameworks */,
 				427446365ACD6B5CB41E7527 /* WebKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1880,7 +1880,7 @@
 			isa = PBXGroup;
 			children = (
 				DFADC9F919D0C236002C2663 /* libc++.dylib */,
-				DF0ADB341A1A76C70096548B /* libmpmCommon.dylib */,
+				DF0ADB341A1A76C70096548B /* libm+mCommon.dylib */,
 				DF0ADB351A1A76C70096548B /* libodLogging.dylib */,
 				DFDC7E4A1A7BFF5C00BE0557 /* libYARP_dev.1.dylib */,
 				DF0ADB3C1A1A77EF0096548B /* libYARP_init.1.dylib */,
@@ -2202,7 +2202,7 @@
 				OTHER_LDFLAGS = (
 					"-lYARP_OS",
 					"-lYARP_init",
-					"-lmpmCommon",
+					"-lm+mCommon",
 					"-lodLogging",
 					"-lOGDF",
 				);
@@ -2245,10 +2245,10 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"/opt/M+M/include",
+					"/opt/m+m/include",
 				);
-				LD_RUNPATH_SEARCH_PATHS = "/opt/M+M/lib";
-				LIBRARY_SEARCH_PATHS = "/opt/M+M/lib";
+				LD_RUNPATH_SEARCH_PATHS = "/opt/m+m/lib";
+				LIBRARY_SEARCH_PATHS = "/opt/m+m/lib";
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = (
@@ -2286,7 +2286,7 @@
 				OTHER_LDFLAGS = (
 					"-lYARP_OS",
 					"-lYARP_init",
-					"-lmpmCommon",
+					"-lm+mCommon",
 					"-lodLogging",
 					"-lOGDF",
 				);
@@ -2328,10 +2328,10 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"/opt/M+M/include",
+					"/opt/m+m/include",
 				);
-				LD_RUNPATH_SEARCH_PATHS = "/opt/M+M/lib";
-				LIBRARY_SEARCH_PATHS = "/opt/M+M/lib";
+				LD_RUNPATH_SEARCH_PATHS = "/opt/m+m/lib";
+				LIBRARY_SEARCH_PATHS = "/opt/m+m/lib";
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OTHER_CFLAGS = (
 					"-fsanitize-undefined-trap-on-error",

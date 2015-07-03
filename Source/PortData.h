@@ -2,7 +2,7 @@
 //
 //  File:       PortData.h
 //
-//  Project:    M+M
+//  Project:    m+m
 //
 //  Contains:   The class declaration for a port detected by the background scanner.
 //

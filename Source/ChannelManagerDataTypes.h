@@ -2,7 +2,7 @@
 //
 //  File:       ChannelManagerDataTypes.h
 //
-//  Project:    M+M
+//  Project:    m+m
 //
 //  Contains:   The common data types for the Channel Manager application.
 //
@@ -43,8 +43,8 @@
 #  include "../JuceLibraryCode/JuceHeader.h"
 # endif // ! defined(DOXYGEN)
 
-# include <mpm/M+MGeneralChannel.h>
-# include <mpm/M+MUtilities.h>
+# include <m+m/m+mGeneralChannel.h>
+# include <m+m/m+mUtilities.h>
 
 # include <list>
 # include <map>

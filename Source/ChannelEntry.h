@@ -2,7 +2,7 @@
 //
 //  File:       ChannelEntry.h
 //
-//  Project:    M+M
+//  Project:    m+m
 //
 //  Contains:   The class declaration for a visible entity that represents a channel or a port.
 //

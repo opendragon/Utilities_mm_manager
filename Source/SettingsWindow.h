@@ -2,7 +2,7 @@
 //
 //  File:       SettingsWindow.h
 //
-//  Project:    M+M
+//  Project:    m+m
 //
 //  Contains:   The class declaration for the application settings window of the channel manager
 //              application.

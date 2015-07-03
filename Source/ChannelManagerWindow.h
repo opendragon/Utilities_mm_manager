@@ -2,7 +2,7 @@
 //
 //  File:       ChannelManagerWindow.h
 //
-//  Project:    M+M
+//  Project:    m+m
 //
 //  Contains:   The class declaration for the primary window of the channel manager application.
 //

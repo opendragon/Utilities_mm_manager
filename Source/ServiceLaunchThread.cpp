@@ -2,7 +2,7 @@
 //
 //  File:       ServiceLaunchThread.cpp
 //
-//  Project:    M+M
+//  Project:    m+m
 //
 //  Contains:   The class declaration for the background service launcher.
 //

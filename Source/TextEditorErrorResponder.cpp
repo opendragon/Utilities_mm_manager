@@ -2,7 +2,7 @@
 //
 //  File:       TextEditorErrorResponder.cpp
 //
-//  Project:    M+M
+//  Project:    m+m
 //
 //  Contains:   The class declaration for an error reporting abstraction.
 //

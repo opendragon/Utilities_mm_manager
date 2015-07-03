@@ -2,7 +2,7 @@
 //
 //  File:       EntityData.cpp
 //
-//  Project:    M+M
+//  Project:    m+m
 //
 //  Contains:   The class definition for an entity detected by the background scanner.
 //

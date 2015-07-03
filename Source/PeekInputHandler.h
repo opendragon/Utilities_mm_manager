@@ -2,7 +2,7 @@
 //
 //  File:       PeekInputHandler.h
 //
-//  Project:    M+M
+//  Project:    m+m
 //
 //  Contains:   The class declaration for the custom data channel input handler used to watch the
 //              Registry Service.
@@ -40,7 +40,7 @@
 #if (! defined(PeekInputHandler_H_))
 # define PeekInputHandler_H_ /* Header guard */
 
-# include <mpm/M+MBaseInputHandler.h>
+# include <m+m/m+mBaseInputHandler.h>
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push

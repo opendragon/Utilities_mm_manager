@@ -2,7 +2,7 @@
 //
 //  File:       ChannelManagerApplication.cpp
 //
-//  Project:    M+M
+//  Project:    m+m
 //
 //  Contains:   The class definition for the application object of the channel manager application.
 //
@@ -46,8 +46,8 @@
 #include "SettingsWindow.h"
 #include "YarpLaunchThread.h"
 
-#include <mpm/M+MEndpoint.h>
-#include <mpm/M+MRequests.h>
+#include <m+m/m+mEndpoint.h>
+#include <m+m/m+mRequests.h>
 
 #if (! MAC_OR_LINUX_)
 # include <io.h>
@@ -1121,7 +1121,7 @@ void ChannelManagerApplication::loadApplicationLists(void)
 {
     OD_LOG_OBJENTER(); //####
     juce::File  commonDir(juce::File::getSpecialLocation(juce::File::commonDocumentsDirectory));
-    String      commonPath(juce::File::addTrailingSeparator(commonDir.getFullPathName()) + "M+M");
+    String      commonPath(juce::File::addTrailingSeparator(commonDir.getFullPathName()) + "m+m");
     String      pathToStdList(juce::File::addTrailingSeparator(commonPath) +
                               "standardApplications.txt");
     String      pathToCustomList(juce::File::addTrailingSeparator(commonPath) +
@@ -1292,7 +1292,7 @@ bool ChannelManagerApplication::validateRegistryService(void)
                                                           "Also, the Registry Service will be "
                                                           "shut down when this application exits, "
                                                           "resulting in a potential loss of "
-                                                          "connectivity to any M+M services that "
+                                                          "connectivity to any m+m services that "
                                                           "were started after the Registry Service "
                                                           "was launched.", "Yes", "No",
                                                           _mainWindow, nullptr));
@@ -1345,7 +1345,7 @@ bool ChannelManagerApplication::validateYarp(void)
                                                           "Also, the private YARP network will be "
                                                           "shut down when this application exits, "
                                                           "resulting in a potential loss of "
-                                                          "connectivity to any M+M services that "
+                                                          "connectivity to any m+m services that "
                                                           "were started after the private YARP "
                                                           "network was launched.", "Yes", "No",
                                                           _mainWindow, nullptr));

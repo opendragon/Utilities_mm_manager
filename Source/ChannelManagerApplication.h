@@ -2,7 +2,7 @@
 //
 //  File:       ChannelManagerApplication.h
 //
-//  Project:    M+M
+//  Project:    m+m
 //
 //  Contains:   The class declaration for the application object of the channel manager application.
 //

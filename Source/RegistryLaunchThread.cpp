@@ -2,7 +2,7 @@
 //
 //  File:       RegistryLaunchThread.cpp
 //
-//  Project:    M+M
+//  Project:    m+m
 //
 //  Contains:   The class declaration for the background Registry Service launcher.
 //

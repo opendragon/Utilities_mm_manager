@@ -2,7 +2,7 @@
 //
 //  File:       EntitiesPanel.h
 //
-//  Project:    M+M
+//  Project:    m+m
 //
 //  Contains:   The class declaration for the entities layer of the primary window of the channel
 //              manager application.

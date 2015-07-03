@@ -2,7 +2,7 @@
 //
 //  File:       ScannerThread.h
 //
-//  Project:    M+M
+//  Project:    m+m
 //
 //  Contains:   The class declaration for the background port and service scanner.
 //

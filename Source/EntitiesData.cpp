@@ -2,7 +2,7 @@
 //
 //  File:       EntitiesData.cpp
 //
-//  Project:    M+M
+//  Project:    m+m
 //
 //  Contains:   The class definition for the data collected by the background scanner.
 //

@@ -2,7 +2,7 @@
 //
 //  File:       PeekInputHandler.cpp
 //
-//  Project:    M+M
+//  Project:    m+m
 //
 //  Contains:   The class definition for the custom data channel input handler used to watch the
 //              Registry Service.
@@ -41,7 +41,7 @@
 
 #include "ChannelManagerApplication.h"
 
-#include <mpm/M+MRequests.h>
+#include <m+m/m+mRequests.h>
 
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>

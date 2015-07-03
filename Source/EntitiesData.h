@@ -2,7 +2,7 @@
 //
 //  File:       EntitiesData.h
 //
-//  Project:    M+M
+//  Project:    m+m
 //
 //  Contains:   The class declaration for the data collected by the background scanner.
 //

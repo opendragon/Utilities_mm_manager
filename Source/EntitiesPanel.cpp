@@ -2,7 +2,7 @@
 //
 //  File:       EntitiesPanel.cpp
 //
-//  Project:    M+M
+//  Project:    m+m
 //
 //  Contains:   The class definition for the entities layer of the primary window of the channel
 //              manager application.

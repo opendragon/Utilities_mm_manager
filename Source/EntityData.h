@@ -2,7 +2,7 @@
 //
 //  File:       EntityData.h
 //
-//  Project:    M+M
+//  Project:    m+m
 //
 //  Contains:   The class declaration for an entity detected by the background scanner.
 //

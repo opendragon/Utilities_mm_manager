@@ -2,9 +2,9 @@
 //
 //  File:       ChannelManagerMain.cpp
 //
-//  Project:    M+M
+//  Project:    m+m
 //
-//  Contains:   A utility application to YARP ports and M+M channels.
+//  Contains:   A utility application to YARP ports and m+m channels.
 //
 //  Written by: Norman Jaffe
 //
@@ -48,7 +48,7 @@
 #endif // defined(__APPLE__)
 /*! @file
  
- @brief A utility application to YARP ports and M+M channels. */
+ @brief A utility application to YARP ports and m+m channels. */
 #if defined(__APPLE__)
 # pragma clang diagnostic pop
 #endif // defined(__APPLE__)

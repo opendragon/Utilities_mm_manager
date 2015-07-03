@@ -2,7 +2,7 @@
 //
 //  File:       PortData.cpp
 //
-//  Project:    M+M
+//  Project:    m+m
 //
 //  Contains:   The class definition for a port detected by the background scanner.
 //

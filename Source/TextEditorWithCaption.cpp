@@ -2,7 +2,7 @@
 //
 //  File:       TextEditorWithCaption.cpp
 //
-//  Project:    M+M
+//  Project:    m+m
 //
 //  Contains:   The class declaration for a text editor paired with a caption.
 //

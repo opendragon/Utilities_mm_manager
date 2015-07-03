@@ -2,7 +2,7 @@
 //
 //  File:       TextValidator.cpp
 //
-//  Project:    M+M
+//  Project:    m+m
 //
 //  Contains:   The class declaration for a text validating object.
 //

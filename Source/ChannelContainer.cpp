@@ -2,7 +2,7 @@
 //
 //  File:       ChannelContainer.cpp
 //
-//  Project:    M+M
+//  Project:    m+m
 //
 //  Contains:   The class definition for a visible entity that has one or more channels or ports.
 //
