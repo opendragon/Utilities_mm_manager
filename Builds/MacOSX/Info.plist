@@ -7,9 +7,9 @@
 	<key>CFBundleIconFile</key>
 	<string></string>
 	<key>CFBundleIdentifier</key>
-	<string>com.yourcompany.ChannelManager</string>
+	<string>com.yourcompany.mpm-manager</string>
 	<key>CFBundleName</key>
-	<string>Channel Manager</string>
+	<string>m+m manager</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>

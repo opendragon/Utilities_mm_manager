@@ -1,4 +1,4 @@
 Utilities Release Notes
 =======================
 
-RC2 - initial release of Channel Manager
+RC2 - initial release of m+m manager
