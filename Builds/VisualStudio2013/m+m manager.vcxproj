@@ -36,12 +36,12 @@
   </PropertyGroup>
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Channel Manager</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">m+m manager</TargetName>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</GenerateManifest>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(LibraryPath);$(MPlusM_ROOT)\mpm\Debug;$(MPlusM_ROOT)\odl\Debug;$(OGDF)\Win32\Debug;$(ACE_ROOT)\lib;$(YARP_DIR)\lib\Debug;c:\program files\bonjour sdk\lib\win32</LibraryPath>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Channel Manager</TargetName>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(LibraryPath);$(MPlusM_ROOT)\m+m\Debug;$(MPlusM_ROOT)\odl\Debug;$(OGDF)\Win32\Debug;$(ACE_ROOT)\lib;$(YARP_DIR)\lib\Debug;c:\program files\bonjour sdk\lib\win32</LibraryPath>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">m+m manager</TargetName>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</GenerateManifest>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(LibraryPath);$(MPlusM_ROOT)\mpm\Release;$(MPlusM_ROOT)\odl\Release;$(OGDF)\Win32\Release;$(ACE_ROOT)\lib;$(YARP_DIR)\lib\Release;c:\program files\bonjour sdk\lib\win32</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(LibraryPath);$(MPlusM_ROOT)\m+m\Release;$(MPlusM_ROOT)\odl\Release;$(OGDF)\Win32\Release;$(ACE_ROOT)\lib;$(YARP_DIR)\lib\Release;c:\program files\bonjour sdk\lib\win32</LibraryPath>
     <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -68,24 +68,24 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>_DEBUG;JUCE_USER_DEFINED_RC_FILE=\"..\CMResources.rc\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;JUCE_USER_DEFINED_RC_FILE=\"..\m+mmResources.rc\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-      <OutputFile>$(OutDir)\Channel Manager.exe</OutputFile>
+      <OutputFile>$(OutDir)\m+m manager.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreSpecificDefaultLibraries>libcmt.lib; msvcrt.lib;;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(IntDir)\Channel Manager.pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>$(IntDir)\m+m manager.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
-      <AdditionalLibraryDirectories>$(MPlusM_ROOT)\mpm\Debug;$(MPlusM_ROOT)\odl\Debug;$(OGDF)\Win32\Debug;$(ACE_ROOT)\lib;$(YARP_DIR)\lib\Debug;c:\program files\bonjour sdk\lib\win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(MPlusM_ROOT)\m+m\Debug;$(MPlusM_ROOT)\odl\Debug;$(OGDF)\Win32\Debug;$(ACE_ROOT)\lib;$(YARP_DIR)\lib\Debug;c:\program files\bonjour sdk\lib\win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <LargeAddressAware>true</LargeAddressAware>
-      <AdditionalDependencies>ACEd.lib;YARP_OSd.lib;YARP_initd.lib;odLogging.lib;mpmCommon.lib;ogdf.lib;Psapi.lib;dnssd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ACEd.lib;YARP_OSd.lib;YARP_initd.lib;odLogging.lib;m+mCommon.lib;ogdf.lib;Psapi.lib;dnssd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <OutputFile>$(IntDir)\Channel Manager.bsc</OutputFile>
+      <OutputFile>$(IntDir)\m+m manager.bsc</OutputFile>
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -111,41 +111,47 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>NDEBUG;JUCE_USER_DEFINED_RC_FILE="..\CMResources.rc";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;JUCE_USER_DEFINED_RC_FILE="..\m+mmResources.rc";%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-      <OutputFile>$(OutDir)\Channel Manager.exe</OutputFile>
+      <OutputFile>$(OutDir)\m+m manager.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>false</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(IntDir)\Channel Manager.pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>$(IntDir)\m+m manager.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <AdditionalLibraryDirectories>$(MPlusM_ROOT)\mpm\Release;$(MPlusM_ROOT)\odl\Release;$(OGDF)\Win32\Release;$(ACE_ROOT)\lib;$(YARP_DIR)\lib\Release;c:\program files\bonjour sdk\lib\win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(MPlusM_ROOT)\m+m\Release;$(MPlusM_ROOT)\odl\Release;$(OGDF)\Win32\Release;$(ACE_ROOT)\lib;$(YARP_DIR)\lib\Release;c:\program files\bonjour sdk\lib\win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <LargeAddressAware>true</LargeAddressAware>
-      <AdditionalDependencies>ACE.lib;YARP_OS.lib;YARP_init.lib;odLogging.lib;mpmCommon.lib;ogdf.lib;Psapi.lib;dnssd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ACE.lib;YARP_OS.lib;YARP_init.lib;odLogging.lib;m+mCommon.lib;ogdf.lib;Psapi.lib;dnssd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <OutputFile>$(IntDir)\Channel Manager.bsc</OutputFile>
+      <OutputFile>$(IntDir)\m+m manager.bsc</OutputFile>
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Source\ChannelContainer.cpp" />
-    <ClCompile Include="..\..\Source\ChannelEntry.cpp" />
-    <ClCompile Include="..\..\Source\ChannelManagerApplication.cpp" />
-    <ClCompile Include="..\..\Source\ChannelManagerMain.cpp" />
-    <ClCompile Include="..\..\Source\ChannelManagerWindow.cpp" />
-    <ClCompile Include="..\..\Source\ContentPanel.cpp" />
-    <ClCompile Include="..\..\Source\EntitiesData.cpp" />
-    <ClCompile Include="..\..\Source\EntitiesPanel.cpp" />
-    <ClCompile Include="..\..\Source\PeekInputHandler.cpp" />
-    <ClCompile Include="..\..\Source\EntityData.cpp" />
-    <ClCompile Include="..\..\Source\PortData.cpp" />
-    <ClCompile Include="..\..\Source\RegistryLaunchThread.cpp" />
-    <ClCompile Include="..\..\Source\ScannerThread.cpp" />
+    <ClCompile Include="..\..\Source\m+mChannelContainer.cpp" />
+    <ClCompile Include="..\..\Source\m+mChannelEntry.cpp" />
+    <ClCompile Include="..\..\Source\m+mContentPanel.cpp" />
+    <ClCompile Include="..\..\Source\m+mEntitiesData.cpp" />
+    <ClCompile Include="..\..\Source\m+mEntitiesPanel.cpp" />
+    <ClCompile Include="..\..\Source\m+mEntityData.cpp" />
+    <ClCompile Include="..\..\Source\m+mManagerApplication.cpp" />
+    <ClCompile Include="..\..\Source\m+mManagerMain.cpp" />
+    <ClCompile Include="..\..\Source\m+mManagerWindow.cpp" />
+    <ClCompile Include="..\..\Source\m+mPeekInputHandler.cpp" />
+    <ClCompile Include="..\..\Source\m+mPortData.cpp" />
+    <ClCompile Include="..\..\Source\m+mRegistryLaunchThread.cpp" />
+    <ClCompile Include="..\..\Source\m+mScannerThread.cpp" />
+    <ClCompile Include="..\..\Source\m+mServiceLaunchThread.cpp" />
+    <ClCompile Include="..\..\Source\m+mSettingsWindow.cpp" />
+    <ClCompile Include="..\..\Source\m+mTextEditorErrorResponder.cpp" />
+    <ClCompile Include="..\..\Source\m+mTextEditorWithCaption.cpp" />
+    <ClCompile Include="..\..\Source\m+mTextValidator.cpp" />
+    <ClCompile Include="..\..\Source\m+mYarpLaunchThread.cpp" />
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_core\text\juce_CharacterFunctions.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
@@ -968,27 +974,27 @@
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_graphics\juce_graphics.cpp" />
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_gui_basics\juce_gui_basics.cpp" />
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_gui_extra\juce_gui_extra.cpp" />
-    <ClCompile Include="..\..\Source\ServiceLaunchThread.cpp" />
-    <ClCompile Include="..\..\Source\SettingsWindow.cpp" />
-    <ClCompile Include="..\..\Source\TextEditorErrorResponder.cpp" />
-    <ClCompile Include="..\..\Source\TextEditorWithCaption.cpp" />
-    <ClCompile Include="..\..\Source\TextValidator.cpp" />
-    <ClCompile Include="..\..\Source\YarpLaunchThread.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Source\ChannelContainer.h" />
-    <ClInclude Include="..\..\Source\ChannelEntry.h" />
-    <ClInclude Include="..\..\Source\ChannelManagerApplication.h" />
-    <ClInclude Include="..\..\Source\ChannelManagerDataTypes.h" />
-    <ClInclude Include="..\..\Source\ChannelManagerWindow.h" />
-    <ClInclude Include="..\..\Source\ContentPanel.h" />
-    <ClInclude Include="..\..\Source\EntitiesData.h" />
-    <ClInclude Include="..\..\Source\PeekInputHandler.h" />
-    <ClInclude Include="..\..\Source\EntitiesPanel.h" />
-    <ClInclude Include="..\..\Source\EntityData.h" />
-    <ClInclude Include="..\..\Source\PortData.h" />
-    <ClInclude Include="..\..\Source\RegistryLaunchThread.h" />
-    <ClInclude Include="..\..\Source\ScannerThread.h" />
+    <ClInclude Include="..\..\Source\m+mChannelContainer.h" />
+    <ClInclude Include="..\..\Source\m+mChannelEntry.h" />
+    <ClInclude Include="..\..\Source\m+mContentPanel.h" />
+    <ClInclude Include="..\..\Source\m+mEntitiesData.h" />
+    <ClInclude Include="..\..\Source\m+mEntitiesPanel.h" />
+    <ClInclude Include="..\..\Source\m+mEntityData.h" />
+    <ClInclude Include="..\..\Source\m+mManagerApplication.h" />
+    <ClInclude Include="..\..\Source\m+mManagerDataTypes.h" />
+    <ClInclude Include="..\..\Source\m+mManagerWindow.h" />
+    <ClInclude Include="..\..\Source\m+mPeekInputHandler.h" />
+    <ClInclude Include="..\..\Source\m+mPortData.h" />
+    <ClInclude Include="..\..\Source\m+mRegistryLaunchThread.h" />
+    <ClInclude Include="..\..\Source\m+mScannerThread.h" />
+    <ClInclude Include="..\..\Source\m+mServiceLaunchThread.h" />
+    <ClInclude Include="..\..\Source\m+mSettingsWindow.h" />
+    <ClInclude Include="..\..\Source\m+mTextEditorErrorResponder.h" />
+    <ClInclude Include="..\..\Source\m+mTextEditorWithCaption.h" />
+    <ClInclude Include="..\..\Source\m+mTextValidator.h" />
+    <ClInclude Include="..\..\Source\m+mYarpLaunchThread.h" />
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_core\text\juce_CharacterFunctions.h" />
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_core\text\juce_CharPointer_ASCII.h" />
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_core\text\juce_CharPointer_UTF8.h" />
@@ -1326,12 +1332,6 @@
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_gui_extra\juce_gui_extra.h" />
     <ClInclude Include="..\..\JuceLibraryCode\AppConfig.h" />
     <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h" />
-    <ClInclude Include="..\..\Source\ServiceLaunchThread.h" />
-    <ClInclude Include="..\..\Source\SettingsWindow.h" />
-    <ClInclude Include="..\..\Source\TextEditorErrorResponder.h" />
-    <ClInclude Include="..\..\Source\TextEditorWithCaption.h" />
-    <ClInclude Include="..\..\Source\TextValidator.h" />
-    <ClInclude Include="..\..\Source\YarpLaunchThread.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -1343,8 +1343,11 @@
     <None Include="..\..\JuceLibraryCode\modules\juce_gui_extra\juce_module_info" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\CMResources.rc" />
+    <ResourceCompile Include="..\m+mmResources.rc" />
     <ResourceCompile Include=".\resources.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\m+mmicon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

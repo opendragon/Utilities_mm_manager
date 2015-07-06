@@ -1,6 +1,9 @@
-Microsoft Visual Studio Solution File, Format Version 11.00
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-Project("{2211E0A3-FD3C-8507-5907-20BCB747E94A}") = "Channel Manager", "Channel Manager.vcxproj", "{039326E3-03D4-CBBC-1B84-900157278E42}"
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "m+m manager", "m+m manager.vcxproj", "{039326E3-03D4-CBBC-1B84-900157278E42}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
