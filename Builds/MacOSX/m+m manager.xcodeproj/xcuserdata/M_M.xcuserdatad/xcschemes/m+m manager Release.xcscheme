@@ -48,12 +48,8 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
-      <PathRunnable
-         runnableDebuggingMode = "0"
-         BundleIdentifier = "com.yourcompany.m+mmanager"
-         FilePath = "/Users/M_M/Documents/git.repositories/Utilities_Channel Manager/Builds/MacOSX/build/Release/m+m manager.app">
-      </PathRunnable>
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "3D401AEA48F74668882D2486"
@@ -61,7 +57,7 @@
             BlueprintName = "m+m manager"
             ReferencedContainer = "container:m+m manager.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>

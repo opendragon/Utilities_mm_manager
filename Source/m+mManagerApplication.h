@@ -162,6 +162,10 @@ namespace MPlusM_Manager
          @returns The home directory of the current user. */
         String getHomeDir(void);
         
+        /*! @brief Return the main window of the application.
+         @returns The main window of the application. */
+        static ManagerWindow * getMainWindow(void);
+        
         /*! @brief Get the primary channel for a service.
          @param appInfo The description of the executable.
          @param endpointName The endpoint to use, if not the default.

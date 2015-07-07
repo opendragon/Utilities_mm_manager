@@ -121,12 +121,8 @@ static const int kThreadKillTime = 3000;
 # pragma mark Local functions
 #endif // defined(__APPLE__)
 
-/*! @brief Compare two strings for case-insensitive equality.
-@param string1 The first string to be compared.
-@param string2 The second string to be compared.
-@returns @c true if the two strings are the same when case is ignored and @c false otherwise. */
-static bool caseInsensitiveMatch(const char * string1,
-	                             const char * string2)
+bool caseInsensitiveMatch(const char * string1,
+                          const char * string2)
 {
 	OD_LOG_ENTER(); //####
 	OD_LOG_S2("string1 = ", string1, "string2 = ", string2); //####
@@ -134,39 +130,48 @@ static bool caseInsensitiveMatch(const char * string1,
 
 	if (! string1)
 	{
+        ManagerWindow * mainWindow = ManagerApplication::getMainWindow();
+        
 		AlertWindow::showMessageBox(AlertWindow::WarningIcon, "Bad first string pointer",
-                                    String::empty, String::empty, nullptr);
+                                    String::empty, String::empty, mainWindow);
+        mainWindow->toFront(true);
 	}
-	if (! string2)
+	else if (! string2)
 	{
+        ManagerWindow * mainWindow = ManagerApplication::getMainWindow();
+        
 		AlertWindow::showMessageBox(AlertWindow::WarningIcon, "Bad second string pointer",
-                                    String::empty, String::empty, nullptr);
+                                    String::empty, String::empty, mainWindow);
+        mainWindow->toFront(true);
 	}
-	for ( ; matched; ++string1, ++string2)
-	{
-		if (*string1)
-		{
-			if (*string2)
-			{
-				matched = (toupper(*string1) == toupper(*string2));
-			}
-			else
-			{
-				// First string is longer.
-			}
-		}
-		else if (*string2)
-		{
-			// Second string is longer.
-			matched = false;
-		}
-		else
-		{
-			// Reached end-of-string on both strings.
-			break;
-		}
-
-	}
+    else
+    {
+        for ( ; matched; ++string1, ++string2)
+        {
+            if (*string1)
+            {
+                if (*string2)
+                {
+                    matched = (toupper(*string1) == toupper(*string2));
+                }
+                else
+                {
+                    // First string is longer.
+                }
+            }
+            else if (*string2)
+            {
+                // Second string is longer.
+                matched = false;
+            }
+            else
+            {
+                // Reached end-of-string on both strings.
+                break;
+            }
+            
+        }
+    }
 	OD_LOG_EXIT_B(matched); //####
 	return matched;
 } // caseInsensitiveMatch
@@ -252,6 +257,7 @@ bool ManagerApplication::checkForRegistryServiceAndLaunchIfDesired(void)
                                     "system environment variable. "
                                     "Launching the Registry Service is not possible.",
                                     String::empty, _mainWindow);
+        _mainWindow->toFront(true);
     }
     OD_LOG_OBJEXIT_B(didLaunch); //####
     return didLaunch;
@@ -346,6 +352,7 @@ yarp::os::Network * ManagerApplication::checkForYarpAndLaunchIfDesired(void)
                     keepGoing = false;
                 }
             }
+            _mainWindow->toFront(true);
             if (1 == res)
             {
                 _yarpLauncher = new YarpLaunchThread(_yarpPath, selectedIpAddress, portChoice);
@@ -378,6 +385,7 @@ yarp::os::Network * ManagerApplication::checkForYarpAndLaunchIfDesired(void)
                                     "No YARP network was detected and a YARP executable could not "
                                     "be found in the PATH system environment variable. "
                                     "Execution is not possible.", String::empty, _mainWindow);
+        _mainWindow->toFront(true);
     }
     OD_LOG_OBJEXIT_P(result); //####
     return result;
@@ -436,6 +444,7 @@ void ManagerApplication::doLaunchAService(const ApplicationInfo & appInfo)
                                             "running on this YARP network. "
                                             "It will not be possible to launch the adapter.",
                                             String::empty, _mainWindow);
+                _mainWindow->toFront(true);
             }
         }
     }
@@ -547,6 +556,7 @@ bool ManagerApplication::doLaunchRegistry(void)
             result = true;
         }
     }
+    _mainWindow->toFront(true);
     OD_LOG_OBJEXIT_B(result); //####
     return result;
 } // ManagerApplication::doLaunchRegistry
@@ -848,6 +858,15 @@ String ManagerApplication::getHomeDir(void)
     OD_LOG_EXIT_s(result.toStdString()); //####
     return result;
 } // ManagerApplication::getHomeDir
+
+ManagerWindow * ManagerApplication::getMainWindow(void)
+{
+    OD_LOG_ENTER(); //####
+    ManagerWindow * result = getApp()->_mainWindow;
+    
+    OD_LOG_EXIT_P(result);
+    return result;
+} // ManagerApplication::getMainWindow
 
 bool ManagerApplication::getParametersForApplication(const String &    execName,
                                                      ApplicationInfo & theInfo)
@@ -1314,6 +1333,7 @@ bool ManagerApplication::validateRegistryService(void)
                                     "Launching the Registry Service is not possible.",
                                     String::empty, _mainWindow);
     }
+    _mainWindow->toFront(true);
     OD_LOG_OBJEXIT_B(doLaunch); //####
     return doLaunch;
 } // ManagerApplication::validateRegistryService
@@ -1366,6 +1386,7 @@ bool ManagerApplication::validateYarp(void)
                                     "the PATH system environment variable could not be started. "
                                     "Execution is not possible.", String::empty, _mainWindow);
     }
+    _mainWindow->toFront(true);
     OD_LOG_OBJEXIT_B(doLaunch); //####
     return doLaunch;
 } // validateYarp
