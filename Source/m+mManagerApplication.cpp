@@ -725,7 +725,8 @@ bool ManagerApplication::getArgumentsForApplication(ApplicationInfo & theInfo)
         {
             StringArray aRecord(StringArray::fromTokens(childOutput, "\t", ""));
 
-            // The input lines should be composed of tab-separated argument descriptions.
+            // The input lines should be composed of argument descriptions separated by the
+            // ARGUMENT_SEPARATOR_ string.
             for (int ii = 0, mm = aRecord.size(); mm > ii; ++ii)
             {
 				String                              trimmedRecord(aRecord[ii].trim());
