@@ -92,7 +92,7 @@ ServiceLaunchThread::ServiceLaunchThread(const String &      pathToExecutable,
                                          const String &      portNumber,
                                          const StringArray & arguments,
                                          const bool          needsGo) :
-	inherited("General service launcher"), _serviceProcess(nullptr), _serviceEndpoint(endpointName),
+	inherited("General service launcher"), _serviceProcess(NULL), _serviceEndpoint(endpointName),
     _servicePath(pathToExecutable), _servicePort(portNumber), _serviceTag(tag),
     _arguments(arguments), _needsGo(needsGo)
 {
@@ -109,7 +109,7 @@ ServiceLaunchThread::~ServiceLaunchThread(void)
 {
     OD_LOG_OBJENTER(); //####
 	killChildProcess();
-	_serviceProcess = nullptr;
+	_serviceProcess = NULL;
     OD_LOG_OBJEXIT(); //####
 } // ServiceLaunchThread::~ServiceLaunchThread
 

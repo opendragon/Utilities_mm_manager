@@ -39,6 +39,9 @@
 #if (! defined(mpmManagerDataTypes_H_))
 # define mpmManagerDataTypes_H_ /* Header guard */
 
+# include <m+m/m+mGeneralChannel.h>
+# include <m+m/m+mUtilities.h>
+
 # if (! defined(DOXYGEN))
 #  if (! MAC_OR_LINUX_)
 #   pragma warning(push)
@@ -50,9 +53,6 @@
 #   pragma warning(pop)
 #  endif // ! MAC_OR_LINUX_
 # endif // ! defined(DOXYGEN)
-
-# include <m+m/m+mGeneralChannel.h>
-# include <m+m/m+mUtilities.h>
 
 # include <list>
 # include <map>

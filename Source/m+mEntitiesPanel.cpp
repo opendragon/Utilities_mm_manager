@@ -132,7 +132,7 @@ EntitiesPanel::EntitiesPanel(ContentPanel * theContainer,
                              const int      startingWidth,
                              const int      startingHeight) :
     inherited(), _knownPorts(), _knownEntities(), _defaultBoldFont(), _defaultNormalFont(),
-    _firstAddPoint(nullptr), _firstRemovePoint(nullptr), _container(theContainer),
+    _firstAddPoint(NULL), _firstRemovePoint(NULL), _container(theContainer),
     _dragConnectionActive(false), _dragIsForced(false)
 {
     OD_LOG_ENTER(); //####
@@ -148,8 +148,8 @@ EntitiesPanel::~EntitiesPanel(void)
 {
     OD_LOG_OBJENTER(); //####
     clearOutData();
-    _defaultBoldFont = nullptr;
-    _defaultNormalFont = nullptr;
+    _defaultBoldFont = NULL;
+    _defaultNormalFont = NULL;
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::~EntitiesPanel
 
@@ -364,7 +364,7 @@ void EntitiesPanel::clearNodeValues(void)
         
         if (anEntity)
         {
-            anEntity->setNode(nullptr);
+            anEntity->setNode(NULL);
         }
     }
     
@@ -434,7 +434,7 @@ ChannelContainer * EntitiesPanel::findKnownEntity(const YarpString & name)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("name = ", name); //####
-    ChannelContainer * result = nullptr;
+    ChannelContainer * result = NULL;
     
     for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
     {
@@ -460,12 +460,12 @@ ChannelEntry * EntitiesPanel::findKnownPort(const YarpString & name)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("name = ", name); //####
-    ChannelEntry *                  result = nullptr;
+    ChannelEntry *                  result = NULL;
     ChannelEntryMap::const_iterator match(_knownPorts.find(name));
     
     if (_knownPorts.end() == match)
     {
-        result = nullptr;
+        result = NULL;
     }
     else
     {
@@ -518,7 +518,7 @@ const
     }
     else
     {
-        result = nullptr;
+        result = NULL;
     }
     OD_LOG_OBJEXIT_P(result); //####
     return result;
@@ -572,7 +572,7 @@ ChannelEntry * EntitiesPanel::locateEntry(const Position & location)
 const
 {
     OD_LOG_OBJENTER(); //####
-    ChannelEntry * result = nullptr;
+    ChannelEntry * result = NULL;
     
     for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
     {
@@ -605,8 +605,8 @@ void EntitiesPanel::mouseDown(const MouseEvent & ee)
 #endif // ! defined(OD_ENABLE_LOGGING)
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("ee = ", &ee); //####
-    _container->setChannelOfInterest(nullptr);
-    _container->setContainerOfInterest(nullptr);
+    _container->setChannelOfInterest(NULL);
+    _container->setContainerOfInterest(NULL);
     rememberConnectionStartPoint();
     clearMarkers();
     repaint();
@@ -665,11 +665,11 @@ void EntitiesPanel::rememberConnectionStartPoint(ChannelEntry * aPort,
     if (beingAdded)
     {
         _firstAddPoint = aPort;
-        _firstRemovePoint = nullptr;
+        _firstRemovePoint = NULL;
     }
     else
     {
-        _firstAddPoint = nullptr;
+        _firstAddPoint = NULL;
         _firstRemovePoint = aPort;
     }
     OD_LOG_OBJEXIT(); //####
@@ -727,7 +727,7 @@ bool EntitiesPanel::removeUnvisitedEntities(void)
     {
         keepGoing = false;
         ContainerList::iterator walker(_knownEntities.begin());
-        ChannelContainer *      anEntity = nullptr;
+        ChannelContainer *      anEntity = NULL;
         
         for ( ; _knownEntities.end() != walker; ++walker)
         {

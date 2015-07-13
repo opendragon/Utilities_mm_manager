@@ -101,7 +101,7 @@ static ScopedPointer<ApplicationCommandManager> lApplicationCommandManager;
 
 ManagerWindow::ManagerWindow(const YarpString & title)  :
     inherited1(), inherited2(title.c_str(), kWindowBackgroundColour, inherited2::allButtons),
-    _contentPanel(new ContentPanel(this)), _scannerThread(nullptr)
+    _contentPanel(new ContentPanel(this)), _scannerThread(NULL)
 {
     OD_LOG_ENTER(); //####
     setOpaque(true);
@@ -121,7 +121,7 @@ ManagerWindow::ManagerWindow(const YarpString & title)  :
 ManagerWindow::~ManagerWindow(void)
 {
     OD_LOG_OBJENTER(); //####
-    lApplicationCommandManager = nullptr;
+    lApplicationCommandManager = NULL;
     OD_LOG_OBJEXIT(); //####
 } // ManagerWindow::~ManagerWindow
 

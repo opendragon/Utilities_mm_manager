@@ -151,7 +151,7 @@ static String getPathToSettingsFile(void)
 ContentPanel::ContentPanel(ManagerWindow * containingWindow) :
     inherited1(), inherited2(), inherited3(), _entitiesPanel(new EntitiesPanel(this)),
     _menuBar(new MenuBarComponent(this)), _containingWindow(containingWindow),
-    _selectedChannel(nullptr), _selectedContainer(nullptr), _channelClicked(false),
+    _selectedChannel(NULL), _selectedContainer(NULL), _channelClicked(false),
     _containerClicked(false),
 #if (defined(USE_OGDF_POSITIONING_) && defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY_))
     _initialPositioningDone(false),
@@ -228,7 +228,7 @@ void ContentPanel::getCommandInfo(CommandID                commandID,
         case ManagerWindow::kCommandClearSelection :
             result.setInfo("Clear selection", "Deselect any selected entities", "View", 0);
             result.addDefaultKeypress('C', ModifierKeys::commandModifier);
-            result.setActive((nullptr != _selectedContainer) || (nullptr != _selectedChannel));
+            result.setActive((NULL != _selectedContainer) || (NULL != _selectedChannel));
             break;
             
         case ManagerWindow::kCommandUnhideEntities :
@@ -260,7 +260,7 @@ void ContentPanel::getCommandInfo(CommandID                commandID,
 StringArray ContentPanel::getMenuBarNames(void)
 {
     OD_LOG_OBJENTER(); //####
-    const char * const names[] = { "m+m manager", "View", "Operation", nullptr };
+    const char * const names[] = { "m+m manager", "View", "Operation", NULL };
 
     return StringArray(names);
 } // ContentPanel::getMenuBarNames
@@ -572,8 +572,8 @@ bool ContentPanel::perform(const InvocationInfo & info)
             break;
             
         case ManagerWindow::kCommandClearSelection :
-            setChannelOfInterest(nullptr);
-            setContainerOfInterest(nullptr);
+            setChannelOfInterest(NULL);
+            setContainerOfInterest(NULL);
             wasProcessed = true;
             break;
             
@@ -701,12 +701,12 @@ void ContentPanel::setChannelOfInterest(ChannelEntry * aChannel)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("aChannel = ", aChannel); //####
-    _channelClicked = (nullptr != aChannel);
+    _channelClicked = (NULL != aChannel);
     _containerClicked = false;
     OD_LOG_B2("_channelClicked <- ", _channelClicked, "_containerClicked <- ", //####
               _containerClicked); //####
     _selectedChannel = aChannel;
-    _selectedContainer = nullptr;
+    _selectedContainer = NULL;
     OD_LOG_P2("_selectedChannel <- ", _selectedChannel, "_selectedContainer <- ", //####
               _selectedContainer); //####
     OD_LOG_OBJEXIT(); //####
@@ -718,9 +718,9 @@ void ContentPanel::setContainerOfInterest(ChannelContainer * aContainer)
     OD_LOG_P1("aContainer = ", aContainer); //####
     if (! _channelClicked)
     {
-        _containerClicked = (nullptr != aContainer);
+        _containerClicked = (NULL != aContainer);
         OD_LOG_B1("_containerClicked <- ", _containerClicked); //####
-        _selectedChannel = nullptr;
+        _selectedChannel = NULL;
         _selectedContainer = aContainer;
         OD_LOG_P2("_selectedChannel <- ", _selectedChannel, "_selectedContainer <- ", //####
                   _selectedContainer); //####
@@ -745,7 +745,7 @@ void ContentPanel::setEntityPositions(void)
 # if defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY_)
     if (_initialPositioningDone)
     {
-        gg = nullptr;
+        gg = NULL;
     }
     else
     {

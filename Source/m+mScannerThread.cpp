@@ -163,7 +163,7 @@ ScannerThread::ScannerThread(ManagerWindow & window,
 #if (defined(CHECK_FOR_STALE_PORTS_) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS_)))
     _lastStaleTime(- (2 * kMinStaleInterval)),
 #endif // efined(CHECK_FOR_STALE_PORTS_) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS_))
-    _inputOnlyPort(nullptr), _outputOnlyPort(nullptr), _cleanupSoon(false),
+    _inputOnlyPort(NULL), _outputOnlyPort(NULL), _cleanupSoon(false),
     _delayScan(delayFirstScan),
 #if (defined(CHECK_FOR_STALE_PORTS_) && defined(DO_SINGLE_CHECK_FOR_STALE_PORTS_))
     _initialStaleCheckDone(false),

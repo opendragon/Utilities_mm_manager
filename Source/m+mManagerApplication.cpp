@@ -186,9 +186,9 @@ bool caseInsensitiveMatch(const char * string1,
 #endif // defined(__APPLE__)
 
 ManagerApplication::ManagerApplication(void) :
-    inherited(), _mainWindow(nullptr), _yarp(nullptr), _scanner(nullptr),
-    _registryLauncher(nullptr), _yarpLauncher(nullptr), _peeker(nullptr),
-    _peekHandler(nullptr), _registryServiceCanBeLaunched(false)
+    inherited(), _mainWindow(NULL), _yarp(NULL), _scanner(NULL),
+    _registryLauncher(NULL), _yarpLauncher(NULL), _peeker(NULL),
+    _peekHandler(NULL), _registryServiceCanBeLaunched(false)
 {
 #if defined(MpM_ServicesLogToStandardError)
     OD_LOG_INIT(ProjectInfo::projectName, kODLoggingOptionIncludeProcessID | //####
@@ -267,7 +267,7 @@ bool ManagerApplication::checkForRegistryServiceAndLaunchIfDesired(void)
 yarp::os::Network * ManagerApplication::checkForYarpAndLaunchIfDesired(void)
 {
     OD_LOG_OBJENTER(); //####
-    yarp::os::Network *      result = nullptr;
+    yarp::os::Network *      result = NULL;
 #if MAC_OR_LINUX_
     yarp::os::impl::Logger & theLogger = Common::GetLogger();
 #endif // MAC_OR_LINUX_
@@ -279,7 +279,7 @@ yarp::os::Network * ManagerApplication::checkForYarpAndLaunchIfDesired(void)
         if (validateYarp())
         {
             char             ipBuffer[INET_ADDRSTRLEN + 1];
-            const char *     ipAddressAsString = nullptr;
+            const char *     ipAddressAsString = NULL;
             struct in_addr   serverAddress;
             int              serverPort = 10000;
             String           selectedIpAddress;
@@ -370,7 +370,7 @@ yarp::os::Network * ManagerApplication::checkForYarpAndLaunchIfDesired(void)
                         }
                         else
                         {
-                            _yarpLauncher = nullptr;
+                            _yarpLauncher = NULL;
                             break;
                         }
                         
@@ -993,7 +993,7 @@ String ManagerApplication::getRealName(void)
     String          result;
 #if defined(__APPLE__)
     struct passwd   pwd;
-    struct passwd * pwdPtr = nullptr;
+    struct passwd * pwdPtr = NULL;
     char *          buf;
     long            bufSize = sysconf(_SC_GETPW_R_SIZE_MAX);
 #endif // defined(__APPLE__)
@@ -1028,7 +1028,7 @@ String ManagerApplication::getUserName(void)
     String          result;
 #if defined(__APPLE__)
     struct passwd   pwd;
-    struct passwd * pwdPtr = nullptr;
+    struct passwd * pwdPtr = NULL;
     char *          buf;
     long            bufSize = sysconf(_SC_GETPW_R_SIZE_MAX);
 #endif // defined(__APPLE__)
@@ -1223,7 +1223,7 @@ void ManagerApplication::shutdown(void)
 	if (_scanner)
 	{
         _scanner->stopThread(kThreadKillTime);
-		_scanner = nullptr; // shuts down thread
+		_scanner = NULL; // shuts down thread
 	}
     for (int ii = 0, mm = _serviceLaunchers.size(); mm > ii; ++ii)
     {
@@ -1234,12 +1234,12 @@ void ManagerApplication::shutdown(void)
     if (_registryLauncher)
     {
         _registryLauncher->stopThread(kThreadKillTime);
-        _registryLauncher = nullptr; // shuts down thread
+        _registryLauncher = NULL; // shuts down thread
     }
 	if (_yarpLauncher)
     {
         _yarpLauncher->stopThread(kThreadKillTime);
-		_yarpLauncher = nullptr; // shuts down thread
+		_yarpLauncher = NULL; // shuts down thread
         restoreYarpConfiguration();
 	}
 	EntitiesPanel & entities = _mainWindow->getEntitiesPanel();
@@ -1249,9 +1249,9 @@ void ManagerApplication::shutdown(void)
     _peeker->close();
 #endif // defined(MpM_DoExplicitClose)
     Common::GeneralChannel::RelinquishChannel(_peeker);
-    _mainWindow = nullptr; // (deletes our window)
+    _mainWindow = NULL; // (deletes our window)
     yarp::os::Network::fini();
-    _yarp = nullptr;
+    _yarp = NULL;
     Utilities::ShutDownGlobalStatusReporter();
     OD_LOG_OBJEXIT(); //####
 } // ManagerApplication::shutdown
@@ -1315,7 +1315,7 @@ bool ManagerApplication::validateRegistryService(void)
                                                           "connectivity to any m+m services that "
                                                           "were started after the Registry Service "
                                                           "was launched.", "Yes", "No",
-                                                          _mainWindow, nullptr));
+                                                          _mainWindow, NULL));
         }
         else
         {
@@ -1369,7 +1369,7 @@ bool ManagerApplication::validateYarp(void)
                                                           "connectivity to any m+m services that "
                                                           "were started after the private YARP "
                                                           "network was launched.", "Yes", "No",
-                                                          _mainWindow, nullptr));
+                                                          _mainWindow, NULL));
         }
         else
         {

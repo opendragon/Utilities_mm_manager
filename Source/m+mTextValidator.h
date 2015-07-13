@@ -75,7 +75,7 @@ namespace MPlusM_Manager
          @returns @c true if the value is accepted by the field description and @c false
          otherwise. */
         bool checkValidity(const String & toBeChecked,
-                           StringArray *  argsToUse = nullptr)
+                           StringArray *  argsToUse = NULL)
         const;
         
         /*! @brief Return @c true if the validator is for file paths and @c false otherwise.

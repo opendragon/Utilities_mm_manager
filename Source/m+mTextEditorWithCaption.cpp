@@ -96,7 +96,7 @@ TextEditorWithCaption::TextEditorWithCaption(TextEditorErrorResponder & responde
                                              const String &             componentName,
                                              juce_wchar                 passwordCharacter) :
 	inherited(componentName, passwordCharacter), _responder(responder), _errorFont(errorLabelFont),
-    _regularFont(regularLabelFont), _button(nullptr), _validator(validator), _caption(new Label),
+    _regularFont(regularLabelFont), _button(NULL), _validator(validator), _caption(new Label),
     _ignoreNextFocusLoss(false)
 {
     OD_LOG_ENTER(); //####

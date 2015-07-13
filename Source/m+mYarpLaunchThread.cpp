@@ -89,7 +89,7 @@ using namespace std;
 YarpLaunchThread::YarpLaunchThread(const String & pathToExecutable,
                                    const String & ipAddress,
                                    const int      portNumber) :
-	inherited("YARP launcher"), _yarpProcess(nullptr), _yarpAddress(ipAddress),
+	inherited("YARP launcher"), _yarpProcess(NULL), _yarpAddress(ipAddress),
     _yarpPath(pathToExecutable), _yarpPort(portNumber)
 {
     OD_LOG_ENTER(); //####
@@ -102,7 +102,7 @@ YarpLaunchThread::~YarpLaunchThread(void)
 {
     OD_LOG_OBJENTER(); //####
 	killChildProcess();
-	_yarpProcess = nullptr;
+	_yarpProcess = NULL;
     OD_LOG_OBJEXIT(); //####
 } // YarpLaunchThread::~YarpLaunchThread
 

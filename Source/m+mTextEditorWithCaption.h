@@ -73,7 +73,7 @@ namespace MPlusM_Manager
         TextEditorWithCaption(TextEditorErrorResponder & responder,
                               Font &                     regularLabelFont,
                               Font &                     errorLabelFont,
-                              TextValidator *            validator = nullptr,
+                              TextValidator *            validator = NULL,
                               const String &             componentName = String::empty,
                               juce_wchar                 passwordCharacter = 0);
         
@@ -104,13 +104,13 @@ namespace MPlusM_Manager
         
         /*! @brief Sets the associated button.
          @param newButton The associated button. */
-        void setButton(TextButton * newButton = nullptr);
+        void setButton(TextButton * newButton = NULL);
         
         /*! @brief Check the field for validity.
          @param argsToUse A set of valid arguments.
          @returns @c true if the validator accepts the field or there's no validation required or
          @c false if the validator rejects the field. */
-        bool validateField(StringArray * argsToUse = nullptr);
+        bool validateField(StringArray * argsToUse = NULL);
         
     protected :
         

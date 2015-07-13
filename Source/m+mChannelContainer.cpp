@@ -111,7 +111,7 @@ ChannelContainer::ChannelContainer(const ContainerKind kind,
     inherited(title.c_str()), _behaviour(behaviour), _description(description),
     _extraInfo(extraInfo), _IPAddress(ipAddress), _requests(requests),
 #if defined(USE_OGDF_POSITIONING_)
-    _node(nullptr),
+    _node(NULL),
 #endif // defined(USE_OGDF_POSITIONING_)
     _owner(owner), _kind(kind), _hidden(false), _newlyCreated(true), _selected(false),
     _visited(false)
@@ -470,7 +470,7 @@ const
     }
     else
     {
-        result = nullptr;
+        result = NULL;
     }
     OD_LOG_OBJEXIT_P(result); //####
     return result;
@@ -522,8 +522,8 @@ void ChannelContainer::hide(void)
     setVisible(false);
     if (thePanel)
     {
-        thePanel->setChannelOfInterest(nullptr);
-        thePanel->setContainerOfInterest(nullptr);
+        thePanel->setChannelOfInterest(NULL);
+        thePanel->setContainerOfInterest(NULL);
         thePanel->requestWindowRepaint();
     }
     OD_LOG_OBJEXIT(); //####
@@ -569,7 +569,7 @@ ChannelEntry * ChannelContainer::locateEntry(const Position & location)
 const
 {
     OD_LOG_OBJENTER(); //####
-    ChannelEntry * result = nullptr;
+    ChannelEntry * result = NULL;
     
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
     {
@@ -771,8 +771,8 @@ void ChannelContainer::stopTheService(void)
                                                             "identify services, clients or "
                                                             "adapters or to group secondary ports "
                                                             "together with their primary ports.",
-                                                            "Yes", String::empty, nullptr,
-                                                            nullptr));
+                                                            "Yes", String::empty, NULL,
+                                                            NULL));
             }
             else
             {
@@ -799,7 +799,7 @@ void ChannelContainer::stopTheService(void)
                                 "prompt, until a command is issued.";
                 doStop = (1 == AlertWindow::showOkCancelBox(AlertWindow::QuestionIcon, titleText,
                                                             messageText, "Yes", String::empty,
-                                                            nullptr, nullptr));
+                                                            NULL, NULL));
             }
             if (doStop)
             {
@@ -807,8 +807,8 @@ void ChannelContainer::stopTheService(void)
                 
                 if (thePanel)
                 {
-                    thePanel->setChannelOfInterest(nullptr);
-                    thePanel->setContainerOfInterest(nullptr);
+                    thePanel->setChannelOfInterest(NULL);
+                    thePanel->setContainerOfInterest(NULL);
                 }
                 Utilities::StopAService(aPort->getPortName(), STANDARD_WAIT_TIME_);
                 _owner.repaint();

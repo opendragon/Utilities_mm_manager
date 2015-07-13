@@ -88,7 +88,7 @@ using namespace std;
 
 RegistryLaunchThread::RegistryLaunchThread(const String & pathToExecutable,
                                            const int      portNumber) :
-	inherited("Registry Service launcher"), _registryServiceProcess(nullptr),
+	inherited("Registry Service launcher"), _registryServiceProcess(NULL),
     _registryServicePath(pathToExecutable), _registryServicePort(portNumber)
 {
     OD_LOG_ENTER(); //####
@@ -101,7 +101,7 @@ RegistryLaunchThread::~RegistryLaunchThread(void)
 {
     OD_LOG_OBJENTER(); //####
 	killChildProcess();
-	_registryServiceProcess = nullptr;
+	_registryServiceProcess = NULL;
     OD_LOG_OBJEXIT(); //####
 } // RegistryLaunchThread::~RegistryLaunchThread
 

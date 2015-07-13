@@ -108,24 +108,24 @@ namespace MPlusM_Manager
          @param checker A function that provides for early exit from loops.
          @param checkStuff The private data for the early exit function. */
         void addPortConnections(const MplusM::Utilities::PortVector & detectedPorts,
-                                MplusM::Common::CheckFunction         checker = nullptr,
-                                void *                                checkStuff = nullptr);
+                                MplusM::Common::CheckFunction         checker = NULL,
+                                void *                                checkStuff = NULL);
         
         /*! @brief Add regular YARP ports as distinct entities to the to-be-displayed list.
          @param detectedPorts The set of detected YARP ports.
          @param checker A function that provides for early exit from loops.
          @param checkStuff The private data for the early exit function. */
         void addRegularPortEntities(const MplusM::Utilities::PortVector & detectedPorts,
-                                    MplusM::Common::CheckFunction         checker = nullptr,
-                                    void *                                checkStuff = nullptr);
+                                    MplusM::Common::CheckFunction         checker = NULL,
+                                    void *                                checkStuff = NULL);
         
         /*! @brief Add services as distinct entities to the list of entities.
          @param services The set of detected services.
          @param checker A function that provides for early exit from loops.
          @param checkStuff The private data for the early exit function. */
         void addServices(const YarpStringVector &      services,
-                         MplusM::Common::CheckFunction checker = nullptr,
-                         void *                        checkStuff = nullptr);
+                         MplusM::Common::CheckFunction checker = NULL,
+                         void *                        checkStuff = NULL);
         
         /*! @brief Request access for reading from shared resources.
          @returns @c true if the read lock has been acquired and @c false otherwise. */
@@ -143,8 +143,8 @@ namespace MPlusM_Manager
          @returns The allowed directions for the port. */
         PortDirection determineDirection(ChannelEntry *                oldEntry,
                                          const YarpString &            portName,
-                                         MplusM::Common::CheckFunction checker = nullptr,
-                                         void *                        checkStuff = nullptr);
+                                         MplusM::Common::CheckFunction checker = NULL,
+                                         void *                        checkStuff = NULL);
         
         /*! @brief Identify the YARP network entities.
          @param detectedPorts The ports found by YARP.
@@ -152,8 +152,8 @@ namespace MPlusM_Manager
          @param checkStuff The private data for the early exit function.
          @returns @c true if the network entity information was gathered and @c false otherwise. */
         bool gatherEntities(MplusM::Utilities::PortVector & detectedPorts,
-                            MplusM::Common::CheckFunction   checker = nullptr,
-                            void *                          checkStuff = nullptr);
+                            MplusM::Common::CheckFunction   checker = NULL,
+                            void *                          checkStuff = NULL);
         
         /*! @brief Release access from reading from the shared resources. */
         void relinquishFromRead(void);

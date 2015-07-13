@@ -141,12 +141,12 @@ SettingsWindow::SettingsWindow(const String &          title,
     _descriptors(appInfo._argDescriptions),
     _errorFont(Font::getDefaultMonospacedFontName(), kFontSize, Font::italic + Font::bold),
     _regularFont(Font::getDefaultMonospacedFontName(), kFontSize, Font::plain), _execType(execType),
-    _extraArgumentsGroup(nullptr), _addArgumentsButton(nullptr), _removeArgumentsButton(nullptr),
-    _endpointEditor(nullptr), _portEditor(nullptr), _tagEditor(nullptr),
+    _extraArgumentsGroup(NULL), _addArgumentsButton(NULL), _removeArgumentsButton(NULL),
+    _endpointEditor(NULL), _portEditor(NULL), _tagEditor(NULL),
     _endpointDescriptor(new Utilities::ChannelArgumentDescriptor(kEndpointFieldName.toStdString(),
-                                                                 "", Utilities::kArgModeOptional, "", nullptr)),
+                                                                 "", Utilities::kArgModeOptional, "", NULL)),
     _portDescriptor(new Utilities::PortArgumentDescriptor(kPortFieldName.toStdString(), "", Utilities::kArgModeOptional, 0,
-                                                          false, nullptr)), _appInfo(appInfo),
+                                                          false, NULL)), _appInfo(appInfo),
     _endpointToUse(endpointToUse), _portToUse(portToUse), _tagToUse(tagToUse),
     _argsToUse(argsToUse), _canHaveExtraArguments(false), _canSetEndpoint(false),
     _canSetPort(false), _canSetTag(false), _hasFileField(false)
@@ -200,7 +200,7 @@ void SettingsWindow::addAnExtraField(void)
     String                  compCountAsString(static_cast<int>(_extraFieldEditors.size() + 1));
     Point<int>              dimensions;
     TextEditorWithCaption * newEditor = new TextEditorWithCaption(*this, _regularFont, _errorFont,
-                                                                  nullptr, _extraArgRootName + "_" +
+                                                                  NULL, _extraArgRootName + "_" +
                                                                   compCountAsString);
     Label *                 newLabel = newEditor->getCaption();
     
@@ -752,7 +752,7 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
     }
     if (_canSetTag)
     {
-        _tagEditor = new TextEditorWithCaption(*this, _regularFont, _errorFont, nullptr,
+        _tagEditor = new TextEditorWithCaption(*this, _regularFont, _errorFont, NULL,
                                                kTagFieldName);
         Label * aCaption = _tagEditor->getCaption();
         
@@ -810,14 +810,14 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
                     _addArgumentsButton = new TextButton(String("+ ") + argName);
                     _addArgumentsButton->setWantsKeyboardFocus(true);
                     _addArgumentsButton->setMouseClickGrabsKeyboardFocus(false);
-                    _addArgumentsButton->setCommandToTrigger(nullptr, kSettingsAddField, false);
+                    _addArgumentsButton->setCommandToTrigger(NULL, kSettingsAddField, false);
                     _addArgumentsButton->addListener(this);
                     _addArgumentsButton->changeWidthToFitText(buttonHeight);
                     content->addAndMakeVisible(_addArgumentsButton, 0);
                     _removeArgumentsButton = new TextButton(String("- ") + argName);
                     _removeArgumentsButton->setWantsKeyboardFocus(true);
                     _removeArgumentsButton->setMouseClickGrabsKeyboardFocus(false);
-                    _removeArgumentsButton->setCommandToTrigger(nullptr, kSettingsRemoveField,
+                    _removeArgumentsButton->setCommandToTrigger(NULL, kSettingsRemoveField,
                                                                 false);
                     _removeArgumentsButton->addListener(this);
                     _removeArgumentsButton->changeWidthToFitText(buttonHeight);
@@ -858,7 +858,7 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
 
                     newButton->setWantsKeyboardFocus(true);
                     newButton->setMouseClickGrabsKeyboardFocus(false);
-                    newButton->setCommandToTrigger(nullptr, kSettingsFileRequest, false);
+                    newButton->setCommandToTrigger(NULL, kSettingsFileRequest, false);
                     newButton->addListener(this);
                     newButton->changeWidthToFitText(buttonHeight);
                     newEditor->setButton(newButton);
@@ -870,14 +870,14 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
     }
     _cancelButton.setWantsKeyboardFocus(true);
     _cancelButton.setMouseClickGrabsKeyboardFocus(false);
-    _cancelButton.setCommandToTrigger(nullptr, kSettingsCancel, false);
+    _cancelButton.setCommandToTrigger(NULL, kSettingsCancel, false);
     _cancelButton.addListener(this);
     _cancelButton.changeWidthToFitText(buttonHeight);
     _cancelButton.setTopLeftPosition(0, heightSoFar + kButtonGap);
     content->addAndMakeVisible(&_cancelButton, 0);
     _okButton.setWantsKeyboardFocus(true);
     _okButton.setMouseClickGrabsKeyboardFocus(false);
-    _okButton.setCommandToTrigger(nullptr, kSettingsOK, false);
+    _okButton.setCommandToTrigger(NULL, kSettingsOK, false);
     _okButton.addListener(this);
     _okButton.changeWidthToFitText(buttonHeight);
     _okButton.setTopLeftPosition(0, heightSoFar + kButtonGap);
