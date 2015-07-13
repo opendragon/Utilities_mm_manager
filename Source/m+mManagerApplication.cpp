@@ -723,7 +723,7 @@ bool ManagerApplication::getArgumentsForApplication(ApplicationInfo & theInfo)
         runApplication.waitForProcessToFinish(kThreadKillTime);
         if (0 < childOutput.length())
         {
-            StringArray aRecord(StringArray::fromTokens(childOutput, "\t", ""));
+            StringArray aRecord(StringArray::fromTokens(childOutput, ARGUMENT_SEPARATOR_, ""));
 
             // The input lines should be composed of argument descriptions separated by the
             // ARGUMENT_SEPARATOR_ string.
