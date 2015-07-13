@@ -626,7 +626,7 @@ void ChannelContainer::mouseDrag(const MouseEvent & ee)
     // Moves this Component according to the mouse drag event and applies our constraints to it
     if (ee.mods.isAltDown() || ee.mods.isCommandDown() || ee.mods.isPopupMenu())
     {
-        doDrag = false;
+		doDrag = false;
     }
     if (doDrag)
     {
@@ -646,10 +646,11 @@ void ChannelContainer::paint(Graphics & gg)
     
     as.setJustification(Justification::left);
     as.append(getName(), _owner.getNormalFont(), kHeadingTextColour);
-    juce::Rectangle<int> bounds(getLocalBounds());
-    juce::Rectangle<int> area1(bounds.getX(), bounds.getY(), bounds.getWidth(), _titleHeight);
-    juce::Rectangle<int> area2(bounds.getX(), bounds.getY() + _titleHeight, bounds.getWidth(),
-                               bounds.getHeight() - _titleHeight);
+    juce::Rectangle<int> localBounds(getLocalBounds());
+    juce::Rectangle<int> area1(localBounds.getX(), localBounds.getY(), localBounds.getWidth(),
+							   _titleHeight);
+    juce::Rectangle<int> area2(localBounds.getX(), localBounds.getY() + _titleHeight,
+							   localBounds.getWidth(), localBounds.getHeight() - _titleHeight);
     
     gg.setColour(kHeadingBackgroundColour);
     gg.fillRect(area1);

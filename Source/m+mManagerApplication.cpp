@@ -75,6 +75,7 @@
 #if (! MAC_OR_LINUX_)
 # pragma warning(push)
 # pragma warning(disable: 4996)
+# pragma warning(disable: 4458)
 #endif // ! MAC_OR_LINUX_
 #include <yarp/os/impl/SystemInfo.h>
 #if (! MAC_OR_LINUX_)
