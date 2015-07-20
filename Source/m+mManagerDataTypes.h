@@ -39,6 +39,7 @@
 #if (! defined(mpmManagerDataTypes_H_))
 # define mpmManagerDataTypes_H_ /* Header guard */
 
+# include <m+m/m+mBaseArgumentDescriptor.h>
 # include <m+m/m+mGeneralChannel.h>
 # include <m+m/m+mUtilities.h>
 
@@ -135,8 +136,11 @@ namespace MPlusM_Manager
     /*! @brief The menu selection from the popup menu. */
     enum ChannelPopupMenuSelection
     {
+        /*! @brief Placeholder to ensure that the menu items don't start at zero. */
+        kPopupChannelDummy = 0x2100,
+
         /*! @brief Add a scrolling monitor to the port. */
-        kPopupAddScrollingMonitor = 0x2200,
+        kPopupAddScrollingMonitor,
         
         /*! @brief Add a simple monitor to the port. */
         kPopupAddSimpleMonitor,
@@ -172,8 +176,14 @@ namespace MPlusM_Manager
     /*! @brief The menu selection from the popup menu. */
     enum EntityPopupMenuSelection
     {
+        /*! @brief Placeholder to ensure that the menu items don't start at zero. */
+        kPopupEntityDummy = 0x2200,
+
+        /*! @brief Configure settings for an input / output service or adapter. */
+        kPopupConfigureService,
+
         /*! @brief Change the state of service metrics collection. */
-        kPopupDisplayChangeServiceMetrics = 0x2100,
+        kPopupDisplayChangeServiceMetrics,
         
         /*! @brief Display detailed information request. */
         kPopupDetailedDisplayEntityInfo,
@@ -181,13 +191,16 @@ namespace MPlusM_Manager
         /*! @brief Display information request. */
         kPopupDisplayEntityInfo,
         
-        /*! @brief Display the channel metrics for a service. */
+        /*! @brief Display the channel metrics for a service or adapter. */
         kPopupDisplayServiceMetrics,
         
         /*! @brief Hide the entity. */
         kPopupHideEntity,
-        
-        /*! @brief Stop the service. */
+
+        /*! @brief Restart the channels for an input / output service or adapter. */
+        kPopupRestartService,
+
+        /*! @brief Stop the service or adapter. */
         kPopupStopService
         
     }; // EntityPopupMenuSelection

@@ -97,6 +97,10 @@ namespace MPlusM_Manager
         /*! @brief The destructor. */
         virtual ~ChannelContainer(void);
         
+        /*! @brief Add an argument description to the container.
+         @param argDesc The argument descriptor to be added to the container. */
+        void addArgumentDescription(MplusM::Utilities::BaseArgumentDescriptor * argDesc);
+
         /*! @brief Add a port to the panel.
          @param portName The name of the port.
          @param portNumber The port number of the port.
@@ -111,7 +115,11 @@ namespace MPlusM_Manager
                                const YarpString &  protocolDescription = "",
                                const PortUsage     portKind = kPortUsageOther,
                                const PortDirection direction = kPortDirectionInputOutput);
-        
+
+        /*! @brief Returns @c true if the container has configurable values and @c false otherwise.
+         @returns @c true if the container has configurable values and @c false otherwise. */
+        bool canBeConfigured(void);
+
         /*! @brief Clears the hidden flag for the entity. */
         void clearHidden(void);
         
@@ -139,6 +147,12 @@ namespace MPlusM_Manager
          @param aRow A line of metric data.
          @returns The metric data reformatted. */
         String formatMetricRow(const String & aRow);
+
+        /*! @brief Return a particular argument descriptor.
+         @param idx The index of the argument of interest.
+         @returns The argument descriptor at the specified index. */
+        MplusM::Utilities::BaseArgumentDescriptor * getArgumentDescriptor(const size_t idx)
+        const;
 
         /*! @brief Return the behavioural model for the entity.
          @returns The behavioural model for the entity. */
@@ -196,8 +210,16 @@ namespace MPlusM_Manager
         const;
 # endif // defined(USE_OGDF_POSITIONING_)
         
-        /*! @brief Returns the number of ports in this panel.
-         @returns The number of ports in this panel. */
+        /*! @brief Returns the number of argument descriptions in this container.
+         @returns The number of argument descriptions in this container. */
+        inline size_t getNumArgumentDescriptors(void)
+        const
+        {
+            return _argumentList.size();
+        } // getNumArgumentDescriptors
+
+        /*! @brief Returns the number of ports in this container.
+         @returns The number of ports in this container. */
         inline int getNumPorts(void)
         const
         {
@@ -286,6 +308,9 @@ namespace MPlusM_Manager
         /*! @brief Called when the component size has been changed. */
         virtual void resized(void);
         
+        /*! @brief Tell the corresponding service to restart. */
+        void restartTheService(void);
+
         /*! @brief Select the entity. */
         void select(void);
         
@@ -347,6 +372,9 @@ namespace MPlusM_Manager
         /*! @brief The class that this class is derived from. */
         typedef Component inherited;
         
+        /*! @brief The argument descriptions if it is a service or an adapter. */
+        MplusM::Utilities::DescriptorVector _argumentList;
+
         /*! @brief Restrictions on the components size or position. */
         ComponentBoundsConstrainer _constrainer;
         

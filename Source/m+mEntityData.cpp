@@ -112,12 +112,27 @@ EntityData::~EntityData(void)
         }
     }
     _ports.clear();
+    for (size_t ii = 0, mm = _argumentList.size(); mm > ii; ++ii)
+    {
+        Utilities::BaseArgumentDescriptor * argDesc = _argumentList[ii];
+
+        delete argDesc;
+    }
+    _argumentList.clear();
     OD_LOG_OBJEXIT(); //####
 } // EntityData::~EntityData
 
 #if defined(__APPLE__)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
+
+void EntityData::addArgumentDescription(MplusM::Utilities::BaseArgumentDescriptor * argDesc)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("argDesc = ", argDesc); //####
+    _argumentList.push_back(argDesc->clone());
+    OD_LOG_OBJEXIT(); //####
+} // EntityData::addArgumentDescription
 
 PortData * EntityData::addPort(const YarpString &  portName,
                                const YarpString &  portProtocol,
@@ -135,6 +150,25 @@ PortData * EntityData::addPort(const YarpString &  portName,
     OD_LOG_OBJEXIT_P(aPort); //####
     return aPort;
 } // EntityData::addPort
+
+MplusM::Utilities::BaseArgumentDescriptor * EntityData::getArgumentDescriptor(const size_t idx)
+const
+{
+    OD_LOG_ENTER(); //####
+    OD_LOG_LL1(idx, idx); //####
+    MplusM::Utilities::BaseArgumentDescriptor * result;
+
+    if (_argumentList.size() > idx)
+    {
+        result = _argumentList[idx];
+    }
+    else
+    {
+        result = NULL;
+    }
+    OD_LOG_EXIT_P(result); //####
+    return result;
+} // EntityData::getArgumentDescriptor
 
 int EntityData::getNumPorts(void)
 const

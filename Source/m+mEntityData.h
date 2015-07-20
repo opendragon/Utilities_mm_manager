@@ -63,10 +63,10 @@ namespace MPlusM_Manager
         /*! @brief The constructor.
          @param kind The kind of entity.
          @param name The name of the entity.
-         @param behaviour The behavioural model if a service.
-         @param description The description, if this is a service.
+         @param behaviour The behavioural model if a service or adapter.
+         @param description The description, if this is a service or adapter.
          @param extraInfo The extra information for the entity.
-         @param requests The requests supported, if this is a service. */
+         @param requests The requests supported, if this is a service or adapter. */
         EntityData(const ContainerKind kind,
                    const YarpString &  name,
                    const YarpString &  behaviour,
@@ -76,8 +76,12 @@ namespace MPlusM_Manager
         
         /*! @brief The destructor. */
         virtual ~EntityData(void);
-        
-        /*! @brief Add a port to the panel.
+
+        /*! @brief Add an argument description to the entity.
+         @param argDesc The argument descriptor to be added to the entity. */
+        void addArgumentDescription(MplusM::Utilities::BaseArgumentDescriptor * argDesc);
+
+        /*! @brief Add a port to the entity.
          @param portName The name of the port.
          @param portProtocol The protocol of the port.
          @param protocolDescription The description of the protocol.
@@ -89,7 +93,13 @@ namespace MPlusM_Manager
                            const YarpString &  protocolDescription = "",
                            const PortUsage     portKind = kPortUsageOther,
                            const PortDirection direction = kPortDirectionInputOutput);
-        
+
+        /*! @brief Return a particular argument descriptor.
+         @param idx The index of the argument of interest.
+         @returns The argument descriptor at the specified index. */
+        MplusM::Utilities::BaseArgumentDescriptor * getArgumentDescriptor(const size_t idx)
+        const;
+
         /*! @brief Return the behavioural model for the entity.
          @returns The behavioural model for the entity. */
         inline YarpString getBehaviour(void)
@@ -138,6 +148,14 @@ namespace MPlusM_Manager
             return _name;
         } // getName
         
+        /*! @brief Returns the number of argument descriptions in this container.
+         @returns The number of argument descriptions in this container. */
+        inline size_t getNumArgumentDescriptors(void)
+        const
+        {
+            return _argumentList.size();
+        } // getNumArgumentDescriptors
+
         /*! @brief Returns the number of ports in this panel.
          @returns The number of ports in this panel. */
         int getNumPorts(void)
@@ -178,7 +196,10 @@ namespace MPlusM_Manager
         
         /*! @brief The collection of ports for the entity. */
         Ports _ports;
-        
+
+        /*! @brief The argument descriptions if it is a service or an adapter. */
+        MplusM::Utilities::DescriptorVector _argumentList;
+
         /*! @brief The behavioural model if a service or an adapter. */
         YarpString _behaviour;
         

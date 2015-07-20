@@ -238,6 +238,9 @@ void ScannerThread::addEntities(const Utilities::PortVector & detectedPorts)
     {
         Utilities::ServiceDescriptor descriptor(outer->second);
         bool                         isAdapter = (0 < descriptor._clientChannels.size());
+        Common::ChannelVector &      clientChannels = descriptor._clientChannels;
+        Common::ChannelVector &      inChannels = descriptor._inputChannels;
+        Common::ChannelVector &      outChannels = descriptor._outputChannels;
         YarpString                   ipAddress;
         YarpString                   ipPort;
         EntityData *                 anEntity = new EntityData(isAdapter ? kContainerKindAdapter :
@@ -250,10 +253,7 @@ void ScannerThread::addEntities(const Utilities::PortVector & detectedPorts)
         PortData *                   aPort = anEntity->addPort(descriptor._channelName, "", "",
                                                                kPortUsageService,
                                                                kPortDirectionInput);
-        Common::ChannelVector &      clientChannels = descriptor._clientChannels;
-        Common::ChannelVector &      inChannels = descriptor._inputChannels;
-        Common::ChannelVector &      outChannels = descriptor._outputChannels;
-        
+
         findMatchingIpAddressAndPort(detectedPorts, descriptor._channelName, ipAddress, ipPort);
         anEntity->setIPAddress(ipAddress);
         aPort->setPortNumber(ipPort);
@@ -289,6 +289,15 @@ void ScannerThread::addEntities(const Utilities::PortVector & detectedPorts)
                                       kPortDirectionInputOutput);
             findMatchingIpAddressAndPort(detectedPorts, aChannel._portName, ipAddress, ipPort);
             aPort->setPortNumber(ipPort);
+        }
+        for (size_t ii = 0, mm = descriptor._argumentList.size(); mm > ii; ++ii)
+        {
+            Utilities::BaseArgumentDescriptor * argDesc = descriptor._argumentList[ii];
+
+            if (argDesc)
+            {
+                anEntity->addArgumentDescription(argDesc);
+            }
         }
         _workingData.addEntity(anEntity);
     }

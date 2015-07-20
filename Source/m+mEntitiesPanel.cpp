@@ -574,18 +574,14 @@ const
     OD_LOG_OBJENTER(); //####
     ChannelEntry * result = NULL;
     
-    for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
+    for (ContainerList::const_iterator it(_knownEntities.begin());
+         (! result) && (_knownEntities.end() != it); ++it)
     {
         ChannelContainer * anEntity = *it;
         
         if (anEntity)
         {
             result = anEntity->locateEntry(location);
-            if (result)
-            {
-                break;
-            }
-            
         }
     }
     OD_LOG_OBJEXIT_P(result); //####

@@ -2205,6 +2205,7 @@
 					"-lm+mCommon",
 					"-lodLogging",
 					"-lOGDF",
+					"-headerpad_max_install_names",
 				);
 				PRODUCT_NAME = "m+m manager";
 			};
@@ -2293,6 +2294,7 @@
 					"-lm+mCommon",
 					"-lodLogging",
 					"-lOGDF",
+					"-headerpad_max_install_names",
 				);
 				PRODUCT_NAME = "m+m manager";
 			};

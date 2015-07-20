@@ -145,12 +145,27 @@ ChannelContainer::~ChannelContainer(void)
         }
     }
     deleteAllChildren();
+    for (size_t ii = 0, mm = _argumentList.size(); mm > ii; ++ii)
+    {
+        Utilities::BaseArgumentDescriptor * argDesc = _argumentList[ii];
+
+        delete argDesc;
+    }
+    _argumentList.clear();
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::~ChannelContainer
 
 #if defined(__APPLE__)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
+
+void ChannelContainer::addArgumentDescription(MplusM::Utilities::BaseArgumentDescriptor * argDesc)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("argDesc = ", argDesc); //####
+    _argumentList.push_back(argDesc->clone());
+    OD_LOG_OBJEXIT(); //####
+} // ChannelContainer::addArgumentDescription
 
 ChannelEntry * ChannelContainer::addPort(const YarpString &  portName,
                                          const YarpString &  portNumber,
@@ -193,6 +208,36 @@ ChannelEntry * ChannelContainer::addPort(const YarpString &  portName,
     OD_LOG_OBJEXIT_P(aPort); //####
     return aPort;
 } // ChannelContainer::addPort
+
+bool ChannelContainer::canBeConfigured(void)
+{
+    OD_LOG_OBJENTER(); //####
+    bool   result;
+    size_t mm = _argumentList.size();
+
+    if (mm)
+    {
+        result = true;
+        for (size_t ii = 0; mm > ii; ++ii)
+        {
+            MplusM::Utilities::BaseArgumentDescriptor * argDesc = _argumentList[ii];
+
+            if (argDesc)
+            {
+                if (0 == (argDesc->argumentMode() & MplusM::Utilities::kArgModeModifiable))
+                {
+                    result = false;
+                }
+            }
+        }
+    }
+    else
+    {
+        result = false;
+    }
+    OD_LOG_OBJEXIT_B(result); //####
+    return result;
+} // ChannelContainer::canBeConfigured
 
 void ChannelContainer::clearHidden(void)
 {
@@ -242,6 +287,9 @@ void ChannelContainer::displayAndProcessPopupMenu(void)
     
     switch (result)
     {
+        case kPopupConfigureService :
+            break;
+            
         case kPopupDisplayChangeServiceMetrics :
             setMetricsState(! getMetricsState());
             break;
@@ -262,6 +310,10 @@ void ChannelContainer::displayAndProcessPopupMenu(void)
             hide();
             break;
             
+        case kPopupRestartService :
+            restartTheService();
+            break;
+
         case kPopupStopService :
             stopTheService();
             break;
@@ -395,6 +447,26 @@ String ChannelContainer::formatMetricRow(const String & aRow)
     OD_LOG_OBJEXIT_S(result.toStdString().c_str());
     return result;
 } // ChannelContainer::formatMetricRow
+
+MplusM::Utilities::BaseArgumentDescriptor * ChannelContainer::getArgumentDescriptor(const size_t
+                                                                                                idx)
+const
+{
+    OD_LOG_ENTER(); //####
+    OD_LOG_LL1(idx, idx); //####
+    MplusM::Utilities::BaseArgumentDescriptor * result;
+
+    if (_argumentList.size() > idx)
+    {
+        result = _argumentList[idx];
+    }
+    else
+    {
+        result = NULL;
+    }
+    OD_LOG_EXIT_P(result); //####
+    return result;
+} // ChannelContainer::getArgumentDescriptor
 
 StringArray ChannelContainer::getMetrics(void)
 {
@@ -685,6 +757,42 @@ void ChannelContainer::resized(void)
                                            static_cast<int>(getWidth() * 0.8));
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::resized
+
+void ChannelContainer::restartTheService(void)
+{
+    OD_LOG_OBJENTER(); //####
+    for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
+    {
+        ChannelEntry * aPort = getPort(ii);
+
+        if (aPort && aPort->isService())
+        {
+            bool restartable;
+
+            switch (Utilities::MapStringToServiceKind(getBehaviour()))
+            {
+                case Common::kServiceKindAdapter :
+                case Common::kServiceKindFilter :
+                case Common::kServiceKindInput :
+                case Common::kServiceKindOutput :
+                    restartable = true;
+                    break;
+
+                default :
+                    restartable = false;
+                    break;
+                    
+            }
+            if (restartable)
+            {
+                Utilities::RestartAService(aPort->getPortName(), STANDARD_WAIT_TIME_);
+            }
+            break;
+
+        }
+    }
+    OD_LOG_OBJEXIT(); //####
+} // ChannelContainer::restartTheService
 
 void ChannelContainer::select(void)
 {

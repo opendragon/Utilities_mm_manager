@@ -41,8 +41,6 @@
 
 # include "m+mManagerDataTypes.h"
 
-# include <m+m/m+mBaseArgumentDescriptor.h>
-
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
 #  pragma clang diagnostic ignored "-Wunknown-pragmas"

@@ -354,6 +354,10 @@ void ContentPanel::menuItemSelected(int menuItemID,
     switch (menuItemID)
     {
             // Container menu items
+        case kPopupConfigureService :
+            //TBD!!!
+            break;
+
         case kPopupDisplayChangeServiceMetrics :
             _selectedContainer->setMetricsState(! _selectedContainer->getMetricsState());
             break;
@@ -374,6 +378,10 @@ void ContentPanel::menuItemSelected(int menuItemID,
             _selectedContainer->hide();
             break;
             
+        case kPopupRestartService :
+            _selectedContainer->restartTheService();
+            break;
+
         case kPopupStopService :
             _selectedContainer->stopTheService();
             break;
@@ -1039,6 +1047,8 @@ void ContentPanel::setUpContainerMenu(PopupMenu &        aMenu,
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P2("aMenu = ", &aMenu, "aContainer = ", &aContainer); //####
+    bool   configurable = false;
+    bool   restartable = false;
     bool   serviceLike;
     String kindOfContainer;
     
@@ -1058,6 +1068,7 @@ void ContentPanel::setUpContainerMenu(PopupMenu &        aMenu,
             kindOfContainer = "entity";
             serviceLike = false;
             break;
+
     }
     aMenu.addItem(kPopupDisplayEntityInfo, String("Display ") + kindOfContainer + " information");
     aMenu.addItem(kPopupDetailedDisplayEntityInfo, String("Display detailed ") + kindOfContainer +
@@ -1076,7 +1087,26 @@ void ContentPanel::setUpContainerMenu(PopupMenu &        aMenu,
     aMenu.addItem(kPopupHideEntity, String("Hide the ") + kindOfContainer);
     if (serviceLike)
     {
+        switch (Utilities::MapStringToServiceKind(aContainer.getBehaviour()))
+        {
+            case Common::kServiceKindAdapter :
+            case Common::kServiceKindFilter :
+            case Common::kServiceKindInput :
+            case Common::kServiceKindOutput :
+                configurable = aContainer.canBeConfigured();
+                restartable = true;
+                break;
+
+            default :
+                configurable = false;
+                restartable = false;
+                break;
+
+        }
         aMenu.addSeparator();
+        aMenu.addItem(kPopupConfigureService, String("Configure the ") + kindOfContainer,
+                      configurable);
+        aMenu.addItem(kPopupRestartService, String("Restart the ") + kindOfContainer, restartable);
         aMenu.addItem(kPopupStopService, String("Stop the ") + kindOfContainer);
     }
     OD_LOG_OBJEXIT(); //####
@@ -1134,26 +1164,26 @@ void ContentPanel::updatePanels(ScannerThread & scanner)
         if (anEntity)
         {
             OD_LOG_S1s("anEntity->getName() = ", anEntity->getName()); //####
-            ChannelContainer * oldEntity = _entitiesPanel->findKnownEntity(anEntity->getName());
+            ChannelContainer * oldContainer = _entitiesPanel->findKnownEntity(anEntity->getName());
             
-            if (oldEntity)
+            if (oldContainer)
             {
-                OD_LOG("(oldEntity)"); //####
-                oldEntity->setVisited();
+                OD_LOG("(oldContainer)"); //####
+                oldContainer->setVisited();
             }
             else
             {
                 // Make a copy of the newly discovered entity, and add it to the active panel.
-                ChannelContainer * newEntity = new ChannelContainer(anEntity->getKind(),
-                                                                    anEntity->getName(),
-                                                                    anEntity->getIPAddress(),
-                                                                    anEntity->getBehaviour(),
-                                                                    anEntity->getDescription(),
-                                                                    anEntity->getExtraInformation(),
-                                                                    anEntity->getRequests(),
-                                                                    *_entitiesPanel);
+                ChannelContainer * newContainer = new ChannelContainer(anEntity->getKind(),
+                                                                       anEntity->getName(),
+                                                                       anEntity->getIPAddress(),
+                                                                       anEntity->getBehaviour(),
+                                                                       anEntity->getDescription(),
+                                                                   anEntity->getExtraInformation(),
+                                                                       anEntity->getRequests(),
+                                                                       *_entitiesPanel);
                 
-                newEntity->setVisited();
+                newContainer->setVisited();
                 // Make copies of the ports of the entity, and add them to the new entity.
                 for (int jj = 0, nn = anEntity->getNumPorts(); nn > jj; ++jj)
                 {
@@ -1161,17 +1191,27 @@ void ContentPanel::updatePanels(ScannerThread & scanner)
                     
                     if (aPort)
                     {
-                        ChannelEntry * newPort = newEntity->addPort(aPort->getPortName(),
-                                                                    aPort->getPortNumber(),
-                                                                    aPort->getProtocol(),
-                                                                    aPort->getProtocolDescription(),
-                                                                    aPort->getUsage(),
-                                                                    aPort->getDirection());
+                        ChannelEntry * newPort = newContainer->addPort(aPort->getPortName(),
+                                                                       aPort->getPortNumber(),
+                                                                       aPort->getProtocol(),
+                                                                   aPort->getProtocolDescription(),
+                                                                       aPort->getUsage(),
+                                                                       aPort->getDirection());
                         
                         _entitiesPanel->rememberPort(newPort);
                     }
                 }
-                _entitiesPanel->addEntity(newEntity);
+                for (size_t jj = 0, nn = anEntity->getNumArgumentDescriptors(); nn > jj; ++jj)
+                {
+                    Utilities::BaseArgumentDescriptor * argDesc =
+                                                                anEntity->getArgumentDescriptor(jj);
+
+                    if (argDesc)
+                    {
+                        newContainer->addArgumentDescription(argDesc);
+                    }
+                }
+                _entitiesPanel->addEntity(newContainer);
                 changeSeen = true;
             }
         }

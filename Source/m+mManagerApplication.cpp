@@ -775,7 +775,7 @@ void ManagerApplication::getEnvironmentVars(YarpStringVector & keys,
                                             YarpStringVector & values)
 {
     OD_LOG_ENTER(); //####
-    OD_LOG_P1("result = ", result);
+    OD_LOG_P2("keys = ", &keys, "values = ", &values);
 #if (! defined(__APPLE__))
     yarp::os::Property vars(yarp::os::impl::SystemInfo::getPlatformInfo().environmentVars);
     YarpString         varsAsString(vars.toString());
@@ -939,7 +939,8 @@ bool ManagerApplication::getPrimaryChannelForService(const ApplicationInfo & app
     OD_LOG_OBJENTER(); //####
     OD_LOG_P3("appInfo = ", &appInfo, "arguments = ", &arguments, "channelName = ", //####
               &channelName); //####
-    OD_LOG_S3s("endpointName = ", endpointName, "tag = ", tag, "portNumber = ", portNumber); //####
+    OD_LOG_S3s("endpointName = ", endpointName.toStdString(), "tag = ", tag.toStdString(), //####
+               "portNumber = ", portNumber.toStdString()); //####
     bool         okSoFar = false;
     ChildProcess runApplication;
     StringArray  nameAndArgs(appInfo._applicationPath);
@@ -983,7 +984,7 @@ bool ManagerApplication::getPrimaryChannelForService(const ApplicationInfo & app
             }
         }
     }
-    OD_LOG_OBJEXIT_B(result); //####
+    OD_LOG_OBJEXIT_B(okSoFar); //####
     return okSoFar;
 } // ManagerApplication::getPrimaryChannelForService
 
@@ -1198,6 +1199,25 @@ bool ManagerApplication::moreThanOneInstanceAllowed(void)
     return true;
 } // ManagerApplication::moreThanOneInstanceAllowed
 
+void ManagerApplication::restoreYarpConfiguration(void)
+{
+    OD_LOG_OBJENTER(); //####
+    ChildProcess runYarp;
+    String       appName(JUCEApplication::getInstance()->getApplicationName());
+    StringArray  nameAndArgs(_yarpPath);
+
+    nameAndArgs.add("conf");
+    nameAndArgs.add(_configuredYarpAddress);
+    nameAndArgs.add(String(_configuredYarpPort));
+    if (runYarp.start(nameAndArgs))
+    {
+        const String childOutput(runYarp.readAllProcessOutput());
+
+        runYarp.waitForProcessToFinish(kThreadKillTime);
+    }
+    OD_LOG_OBJEXIT(); //####
+} // ManagerApplication::restoreYarpConfiguration
+
 void ManagerApplication::shutdown(void)
 {
     OD_LOG_OBJENTER(); //####
@@ -1264,25 +1284,6 @@ void ManagerApplication::systemRequestedQuit(void)
     quit();
     OD_LOG_OBJEXIT(); //####
 } // ManagerApplication::systemRequestedQuit
-
-void ManagerApplication::restoreYarpConfiguration(void)
-{
-    OD_LOG_OBJENTER(); //####
-    ChildProcess runYarp;
-    String       appName(JUCEApplication::getInstance()->getApplicationName());
-    StringArray  nameAndArgs(_yarpPath);
-    
-    nameAndArgs.add("conf");
-    nameAndArgs.add(_configuredYarpAddress);
-    nameAndArgs.add(String(_configuredYarpPort));
-    if (runYarp.start(nameAndArgs))
-    {
-        const String childOutput(runYarp.readAllProcessOutput());
-        
-        runYarp.waitForProcessToFinish(kThreadKillTime);
-    }
-    OD_LOG_OBJEXIT(); //####
-} // ManagerApplication::restoreYarpConfiguration
 
 bool ManagerApplication::validateRegistryService(void)
 {
