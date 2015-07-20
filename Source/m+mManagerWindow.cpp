@@ -72,7 +72,7 @@ static const Colour & kWindowBackgroundColour(Colours::lightgrey);
 
 #if SETTINGS_FOR_MANUAL_
 /*! @brief The height of the fixed, small window used when doing screen captures for the manual. */
-static const int kWindowHeightForManual = 320;
+static const int kWindowHeightForManual = 360;
 #endif // SETTINGS_FOR_MANUAL_
 
 #if SETTINGS_FOR_MANUAL_
