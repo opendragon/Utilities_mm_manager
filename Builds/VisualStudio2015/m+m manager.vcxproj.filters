@@ -1092,6 +1092,7 @@
     <ClCompile Include="..\..\Source\m+mYarpLaunchThread.cpp">
       <Filter>m+m manager\Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\m+mConfigurationWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_core\text\juce_CharacterFunctions.h">
@@ -2163,6 +2164,7 @@
     <ClInclude Include="..\..\Source\m+mYarpLaunchThread.h">
       <Filter>m+m manager\Source</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\m+mConfigurationWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\JuceLibraryCode\modules\juce_core\juce_module_info">

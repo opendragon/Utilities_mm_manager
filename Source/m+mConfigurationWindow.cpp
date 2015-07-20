@@ -590,13 +590,13 @@ void ConfigurationWindow::setUpStandardFields(int &                    widthSoFa
     _topText.setFont(_regularFont);
     if (0 < numDescriptors)
     {
-        _topText.setText(String("The ") + _execType + " has one or more arguments, that need to be "
-                         "provided before it can be launched.", dontSendNotification);
+        _topText.setText(String("The ") + _execType +
+						 " has one or more values that can be configured.", dontSendNotification);
     }
     else
     {
-        _topText.setText(String("The ") + _execType + " has no arguments or options, so it can be "
-                         "launched right now.", dontSendNotification);
+        _topText.setText(String("The ") + _execType + " has no configurable values.",
+						 dontSendNotification);
     }
     MPlusM_Manager::CalculateTextArea(dimensions, _regularFont, _topText.getText());
     _topText.setBounds(kButtonGap, kButtonGap + getTitleBarHeight(), dimensions.getX() + kButtonGap,
