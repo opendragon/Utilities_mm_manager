@@ -39,6 +39,7 @@
 #include "m+mChannelContainer.h"
 
 #include "m+mChannelEntry.h"
+#include "m+mConfigurationWindow.h"
 #include "m+mContentPanel.h"
 #include "m+mEntitiesPanel.h"
 
@@ -218,16 +219,13 @@ bool ChannelContainer::canBeConfigured(void)
     if (mm)
     {
         result = true;
-        for (size_t ii = 0; mm > ii; ++ii)
+        for (size_t ii = 0; /*result &&*/ (mm > ii); ++ii)
         {
             MplusM::Utilities::BaseArgumentDescriptor * argDesc = _argumentList[ii];
 
-            if (argDesc)
+            if (argDesc && (! argDesc->isModifiable()))
             {
-                if (0 == (argDesc->argumentMode() & MplusM::Utilities::kArgModeModifiable))
-                {
-                    result = false;
-                }
+                result = false;
             }
         }
     }
@@ -269,6 +267,83 @@ void ChannelContainer::clearVisited(void)
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::clearVisited
 
+void ChannelContainer::configureTheService(void)
+{
+    OD_LOG_OBJENTER(); //####
+    for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
+    {
+        ChannelEntry * aPort = getPort(ii);
+        
+        if (aPort && aPort->isService())
+        {
+            bool configurable;
+            
+            switch (Utilities::MapStringToServiceKind(_behaviour))
+            {
+                case Common::kServiceKindAdapter :
+                case Common::kServiceKindFilter :
+                case Common::kServiceKindInput :
+                case Common::kServiceKindOutput :
+                    configurable = canBeConfigured();
+                    break;
+                    
+                default :
+                    configurable = false;
+                    break;
+                    
+            }
+            if (configurable)
+            {
+                String           caption("Setting the configuration for the ");
+                String           execType;
+                YarpStringVector currentValues;
+                
+                caption += _description.c_str();
+                if (kContainerKindAdapter == _kind)
+                {
+                    execType = "adapter";
+                }
+                else
+                {
+                    execType = "service";
+                }
+                // We need the current values!!!!!
+                if (Utilities::GetConfigurationForService(aPort->getPortName(), currentValues,
+                                                          STANDARD_WAIT_TIME_))
+                {
+                    
+                    yarp::os::Bottle                   valuesToUse;
+                    ScopedPointer<ConfigurationWindow>
+                                                configuration(new ConfigurationWindow(caption,
+                                                                                      execType,
+                                                                                      currentValues,
+                                                                                      _argumentList,
+                                                                                      valuesToUse));
+                    
+                    if (ConfigurationWindow::kConfigurationOK == configuration->runModalLoop())
+                    {
+                        if (Utilities::SetConfigurationForService(aPort->getPortName(), valuesToUse,
+                                                              STANDARD_WAIT_TIME_))
+                        {
+                            YarpString holder;
+                            
+                            if (Utilities::GetExtraInformationForService(aPort->getPortName(),
+                                                                         holder,
+                                                                         STANDARD_WAIT_TIME_))
+                            {
+                                _extraInfo = holder;
+                            }
+                        }
+                    }
+                }
+            }
+            break;
+            
+        }
+    }
+    OD_LOG_OBJEXIT(); //####
+} // ChannelContainer::configureTheService
+
 void ChannelContainer::deselect(void)
 {
     OD_LOG_OBJENTER(); //####
@@ -288,6 +363,7 @@ void ChannelContainer::displayAndProcessPopupMenu(void)
     switch (result)
     {
         case kPopupConfigureService :
+            configureTheService();
             break;
             
         case kPopupDisplayChangeServiceMetrics :
@@ -349,27 +425,25 @@ void ChannelContainer::displayInformation(const bool moreDetails)
     }
     String bodyText("Address: ");
     
-    bodyText += (getIPAddress() + "\n").c_str();
+    bodyText += (_IPAddress + "\n").c_str();
     bodyText += thePanelDescription.c_str();
     if (moreDetails)
     {
-        YarpString extraInfo = getExtraInformation();
         YarpString requests;
 
-        if (0 < extraInfo.length())
+        if (0 < _extraInfo.length())
         {
             bodyText += "\n";
-            bodyText += extraInfo.c_str();
+            bodyText += _extraInfo.c_str();
         }
         switch (_kind)
         {
             case kContainerKindAdapter :
             case kContainerKindService :
-                requests = getRequests();
-                if (0 < requests.length())
+                if (0 < _requests.length())
                 {
                     bodyText += "\n\n";
-                    bodyText += requests.c_str();
+                    bodyText += _requests.c_str();
                     bodyText += "\n";
                 }
                 break;
@@ -769,7 +843,7 @@ void ChannelContainer::restartTheService(void)
         {
             bool restartable;
 
-            switch (Utilities::MapStringToServiceKind(getBehaviour()))
+            switch (Utilities::MapStringToServiceKind(_behaviour))
             {
                 case Common::kServiceKindAdapter :
                 case Common::kServiceKindFilter :

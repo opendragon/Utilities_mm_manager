@@ -129,6 +129,9 @@ namespace MPlusM_Manager
         /*! @brief Clears the visited flag for the entity. */
         void clearVisited(void);
         
+        /*! @brief Set the configuration of the corresponding service. */
+        void configureTheService(void);
+        
         /*! @brief Deselect the entity. */
         void deselect(void);
         
@@ -156,7 +159,7 @@ namespace MPlusM_Manager
 
         /*! @brief Return the behavioural model for the entity.
          @returns The behavioural model for the entity. */
-        inline YarpString getBehaviour(void)
+        inline const YarpString & getBehaviour(void)
         const
         {
             return _behaviour;
@@ -164,7 +167,7 @@ namespace MPlusM_Manager
         
         /*! @brief Return the description of the entity.
          @returns The description of the entity. */
-        inline YarpString getDescription(void)
+        inline const YarpString & getDescription(void)
         const
         {
             return _description;
@@ -172,7 +175,7 @@ namespace MPlusM_Manager
         
         /*! @brief Return the extra information for the entity.
          @returns The extra information for the entity. */
-        inline YarpString getExtraInformation(void)
+        inline const YarpString & getExtraInformation(void)
         const
         {
             return _extraInfo;
@@ -180,7 +183,7 @@ namespace MPlusM_Manager
 
         /*! @brief Return the IP address of the container.
          @returns The IP address of the container. */
-        inline YarpString getIPAddress(void)
+        inline const YarpString & getIPAddress(void)
         const
         {
             return _IPAddress;
@@ -245,7 +248,7 @@ namespace MPlusM_Manager
         
         /*! @brief Return the requests supported by the entity.
          @returns The requests supported by the entity. */
-        inline YarpString getRequests(void)
+        inline const YarpString & getRequests(void)
         const
         {
             return _requests;

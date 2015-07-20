@@ -67,12 +67,14 @@ namespace MPlusM_Manager
          @param responder The entity that will report errors in this field.
          @param regularLabelFont The font to use with the label when the text editor data is valid.
          @param errorLabelFont The font to use with the label when the text editor data is invalid.
+         @param index The order of the text editor.
          @param validator The function to use when checking the field on completion of text entry.
          @param componentName The name to pass to the component for it to use as its name
          @param passwordCharacter The visual replacement to use for password fields. */
         TextEditorWithCaption(TextEditorErrorResponder & responder,
                               Font &                     regularLabelFont,
                               Font &                     errorLabelFont,
+                              const size_t               index,
                               TextValidator *            validator = NULL,
                               const String &             componentName = String::empty,
                               juce_wchar                 passwordCharacter = 0);
@@ -96,6 +98,14 @@ namespace MPlusM_Manager
             return _caption;
         } // getCaption
         
+        /*! @brief Return the order of the text editor.
+         @returns The order of the text editor. */
+        inline size_t getIndex(void)
+        const
+        {
+            return _index;
+        } // getIndex
+        
         /*! @brief Do not perform validation on next loss of focus. */
         void ignoreNextFocusLoss(void);
         
@@ -107,10 +117,15 @@ namespace MPlusM_Manager
         void setButton(TextButton * newButton = NULL);
         
         /*! @brief Check the field for validity.
+         @returns @c true if the validator accepts the field or there's no validation required or
+         @c false if the validator rejects the field. */
+        bool validateField(void);
+        
+        /*! @brief Check the field for validity.
          @param argsToUse A set of valid arguments.
          @returns @c true if the validator accepts the field or there's no validation required or
          @c false if the validator rejects the field. */
-        bool validateField(StringArray * argsToUse = NULL);
+        bool validateField(StringArray & argsToUse);
         
     protected :
         
@@ -183,6 +198,9 @@ namespace MPlusM_Manager
         
         /*! @brief The caption for the text editor. */
         ScopedPointer<Label> _caption;
+        
+        /*! @brief The order of the text editor. */
+        size_t _index;
         
         /*! @brief @c true if validation should not be done on the next focus loss and @c false if
          normal behaviour is to occur. */

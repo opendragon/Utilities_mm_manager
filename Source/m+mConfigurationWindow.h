@@ -1,11 +1,10 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       m+mSettingsWindow.h
+//  File:       m+mConfigurationWindow.h
 //
 //  Project:    m+m
 //
-//  Contains:   The class declaration for the application settings window of the m+m manager
-//              application.
+//  Contains:   The class declaration for the configuration window of the m+m manager application.
 //
 //  Written by: Norman Jaffe
 //
@@ -33,12 +32,12 @@
 //              ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 //              DAMAGE.
 //
-//  Created:    2015-06-10
+//  Created:    2015-07-20
 //
 //--------------------------------------------------------------------------------------------------
 
-#if (! defined(mpmSettingsWindow_H_))
-# define mpmSettingsWindow_H_ /* Header guard */
+#if (! defined(mpmConfigurationWindow_H_))
+# define mpmConfigurationWindow_H_ /* Header guard */
 
 # include "m+mTextEditorErrorResponder.h"
 
@@ -49,7 +48,7 @@
 # endif // defined(__APPLE__)
 /*! @file
  
- @brief The class declaration for the application settings window of the m+m manager application. */
+ @brief The class declaration for the configuration window of the m+m manager application. */
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
@@ -58,11 +57,11 @@ namespace MPlusM_Manager
 {
     class TextEditorWithCaption;
     
-    /*! @brief The application settings window of the application. */
-    class SettingsWindow : private AsyncUpdater,
-                           private ButtonListener,
-                           public DocumentWindow,
-                           public TextEditorErrorResponder
+    /*! @brief The configuration window of the application. */
+    class ConfigurationWindow : private AsyncUpdater,
+                                private ButtonListener,
+                                public DocumentWindow,
+                                public TextEditorErrorResponder
     {
     public :
         
@@ -70,39 +69,35 @@ namespace MPlusM_Manager
         enum
         {
             /*! @brief 'Cancel' was requested. */
-            kSettingsCancel,
+            kConfigurationCancel,
             
             /*! @brief 'OK' was requested. */
-            kSettingsOK,
+            kConfigurationOK,
             
             /*! @brief '+ argument' was requested. */
-            kSettingsAddField,
+            kConfigurationAddField,
             
             /*! @brief '...' was requested. */
-            kSettingsFileRequest,
+            kConfigurationFileRequest,
             
             /*! @brief '- argument' was requested. */
-            kSettingsRemoveField
+            kConfigurationRemoveField
         };
         
         /*! @brief The constructor.
          @param title The title for the window.
          @param execType The kind of application being configured.
-         @param appInfo The options for the settings.
-         @param endpointToUse The resulting endpoint for the application.
-         @param tagToUse The resulting tag for the application.
-         @param portToUse The resulting port for the application.
+         @param currentValues The current set of values for the fields.
+         @param descriptors The provided argument descriptions.
          @param argsToUse The resulting arguments for the application. */
-        SettingsWindow(const String &          title,
-                       const String &          execType,
-                       const ApplicationInfo & appInfo,
-                       String &                endpointToUse,
-                       String &                tagToUse,
-                       String &                portToUse,
-                       StringArray &           argsToUse);
-        
+        ConfigurationWindow(const String &                              title,
+                            const String &                              execType,
+                            const YarpStringVector &                    currentValues,
+                            const MplusM::Utilities::DescriptorVector & descriptors,
+                            yarp::os::Bottle &                          valuesToUse);
+
         /*! @brief The destructor. */
-        virtual ~SettingsWindow(void);
+        virtual ~ConfigurationWindow(void);
         
     protected :
         
@@ -153,9 +148,11 @@ namespace MPlusM_Manager
         
         /*! @brief Set up the standard fields.
          @param widthSoFar The minimum width to show the fields.
-         @param heightSoFar The minimum height to show the fields. */
-        void setUpStandardFields(int & widthSoFar,
-                                 int & heightSoFar);
+         @param heightSoFar The minimum height to show the fields.
+         @param currentValues The current set of values for the fields. */
+        void setUpStandardFields(int &                    widthSoFar,
+                                 int &                    heightSoFar,
+                                 const YarpStringVector & currentValues);
         
         /*! @brief Tell all the text editor fields to ignore the next focus loss, so redundant
          validation is not done. */
@@ -188,9 +185,6 @@ namespace MPlusM_Manager
         /*! @brief The 'OK' button. */
         TextButton _okButton;
 
-        /*! @brief The provided argument descriptions. */
-        const MplusM::Utilities::DescriptorVector & _descriptors;
-        
         /*! @brief The content area to hold everything. */
         Component _contentArea;
         
@@ -205,6 +199,9 @@ namespace MPlusM_Manager
         
         /*! @brief The root name for extra arguments. */
         String _extraArgRootName;
+        
+        /*! @brief The provided argument descriptions. */
+        const MplusM::Utilities::DescriptorVector & _descriptors;
         
         /*! @brief The set of extra fields. */
         OwnedArray<TextEditorWithCaption> _extraFieldEditors;
@@ -221,35 +218,8 @@ namespace MPlusM_Manager
         /*! @brief The '- arguments' button. */
         ScopedPointer<TextButton> _removeArgumentsButton;
         
-        /*! @brief The endpoint text entry field. */
-        ScopedPointer<TextEditorWithCaption> _endpointEditor;
-        
-        /*! @brief The port text entry field. */
-        ScopedPointer<TextEditorWithCaption> _portEditor;
-        
-        /*! @brief The tag text entry field. */
-        ScopedPointer<TextEditorWithCaption> _tagEditor;
-        
-        /*! @brief An argument descriptor for endpoints. */
-        ScopedPointer<MplusM::Utilities::BaseArgumentDescriptor> _endpointDescriptor;
-
-        /*! @brief An argument descriptor for ports. */
-        ScopedPointer<MplusM::Utilities::BaseArgumentDescriptor> _portDescriptor;
-        
-        /*! @brief The options for the application. */
-        const ApplicationInfo & _appInfo;
-        
-        /*! @brief Set to the endpoint provided by the user. */
-        String & _endpointToUse;
-        
-        /*! @brief Set to the port provided by the user. */
-        String & _portToUse;
-        
-        /*! @brief Set to the tag provided by the user. */
-        String & _tagToUse;
-
-        /*! @brief Set to the arguments provided by the user. */
-        StringArray & _argsToUse;
+        /*! @brief Set to the values provided by the user. */
+        yarp::os::Bottle & _valuesToUse;
         
         /*! @brief The width of the standard file popup invocation button. */
         int _fileButtonWidth;
@@ -257,26 +227,16 @@ namespace MPlusM_Manager
         /*! @brief The height to use for text editor fields. */
         float _adjustedEditorHeight;
         
-        /*! @brief @c true if the endpoint can be set and @c false if the endpoint is fixed. */
-        bool _canSetEndpoint;
-        
-        /*! @brief @c true if the internet port can be set and @c false if the internet port is
-         fixed. */
-        bool _canSetPort;
-        
-        /*! @brief @c true if a tag can be applied and @c false if the port names are fixed. */
-        bool _canSetTag;
-
         /*! @brief @c true if extra arguments are present and @c false if they aren't used. */
         bool _hasExtraArguments;
         
         /*! @brief @c true if one or more of the text fields are for file paths. */
         bool _hasFileField;
         
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SettingsWindow)
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ConfigurationWindow)
         
-    }; // SettingsWindow
+    }; // ConfigurationWindow
     
 } // MPlusM_Manager
 
-#endif // ! defined(mpmSettingsWindow_H_)
+#endif // ! defined(mpmConfigurationWindow_H_)

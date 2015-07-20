@@ -104,13 +104,11 @@ TextValidator::~TextValidator(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-bool TextValidator::checkValidity(const String & toBeChecked,
-                                  StringArray *  argsToUse)
+bool TextValidator::checkValidity(const String & toBeChecked)
 const
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("toBeChecked = ", toBeChecked.toStdString()); //####
-    OD_LOG_P1("argsToUse = ", argsToUse); //####
     bool result;
     
     if (0 == toBeChecked.length())
@@ -118,10 +116,6 @@ const
         if (_fieldDescriptor.isOptional())
         {
             result = true;
-            if (argsToUse)
-            {
-                argsToUse->add(_fieldDescriptor.getDefaultValue().c_str());
-            }
         }
         else
         {
@@ -131,10 +125,40 @@ const
     else if (_fieldDescriptor.validate(toBeChecked.toStdString()))
     {
         result = true;
-        if (argsToUse)
+    }
+    else
+    {
+        result = false;
+    }
+    OD_LOG_OBJEXIT_B(result); //####
+    return result;
+} // TextValidator::checkValidity
+
+bool TextValidator::checkValidity(const String & toBeChecked,
+                                  StringArray &  argsToUse)
+const
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_S1s("toBeChecked = ", toBeChecked.toStdString()); //####
+    OD_LOG_P1("argsToUse = ", &argsToUse); //####
+    bool result;
+    
+    if (0 == toBeChecked.length())
+    {
+        if (_fieldDescriptor.isOptional())
         {
-            argsToUse->add(toBeChecked);
+            result = true;
+            argsToUse.add(_fieldDescriptor.getDefaultValue().c_str());
         }
+        else
+        {
+            result = false;
+        }
+    }
+    else if (_fieldDescriptor.validate(toBeChecked.toStdString()))
+    {
+        result = true;
+        argsToUse.add(toBeChecked);
     }
     else
     {

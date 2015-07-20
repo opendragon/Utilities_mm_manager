@@ -51,6 +51,7 @@
 		DF8888241AF92D99001320EB /* m+mYarpLaunchThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF8888221AF92D99001320EB /* m+mYarpLaunchThread.cpp */; };
 		DF8888281AFBD66C001320EB /* m+mRegistryLaunchThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF8888261AFBD66C001320EB /* m+mRegistryLaunchThread.cpp */; };
 		DFADC9FA19D0C236002C2663 /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DFADC9F919D0C236002C2663 /* libc++.dylib */; };
+		DFC3C5881B5D49EF00D79441 /* m+mConfigurationWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DFC3C5861B5D49EF00D79441 /* m+mConfigurationWindow.cpp */; };
 		E2FED85FB76A3966795E8416 /* juce_core.mm in Sources */ = {isa = PBXBuildFile; fileRef = ADC373CE4DEDF850BDE3A738 /* juce_core.mm */; };
 		E423C86693E599625A6112CC /* m+mPortData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93AD4B4E9FBADD52BACEF145 /* m+mPortData.cpp */; };
 		F33B431E9BA660F6B5034872 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA72840EFF14AF9F39FB65E /* Carbon.framework */; };
@@ -675,6 +676,8 @@
 		DF91F18A1AC49BE7003D9F6D /* m+mmResources.rc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "m+mmResources.rc"; path = "../m+mmResources.rc"; sourceTree = "<group>"; };
 		DF9FF6D4DE18B3DF54A65B7D /* juce_Toolbar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_Toolbar.h; path = ../../JuceLibraryCode/modules/juce_gui_basics/widgets/juce_Toolbar.h; sourceTree = SOURCE_ROOT; };
 		DFADC9F919D0C236002C2663 /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
+		DFC3C5861B5D49EF00D79441 /* m+mConfigurationWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "m+mConfigurationWindow.cpp"; path = "../../Source/m+mConfigurationWindow.cpp"; sourceTree = "<group>"; };
+		DFC3C5871B5D49EF00D79441 /* m+mConfigurationWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "m+mConfigurationWindow.h"; path = "../../Source/m+mConfigurationWindow.h"; sourceTree = "<group>"; };
 		E059C6388A6E99841B353887 /* juce_ZipFile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_ZipFile.cpp; path = ../../JuceLibraryCode/modules/juce_core/zip/juce_ZipFile.cpp; sourceTree = SOURCE_ROOT; };
 		E09F5EC75773E15AEDADD364 /* juce_HeapBlock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_HeapBlock.h; path = ../../JuceLibraryCode/modules/juce_core/memory/juce_HeapBlock.h; sourceTree = SOURCE_ROOT; };
 		E0DF6259804712093C5836B0 /* juce_mac_Fonts.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = juce_mac_Fonts.mm; path = ../../JuceLibraryCode/modules/juce_graphics/native/juce_mac_Fonts.mm; sourceTree = SOURCE_ROOT; };
@@ -979,6 +982,8 @@
 				DBB0E9F53B7C2F3E1D92CDBE /* m+mChannelContainer.h */,
 				36EE2F28FE454ED89CD62E58 /* m+mChannelEntry.cpp */,
 				181D3E98E683692DB5CC5F83 /* m+mChannelEntry.h */,
+				DFC3C5861B5D49EF00D79441 /* m+mConfigurationWindow.cpp */,
+				DFC3C5871B5D49EF00D79441 /* m+mConfigurationWindow.h */,
 				1841CCAF28EE50821F306588 /* m+mContentPanel.cpp */,
 				B694EB5B96C38840F7DC05E1 /* m+mContentPanel.h */,
 				55A7DDCB784682304EC9B39F /* m+mEntitiesData.cpp */,
@@ -2148,6 +2153,7 @@
 				DF8888281AFBD66C001320EB /* m+mRegistryLaunchThread.cpp in Sources */,
 				499E38442A69C4C056D30A5C /* m+mChannelEntry.cpp in Sources */,
 				DF0E54111B29D2D300A74A49 /* m+mTextEditorWithCaption.cpp in Sources */,
+				DFC3C5881B5D49EF00D79441 /* m+mConfigurationWindow.cpp in Sources */,
 				DF8888241AF92D99001320EB /* m+mYarpLaunchThread.cpp in Sources */,
 				DF0E54141B29E31100A74A49 /* m+mTextValidator.cpp in Sources */,
 				C3BADFC3FFD8F492B13B8E14 /* m+mManagerApplication.cpp in Sources */,

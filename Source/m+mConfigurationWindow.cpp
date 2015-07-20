@@ -1,11 +1,10 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       m+mSettingsWindow.cpp
+//  File:       m+mConfigurationWindow.cpp
 //
 //  Project:    m+m
 //
-//  Contains:   The class definition for the application settings window of the m+m manager
-//              application.
+//  Contains:   The class definition for the configuration window of the m+m manager application.
 //
 //  Written by: Norman Jaffe
 //
@@ -33,11 +32,11 @@
 //              ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 //              DAMAGE.
 //
-//  Created:    2015-06-10
+//  Created:    2015-07-20
 //
 //--------------------------------------------------------------------------------------------------
 
-#include "m+mSettingsWindow.h"
+#include "m+mConfigurationWindow.h"
 
 #include "m+mManagerApplication.h"
 #include "m+mTextEditorWithCaption.h"
@@ -57,7 +56,7 @@
 #endif // defined(__APPLE__)
 /*! @file
  
- @brief The class definition for the application settings window of the m+m manager application. */
+ @brief The class definition for the configuration window of the m+m manager application. */
 #if defined(__APPLE__)
 # pragma clang diagnostic pop
 #endif // defined(__APPLE__)
@@ -129,34 +128,22 @@ static const String kTagFieldName("$$$tag$$$");
 # pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
-SettingsWindow::SettingsWindow(const String &          title,
-                               const String &          execType,
-                               const ApplicationInfo & appInfo,
-                               String &                endpointToUse,
-                               String &                tagToUse,
-                               String &                portToUse,
-                               StringArray &           argsToUse)  :
+ConfigurationWindow::ConfigurationWindow(const String &                              title,
+                                         const String &                              execType,
+                                         const YarpStringVector &                    currentValues,
+                                         const MplusM::Utilities::DescriptorVector & descriptors,
+                                         yarp::os::Bottle &                          valuesToUse) :
     inherited1(), inherited2(), inherited3(title, kWindowBackgroundColour, 0), inherited4(),
     _topText("topText"), _cancelButton("Cancel"), _okButton("OK"),
-    _descriptors(appInfo._argDescriptions),
     _errorFont(Font::getDefaultMonospacedFontName(), kFontSize, Font::italic + Font::bold),
     _regularFont(Font::getDefaultMonospacedFontName(), kFontSize, Font::plain), _execType(execType),
-    _extraArgumentsGroup(NULL), _addArgumentsButton(NULL), _removeArgumentsButton(NULL),
-    _endpointEditor(NULL), _portEditor(NULL), _tagEditor(NULL),
-    _endpointDescriptor(new Utilities::ChannelArgumentDescriptor(kEndpointFieldName.toStdString(),
-                                                                 "", Utilities::kArgModeOptional,
-                                                                 "")),
-    _portDescriptor(new Utilities::PortArgumentDescriptor(kPortFieldName.toStdString(), "",
-                                                          Utilities::kArgModeOptional, 0, false)),
-    _appInfo(appInfo), _endpointToUse(endpointToUse), _portToUse(portToUse), _tagToUse(tagToUse),
-    _argsToUse(argsToUse), _canSetEndpoint(false), _canSetPort(false), _canSetTag(false),
-    _hasExtraArguments(false), _hasFileField(false)
+    _descriptors(descriptors), _extraArgumentsGroup(NULL), _addArgumentsButton(NULL),
+    _removeArgumentsButton(NULL), _valuesToUse(valuesToUse), _hasExtraArguments(false),
+    _hasFileField(false)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_S2s("title = ", title, "execType = ", execType); //####
-    OD_LOG_P4("appInfo = ", &appInfo, "endpointToUse = ", &endpointToUse, "tagToUse = ", //####
-              &tagToUse, "portToUse = ", &portToUse); //####
-    OD_LOG_P1("argsToUse = ", &argsToUse); //####
+    OD_LOG_P2("descriptors = ", &descriptors, "argsToUse = ", &argsToUse); //####
     _contentArea.setSize(100, 100);
     setContentNonOwned(&_contentArea, true);
     BorderSize<int> bt = getBorderThickness();
@@ -165,11 +152,8 @@ SettingsWindow::SettingsWindow(const String &          title,
     int             widthSoFar = 0;
 
     _adjustedEditorHeight = _regularFont.getHeight() + kEditorHeightAdjustment;
-    _argsToUse.clear();
-    _canSetEndpoint = appInfo._options.contains("e");
-    _canSetPort = appInfo._options.contains("p");
-    _canSetTag = appInfo._options.contains("t");
-    setUpStandardFields(widthSoFar, heightSoFar);
+    _valuesToUse.clear();
+    setUpStandardFields(widthSoFar, heightSoFar, currentValues);
 	int minW = jmax(widthSoFar, _cancelButton.getWidth() + _okButton.getWidth() + (3 * kButtonGap));
     int calcW = minW + bt.getLeftAndRight() + cb.getLeftAndRight();
     int calcH = heightSoFar + bt.getTopAndBottom() + cb.getTopAndBottom();
@@ -182,19 +166,19 @@ SettingsWindow::SettingsWindow(const String &          title,
     addKeyListener(ManagerWindow::getApplicationCommandManager().getKeyMappings());
     triggerAsyncUpdate();
     OD_LOG_EXIT_P(this); //####
-} // SettingsWindow::SettingsWindow
+} // ConfigurationWindow::ConfigurationWindow
 
-SettingsWindow::~SettingsWindow(void)
+ConfigurationWindow::~ConfigurationWindow(void)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_OBJEXIT(); //####
-} // SettingsWindow::~SettingsWindow
+} // ConfigurationWindow::~ConfigurationWindow
 
 #if defined(__APPLE__)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-void SettingsWindow::addAnExtraField(void)
+void ConfigurationWindow::addAnExtraField(void)
 {
     OD_LOG_ENTER(); //####
     Component *             content = _extraArgumentsGroup;
@@ -221,9 +205,9 @@ void SettingsWindow::addAnExtraField(void)
         _removeArgumentsButton->setVisible(true);
     }
     OD_LOG_EXIT(); //####
-} // SettingsWindow::addAnExtraField
+} // ConfigurationWindow::addAnExtraField
 
-void SettingsWindow::adjustFields(void)
+void ConfigurationWindow::adjustFields(void)
 {
     OD_LOG_OBJENTER(); //####
     Component * content = getContentComponent();
@@ -238,18 +222,6 @@ void SettingsWindow::adjustFields(void)
                                      newButtonTop);
     _okButton.setTopLeftPosition(_cancelButton.getX() - (_okButton.getWidth() + kButtonGap),
                                  newButtonTop);
-    if (_endpointEditor)
-    {
-        _endpointEditor->setSize(newFieldWidth, _endpointEditor->getHeight());
-    }
-    if (_portEditor)
-    {
-        _portEditor->setSize(newFieldWidth, _portEditor->getHeight());
-    }
-    if (_tagEditor)
-    {
-        _tagEditor->setSize(newFieldWidth, _tagEditor->getHeight());
-    }
     if (_addArgumentsButton)
     {
         _addArgumentsButton->setTopLeftPosition(_okButton.getX() -
@@ -297,9 +269,9 @@ void SettingsWindow::adjustFields(void)
         _extraArgumentsGroup->setSize(groupWidth, _extraArgumentsGroup->getHeight());
     }
     OD_LOG_OBJEXIT(); //####
-} // SettingsWindow::adjustFields
+} // ConfigurationWindow::adjustFields
 
-void SettingsWindow::buttonClicked(Button * aButton)
+void ConfigurationWindow::buttonClicked(Button * aButton)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("aButton = ", aButton); //####
@@ -308,22 +280,22 @@ void SettingsWindow::buttonClicked(Button * aButton)
     tellAllFieldsToIgnoreNextFocusLoss();
     switch (commandId)
     {
-        case kSettingsAddField :
+        case kConfigurationAddField :
             addAnExtraField();
             break;
             
-        case kSettingsRemoveField :
+        case kConfigurationRemoveField :
             removeMostRecentlyAddedExtraField();
             break;
             
-        case kSettingsOK :
+        case kConfigurationOK :
             if (fieldsAreValid())
             {
                 exitModalState(commandId);
             }
             break;
             
-        case kSettingsFileRequest :
+        case kConfigurationFileRequest :
             for (size_t ii = 0, maxf = _standardFieldEditors.size(); maxf > ii; ++ii)
             {
                 TextEditorWithCaption * anEditor = _standardFieldEditors[static_cast<int>(ii)];
@@ -343,29 +315,43 @@ void SettingsWindow::buttonClicked(Button * aButton)
             
     }
     OD_LOG_OBJEXIT(); //####
-} // SettingsWindow::buttonClicked
+} // ConfigurationWindow::buttonClicked
 
-bool SettingsWindow::fieldsAreValid(void)
+bool ConfigurationWindow::fieldsAreValid(void)
 {
     OD_LOG_ENTER(); //####
     int    badCount = 0;
     String badArgs;
-    String primaryChannel;
     
-    // Counterintuitively, we check the values from the descriptors first, before checking the
-    // endpoint, port or tag values.
     for (size_t ii = 0, maxf = _standardFieldEditors.size(); maxf > ii; ++ii)
     {
         TextEditorWithCaption * anEditor = _standardFieldEditors[static_cast<int>(ii)];
         
-        if (anEditor && (! anEditor->validateField(_argsToUse)))
+        if (anEditor)
         {
-            if (0 < badArgs.length())
+            if (anEditor->validateField())
             {
-                badArgs += "\n";
+                size_t jj = anEditor->getIndex();
+                
+                if (_descriptors.size() > jj)
+                {
+                    Utilities::BaseArgumentDescriptor * aDescriptor = _descriptors[jj];
+                    
+                    if (aDescriptor)
+                    {
+                        aDescriptor->addValueToBottle(_valuesToUse);
+                    }
+                }
             }
-            badArgs += anEditor->getName();
-            ++badCount;
+            else
+            {
+                if (0 < badArgs.length())
+                {
+                    badArgs += "\n";
+                }
+                badArgs += anEditor->getName();
+                ++badCount;
+            }
         }
     }
     if (0 == badCount)
@@ -375,44 +361,8 @@ bool SettingsWindow::fieldsAreValid(void)
         {
             TextEditorWithCaption * anEditor = _extraFieldEditors[static_cast<int>(ii)];
             
-            _argsToUse.add(anEditor->getText());
-        }        
-    }
-    if (_canSetEndpoint)
-    {
-        if (_endpointEditor->validateField())
-        {
-            _endpointToUse = _endpointEditor->getText();
+            _valuesToUse.addString(anEditor->getText().toStdString());
         }
-        else
-        {
-            if (0 < badArgs.length())
-            {
-                badArgs += "\n";
-            }
-            badArgs += "Endpoint";
-            ++badCount;
-        }
-    }
-    if (_canSetPort)
-    {
-        if (_portEditor->validateField())
-        {
-            _portToUse = _portEditor->getText();
-        }
-        else
-        {
-            if (0 < badArgs.length())
-            {
-                badArgs += "\n";
-            }
-            badArgs += "Port";
-            ++badCount;
-        }
-    }
-    if (_canSetTag)
-    {
-        _tagToUse = _tagEditor->getText();
     }
     if (0 < badCount)
     {
@@ -424,48 +374,22 @@ bool SettingsWindow::fieldsAreValid(void)
                                     "\n" + String("Please correct the ") + message2 + " to the " +
                                     _execType + " and try again.", String::empty, this);
     }
-    else
-    {
-        ManagerApplication * ourApp = ManagerApplication::getApp();
-        
-        if (ourApp->getPrimaryChannelForService(_appInfo, _endpointToUse, _tagToUse, _portToUse,
-                                                _argsToUse, primaryChannel))
-        {
-            if (Utilities::CheckForChannel(primaryChannel.toStdString()))
-            {
-                AlertWindow::showMessageBox(AlertWindow::WarningIcon, getName(),
-                                            String("The primary channel\n") + primaryChannel +
-                                            "\nof the " + _execType + " is in use.\n"
-                                            "Please correct the arguments to the " + _execType +
-                                            " and try again.", String::empty, this);
-                badCount = -1; // Flag this as bad.
-            }
-        }
-        else
-        {
-            AlertWindow::showMessageBox(AlertWindow::WarningIcon, getName(),
-                                        "There was a problem retrieving the primary channel for "
-                                        "the " + _execType + ".\n"
-                                        "Please try again.", String::empty, this);
-            badCount = -1; // Flag this as bad.
-        }
-    }
     OD_LOG_EXIT_B(0 == badCount); //####
     return (0 == badCount);
-} // SettingsWindow::fieldsAreValid
+} // ConfigurationWindow::fieldsAreValid
 
 #if (! MAC_OR_LINUX_)
 # pragma warning(push)
 # pragma warning(disable: 4100)
 #endif // ! MAC_OR_LINUX_
-void SettingsWindow::focusGained(FocusChangeType cause)
+void ConfigurationWindow::focusGained(FocusChangeType cause)
 {
 #if MAC_OR_LINUX_
 # pragma unused(cause)
 #endif // MAC_OR_LINUX_
 	OD_LOG_OBJENTER(); //####
     OD_LOG_OBJEXIT(); //####
-} // SettingsWindow::focusGained
+} // ConfigurationWindow::focusGained
 #if (! MAC_OR_LINUX_)
 # pragma warning(pop)
 #endif // ! MAC_OR_LINUX_
@@ -474,28 +398,28 @@ void SettingsWindow::focusGained(FocusChangeType cause)
 # pragma warning(push)
 # pragma warning(disable: 4100)
 #endif // ! MAC_OR_LINUX_
-void SettingsWindow::focusLost(FocusChangeType cause)
+void ConfigurationWindow::focusLost(FocusChangeType cause)
 {
 #if MAC_OR_LINUX_
 # pragma unused(cause)
 #endif // MAC_OR_LINUX_
 	OD_LOG_OBJENTER(); //####
     OD_LOG_OBJEXIT(); //####
-} // SettingsWindow::focusLost
+} // ConfigurationWindow::focusLost
 #if (! MAC_OR_LINUX_)
 # pragma warning(pop)
 #endif // ! MAC_OR_LINUX_
 
-void SettingsWindow::handleAsyncUpdate(void)
+void ConfigurationWindow::handleAsyncUpdate(void)
 {
     OD_LOG_OBJENTER(); //####
     ApplicationCommandManager & commandManager = ManagerWindow::getApplicationCommandManager();
 
     commandManager.registerAllCommandsForTarget(JUCEApplication::getInstance());
     OD_LOG_OBJEXIT(); //####
-} // SettingsWindow::handleAsyncUpdate
+} // ConfigurationWindow::handleAsyncUpdate
 
-bool SettingsWindow::keyPressed(const KeyPress & key)
+bool ConfigurationWindow::keyPressed(const KeyPress & key)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("key = ", &key); //####
@@ -504,7 +428,7 @@ bool SettingsWindow::keyPressed(const KeyPress & key)
     if (key == KeyPress::escapeKey)
     {
         tellAllFieldsToIgnoreNextFocusLoss();
-        exitModalState(kSettingsCancel);
+        exitModalState(kConfigurationCancel);
         result = true;
     }
     else if (key == KeyPress::returnKey)
@@ -512,7 +436,7 @@ bool SettingsWindow::keyPressed(const KeyPress & key)
         tellAllFieldsToIgnoreNextFocusLoss();
         if (fieldsAreValid())
         {
-            exitModalState(kSettingsOK);
+            exitModalState(kConfigurationOK);
         }
         result = true;
     }
@@ -522,9 +446,9 @@ bool SettingsWindow::keyPressed(const KeyPress & key)
     }
     OD_LOG_OBJEXIT_B(result); //####
     return result;
-} // SettingsWindow::keyPressed
+} // ConfigurationWindow::keyPressed
 
-void SettingsWindow::recalculateArea(void)
+void ConfigurationWindow::recalculateArea(void)
 {
     OD_LOG_ENTER(); //####
     int    heightSoFar = 0;
@@ -533,27 +457,6 @@ void SettingsWindow::recalculateArea(void)
     
     heightSoFar = _topText.getY() + _topText.getHeight() + kButtonGap;
     widthSoFar = jmax(widthSoFar, _topText.getX() + _topText.getWidth());
-    if (_canSetEndpoint)
-    {
-        Label * aCaption = _endpointEditor->getCaption();
-        
-        widthSoFar = jmax(widthSoFar, aCaption->getX() + aCaption->getWidth());
-        heightSoFar = _endpointEditor->getY() + _endpointEditor->getHeight() + (kButtonGap / 2);
-    }
-    if (_canSetPort)
-    {
-        Label * aCaption = _portEditor->getCaption();
-
-        widthSoFar = jmax(widthSoFar, aCaption->getX() + aCaption->getWidth());
-        heightSoFar = _portEditor->getY() + _portEditor->getHeight() + (kButtonGap / 2);
-    }
-    if (_canSetTag)
-    {
-        Label * aCaption = _tagEditor->getCaption();
-        
-        widthSoFar = jmax(widthSoFar, aCaption->getX() + aCaption->getWidth());
-        heightSoFar = _tagEditor->getY() + _tagEditor->getHeight() + (kButtonGap / 2);
-    }
     for (size_t ii = 0, numDescriptors = _descriptors.size(), jj = 0; numDescriptors > ii; ++ii)
     {
         Utilities::BaseArgumentDescriptor * aDescriptor = _descriptors[ii];
@@ -618,9 +521,9 @@ void SettingsWindow::recalculateArea(void)
     setContentComponentSize(minW + kExtraSpaceInWindow + cb.getLeftAndRight(),
                             heightSoFar + kExtraSpaceInWindow + cb.getTopAndBottom());
     OD_LOG_EXIT(); //####
-} // SettingsWindow::recalculateArea
+} // ConfigurationWindow::recalculateArea
 
-void SettingsWindow::removeMostRecentlyAddedExtraField(void)
+void ConfigurationWindow::removeMostRecentlyAddedExtraField(void)
 {
     OD_LOG_ENTER(); //####
     Component *             content = _extraArgumentsGroup;
@@ -637,34 +540,20 @@ void SettingsWindow::removeMostRecentlyAddedExtraField(void)
         _removeArgumentsButton->setVisible(0 < _extraFieldEditors.size());
     }
     OD_LOG_EXIT(); //####
-} // SettingsWindow::removeMostRecentlyAddedExtraField
+} // ConfigurationWindow::removeMostRecentlyAddedExtraField
 
-void SettingsWindow::reportErrorInField(TextEditorWithCaption & fieldOfInterest)
+void ConfigurationWindow::reportErrorInField(TextEditorWithCaption & fieldOfInterest)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("fieldOfInterest = ", &fieldOfInterest); //####
-    String nameToDisplay;
-    
-    if (&fieldOfInterest == _endpointEditor)
-    {
-        nameToDisplay = "Endpoint";
-    }
-    else if (&fieldOfInterest == _portEditor)
-    {
-        nameToDisplay = "Port";
-    }
-    else
-    {
-        nameToDisplay = fieldOfInterest.getName();
-    }
-    AlertWindow::showMessageBox(AlertWindow::WarningIcon, getName(),
-                                String("The ") + nameToDisplay + " argument is invalid.\n"
+    AlertWindow::showMessageBox(AlertWindow::WarningIcon, getName(), String("The ") +
+                                fieldOfInterest.getName() + " argument is invalid.\n"
                                 "Please correct the argument and try again.", String::empty,
                                 this);
     OD_LOG_OBJEXIT(); //####
-} // SettingsWindow::reportErrorInField
+} // ConfigurationWindow::reportErrorInField
 
-void SettingsWindow::resized(void)
+void ConfigurationWindow::resized(void)
 {
     OD_LOG_OBJENTER(); //####
     Button * close = getCloseButton();
@@ -680,13 +569,15 @@ void SettingsWindow::resized(void)
         }
     }
     OD_LOG_OBJEXIT(); //####
-} // SettingsWindow::resized
+} // ConfigurationWindow::resized
 
-void SettingsWindow::setUpStandardFields(int & widthSoFar,
-                                         int & heightSoFar)
+void ConfigurationWindow::setUpStandardFields(int &                    widthSoFar,
+                                              int &                    heightSoFar,
+                                              const YarpStringVector & currentValues)
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_P2("widthSoFar = ", &widthSoFar, "heightSoFar = ", &heightSoFar); //####
+    OD_LOG_P3("widthSoFar = ", &widthSoFar, "heightSoFar = ", &heightSoFar, //####
+              "currentValues = ", &currentValues); //####
     Component *               content = getContentComponent();
     int                       buttonHeight = getLookAndFeel().getAlertWindowButtonHeight();
     Point<int>                dimensions;
@@ -697,7 +588,7 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
     _fileButtonWidth = fileButton->getWidth();
     widthSoFar = heightSoFar = 0;
     _topText.setFont(_regularFont);
-    if ((0 < numDescriptors) || _canSetEndpoint || _canSetPort || _canSetTag)
+    if (0 < numDescriptors)
     {
         _topText.setText(String("The ") + _execType + " has one or more arguments, that need to be "
                          "provided before it can be launched.", dontSendNotification);
@@ -713,67 +604,6 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
     content->addAndMakeVisible(&_topText, 0);
     heightSoFar = _topText.getY() + _topText.getHeight() + kButtonGap;
     widthSoFar = jmax(widthSoFar, _topText.getX() + _topText.getWidth());
-    if (_canSetEndpoint)
-    {
-        /*! @brief The text field validator for endpoints. */
-        _endpointEditor = new TextEditorWithCaption(*this, _regularFont, _errorFont, 0,
-                                                    new TextValidator(*_endpointDescriptor),
-                                                    kEndpointFieldName);
-        Label * aCaption = _endpointEditor->getCaption();
-        
-        aCaption->setText("(Optional) Endpoint to use", dontSendNotification);
-        MPlusM_Manager::CalculateTextArea(dimensions, _regularFont, aCaption->getText());
-        aCaption->setBounds(kLabelInset, heightSoFar, dimensions.getX() + kLabelInset,
-							dimensions.getY());
-        content->addAndMakeVisible(aCaption);
-		heightSoFar = aCaption->getY() + aCaption->getHeight() + kLabelToFieldGap;
-        widthSoFar = jmax(widthSoFar, aCaption->getX() + aCaption->getWidth());
-        _endpointEditor->setBounds(kFieldInset, heightSoFar, widthSoFar - kFieldInset,
-                                   static_cast<int>(_adjustedEditorHeight));
-        _endpointEditor->setSelectAllWhenFocused(true);
-        content->addAndMakeVisible(_endpointEditor);
-        heightSoFar = _endpointEditor->getY() + _endpointEditor->getHeight() + (kButtonGap / 2);
-    }
-    if (_canSetPort)
-    {
-        /*! @brief The text field validator for ports. */
-        _portEditor = new TextEditorWithCaption(*this, _regularFont, _errorFont, 0,
-                                                new TextValidator(*_portDescriptor),
-                                                kPortFieldName);
-        Label * aCaption = _portEditor->getCaption();
-
-        aCaption->setText("(Optional) Network port to use", dontSendNotification);
-        MPlusM_Manager::CalculateTextArea(dimensions, _regularFont, aCaption->getText());
-        aCaption->setBounds(kLabelInset, heightSoFar, dimensions.getX() + kLabelInset,
-                            dimensions.getY());
-        content->addAndMakeVisible(aCaption);
-		heightSoFar = aCaption->getY() + aCaption->getHeight() + kLabelToFieldGap;
-        widthSoFar = jmax(widthSoFar, aCaption->getX() + aCaption->getWidth());
-        _portEditor->setBounds(kFieldInset, heightSoFar, widthSoFar - kFieldInset,
-                               static_cast<int>(_adjustedEditorHeight));
-        _portEditor->setSelectAllWhenFocused(true);
-        content->addAndMakeVisible(_portEditor);
-        heightSoFar = _portEditor->getY() + _portEditor->getHeight() + (kButtonGap / 2);
-    }
-    if (_canSetTag)
-    {
-        _tagEditor = new TextEditorWithCaption(*this, _regularFont, _errorFont, 0, NULL,
-                                               kTagFieldName);
-        Label * aCaption = _tagEditor->getCaption();
-        
-        aCaption->setText(String("(Optional) Tag for the ") + _execType, dontSendNotification);
-        MPlusM_Manager::CalculateTextArea(dimensions, _regularFont, aCaption->getText());
-		aCaption->setBounds(kLabelInset, heightSoFar, dimensions.getX() + kLabelInset,
-                            dimensions.getY());
-        content->addAndMakeVisible(aCaption);
-		heightSoFar = aCaption->getY() + aCaption->getHeight() + kLabelToFieldGap;
-        widthSoFar = jmax(widthSoFar, aCaption->getX() + aCaption->getWidth());
-        _tagEditor->setBounds(kFieldInset, heightSoFar, widthSoFar - kFieldInset,
-                              static_cast<int>(_adjustedEditorHeight));
-        _tagEditor->setSelectAllWhenFocused(true);
-        content->addAndMakeVisible(_tagEditor);
-        heightSoFar = _tagEditor->getY() + _tagEditor->getHeight() + (kButtonGap / 2);
-    }
     // Check for one or more file descriptors
     for (size_t ii = 0; numDescriptors > ii; ++ii)
     {
@@ -815,14 +645,14 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
                     _addArgumentsButton = new TextButton(String("+ ") + argName);
                     _addArgumentsButton->setWantsKeyboardFocus(true);
                     _addArgumentsButton->setMouseClickGrabsKeyboardFocus(false);
-                    _addArgumentsButton->setCommandToTrigger(NULL, kSettingsAddField, false);
+                    _addArgumentsButton->setCommandToTrigger(NULL, kConfigurationAddField, false);
                     _addArgumentsButton->addListener(this);
                     _addArgumentsButton->changeWidthToFitText(buttonHeight);
                     content->addAndMakeVisible(_addArgumentsButton, 0);
                     _removeArgumentsButton = new TextButton(String("- ") + argName);
                     _removeArgumentsButton->setWantsKeyboardFocus(true);
                     _removeArgumentsButton->setMouseClickGrabsKeyboardFocus(false);
-                    _removeArgumentsButton->setCommandToTrigger(NULL, kSettingsRemoveField,
+                    _removeArgumentsButton->setCommandToTrigger(NULL, kConfigurationRemoveField,
                                                                 false);
                     _removeArgumentsButton->addListener(this);
                     _removeArgumentsButton->changeWidthToFitText(buttonHeight);
@@ -833,6 +663,7 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
             {
                 bool                    forOutput;
                 String                  descriptionPrefix;
+                String                  valueToUse;
                 TextValidator *         newValidator = new TextValidator(*aDescriptor);
                 TextEditorWithCaption * newEditor = new TextEditorWithCaption(*this, _regularFont,
                                                                               _errorFont, ii,
@@ -854,7 +685,15 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
                 _standardFieldEditors.add(newEditor);
                 newEditor->setBounds(kFieldInset, heightSoFar, widthSoFar - kFieldInset,
                                      static_cast<int>(_adjustedEditorHeight));
-                newEditor->setText(aDescriptor->getDefaultValue().c_str(), false);
+                if (ii < currentValues.size())
+                {
+                    valueToUse = currentValues[ii].c_str();
+                }
+                else
+                {
+                    valueToUse = aDescriptor->getDefaultValue().c_str();
+                }
+                newEditor->setText(valueToUse, false);
                 newEditor->setSelectAllWhenFocused(true);
                 content->addAndMakeVisible(newEditor);
                 if (aDescriptor->isForFiles(forOutput))
@@ -863,7 +702,7 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
 
                     newButton->setWantsKeyboardFocus(true);
                     newButton->setMouseClickGrabsKeyboardFocus(false);
-                    newButton->setCommandToTrigger(NULL, kSettingsFileRequest, false);
+                    newButton->setCommandToTrigger(NULL, kConfigurationFileRequest, false);
                     newButton->addListener(this);
                     newButton->changeWidthToFitText(buttonHeight);
                     newEditor->setButton(newButton);
@@ -875,37 +714,25 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
     }
     _cancelButton.setWantsKeyboardFocus(true);
     _cancelButton.setMouseClickGrabsKeyboardFocus(false);
-    _cancelButton.setCommandToTrigger(NULL, kSettingsCancel, false);
+    _cancelButton.setCommandToTrigger(NULL, kConfigurationCancel, false);
     _cancelButton.addListener(this);
     _cancelButton.changeWidthToFitText(buttonHeight);
     _cancelButton.setTopLeftPosition(0, heightSoFar + kButtonGap);
     content->addAndMakeVisible(&_cancelButton, 0);
     _okButton.setWantsKeyboardFocus(true);
     _okButton.setMouseClickGrabsKeyboardFocus(false);
-    _okButton.setCommandToTrigger(NULL, kSettingsOK, false);
+    _okButton.setCommandToTrigger(NULL, kConfigurationOK, false);
     _okButton.addListener(this);
     _okButton.changeWidthToFitText(buttonHeight);
     _okButton.setTopLeftPosition(0, heightSoFar + kButtonGap);
     content->addAndMakeVisible(&_okButton, 0);
     heightSoFar += buttonHeight;
     OD_LOG_OBJEXIT(); //####
-} // SettingsWindow::setUpStandardFields
+} // ConfigurationWindow::setUpStandardFields
 
-void SettingsWindow::tellAllFieldsToIgnoreNextFocusLoss(void)
+void ConfigurationWindow::tellAllFieldsToIgnoreNextFocusLoss(void)
 {
     OD_LOG_ENTER(); //####
-    if (_endpointEditor)
-    {
-        _endpointEditor->ignoreNextFocusLoss();
-    }
-    if (_portEditor)
-    {
-        _portEditor->ignoreNextFocusLoss();
-    }
-    if (_tagEditor)
-    {
-        _tagEditor->ignoreNextFocusLoss();
-    }
     for (size_t ii = 0, maxf = _standardFieldEditors.size(); maxf > ii; ++ii)
     {
         TextEditorWithCaption * anEditor = _standardFieldEditors[static_cast<int>(ii)];
@@ -925,7 +752,7 @@ void SettingsWindow::tellAllFieldsToIgnoreNextFocusLoss(void)
         }
     }
     OD_LOG_EXIT(); //####
-} // SettingsWindow::tellAllFieldsToIgnoreNextFocusLoss
+} // ConfigurationWindow::tellAllFieldsToIgnoreNextFocusLoss
 
 #if defined(__APPLE__)
 # pragma mark Global functions

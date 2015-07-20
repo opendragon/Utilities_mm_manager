@@ -69,11 +69,18 @@ namespace MPlusM_Manager
         
         /*! @brief Check if the provided value is valid according to the field description.
          @param toBeChecked The value to be checked.
+         @returns @c true if the value is accepted by the field description and @c false
+         otherwise. */
+        bool checkValidity(const String & toBeChecked)
+        const;
+        
+        /*! @brief Check if the provided value is valid according to the field description.
+         @param toBeChecked The value to be checked.
          @param argsToUse A set of valid arguments.
          @returns @c true if the value is accepted by the field description and @c false
          otherwise. */
         bool checkValidity(const String & toBeChecked,
-                           StringArray *  argsToUse = NULL)
+                           StringArray &  argsToUse)
         const;
         
         /*! @brief Return @c true if the validator is for file paths and @c false otherwise.

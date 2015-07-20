@@ -202,7 +202,7 @@ namespace MPlusM_Manager
         
         /*! @brief Return the name of the associated port.
          @returns The name of the associated port. */
-        inline YarpString getPortName(void)
+        inline const YarpString & getPortName(void)
         const
         {
             return _portName;
@@ -210,7 +210,7 @@ namespace MPlusM_Manager
         
         /*! @brief Return the port number of the associated port.
          @returns The port number of the associated port. */
-        inline YarpString getPortNumber(void)
+        inline const YarpString & getPortNumber(void)
         const
         {
             return _portPortNumber;
@@ -223,7 +223,7 @@ namespace MPlusM_Manager
         
         /*! @brief Return the protocol of the associated port.
          @returns The protocol of the associated port. */
-        inline YarpString getProtocol(void)
+        inline const YarpString & getProtocol(void)
         const
         {
             return _portProtocol;
@@ -231,7 +231,7 @@ namespace MPlusM_Manager
         
         /*! @brief Return the description of the protocol for the associated port.
          @returns The description of the protocol for the associated port. */
-        inline YarpString getProtocolDescription(void)
+        inline const YarpString & getProtocolDescription(void)
         const
         {
             return _protocolDescription;

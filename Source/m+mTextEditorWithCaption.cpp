@@ -92,18 +92,19 @@ using namespace std;
 TextEditorWithCaption::TextEditorWithCaption(TextEditorErrorResponder & responder,
                                              Font &                     regularLabelFont,
                                              Font &                     errorLabelFont,
+                                             const size_t               index,
                                              TextValidator *            validator,
                                              const String &             componentName,
                                              juce_wchar                 passwordCharacter) :
 	inherited(componentName, passwordCharacter), _responder(responder), _errorFont(errorLabelFont),
     _regularFont(regularLabelFont), _button(NULL), _validator(validator), _caption(new Label),
-    _ignoreNextFocusLoss(false)
+    _index(index), _ignoreNextFocusLoss(false)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P4("responder = ", &responder, "regularLabelFont = ", &regularLabelFont, //####
               "errorLabelFont = ", &errorLabelFont, "validator = ", validator); //####
     OD_LOG_S1s("componentName = ", componentName.toStdString()); //####
-    OD_LOG_LL1("passwordCharacter = ", passwordCharacter); //####
+    OD_LOG_LL2("index = ", index, "passwordCharacter = ", passwordCharacter); //####
     setFont(_regularFont);
     _caption->setFont(_regularFont);
     setEscapeAndReturnKeysConsumed(false);
@@ -223,7 +224,7 @@ bool TextEditorWithCaption::keyPressed(const KeyPress & key)
     }
     OD_LOG_OBJEXIT_B(result); //####
     return result;
-} // SettingsWindow::keyPressed
+} // TextEditorWithCaption::keyPressed
 
 void TextEditorWithCaption::makeFileSelection(void)
 {
@@ -314,10 +315,35 @@ void TextEditorWithCaption::setButton(TextButton * newButton)
     OD_LOG_OBJEXIT(); //####
 } // TextEditorWithCaption::setButton
 
-bool TextEditorWithCaption::validateField(StringArray * argsToUse)
+bool TextEditorWithCaption::validateField(void)
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("argsToUse = ", argsToUse); //####
+    bool result;
+    
+    if (_validator)
+    {
+        result = _validator->checkValidity(getText());
+    }
+    else
+    {
+        result = true;
+    }
+    if (result)
+    {
+        markAsValid();
+    }
+    else
+    {
+        markAsInvalid();
+    }
+    OD_LOG_OBJEXIT_B(result); //####
+    return result;
+} // TextEditorWithCaption::validateField
+
+bool TextEditorWithCaption::validateField(StringArray & argsToUse)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("argsToUse = ", &argsToUse); //####
     bool result;
     
     if (_validator)
@@ -327,10 +353,7 @@ bool TextEditorWithCaption::validateField(StringArray * argsToUse)
     else
     {
         result = true;
-        if (argsToUse)
-        {
-            argsToUse->add(getText());
-        }
+        argsToUse.add(getText());
     }
     if (result)
     {

@@ -72,12 +72,12 @@ static const Colour & kWindowBackgroundColour(Colours::lightgrey);
 
 #if SETTINGS_FOR_MANUAL_
 /*! @brief The height of the fixed, small window used when doing screen captures for the manual. */
-static const int kSettingsWindowHeight = 320;
+static const int kWindowHeightForManual = 320;
 #endif // SETTINGS_FOR_MANUAL_
 
 #if SETTINGS_FOR_MANUAL_
 /*! @brief The width of the fixed, small window used when doing screen captures for the manual. */
-static const int kSettingsWindowWidth = 640;
+static const int kWindowWidthForManual = 640;
 #endif // SETTINGS_FOR_MANUAL_
 
 /*! @brief The command manager object used to dispatch command events. */
@@ -108,7 +108,7 @@ ManagerWindow::ManagerWindow(const YarpString & title)  :
     setResizable(true, true);
     setContentOwned(_contentPanel, true);
 #if SETTINGS_FOR_MANUAL_
-    centreWithSize(kSettingsWindowWidth, kSettingsWindowHeight);
+    centreWithSize(kWindowWidthForManual, kWindowHeightForManual);
 #else // ! SETTINGS_FOR_MANUAL_
     centreWithSize(getWidth(), getHeight());
 #endif // ! SETTINGS_FOR_MANUAL_

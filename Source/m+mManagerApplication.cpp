@@ -420,10 +420,10 @@ void ManagerApplication::doCleanupSoon(void)
 void ManagerApplication::doLaunchAService(const ApplicationInfo & appInfo)
 {
     OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("appInfo = ", &appInfo); //####
     bool                     okSoFar = false;
     String                   caption("Launching the ");
     String                   execType;
-    YarpStringVector         services;
 #if MAC_OR_LINUX_
     yarp::os::impl::Logger & theLogger = Common::GetLogger();
 #endif // MAC_OR_LINUX_
@@ -431,6 +431,8 @@ void ManagerApplication::doLaunchAService(const ApplicationInfo & appInfo)
     caption += appInfo._description;
     if (0 < appInfo._criteria.length())
     {
+        YarpStringVector services;
+        
         execType = "adapter";
         if (Utilities::GetServiceNamesFromCriteria(appInfo._criteria.toStdString(), services))
         {
