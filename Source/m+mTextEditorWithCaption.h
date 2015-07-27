@@ -53,6 +53,9 @@
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
 
+/*! @brief The character to use when displaying a 'password' field. */
+# define CHAR_TO_USE_FOR_PASSWORD_ '*'
+
 namespace MPlusM_Manager
 {
     class TextEditorErrorResponder;
