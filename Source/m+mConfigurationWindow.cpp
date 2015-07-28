@@ -662,6 +662,8 @@ void ConfigurationWindow::setUpStandardFields(int &                    widthSoFa
             else
             {
                 bool                    forOutput;
+                juce_wchar              fillChar = (aDescriptor->isPassword() ?
+                                                    CHAR_TO_USE_FOR_PASSWORD_ : 0);
                 String                  descriptionPrefix;
                 String                  valueToUse;
                 TextValidator *         newValidator = new TextValidator(*aDescriptor);

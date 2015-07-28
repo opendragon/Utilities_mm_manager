@@ -54,7 +54,7 @@
 # endif // defined(__APPLE__)
 
 /*! @brief The character to use when displaying a 'password' field. */
-# define CHAR_TO_USE_FOR_PASSWORD_ '*'
+# define CHAR_TO_USE_FOR_PASSWORD_ 0x02022 /* '*' */
 
 namespace MPlusM_Manager
 {

@@ -832,7 +832,7 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
             else
             {
                 bool                    forOutput;
-                char                    fillChar = (aDescriptor->isPassword() ?
+                juce_wchar              fillChar = (aDescriptor->isPassword() ?
                                                     CHAR_TO_USE_FOR_PASSWORD_ : 0);
                 String                  descriptionPrefix;
                 TextValidator *         newValidator = new TextValidator(*aDescriptor);
