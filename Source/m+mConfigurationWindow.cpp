@@ -670,7 +670,7 @@ void ConfigurationWindow::setUpStandardFields(int &                    widthSoFa
                 TextEditorWithCaption * newEditor = new TextEditorWithCaption(*this, _regularFont,
                                                                               _errorFont, ii,
                                                                               newValidator,
-                                                                              argName);
+                                                                              argName, fillChar);
                 Label *                 newLabel = newEditor->getCaption();
                 
                 if (aDescriptor->isOptional())
