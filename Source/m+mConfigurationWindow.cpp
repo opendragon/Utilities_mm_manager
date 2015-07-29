@@ -659,7 +659,7 @@ void ConfigurationWindow::setUpStandardFields(int &                    widthSoFa
                     content->addChildComponent(_removeArgumentsButton);
                 }
             }
-            else
+            else if (aDescriptor->isModifiable())
             {
                 bool                    forOutput;
                 juce_wchar              fillChar = (aDescriptor->isPassword() ?

@@ -213,21 +213,35 @@ ChannelEntry * ChannelContainer::addPort(const YarpString &  portName,
 bool ChannelContainer::canBeConfigured(void)
 {
     OD_LOG_OBJENTER(); //####
+    bool   gotOne = false;
     bool   result;
     size_t mm = _argumentList.size();
 
     if (mm)
     {
         result = true;
-        for (size_t ii = 0; /*result &&*/ (mm > ii); ++ii)
+        for (size_t ii = 0; result && (mm > ii); ++ii)
         {
             MplusM::Utilities::BaseArgumentDescriptor * argDesc = _argumentList[ii];
 
-            if (argDesc && (! argDesc->isModifiable()))
+            if (argDesc)
             {
-                result = false;
+                // Skip over the required fields, since they won't be displayed. Also, ignore any
+                // 'extra' fields, since they can't be displayed either.
+                if ((! argDesc->isRequired()) && (! argDesc->isExtra()))
+                {
+                    if (argDesc->isModifiable())
+                    {
+                        gotOne = true;
+                    }
+                    else
+                    {
+                        result = false;
+                    }
+                }
             }
         }
+        result &= gotOne;
     }
     else
     {
