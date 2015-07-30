@@ -89,7 +89,7 @@ namespace MPlusM_Manager
          @param execType The kind of application being configured.
          @param currentValues The current set of values for the fields.
          @param descriptors The provided argument descriptions.
-         @param argsToUse The resulting arguments for the application. */
+         @param valuesToUse The resulting arguments for the application. */
         ConfigurationWindow(const String &                              title,
                             const String &                              execType,
                             const YarpStringVector &                    currentValues,
