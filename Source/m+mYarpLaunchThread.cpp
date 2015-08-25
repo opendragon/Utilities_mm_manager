@@ -141,6 +141,11 @@ void YarpLaunchThread::run(void)
             const String childOutput(_yarpProcess->readAllProcessOutput());
             
             _yarpProcess->waitForProcessToFinish(-1);
+            OD_LOG_S1s("childOutput = ", childOutput.toStdString()); //####
+        }
+        else
+        {
+            OD_LOG("! (_yarpProcess->start(nameAndArgs, 0))"); //####
         }
     }
     OD_LOG_OBJEXIT(); //####

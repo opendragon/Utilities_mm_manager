@@ -736,9 +736,7 @@ void ScannerThread::run(void)
             _cleanupSoon = false;
             OD_LOG_B1("_cleanupSoon <- ", _cleanupSoon); //####
             relinquishFromWrite();
-#if defined(CHECK_FOR_STALE_PORTS_)
             Utilities::RemoveStalePorts();
-#endif // defined(CHECK_FOR_STALE_PORTS_)
         }
         else if (_delayScan)
         {

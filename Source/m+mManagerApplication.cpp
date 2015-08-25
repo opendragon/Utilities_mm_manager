@@ -185,6 +185,9 @@ bool caseInsensitiveMatch(const char * string1,
 # pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
+//#include <odl/ODEnableLogging.h>
+#include <odl/ODLogging.h>
+
 ManagerApplication::ManagerApplication(void) :
     inherited(), _mainWindow(NULL), _yarp(NULL), _scanner(NULL),
     _registryLauncher(NULL), _yarpLauncher(NULL), _peeker(NULL),
@@ -218,11 +221,11 @@ ManagerApplication::~ManagerApplication(void)
 #endif // ! MAC_OR_LINUX_
 void ManagerApplication::anotherInstanceStarted(const String & commandLine)
 {
-#if (! defined(OD_ENABLE_LOGGING))
+#if (! defined(OD_ENABLE_LOGGING_))
 # if MAC_OR_LINUX_
 #  pragma unused(commandLine)
 # endif // MAC_OR_LINUX_
-#endif // ! defined(OD_ENABLE_LOGGING)
+#endif // ! defined(OD_ENABLE_LOGGING_)
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("commandLine = ", commandLine.toStdString()); //####
     // When another instance of the app is launched while this one is running,
@@ -723,6 +726,7 @@ bool ManagerApplication::getArgumentsForApplication(ApplicationInfo & theInfo)
         const String childOutput(runApplication.readAllProcessOutput());
 
         runApplication.waitForProcessToFinish(kThreadKillTime);
+        OD_LOG_S1s("childOutput = ", childOutput.toStdString()); //####
         if (0 < childOutput.length())
         {
             StringArray aRecord(StringArray::fromTokens(childOutput, ARGUMENT_SEPARATOR_, ""));
@@ -743,6 +747,10 @@ bool ManagerApplication::getArgumentsForApplication(ApplicationInfo & theInfo)
             }
             okSoFar = true;
         }
+    }
+    else
+    {
+        OD_LOG("! (runApplication.start(nameAndArgs))"); //####
     }
     OD_LOG_OBJEXIT_B(okSoFar); //####
     return okSoFar;
@@ -804,6 +812,7 @@ void ManagerApplication::getEnvironmentVars(YarpStringVector & keys,
         const String childOutput(runApplication.readAllProcessOutput());
         
         runApplication.waitForProcessToFinish(kThreadKillTime);
+        OD_LOG_S1s("childOutput = ", childOutput.toStdString()); //####
         if (0 < childOutput.length())
         {
             StringArray aRecord(StringArray::fromTokens(childOutput, "\n", ""));
@@ -820,6 +829,10 @@ void ManagerApplication::getEnvironmentVars(YarpStringVector & keys,
                 }
             }
         }
+    }
+    else
+    {
+        OD_LOG("! (runApplication.start(nameAndArgs))"); //####
     }
 #else // ! defined(__APPLE__)
     for (int ii = 0, numVars = varsAsBottle.size(); numVars > ii; ++ii)
@@ -892,6 +905,7 @@ bool ManagerApplication::getParametersForApplication(const String &    execName,
             const String childOutput(runApplication.readAllProcessOutput());
             
             runApplication.waitForProcessToFinish(kThreadKillTime);
+            OD_LOG_S1s("childOutput = ", childOutput.toStdString()); //####
             if (0 < childOutput.length())
             {
                 StringArray aRecord(StringArray::fromTokens(childOutput, "\t", ""));
@@ -925,6 +939,10 @@ bool ManagerApplication::getParametersForApplication(const String &    execName,
                     }
                 }
             }
+        }
+        else
+        {
+            OD_LOG("! (runApplication.start(nameAndArgs))"); //####
         }
     }
     OD_LOG_OBJEXIT_B(okSoFar); //####
@@ -975,6 +993,7 @@ bool ManagerApplication::getPrimaryChannelForService(const ApplicationInfo & app
         const String childOutput(runApplication.readAllProcessOutput());
 
         runApplication.waitForProcessToFinish(kThreadKillTime);
+        OD_LOG_S1s("childOutput = ", childOutput.toStdString()); //####
         if (0 < childOutput.length())
         {
             StringArray aRecord(StringArray::fromTokens(childOutput, "\t", ""));
@@ -985,6 +1004,10 @@ bool ManagerApplication::getPrimaryChannelForService(const ApplicationInfo & app
                 okSoFar = true;
             }
         }
+    }
+    else
+    {
+        OD_LOG("! (runApplication.start(nameAndArgs))"); //####
     }
     OD_LOG_OBJEXIT_B(okSoFar); //####
     return okSoFar;
@@ -1066,11 +1089,11 @@ String ManagerApplication::getUserName(void)
 #endif // ! MAC_OR_LINUX_
 void ManagerApplication::initialise(const String & commandLine)
 {
-#if (! defined(OD_ENABLE_LOGGING))
+#if (! defined(OD_ENABLE_LOGGING_))
 # if MAC_OR_LINUX_
 #  pragma unused(commandLine)
 # endif // MAC_OR_LINUX_
-#endif // ! defined(OD_ENABLE_LOGGING)
+#endif // ! defined(OD_ENABLE_LOGGING_)
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("commandLine = ", commandLine.toStdString()); //####
     bool launchedRegistry = false;
@@ -1216,6 +1239,11 @@ void ManagerApplication::restoreYarpConfiguration(void)
         const String childOutput(runYarp.readAllProcessOutput());
 
         runYarp.waitForProcessToFinish(kThreadKillTime);
+        OD_LOG_S1s("childOutput = ", childOutput.toStdString()); //####
+    }
+    else
+    {
+        OD_LOG("! (runYarp.start(nameAndArgs))"); //####
     }
     OD_LOG_OBJEXIT(); //####
 } // ManagerApplication::restoreYarpConfiguration
@@ -1301,6 +1329,7 @@ bool ManagerApplication::validateRegistryService(void)
         const String childOutput(runRegistryService.readAllProcessOutput());
         
         runRegistryService.waitForProcessToFinish(kThreadKillTime);
+        OD_LOG_S1s("childOutput = ", childOutput.toStdString()); //####
         if (0 < childOutput.length())
         {
             // We have a useable Registry Service executable - ask what the user wants to do.
@@ -1332,6 +1361,7 @@ bool ManagerApplication::validateRegistryService(void)
     }
     else
     {
+        OD_LOG("! (runRegistryService.start(nameAndArgs))"); //####
         AlertWindow::showMessageBox(AlertWindow::WarningIcon, appName,
                                     "The Registry Service executable found in the PATH system "
                                     "environment variable could not be started. "
@@ -1357,6 +1387,7 @@ bool ManagerApplication::validateYarp(void)
         const String childOutput(runYarp.readAllProcessOutput());
         
         runYarp.waitForProcessToFinish(kThreadKillTime);
+        OD_LOG_S1s("childOutput = ", childOutput.toStdString()); //####
         if (0 < childOutput.length())
         {
             // We have a useable YARP executable - ask what the user wants to do.
@@ -1386,6 +1417,7 @@ bool ManagerApplication::validateYarp(void)
     }
     else
     {
+        OD_LOG("! (runYarp.start(nameAndArgs))"); //####
         AlertWindow::showMessageBox(AlertWindow::WarningIcon, appName,
                                     "No YARP network was detected and the YARP executable found in "
                                     "the PATH system environment variable could not be started. "
@@ -1434,11 +1466,11 @@ void MPlusM_Manager::CalculateTextArea(Point<int> &   dimensions,
 #endif // ! MAC_OR_LINUX_
 bool CheckForExit(void * stuff)
 {
-#if (! defined(OD_ENABLE_LOGGING))
+#if (! defined(OD_ENABLE_LOGGING_))
 # if MAC_OR_LINUX_
 #  pragma unused(stuff)
 # endif // MAC_OR_LINUX_
-#endif // ! defined(OD_ENABLE_LOGGING)
+#endif // ! defined(OD_ENABLE_LOGGING_)
     OD_LOG_ENTER(); //####
     OD_LOG_P1("stuff = ", stuff); //####
     OD_LOG_EXIT_B(lExitRequested); //####

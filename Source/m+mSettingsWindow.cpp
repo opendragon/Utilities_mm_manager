@@ -354,6 +354,7 @@ bool SettingsWindow::fieldsAreValid(void)
     
     // Counterintuitively, we check the values from the descriptors first, before checking the
     // endpoint, port or tag values.
+    _argsToUse.clear();
     for (size_t ii = 0, maxf = _standardFieldEditors.size(); maxf > ii; ++ii)
     {
         TextEditorWithCaption * anEditor = _standardFieldEditors[static_cast<int>(ii)];

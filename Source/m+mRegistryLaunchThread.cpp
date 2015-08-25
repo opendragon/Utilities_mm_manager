@@ -140,6 +140,11 @@ void RegistryLaunchThread::run(void)
             const String childOutput(_registryServiceProcess->readAllProcessOutput());
             
             _registryServiceProcess->waitForProcessToFinish(-1);
+            OD_LOG_S1s("childOutput = ", childOutput.toStdString()); //####
+        }
+        else
+        {
+            OD_LOG("! (_registryServiceProcess->start(nameAndArgs, 0))"); //####
         }
     }
     OD_LOG_OBJEXIT(); //####

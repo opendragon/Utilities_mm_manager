@@ -272,11 +272,11 @@ StringArray ContentPanel::getMenuBarNames(void)
 PopupMenu ContentPanel::getMenuForIndex(int            menuIndex,
                                         const String & menuName)
 {
-#if (! defined(OD_ENABLE_LOGGING))
+#if (! defined(OD_ENABLE_LOGGING_))
 # if MAC_OR_LINUX_
 #  pragma unused(menuName)
 # endif // MAC_OR_LINUX_
-#endif // ! defined(OD_ENABLE_LOGGING)
+#endif // ! defined(OD_ENABLE_LOGGING_)
 	OD_LOG_OBJENTER(); //####
     OD_LOG_LL1("menuIndex = ", menuIndex); //####
     OD_LOG_S1s("menuName = ", menuName.toStdString()); //####
@@ -338,14 +338,15 @@ ApplicationCommandTarget * ContentPanel::getNextCommandTarget(void)
 void ContentPanel::menuItemSelected(int menuItemID,
                                     int topLevelMenuIndex)
 {
-#if (! defined(OD_ENABLE_LOGGING))
+#if (! defined(OD_ENABLE_LOGGING_))
 # if MAC_OR_LINUX_
 #  pragma unused(topLevelMenuIndex)
 # endif // MAC_OR_LINUX_
-#endif // ! defined(OD_ENABLE_LOGGING)
+#endif // ! defined(OD_ENABLE_LOGGING_)
 	OD_LOG_OBJENTER(); //####
     OD_LOG_LL2("menuItemID = ", menuItemID, "topLevelMenuIndex = ", topLevelMenuIndex); //####
-    bool isChannel = false;
+    bool                 isChannel = false;
+    ManagerApplication * ourApp = ManagerApplication::getApp();
     
     if (_selectedChannel)
     {
@@ -384,6 +385,10 @@ void ContentPanel::menuItemSelected(int menuItemID,
 
         case kPopupStopService :
             _selectedContainer->stopTheService();
+            if (ourApp)
+            {
+                ourApp->doCleanupSoon();
+            }
             break;
            
             // Channel menu items
@@ -1254,11 +1259,11 @@ void ContentPanel::updatePanels(ScannerThread & scanner)
 #endif // ! MAC_OR_LINUX_
 void ContentPanel::visibleAreaChanged(const juce::Rectangle<int> & newVisibleArea)
 {
-#if (! defined(OD_ENABLE_LOGGING))
+#if (! defined(OD_ENABLE_LOGGING_))
 # if MAC_OR_LINUX_
 #  pragma unused(newVisibleArea)
 # endif // MAC_OR_LINUX_
-#endif // ! defined(OD_ENABLE_LOGGING)
+#endif // ! defined(OD_ENABLE_LOGGING_)
     OD_LOG_OBJENTER(); //####
     OD_LOG_LL4("nVA.x = ", newVisibleArea.getX(), "nVA.y = ", newVisibleArea.getY(), //####
                "nVA.w = ", newVisibleArea.getWidth(), "nVA.h = ", //####

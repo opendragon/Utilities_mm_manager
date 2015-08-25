@@ -610,18 +610,18 @@ void ConfigurationWindow::setUpStandardFields(int &                    widthSoFa
         bool                                forOutput;
         Utilities::BaseArgumentDescriptor * aDescriptor = _descriptors[ii];
         
-        if (aDescriptor && aDescriptor->isForFiles(forOutput))
+        if (aDescriptor && (! aDescriptor->isRequired()) && aDescriptor->isForFiles(forOutput))
         {
             _hasFileField = true;
             break;
         }
 
     }
-    for (size_t ii = 0; numDescriptors > ii; ++ii)
+    for (size_t ii = 0, jj = 0; numDescriptors > ii; ++ii)
     {
         Utilities::BaseArgumentDescriptor * aDescriptor = _descriptors[ii];
         
-        if (aDescriptor)
+        if (aDescriptor && (! aDescriptor->isRequired()))
         {
             String argName(aDescriptor->argumentName().c_str());
             String argDescription(aDescriptor->argumentDescription().c_str());
@@ -687,9 +687,9 @@ void ConfigurationWindow::setUpStandardFields(int &                    widthSoFa
                 _standardFieldEditors.add(newEditor);
                 newEditor->setBounds(kFieldInset, heightSoFar, widthSoFar - kFieldInset,
                                      static_cast<int>(_adjustedEditorHeight));
-                if (ii < currentValues.size())
+                if (jj < currentValues.size())
                 {
-                    valueToUse = currentValues[ii].c_str();
+                    valueToUse = currentValues[jj].c_str();
                 }
                 else
                 {
@@ -712,6 +712,7 @@ void ConfigurationWindow::setUpStandardFields(int &                    widthSoFa
                 }
                 heightSoFar = newEditor->getY() + newEditor->getHeight() + (kButtonGap / 2);
             }
+            ++jj;
         }
     }
     _cancelButton.setWantsKeyboardFocus(true);

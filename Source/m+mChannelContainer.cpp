@@ -42,6 +42,7 @@
 #include "m+mConfigurationWindow.h"
 #include "m+mContentPanel.h"
 #include "m+mEntitiesPanel.h"
+#include "m+mManagerApplication.h"
 
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
@@ -337,7 +338,7 @@ void ChannelContainer::configureTheService(void)
                     if (ConfigurationWindow::kConfigurationOK == configuration->runModalLoop())
                     {
                         if (Utilities::SetConfigurationForService(aPort->getPortName(), valuesToUse,
-                                                              STANDARD_WAIT_TIME_))
+                                                                  STANDARD_WAIT_TIME_))
                         {
                             YarpString holder;
                             
@@ -443,8 +444,42 @@ void ChannelContainer::displayInformation(const bool moreDetails)
     bodyText += thePanelDescription.c_str();
     if (moreDetails)
     {
-        YarpString requests;
-
+        for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
+        {
+            ChannelEntry * aPort = getPort(ii);
+            
+            if (aPort && aPort->isService())
+            {
+                bool configurable;
+                
+                switch (Utilities::MapStringToServiceKind(_behaviour))
+                {
+                    case Common::kServiceKindAdapter :
+                    case Common::kServiceKindFilter :
+                    case Common::kServiceKindInput :
+                    case Common::kServiceKindOutput :
+                        configurable = canBeConfigured();
+                        break;
+                        
+                    default :
+                        configurable = false;
+                        break;
+                        
+                }
+                if (configurable)
+                {
+                    YarpString holder;
+                    
+                    if (Utilities::GetExtraInformationForService(aPort->getPortName(), holder,
+                                                                 STANDARD_WAIT_TIME_))
+                    {
+                        _extraInfo = holder;
+                    }
+                }
+                break;
+                
+            }
+        }
         if (0 < _extraInfo.length())
         {
             bodyText += "\n";
@@ -1006,8 +1041,19 @@ void ChannelContainer::stopTheService(void)
                     thePanel->setChannelOfInterest(NULL);
                     thePanel->setContainerOfInterest(NULL);
                 }
-                Utilities::StopAService(aPort->getPortName(), STANDARD_WAIT_TIME_);
-                _owner.repaint();
+                if (Utilities::StopAService(aPort->getPortName(), STANDARD_WAIT_TIME_))
+                {
+                    _owner.repaint();
+                }
+                else
+                {
+                    ManagerApplication * ourApp = ManagerApplication::getApp();
+                    
+                    if (ourApp)
+                    {
+                        ourApp->doScanSoon();
+                    }
+                }
             }
             break;
             

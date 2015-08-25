@@ -102,6 +102,11 @@ ServiceLaunchThread::ServiceLaunchThread(const String &      pathToExecutable,
                portNumber.toStdString()); //####
     OD_LOG_P1("arguments = ", &arguments); //####
     OD_LOG_B1("needsGo = ", needsGo); //####
+#if defined(OD_ENABLE_LOGGING_)
+    String allArgs(arguments.joinIntoString(", "));
+    
+    OD_LOG_S1s("allArgs <- ", allArgs.toStdString()); //####
+#endif // defined(OD_ENABLE_LOGGING_)
     OD_LOG_EXIT_P(this); //####
 } // ServiceLaunchThread::ServiceLaunchThread
 
@@ -169,6 +174,11 @@ void ServiceLaunchThread::run(void)
             const String childOutput(_serviceProcess->readAllProcessOutput());
             
             _serviceProcess->waitForProcessToFinish(-1);
+            OD_LOG_S1s("childOutput = ", childOutput.toStdString()); //####
+        }
+        else
+        {
+            OD_LOG("! (_serviceProcess->start(nameAndArgs, 0))"); //####
         }
     }
     OD_LOG_OBJEXIT(); //####

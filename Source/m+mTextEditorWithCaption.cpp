@@ -239,7 +239,7 @@ void TextEditorWithCaption::makeFileSelection(void)
             if (forOutput)
             {
                 FileChooser fc("Choose a file to write to...", File::getCurrentWorkingDirectory(),
-                               "*", false);
+                               "*", true);
                 
                 if (fc.browseForFileToSave(true))
                 {
@@ -256,7 +256,7 @@ void TextEditorWithCaption::makeFileSelection(void)
             else
             {
                 FileChooser fc("Choose a file to open...", File::getCurrentWorkingDirectory(), "*",
-                               false);
+                               true);
                 
                 if (fc.browseForFileToOpen())
                 {
