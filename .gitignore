@@ -39,3 +39,4 @@ Builds/MacOSX/build
 sloc_hashes
 Builds/VisualStudio2013/Debug/CMResources.res
 Builds/VisualStudio2013/Release/CMResources.res
+m+mmResources.res
