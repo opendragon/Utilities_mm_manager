@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       m+mTextEditorErrorResponder.cpp
+//  File:       m+mFormFieldErrorResponder.cpp
 //
 //  Project:    m+m
 //
@@ -32,11 +32,11 @@
 //              ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 //              DAMAGE.
 //
-//  Created:    2015-06-11
+//  Created:    2015-08-31
 //
 //--------------------------------------------------------------------------------------------------
 
-#include "m+mTextEditorErrorResponder.h"
+#include "m+mFormFieldErrorResponder.h"
 
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
@@ -86,17 +86,17 @@ using namespace std;
 # pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
-TextEditorErrorResponder::TextEditorErrorResponder(void)
+FormFieldErrorResponder::FormFieldErrorResponder(void)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_EXIT_P(this); //####
-} // TextEditorErrorResponder::TextEditorErrorResponder
+} // FormFieldErrorResponder::FormFieldErrorResponder
 
-TextEditorErrorResponder::~TextEditorErrorResponder(void)
+FormFieldErrorResponder::~FormFieldErrorResponder(void)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_OBJEXIT(); //####
-} // TextEditorErrorResponder::~TextEditorErrorResponder
+} // FormFieldErrorResponder::~FormFieldErrorResponder
 
 #if defined(__APPLE__)
 # pragma mark Actions and Accessors

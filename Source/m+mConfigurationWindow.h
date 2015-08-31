@@ -39,7 +39,8 @@
 #if (! defined(mpmConfigurationWindow_H_))
 # define mpmConfigurationWindow_H_ /* Header guard */
 
-# include "m+mTextEditorErrorResponder.h"
+# include "m+mFormFieldErrorResponder.h"
+# include "m+mValidatingTextEditor.h"
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -55,13 +56,11 @@
 
 namespace MPlusM_Manager
 {
-    class TextEditorWithCaption;
-    
     /*! @brief The configuration window of the application. */
     class ConfigurationWindow : private AsyncUpdater,
                                 private ButtonListener,
                                 public DocumentWindow,
-                                public TextEditorErrorResponder
+                                public FormFieldErrorResponder
     {
     public :
         
@@ -141,8 +140,12 @@ namespace MPlusM_Manager
         
         /*! @brief Report an error in a field.
          @param fieldOfInterest The field to be reported. */
-        virtual void reportErrorInField(TextEditorWithCaption & fieldOfInterest);
+        virtual void reportErrorInField(FormField & fieldOfInterest);
         
+        /*! @brief Report an error in a field.
+         @param fieldOfInterest The field to be reported. */
+        virtual void reportErrorInField(ValidatingTextEditor & fieldOfInterest);
+
         /*! @brief Called when the component size has been changed. */
         virtual void resized(void);
         
@@ -174,7 +177,7 @@ namespace MPlusM_Manager
         typedef DocumentWindow inherited3;
         
         /*! @brief The fourth class that this class is derived from. */
-        typedef TextEditorErrorResponder inherited4;
+        typedef FormFieldErrorResponder inherited4;
         
         /*! @brief The descriptive text at the top of the window. */
         Label _topText;
@@ -202,12 +205,12 @@ namespace MPlusM_Manager
         
         /*! @brief The provided argument descriptions. */
         const MplusM::Utilities::DescriptorVector & _descriptors;
-        
+                
         /*! @brief The set of extra fields. */
-        OwnedArray<TextEditorWithCaption> _extraFieldEditors;
+        OwnedArray<FormField> _extraFields;
         
         /*! @brief The set of standard fields. */
-        OwnedArray<TextEditorWithCaption> _standardFieldEditors;
+        OwnedArray<FormField> _standardFields;
         
         /*! @brief The 'extra arguments' area of the window. */
         ScopedPointer<GroupComponent> _extraArgumentsGroup;

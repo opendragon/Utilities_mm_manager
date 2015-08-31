@@ -39,9 +39,7 @@
 		DF0B256719FAE7C2001AEB0C /* libACE.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0B256119FAE7C2001AEB0C /* libACE.dylib */; };
 		DF0B256A19FAE7C2001AEB0C /* libOGDF.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0B256419FAE7C2001AEB0C /* libOGDF.a */; };
 		DF0E540E1B287C3A00A74A49 /* m+mSettingsWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF0E540C1B287C3A00A74A49 /* m+mSettingsWindow.cpp */; };
-		DF0E54111B29D2D300A74A49 /* m+mTextEditorWithCaption.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF0E540F1B29D2D300A74A49 /* m+mTextEditorWithCaption.cpp */; };
 		DF0E54141B29E31100A74A49 /* m+mTextValidator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF0E54121B29E31100A74A49 /* m+mTextValidator.cpp */; };
-		DF0E54171B2A012C00A74A49 /* m+mTextEditorErrorResponder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF0E54151B2A012C00A74A49 /* m+mTextEditorErrorResponder.cpp */; };
 		DF2934351B470AD20067FBB0 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DF2934341B470AD20067FBB0 /* Images.xcassets */; };
 		DF2934441B4714AA0067FBB0 /* libYARP_init.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF2934401B4714AA0067FBB0 /* libYARP_init.1.dylib */; };
 		DF2934451B4714AA0067FBB0 /* libYARP_name.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF2934411B4714AA0067FBB0 /* libYARP_name.1.dylib */; };
@@ -52,6 +50,10 @@
 		DF8888281AFBD66C001320EB /* m+mRegistryLaunchThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF8888261AFBD66C001320EB /* m+mRegistryLaunchThread.cpp */; };
 		DFADC9FA19D0C236002C2663 /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DFADC9F919D0C236002C2663 /* libc++.dylib */; };
 		DFC3C5881B5D49EF00D79441 /* m+mConfigurationWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DFC3C5861B5D49EF00D79441 /* m+mConfigurationWindow.cpp */; };
+		DFEF83E41B94930900C0ACDD /* m+mFormField.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DFEF83E21B94930900C0ACDD /* m+mFormField.cpp */; };
+		DFEF83E71B9494B800C0ACDD /* m+mFormFieldErrorResponder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DFEF83E51B9494B800C0ACDD /* m+mFormFieldErrorResponder.cpp */; };
+		DFEF83EA1B949DB100C0ACDD /* m+mCaptionedTextField.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DFEF83E81B949DB100C0ACDD /* m+mCaptionedTextField.cpp */; };
+		DFEF83ED1B94B8CC00C0ACDD /* m+mValidatingTextEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DFEF83EB1B94B8CC00C0ACDD /* m+mValidatingTextEditor.cpp */; };
 		E2FED85FB76A3966795E8416 /* juce_core.mm in Sources */ = {isa = PBXBuildFile; fileRef = ADC373CE4DEDF850BDE3A738 /* juce_core.mm */; };
 		E423C86693E599625A6112CC /* m+mPortData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93AD4B4E9FBADD52BACEF145 /* m+mPortData.cpp */; };
 		F33B431E9BA660F6B5034872 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA72840EFF14AF9F39FB65E /* Carbon.framework */; };
@@ -651,12 +653,8 @@
 		DF0B257219FAE7E6001AEB0C /* libACE.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libACE.dylib; path = "/opt/m+m/lib/libACE.dylib"; sourceTree = "<absolute>"; };
 		DF0E540C1B287C3A00A74A49 /* m+mSettingsWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "m+mSettingsWindow.cpp"; path = "../../Source/m+mSettingsWindow.cpp"; sourceTree = "<group>"; };
 		DF0E540D1B287C3A00A74A49 /* m+mSettingsWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "m+mSettingsWindow.h"; path = "../../Source/m+mSettingsWindow.h"; sourceTree = "<group>"; };
-		DF0E540F1B29D2D300A74A49 /* m+mTextEditorWithCaption.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "m+mTextEditorWithCaption.cpp"; path = "../../Source/m+mTextEditorWithCaption.cpp"; sourceTree = "<group>"; };
-		DF0E54101B29D2D300A74A49 /* m+mTextEditorWithCaption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "m+mTextEditorWithCaption.h"; path = "../../Source/m+mTextEditorWithCaption.h"; sourceTree = "<group>"; };
 		DF0E54121B29E31100A74A49 /* m+mTextValidator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "m+mTextValidator.cpp"; path = "../../Source/m+mTextValidator.cpp"; sourceTree = "<group>"; };
 		DF0E54131B29E31100A74A49 /* m+mTextValidator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "m+mTextValidator.h"; path = "../../Source/m+mTextValidator.h"; sourceTree = "<group>"; };
-		DF0E54151B2A012C00A74A49 /* m+mTextEditorErrorResponder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "m+mTextEditorErrorResponder.cpp"; path = "../../Source/m+mTextEditorErrorResponder.cpp"; sourceTree = "<group>"; };
-		DF0E54161B2A012C00A74A49 /* m+mTextEditorErrorResponder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "m+mTextEditorErrorResponder.h"; path = "../../Source/m+mTextEditorErrorResponder.h"; sourceTree = "<group>"; };
 		DF2934341B470AD20067FBB0 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = "m+m manager/Images.xcassets"; sourceTree = "<group>"; };
 		DF2934401B4714AA0067FBB0 /* libYARP_init.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libYARP_init.1.dylib; path = "../../../../../../../opt/m+m/lib/libYARP_init.1.dylib"; sourceTree = "<group>"; };
 		DF2934411B4714AA0067FBB0 /* libYARP_name.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libYARP_name.1.dylib; path = "../../../../../../../opt/m+m/lib/libYARP_name.1.dylib"; sourceTree = "<group>"; };
@@ -678,6 +676,14 @@
 		DFADC9F919D0C236002C2663 /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
 		DFC3C5861B5D49EF00D79441 /* m+mConfigurationWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "m+mConfigurationWindow.cpp"; path = "../../Source/m+mConfigurationWindow.cpp"; sourceTree = "<group>"; };
 		DFC3C5871B5D49EF00D79441 /* m+mConfigurationWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "m+mConfigurationWindow.h"; path = "../../Source/m+mConfigurationWindow.h"; sourceTree = "<group>"; };
+		DFEF83E21B94930900C0ACDD /* m+mFormField.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "m+mFormField.cpp"; path = "../../Source/m+mFormField.cpp"; sourceTree = "<group>"; };
+		DFEF83E31B94930900C0ACDD /* m+mFormField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "m+mFormField.h"; path = "../../Source/m+mFormField.h"; sourceTree = "<group>"; };
+		DFEF83E51B9494B800C0ACDD /* m+mFormFieldErrorResponder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "m+mFormFieldErrorResponder.cpp"; path = "../../Source/m+mFormFieldErrorResponder.cpp"; sourceTree = "<group>"; };
+		DFEF83E61B9494B800C0ACDD /* m+mFormFieldErrorResponder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "m+mFormFieldErrorResponder.h"; path = "../../Source/m+mFormFieldErrorResponder.h"; sourceTree = "<group>"; };
+		DFEF83E81B949DB100C0ACDD /* m+mCaptionedTextField.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "m+mCaptionedTextField.cpp"; path = "../../Source/m+mCaptionedTextField.cpp"; sourceTree = "<group>"; };
+		DFEF83E91B949DB100C0ACDD /* m+mCaptionedTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "m+mCaptionedTextField.h"; path = "../../Source/m+mCaptionedTextField.h"; sourceTree = "<group>"; };
+		DFEF83EB1B94B8CC00C0ACDD /* m+mValidatingTextEditor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "m+mValidatingTextEditor.cpp"; path = "../../Source/m+mValidatingTextEditor.cpp"; sourceTree = "<group>"; };
+		DFEF83EC1B94B8CC00C0ACDD /* m+mValidatingTextEditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "m+mValidatingTextEditor.h"; path = "../../Source/m+mValidatingTextEditor.h"; sourceTree = "<group>"; };
 		E059C6388A6E99841B353887 /* juce_ZipFile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_ZipFile.cpp; path = ../../JuceLibraryCode/modules/juce_core/zip/juce_ZipFile.cpp; sourceTree = SOURCE_ROOT; };
 		E09F5EC75773E15AEDADD364 /* juce_HeapBlock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_HeapBlock.h; path = ../../JuceLibraryCode/modules/juce_core/memory/juce_HeapBlock.h; sourceTree = SOURCE_ROOT; };
 		E0DF6259804712093C5836B0 /* juce_mac_Fonts.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = juce_mac_Fonts.mm; path = ../../JuceLibraryCode/modules/juce_graphics/native/juce_mac_Fonts.mm; sourceTree = SOURCE_ROOT; };
@@ -978,6 +984,8 @@
 		295631B272BFFCD49E8CF0DB /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				DFEF83E81B949DB100C0ACDD /* m+mCaptionedTextField.cpp */,
+				DFEF83E91B949DB100C0ACDD /* m+mCaptionedTextField.h */,
 				F8A50B61D95A448FCB3E1B60 /* m+mChannelContainer.cpp */,
 				DBB0E9F53B7C2F3E1D92CDBE /* m+mChannelContainer.h */,
 				36EE2F28FE454ED89CD62E58 /* m+mChannelEntry.cpp */,
@@ -992,6 +1000,10 @@
 				C5AB44D32AE328464084F3B3 /* m+mEntitiesPanel.h */,
 				46C132D661A3B9BEB29B9E2D /* m+mEntityData.cpp */,
 				700A549C9FE4467A2B3FCE56 /* m+mEntityData.h */,
+				DFEF83E21B94930900C0ACDD /* m+mFormField.cpp */,
+				DFEF83E31B94930900C0ACDD /* m+mFormField.h */,
+				DFEF83E51B9494B800C0ACDD /* m+mFormFieldErrorResponder.cpp */,
+				DFEF83E61B9494B800C0ACDD /* m+mFormFieldErrorResponder.h */,
 				5F643A47ED541003872A03FE /* m+mManagerApplication.cpp */,
 				6B333F2699A1F06DBD3AB9A5 /* m+mManagerApplication.h */,
 				BD485DE829E7FECF49805AB4 /* m+mManagerDataTypes.h */,
@@ -1010,12 +1022,10 @@
 				DF7623621B02590E002BDC49 /* m+mServiceLaunchThread.h */,
 				DF0E540C1B287C3A00A74A49 /* m+mSettingsWindow.cpp */,
 				DF0E540D1B287C3A00A74A49 /* m+mSettingsWindow.h */,
-				DF0E54151B2A012C00A74A49 /* m+mTextEditorErrorResponder.cpp */,
-				DF0E54161B2A012C00A74A49 /* m+mTextEditorErrorResponder.h */,
-				DF0E540F1B29D2D300A74A49 /* m+mTextEditorWithCaption.cpp */,
-				DF0E54101B29D2D300A74A49 /* m+mTextEditorWithCaption.h */,
 				DF0E54121B29E31100A74A49 /* m+mTextValidator.cpp */,
 				DF0E54131B29E31100A74A49 /* m+mTextValidator.h */,
+				DFEF83EB1B94B8CC00C0ACDD /* m+mValidatingTextEditor.cpp */,
+				DFEF83EC1B94B8CC00C0ACDD /* m+mValidatingTextEditor.h */,
 				DF8888221AF92D99001320EB /* m+mYarpLaunchThread.cpp */,
 				DF8888231AF92D99001320EB /* m+mYarpLaunchThread.h */,
 			);
@@ -2152,12 +2162,10 @@
 				D955E9BBD7DF44ED871C3B3C /* m+mChannelContainer.cpp in Sources */,
 				DF8888281AFBD66C001320EB /* m+mRegistryLaunchThread.cpp in Sources */,
 				499E38442A69C4C056D30A5C /* m+mChannelEntry.cpp in Sources */,
-				DF0E54111B29D2D300A74A49 /* m+mTextEditorWithCaption.cpp in Sources */,
 				DFC3C5881B5D49EF00D79441 /* m+mConfigurationWindow.cpp in Sources */,
 				DF8888241AF92D99001320EB /* m+mYarpLaunchThread.cpp in Sources */,
 				DF0E54141B29E31100A74A49 /* m+mTextValidator.cpp in Sources */,
 				C3BADFC3FFD8F492B13B8E14 /* m+mManagerApplication.cpp in Sources */,
-				DF0E54171B2A012C00A74A49 /* m+mTextEditorErrorResponder.cpp in Sources */,
 				DF0E540E1B287C3A00A74A49 /* m+mSettingsWindow.cpp in Sources */,
 				240DB34ABCC4CE53B98A2311 /* m+mManagerMain.cpp in Sources */,
 				B87D4FD874D7B0366056649E /* m+mManagerWindow.cpp in Sources */,
@@ -2165,6 +2173,7 @@
 				D5E4B7287BEFC863C05F9AA2 /* m+mEntitiesData.cpp in Sources */,
 				4DB90429C19E95F5AD59886D /* m+mEntitiesPanel.cpp in Sources */,
 				BD983EBB0F303CF40491833A /* m+mPeekInputHandler.cpp in Sources */,
+				DFEF83E71B9494B800C0ACDD /* m+mFormFieldErrorResponder.cpp in Sources */,
 				A8C9288DC71CCD3F2B2BA37B /* m+mEntityData.cpp in Sources */,
 				E423C86693E599625A6112CC /* m+mPortData.cpp in Sources */,
 				A8404C2628FCED0B0192326D /* m+mScannerThread.cpp in Sources */,
@@ -2173,8 +2182,11 @@
 				50F1CB5B2A0C22454AF41833 /* juce_events.mm in Sources */,
 				81E02713982BA5A1CFDA27C2 /* juce_graphics.mm in Sources */,
 				BC56C45521A083DFABDFB7B2 /* juce_gui_basics.mm in Sources */,
+				DFEF83EA1B949DB100C0ACDD /* m+mCaptionedTextField.cpp in Sources */,
+				DFEF83ED1B94B8CC00C0ACDD /* m+mValidatingTextEditor.cpp in Sources */,
 				DEEF248165B3103CD7681805 /* juce_gui_extra.mm in Sources */,
 				DF7623631B02590E002BDC49 /* m+mServiceLaunchThread.cpp in Sources */,
+				DFEF83E41B94930900C0ACDD /* m+mFormField.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,10 +1,10 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       m+mTextEditorWithCaption.cpp
+//  File:       m+mCaptionedTextField.cpp
 //
 //  Project:    m+m
 //
-//  Contains:   The class declaration for a text editor paired with a caption.
+//  Contains:   The class declaration for a field consisting of a text editor paired with a caption.
 //
 //  Written by: Norman Jaffe
 //
@@ -32,14 +32,15 @@
 //              ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 //              DAMAGE.
 //
-//  Created:    2015-06-11
+//  Created:    2015-08-31
 //
 //--------------------------------------------------------------------------------------------------
 
-#include "m+mTextEditorWithCaption.h"
+#include "m+mCaptionedTextField.h"
 
-#include "m+mTextEditorErrorResponder.h"
+#include "m+mFormFieldErrorResponder.h"
 #include "m+mTextValidator.h"
+#include "m+mValidatingTextEditor.h"
 
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
@@ -56,7 +57,7 @@
 
 /*! @file
  
- @brief The class declaration for a text editor paired with a caption. */
+ @brief The class declaration for a field consisting of a text editor paired with a caption. */
 #if defined(__APPLE__)
 # pragma clang diagnostic pop
 #endif // defined(__APPLE__)
@@ -89,144 +90,118 @@ using namespace std;
 # pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
-TextEditorWithCaption::TextEditorWithCaption(TextEditorErrorResponder & responder,
-                                             Font &                     regularLabelFont,
-                                             Font &                     errorLabelFont,
-                                             const size_t               index,
-                                             TextValidator *            validator,
-                                             const String &             componentName,
-                                             juce_wchar                 passwordCharacter) :
-	inherited(componentName, passwordCharacter), _responder(responder), _errorFont(errorLabelFont),
-    _regularFont(regularLabelFont), _button(NULL), _validator(validator), _caption(new Label),
-    _index(index), _ignoreNextFocusLoss(false)
+CaptionedTextField::CaptionedTextField(FormFieldErrorResponder & responder,
+                                       Font &                    regularLabelFont,
+                                       Font &                    errorLabelFont,
+                                       const size_t              index,
+                                       TextValidator *           validator,
+                                       const String &            componentName,
+                                       juce_wchar                passwordCharacter) :
+    inherited(responder, regularLabelFont, errorLabelFont, index, componentName),
+    _textEditor(new ValidatingTextEditor(*this, validator, componentName, passwordCharacter)),
+    _validator(validator)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P4("responder = ", &responder, "regularLabelFont = ", &regularLabelFont, //####
               "errorLabelFont = ", &errorLabelFont, "validator = ", validator); //####
     OD_LOG_S1s("componentName = ", componentName.toStdString()); //####
     OD_LOG_LL2("index = ", index, "passwordCharacter = ", passwordCharacter); //####
-    setFont(_regularFont);
-    _caption->setFont(_regularFont);
-    setEscapeAndReturnKeysConsumed(false);
+    _textEditor->setFont(_regularFont);
+    _textEditor->setEscapeAndReturnKeysConsumed(false);
     OD_LOG_EXIT_P(this); //####
-} // TextEditorWithCaption::TextEditorWithCaption
+} // CaptionedTextField::CaptionedTextField
 
-TextEditorWithCaption::~TextEditorWithCaption(void)
+CaptionedTextField::~CaptionedTextField(void)
 {
     OD_LOG_OBJENTER(); //####
+    _textEditor = NULL;
     OD_LOG_OBJEXIT(); //####
-} // TextEditorWithCaption::~TextEditorWithCaption
+} // CaptionedTextField::~CaptionedTextField
 
 #if defined(__APPLE__)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-void TextEditorWithCaption::addPopupMenuItems(PopupMenu &        menuToAddTo,
-                                              const MouseEvent * mouseClickEvent)
+Component * CaptionedTextField::getComponent(void)
+const
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_P2("menuToAddTo = ", &menuToAddTo, "mouseClickEvent = ", mouseClickEvent); //####
-    inherited::addPopupMenuItems(menuToAddTo, mouseClickEvent);
-    if (_validator)
-    {
-        bool forOutput;
-        
-        if (_validator->isForFiles(forOutput))
-        {
-            menuToAddTo.addSeparator();
-            if (forOutput)
-            {
-                menuToAddTo.addItem(kPopupSelectFileToSave, "Save...");
-            }
-            else
-            {
-                menuToAddTo.addItem(kPopupSelectFileToOpen, "Open...");
-            }
-        }
-    }
-    OD_LOG_OBJEXIT(); //####
-} // TextEditorWithCaption::addPopupMenuItems
+    OD_LOG_OBJEXIT_P(this); //####
+    return _textEditor;
+} // CaptionedTextField::getComponent
 
-#if (! MAC_OR_LINUX_)
-# pragma warning(push)
-# pragma warning(disable: 4100)
-#endif // ! MAC_OR_LINUX_
-void TextEditorWithCaption::focusGained(FocusChangeType cause)
-{
-#if MAC_OR_LINUX_
-# pragma unused(cause)
-#endif // MAC_OR_LINUX_
-	OD_LOG_OBJENTER(); //####
-    OD_LOG_OBJEXIT(); //####
-} // TextEditorWithCaption::focusGained
-#if (! MAC_OR_LINUX_)
-# pragma warning(pop)
-#endif // ! MAC_OR_LINUX_
-
-#if (! MAC_OR_LINUX_)
-# pragma warning(push)
-# pragma warning(disable: 4100)
-#endif // ! MAC_OR_LINUX_
-void TextEditorWithCaption::focusLost(FocusChangeType cause)
-{
-#if MAC_OR_LINUX_
-# pragma unused(cause)
-#endif // MAC_OR_LINUX_
-	OD_LOG_OBJENTER(); //####
-    if (_ignoreNextFocusLoss)
-    {
-        _ignoreNextFocusLoss = false;
-    }
-    else if (! validateField())
-    {
-        _responder.reportErrorInField(*this);
-    }
-    OD_LOG_OBJEXIT(); //####
-} // TextEditorWithCaption::focusLost
-#if (! MAC_OR_LINUX_)
-# pragma warning(pop)
-#endif // ! MAC_OR_LINUX_
-
-void TextEditorWithCaption::ignoreNextFocusLoss(void)
+int CaptionedTextField::getHeight(void)
+const
 {
     OD_LOG_OBJENTER(); //####
-    _ignoreNextFocusLoss = true;
-    OD_LOG_OBJEXIT(); //####
-} // TextEditorWithCaption::ignoreNextFocusLoss
-
-bool TextEditorWithCaption::keyPressed(const KeyPress & key)
-{
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("key = ", &key); //####
-    bool result;
+    int result = _textEditor->getHeight();
     
-    if (key == KeyPress::tabKey)
-    {
-        if (validateField())
-        {
-            result = inherited::keyPressed(key);
-        }
-        else
-        {
-            ignoreNextFocusLoss();
-            _responder.reportErrorInField(*this);
-            result = true;
-        }
-    }
-    else if (key == KeyPress::escapeKey)
-    {
-        ignoreNextFocusLoss();
-        result = inherited::keyPressed(key);
-    }
-    else
-    {
-        result = inherited::keyPressed(key);
-    }
-    OD_LOG_OBJEXIT_B(result); //####
+    OD_LOG_OBJEXIT_LL(result); //####
     return result;
-} // TextEditorWithCaption::keyPressed
+} // CaptionedTextField::getHeight
 
-void TextEditorWithCaption::makeFileSelection(void)
+const String & CaptionedTextField::getName(void)
+const
+{
+    OD_LOG_OBJENTER(); //####
+    const String & theName = _textEditor->getName();
+    
+    OD_LOG_OBJEXIT_s(theName.toStdString()); //####
+    return theName;
+} // CaptionedTextField::getName
+
+String CaptionedTextField::getText(void)
+const
+{
+    OD_LOG_OBJENTER(); //####
+    String result(_textEditor->getText());
+    
+    OD_LOG_OBJEXIT_s(result.toStdString()); //####
+    return result;
+} // CaptionedTextField::getText
+
+int CaptionedTextField::getX(void)
+const
+{
+    OD_LOG_OBJENTER(); //####
+    int result = _textEditor->getX();
+    
+    OD_LOG_OBJEXIT_LL(result); //####
+    return result;
+} // CaptionedTextField::getX
+
+int CaptionedTextField::getY(void)
+const
+{
+    OD_LOG_OBJENTER(); //####
+    int result = _textEditor->getY();
+    
+    OD_LOG_OBJEXIT_LL(result); //####
+    return result;
+} // CaptionedTextField::getY
+
+void CaptionedTextField::ignoreNextFocusLoss(void)
+{
+    OD_LOG_OBJENTER(); //####
+    _textEditor->ignoreNextFocusLoss();
+    OD_LOG_OBJEXIT(); //####
+} // CaptionedTextField::ignoreNextFocusLoss
+
+void CaptionedTextField::markAsInvalid(void)
+{
+    OD_LOG_OBJENTER(); //####
+    _caption->setFont(_errorFont);
+    OD_LOG_OBJEXIT(); //####
+} // CaptionedTextField::markAsInvalid
+
+void CaptionedTextField::markAsValid(void)
+{
+    OD_LOG_OBJENTER(); //####
+    _caption->setFont(_regularFont);
+    OD_LOG_OBJEXIT(); //####
+} // CaptionedTextField::markAsValid
+
+void CaptionedTextField::performButtonAction(void)
 {
     OD_LOG_OBJENTER(); //####
     if (_validator)
@@ -246,7 +221,7 @@ void TextEditorWithCaption::makeFileSelection(void)
                     File   chosenFile = fc.getResult();
                     String filePath = chosenFile.getFullPathName();
                     
-                    setText(chosenFile.getFullPathName());
+                    _textEditor->setText(chosenFile.getFullPathName());
                     if (! validateField())
                     {
                         _responder.reportErrorInField(*this);
@@ -263,7 +238,7 @@ void TextEditorWithCaption::makeFileSelection(void)
                     File   chosenFile = fc.getResult();
                     String filePath = chosenFile.getFullPathName();
                     
-                    setText(chosenFile.getFullPathName());
+                    _textEditor->setText(chosenFile.getFullPathName());
                     if (! validateField())
                     {
                         _responder.reportErrorInField(*this);
@@ -273,61 +248,67 @@ void TextEditorWithCaption::makeFileSelection(void)
         }
     }
     OD_LOG_OBJEXIT(); //####
-} // TextEditorWithCaption::makeFileSelection
+} // CaptionedTextField::performButtonAction
 
-void TextEditorWithCaption::markAsInvalid(void)
+void CaptionedTextField::reportErrorInField(void)
 {
     OD_LOG_OBJENTER(); //####
-    _caption->setFont(_errorFont);
+    _responder.reportErrorInField(*this);
     OD_LOG_OBJEXIT(); //####
-} // TextEditorWithCaption::markAsInvalid
+} // CaptionedTextField::reportErrorInField
 
-void TextEditorWithCaption::markAsValid(void)
+void CaptionedTextField::setBounds(const int xx,
+                                   const int yy,
+                                   const int width,
+                                   const int height)
 {
     OD_LOG_OBJENTER(); //####
-    _caption->setFont(_regularFont);
+    OD_LOG_LL4("xx = ", xx, "yy = ", yy, "width = ", width, "height = ", height); //####
+    _textEditor->setBounds(xx, yy, width, height);
     OD_LOG_OBJEXIT(); //####
-} // TextEditorWithCaption::markAsValid
+} // CaptionedTextField::setBounds
 
-void TextEditorWithCaption::performPopupMenuAction(int menuItemID)
+void CaptionedTextField::setSelectAllWhenFocused(const bool shouldSelectAll)
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_LL1("menuItemID = ", menuItemID); //####
-    switch (menuItemID)
-    {
-        case kPopupSelectFileToOpen :
-        case kPopupSelectFileToSave :
-            makeFileSelection();
-            break;
-            
-        default :
-            inherited::performPopupMenuAction(menuItemID);
-            break;
-    }
+    OD_LOG_B1("shouldSelectAll = ", shouldSelectAll); //####
+    _textEditor->setSelectAllWhenFocused(shouldSelectAll);
     OD_LOG_OBJEXIT(); //####
-} // TextEditorWithCaption::performPopupMenuAction
+} // CaptionedTextField::setSelectAllWhenFocused
 
-void TextEditorWithCaption::setButton(TextButton * newButton)
+void CaptionedTextField::setSize(const int newWidth,
+                                 const int newHeight)
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("newButton = ", newButton); //####
-    _button = newButton;
+    OD_LOG_LL2("newWidth = ", newWidth, "newHeight = ", newHeight); //####
+    _textEditor->setSize(newWidth, newHeight);
     OD_LOG_OBJEXIT(); //####
-} // TextEditorWithCaption::setButton
+} // CaptionedTextField::setSize
 
-bool TextEditorWithCaption::validateField(void)
+void CaptionedTextField::setText(const String & newText,
+                                 const bool     sendTextChangeMessage)
 {
     OD_LOG_OBJENTER(); //####
-    bool result;
+    OD_LOG_S1s("newText = ", newText.toStdString()); //####
+    OD_LOG_B1("sendTextChangeMessage = ", sendTextChangeMessage); //####
+    _textEditor->setText(newText, sendTextChangeMessage);
+    OD_LOG_OBJEXIT(); //####
+} // CaptionedTextField::setText
+
+void CaptionedTextField::setTopLeftPosition(const int xx,
+                                            const int yy)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_LL2("xx = ", xx, "yy = ", yy); //####
+    _textEditor->setTopLeftPosition(xx, yy);
+    OD_LOG_OBJEXIT(); //####
+} // CaptionedTextField::setTopLeftPosition
+
+bool CaptionedTextField::validateField(void)
+{
+    OD_LOG_OBJENTER(); //####
+    bool result = _textEditor->validateField();
     
-    if (_validator)
-    {
-        result = _validator->checkValidity(getText());
-    }
-    else
-    {
-        result = true;
-    }
     if (result)
     {
         markAsValid();
@@ -338,23 +319,14 @@ bool TextEditorWithCaption::validateField(void)
     }
     OD_LOG_OBJEXIT_B(result); //####
     return result;
-} // TextEditorWithCaption::validateField
+} // CaptionedTextField::validateField
 
-bool TextEditorWithCaption::validateField(StringArray & argsToUse)
+bool CaptionedTextField::validateField(StringArray & argsToUse)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("argsToUse = ", &argsToUse); //####
-    bool result;
+    bool result = _textEditor->validateField(argsToUse);
     
-    if (_validator)
-    {
-        result = _validator->checkValidity(getText(), argsToUse);
-    }
-    else
-    {
-        result = true;
-        argsToUse.add(getText());
-    }
     if (result)
     {
         markAsValid();
@@ -365,7 +337,7 @@ bool TextEditorWithCaption::validateField(StringArray & argsToUse)
     }
     OD_LOG_OBJEXIT_B(result); //####
     return result;
-} // TextEditorWithCaption::validateField
+} // CaptionedTextField::validateField
 
 #if defined(__APPLE__)
 # pragma mark Global functions

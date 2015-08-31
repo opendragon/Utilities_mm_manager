@@ -1,10 +1,10 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       m+mTextEditorWithCaption.h
+//  File:       m+mFormField.h
 //
 //  Project:    m+m
 //
-//  Contains:   The class declaration for a text editor paired with a caption.
+//  Contains:   The class declaration for a generalized input field.
 //
 //  Written by: Norman Jaffe
 //
@@ -32,12 +32,12 @@
 //              ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 //              DAMAGE.
 //
-//  Created:    2015-06-11
+//  Created:    2015-08-31
 //
 //--------------------------------------------------------------------------------------------------
 
-#if (! defined(mpmTextEditorWithCaption_H_))
-# define mpmTextEditorWithCaption_H_ /* Header guard */
+#if (! defined(mpmFormField_H_))
+# define mpmFormField_H_ /* Header guard */
 
 # include "m+mManagerDataTypes.h"
 
@@ -48,21 +48,17 @@
 # endif // defined(__APPLE__)
 /*! @file
  
- @brief The class declaration for a text editor paired with a caption. */
+ @brief The class declaration for a generalized input field. */
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
 
-/*! @brief The character to use when displaying a 'password' field. */
-# define CHAR_TO_USE_FOR_PASSWORD_ 0x02022
-
 namespace MPlusM_Manager
 {
-    class TextEditorErrorResponder;
-    class TextValidator;
+    class FormFieldErrorResponder;
     
-    /*! @brief A text editor paired with a caption. */
-    class TextEditorWithCaption : public TextEditor
+    /*! @brief A generalized input field. */
+    class FormField
     {
     public :
         
@@ -71,19 +67,15 @@ namespace MPlusM_Manager
          @param regularLabelFont The font to use with the label when the text editor data is valid.
          @param errorLabelFont The font to use with the label when the text editor data is invalid.
          @param index The order of the text editor.
-         @param validator The function to use when checking the field on completion of text entry.
-         @param componentName The name to pass to the component for it to use as its name
-         @param passwordCharacter The visual replacement to use for password fields. */
-        TextEditorWithCaption(TextEditorErrorResponder & responder,
-                              Font &                     regularLabelFont,
-                              Font &                     errorLabelFont,
-                              const size_t               index,
-                              TextValidator *            validator = NULL,
-                              const String &             componentName = String::empty,
-                              juce_wchar                 passwordCharacter = 0);
+         @param componentName The name to pass to the component for it to use as its name. */
+        FormField(FormFieldErrorResponder & responder,
+                  Font &                    regularLabelFont,
+                  Font &                    errorLabelFont,
+                  const size_t              index,
+                  const String &            componentName = String::empty);
         
         /*! @brief The destructor. */
-        virtual ~TextEditorWithCaption(void);
+        virtual ~FormField(void);
         
         /*! @brief Return the associated button.
          @returns The associated button. */
@@ -101,6 +93,16 @@ namespace MPlusM_Manager
             return _caption;
         } // getCaption
         
+        /*! @brief Return the component associated with the field.
+         @return The component associated with the field. */
+        virtual Component * getComponent(void)
+        const = 0;
+
+        /*! @brief Return the height of the field in pixels.
+         @return The height of the field in pixels. */
+        virtual int getHeight(void)
+        const = 0;
+        
         /*! @brief Return the order of the text editor.
          @returns The order of the text editor. */
         inline size_t getIndex(void)
@@ -109,110 +111,111 @@ namespace MPlusM_Manager
             return _index;
         } // getIndex
         
-        /*! @brief Do not perform validation on next loss of focus. */
-        void ignoreNextFocusLoss(void);
+        /*! @brief Returns the name of the field.
+         @returns The name of the field. */
+        virtual const String & getName(void)
+        const = 0;
         
-        /*! @brief Open a file selection dialog and update the field from the result. */
-        void makeFileSelection(void);
+        /*! @brief Returns the text value associated with the field.
+         @returns The text value associated with the field. */
+        virtual String getText(void)
+        const = 0;
+
+        /*! @brief Return the left coordinate of the field.
+         @return The left coordinate of the field. */
+        virtual int getX(void)
+        const = 0;
+        
+        /*! @brief Return the top coordinate of the field.
+         @return The top coordinate of the field. */
+        virtual int getY(void)
+        const = 0;
+        
+        /*! @brief Do not perform validation on next loss of focus. */
+        virtual void ignoreNextFocusLoss(void) = 0;
+        
+        /*! @brief Perform the action triggered by the button. */
+        virtual void performButtonAction(void);
+
+        /*! @brief Set the position and size of the field.
+         @param xx The leftmost coordinate of the field.
+         @param yy The topmost coordinate of the field.
+         @param width The width of the field.
+         @param height The height of the field. */
+        virtual void setBounds(const int xx,
+                               const int yy,
+                               const int width,
+                               const int height) = 0;
         
         /*! @brief Sets the associated button.
          @param newButton The associated button. */
         void setButton(TextButton * newButton = NULL);
         
+        /*! @brief Set the action on receiving focus.
+         @param shouldSelectAll If @c true, obtaining focus will select all the content. */
+        virtual void setSelectAllWhenFocused(const bool shouldSelectAll) = 0;
+
+        /*! @brief Change the size of the field.
+         @param newWidth The new width of the field.
+         @param newHeight The new height of the field. */
+        virtual void setSize(const int newWidth,
+                             const int newHeight) = 0;
+        
+        /*! @brief Set the text value associated with the field.
+         @param newText The text to be used.
+         @param sendTextChangeMessage @c true if a change message is sent to all listeners. */
+        virtual void setText(const String & newText,
+                             const bool     sendTextChangeMessage) = 0;
+
+        /*! @brief Set the position of the field.
+         @param xx The new leftmost coordinate of the field.
+         @param yy The new topmost coordinate of the field. */
+        virtual void setTopLeftPosition(const int xx,
+                                        const int yy) = 0;
+
         /*! @brief Check the field for validity.
          @returns @c true if the validator accepts the field or there's no validation required or
          @c false if the validator rejects the field. */
-        bool validateField(void);
+        virtual bool validateField(void) = 0;
         
         /*! @brief Check the field for validity.
          @param argsToUse A set of valid arguments.
          @returns @c true if the validator accepts the field or there's no validation required or
          @c false if the validator rejects the field. */
-        bool validateField(StringArray & argsToUse);
+        virtual bool validateField(StringArray & argsToUse) = 0;
         
     protected :
         
     private :
-        
-        /*! @brief Add items to the popup menu.
-         @param menuToAddTo The popup menu to be modified.
-         @param mouseClickEvent Non-@c NULL when triggered by a mouse click and @c NULL otherwise.
-         */
-        virtual void addPopupMenuItems(PopupMenu &        menuToAddTo,
-                                       const MouseEvent * mouseClickEvent);
-        
-        /*! @brief Called when this component has just acquired the keyboard focus.
-         @param cause The type of event that caused the change in focus. */
-        virtual void focusGained(FocusChangeType cause);
-        
-        /*! @brief Called when this component has just lost the keyboard focus.
-         @param cause The type of event that caused the change in focus. */
-        virtual void focusLost(FocusChangeType cause);
-
-        /*! @brief Called when a key is pressed.
-         @param key The key that was pressed.
-         @returns @c true if the key was consumed and @c false otherwise. */
-        virtual bool keyPressed(const KeyPress & key);
-        
-        /*! @brief Mark the text editor data as invalid. */
-        void markAsInvalid(void);
-        
-        /*! @brief Mark the text editor data as valid. */
-        void markAsValid(void);
-        
-        /*! @brief Perform one of the items from the popup menu.
-         @param menuItemID The item that was selected. */
-        virtual void performPopupMenuAction(int menuItemID);
         
     public :
     
     protected :
     
-    private :
-
-        /*! @brief The class that this class is derived from. */
-        typedef TextEditor inherited;
-        
-        /*! @brief The menu selection from the popup menu. */
-        enum TextEditorPopupMenuSelection
-        {
-            /*! @brief Select an input file. */
-            kPopupSelectFileToOpen = 0x2200,
-            
-            /*! @brief Select an output file. */
-            kPopupSelectFileToSave
-            
-        }; // EntityPopupMenuSelection
-        
-        /*! @brief The entity that can report an error in this field. */
-        TextEditorErrorResponder & _responder;
-        
         /*! @brief The font to use with the label when the text editor data is invalid. */
         Font & _errorFont;
         
         /*! @brief The font to use with the label when the text editor data is valid. */
         Font & _regularFont;
         
+        /*! @brief The entity that can report an error in this field. */
+        FormFieldErrorResponder & _responder;
+        
         /*! @brief An associated button for the text editor. */
         ScopedPointer<TextButton> _button;
-
-        /*! @brief The validator to use with the text editor data. */
-        ScopedPointer<TextValidator> _validator;
         
-        /*! @brief The caption for the text editor. */
+        /*! @brief The caption for the field. */
         ScopedPointer<Label> _caption;
         
-        /*! @brief The order of the text editor. */
+        /*! @brief The order of the field. */
         size_t _index;
         
-        /*! @brief @c true if validation should not be done on the next focus loss and @c false if
-         normal behaviour is to occur. */
-        bool _ignoreNextFocusLoss;
+    private :
+
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FormField)
         
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(TextEditorWithCaption)
-        
-    }; // TextEditorWithCaption
+    }; // FormField
     
 } // MPlusM_Manager
 
-#endif // ! defined(mpmTextEditorWithCaption_H_)
+#endif // ! defined(mpmFormField_H_)

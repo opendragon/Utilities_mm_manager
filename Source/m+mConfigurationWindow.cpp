@@ -38,9 +38,10 @@
 
 #include "m+mConfigurationWindow.h"
 
+#include "m+mCaptionedTextField.h"
 #include "m+mManagerApplication.h"
-#include "m+mTextEditorWithCaption.h"
 #include "m+mTextValidator.h"
+#include "m+mValidatingTextEditor.h"
 
 #include <m+m/m+mChannelArgumentDescriptor.h>
 #include <m+m/m+mEndpoint.h>
@@ -181,23 +182,23 @@ ConfigurationWindow::~ConfigurationWindow(void)
 void ConfigurationWindow::addAnExtraField(void)
 {
     OD_LOG_ENTER(); //####
-    Component *             content = _extraArgumentsGroup;
-    String                  compCountAsString(static_cast<int>(_extraFieldEditors.size() + 1));
-    Point<int>              dimensions;
-    TextEditorWithCaption * newEditor = new TextEditorWithCaption(*this, _regularFont, _errorFont,
-                                                                  _extraFieldEditors.size(), NULL,
-                                                                  _extraArgRootName + "_" +
-                                                                  compCountAsString);
-    Label *                 newLabel = newEditor->getCaption();
+    Component *          content = _extraArgumentsGroup;
+    String               compCountAsString(static_cast<int>(_extraFields.size() + 1));
+    Point<int>           dimensions;
+    CaptionedTextField * newField = new CaptionedTextField(*this, _regularFont, _errorFont,
+                                                           _extraFields.size(), NULL,
+                                                           _extraArgRootName + "_" +
+                                                           compCountAsString);
+    Label *              newLabel = newField->getCaption();
     
     newLabel->setText(_extraArgRootName + " " + compCountAsString, dontSendNotification);
-    _extraFieldEditors.add(newEditor);
+    _extraFields.add(newField);
     MPlusM_Manager::CalculateTextArea(dimensions, _regularFont, newLabel->getText());
     newLabel->setBounds(kLabelInset, 0, dimensions.getX() + kLabelInset, dimensions.getY());
     content->addAndMakeVisible(newLabel);
-    newEditor->setBounds(kFieldInset, 0, 0, static_cast<int>(_adjustedEditorHeight));
-    newEditor->setSelectAllWhenFocused(true);
-    content->addAndMakeVisible(newEditor);
+    newField->setBounds(kFieldInset, 0, 0, static_cast<int>(_adjustedEditorHeight));
+    newField->setSelectAllWhenFocused(true);
+    content->addAndMakeVisible(newField->getComponent());
     recalculateArea();
     adjustFields();
     if (_removeArgumentsButton)
@@ -234,22 +235,22 @@ void ConfigurationWindow::adjustFields(void)
                                                (_removeArgumentsButton->getWidth() + kButtonGap),
                                                    newButtonTop);
     }
-    for (size_t ii = 0, maxf = _standardFieldEditors.size(); maxf > ii; ++ii)
+    for (size_t ii = 0, maxf = _standardFields.size(); maxf > ii; ++ii)
     {
-        TextEditorWithCaption * anEditor = _standardFieldEditors[static_cast<int>(ii)];
+        FormField * aField = _standardFields[static_cast<int>(ii)];
         
-        if (anEditor)
+        if (aField)
         {
-            TextButton * aButton = anEditor->getButton();
+            TextButton * aButton = aField->getButton();
             
-            anEditor->setSize(newFieldWidth, anEditor->getHeight());
+            aField->setSize(newFieldWidth, aField->getHeight());
             if (aButton)
             {
-                Label * aLabel = anEditor->getCaption();
-                int     span = anEditor->getY() + anEditor->getHeight() - aLabel->getY();
+                Label * aLabel = aField->getCaption();
+                int     span = aField->getY() + aField->getHeight() - aLabel->getY();
                 int     offset = span - aButton->getHeight();
                 
-                aButton->setTopLeftPosition(anEditor->getX() + newFieldWidth + kButtonGap,
+                aButton->setTopLeftPosition(aField->getX() + newFieldWidth + kButtonGap,
                                             aLabel->getY() + (offset / 2));
             }
         }
@@ -260,11 +261,11 @@ void ConfigurationWindow::adjustFields(void)
                             (_extraArgumentsGroup->getX() + kButtonGap);
         int innerWidth = groupWidth - (kFieldInset + (2 * kButtonGap));
         
-        for (size_t ii = 0, maxf = _extraFieldEditors.size(); maxf > ii; ++ii)
+        for (size_t ii = 0, maxf = _extraFields.size(); maxf > ii; ++ii)
         {
-            TextEditorWithCaption * anEditor = _extraFieldEditors[static_cast<int>(ii)];
+            FormField * aField = _extraFields[static_cast<int>(ii)];
             
-            anEditor->setSize(innerWidth, anEditor->getHeight());
+            aField->setSize(innerWidth, aField->getHeight());
         }
         _extraArgumentsGroup->setSize(groupWidth, _extraArgumentsGroup->getHeight());
     }
@@ -296,13 +297,13 @@ void ConfigurationWindow::buttonClicked(Button * aButton)
             break;
             
         case kConfigurationFileRequest :
-            for (size_t ii = 0, maxf = _standardFieldEditors.size(); maxf > ii; ++ii)
+            for (size_t ii = 0, maxf = _standardFields.size(); maxf > ii; ++ii)
             {
-                TextEditorWithCaption * anEditor = _standardFieldEditors[static_cast<int>(ii)];
+                FormField * aField = _standardFields[static_cast<int>(ii)];
                 
-                if (anEditor && (anEditor->getButton() == aButton))
+                if (aField && (aField->getButton() == aButton))
                 {
-                    anEditor->makeFileSelection();
+                    aField->performButtonAction();
                     break;
                 }
                 
@@ -323,15 +324,15 @@ bool ConfigurationWindow::fieldsAreValid(void)
     int    badCount = 0;
     String badArgs;
     
-    for (size_t ii = 0, maxf = _standardFieldEditors.size(); maxf > ii; ++ii)
+    for (size_t ii = 0, maxf = _standardFields.size(); maxf > ii; ++ii)
     {
-        TextEditorWithCaption * anEditor = _standardFieldEditors[static_cast<int>(ii)];
+        FormField * aField = _standardFields[static_cast<int>(ii)];
         
-        if (anEditor)
+        if (aField)
         {
-            if (anEditor->validateField())
+            if (aField->validateField())
             {
-                size_t jj = anEditor->getIndex();
+                size_t jj = aField->getIndex();
                 
                 if (_descriptors.size() > jj)
                 {
@@ -349,7 +350,7 @@ bool ConfigurationWindow::fieldsAreValid(void)
                 {
                     badArgs += "\n";
                 }
-                badArgs += anEditor->getName();
+                badArgs += aField->getName();
                 ++badCount;
             }
         }
@@ -357,9 +358,9 @@ bool ConfigurationWindow::fieldsAreValid(void)
     if (0 == badCount)
     {
         // Add the extra arguments here.
-        for (size_t ii = 0, maxf = _extraFieldEditors.size(); maxf > ii; ++ii)
+        for (size_t ii = 0, maxf = _extraFields.size(); maxf > ii; ++ii)
         {
-            TextEditorWithCaption * anEditor = _extraFieldEditors[static_cast<int>(ii)];
+            FormField * anEditor = _extraFields[static_cast<int>(ii)];
             
             _valuesToUse.addString(anEditor->getText().toStdString());
         }
@@ -453,7 +454,7 @@ void ConfigurationWindow::recalculateArea(void)
     OD_LOG_ENTER(); //####
     int    heightSoFar = 0;
     int    widthSoFar = 0;
-    size_t numExtra = _extraFieldEditors.size();
+    size_t numExtra = _extraFields.size();
     
     heightSoFar = _topText.getY() + _topText.getHeight() + kButtonGap;
     widthSoFar = jmax(widthSoFar, _topText.getX() + _topText.getWidth());
@@ -468,16 +469,16 @@ void ConfigurationWindow::recalculateArea(void)
             
             if (! aDescriptor->isExtra())
             {
-                TextEditorWithCaption * anEditor = _standardFieldEditors[static_cast<int>(jj)];
+                FormField * aField = _standardFields[static_cast<int>(jj)];
                 
-                if (anEditor)
+                if (aField)
                 {
-                    Label * aLabel = anEditor->getCaption();
+                    Label * aLabel = aField->getCaption();
                     
                     if (aLabel)
                     {
                         widthSoFar = jmax(widthSoFar, aLabel->getX() + aLabel->getWidth());
-                        heightSoFar = anEditor->getY() + anEditor->getHeight() + (kButtonGap / 2);
+                        heightSoFar = aField->getY() + aField->getHeight() + (kButtonGap / 2);
                         ++jj;
                     }
                 }
@@ -492,14 +493,14 @@ void ConfigurationWindow::recalculateArea(void)
         _extraArgumentsGroup->setTopLeftPosition(kFieldInset, heightSoFar);
         for (size_t ii = 0; numExtra > ii; ++ii)
         {
-            TextEditorWithCaption * anEditor = _extraFieldEditors[static_cast<int>(ii)];
-            Label *                 aLabel = anEditor->getCaption();
+            FormField * aField = _extraFields[static_cast<int>(ii)];
+            Label *     aLabel = aField->getCaption();
             
             aLabel->setTopLeftPosition(kLabelInset, innerHeight);
             innerHeight = aLabel->getY() + aLabel->getHeight() + kLabelToFieldGap;
             innerWidth = jmax(innerWidth, aLabel->getX() + aLabel->getWidth());
-            anEditor->setTopLeftPosition(kFieldInset, innerHeight);
-            innerHeight = anEditor->getY() + anEditor->getHeight() + (kButtonGap / 2);
+            aField->setTopLeftPosition(kFieldInset, innerHeight);
+            innerHeight = aField->getY() + aField->getHeight() + (kButtonGap / 2);
         }
         if (0 < numExtra)
         {
@@ -526,23 +527,34 @@ void ConfigurationWindow::recalculateArea(void)
 void ConfigurationWindow::removeMostRecentlyAddedExtraField(void)
 {
     OD_LOG_ENTER(); //####
-    Component *             content = _extraArgumentsGroup;
-    TextEditorWithCaption * lastEditor = _extraFieldEditors.getLast();
-    Label *                 lastLabel = lastEditor->getCaption();
+    Component * content = _extraArgumentsGroup;
+    FormField * lastField = _extraFields.getLast();
+    Label *     lastLabel = lastField->getCaption();
     
-    _extraFieldEditors.removeLast();
-    content->removeChildComponent(lastEditor);
+    _extraFields.removeLast();
+    content->removeChildComponent(lastField->getComponent());
     content->removeChildComponent(lastLabel);
     recalculateArea();
     adjustFields();
     if (_removeArgumentsButton)
     {
-        _removeArgumentsButton->setVisible(0 < _extraFieldEditors.size());
+        _removeArgumentsButton->setVisible(0 < _extraFields.size());
     }
     OD_LOG_EXIT(); //####
 } // ConfigurationWindow::removeMostRecentlyAddedExtraField
 
-void ConfigurationWindow::reportErrorInField(TextEditorWithCaption & fieldOfInterest)
+void ConfigurationWindow::reportErrorInField(FormField & fieldOfInterest)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("fieldOfInterest = ", &fieldOfInterest); //####
+    AlertWindow::showMessageBox(AlertWindow::WarningIcon, getName(), String("The ") +
+                                fieldOfInterest.getName() + " argument is invalid.\n"
+                                "Please correct the argument and try again.", String::empty,
+                                this);
+    OD_LOG_OBJEXIT(); //####
+} // ConfigurationWindow::reportErrorInField
+
+void ConfigurationWindow::reportErrorInField(ValidatingTextEditor & fieldOfInterest)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("fieldOfInterest = ", &fieldOfInterest); //####
@@ -661,17 +673,16 @@ void ConfigurationWindow::setUpStandardFields(int &                    widthSoFa
             }
             else if (aDescriptor->isModifiable())
             {
-                bool                    forOutput;
-                juce_wchar              fillChar = (aDescriptor->isPassword() ?
-                                                    CHAR_TO_USE_FOR_PASSWORD_ : 0);
-                String                  descriptionPrefix;
-                String                  valueToUse;
-                TextValidator *         newValidator = new TextValidator(*aDescriptor);
-                TextEditorWithCaption * newEditor = new TextEditorWithCaption(*this, _regularFont,
-                                                                              _errorFont, ii,
-                                                                              newValidator,
-                                                                              argName, fillChar);
-                Label *                 newLabel = newEditor->getCaption();
+                bool                 forOutput;
+                juce_wchar           fillChar = (aDescriptor->isPassword() ?
+                                                 CHAR_TO_USE_FOR_PASSWORD_ : 0);
+                String               descriptionPrefix;
+                String               valueToUse;
+                TextValidator *      newValidator = new TextValidator(*aDescriptor);
+                CaptionedTextField * newField = new CaptionedTextField(*this, _regularFont,
+                                                                       _errorFont, ii, newValidator,
+                                                                       argName, fillChar);
+                Label *              newLabel = newField->getCaption();
                 
                 if (aDescriptor->isOptional())
                 {
@@ -684,9 +695,9 @@ void ConfigurationWindow::setUpStandardFields(int &                    widthSoFa
                 content->addAndMakeVisible(newLabel);
 				heightSoFar = newLabel->getY() + newLabel->getHeight() + kLabelToFieldGap;
                 widthSoFar = jmax(widthSoFar, newLabel->getX() + newLabel->getWidth());
-                _standardFieldEditors.add(newEditor);
-                newEditor->setBounds(kFieldInset, heightSoFar, widthSoFar - kFieldInset,
-                                     static_cast<int>(_adjustedEditorHeight));
+                _standardFields.add(newField);
+                newField->setBounds(kFieldInset, heightSoFar, widthSoFar - kFieldInset,
+                                    static_cast<int>(_adjustedEditorHeight));
                 if (jj < currentValues.size())
                 {
                     valueToUse = currentValues[jj].c_str();
@@ -695,9 +706,9 @@ void ConfigurationWindow::setUpStandardFields(int &                    widthSoFa
                 {
                     valueToUse = aDescriptor->getDefaultValue().c_str();
                 }
-                newEditor->setText(valueToUse, false);
-                newEditor->setSelectAllWhenFocused(true);
-                content->addAndMakeVisible(newEditor);
+                newField->setText(valueToUse, false);
+                newField->setSelectAllWhenFocused(true);
+                content->addAndMakeVisible(newField->getComponent());
                 if (aDescriptor->isForFiles(forOutput))
                 {
                     TextButton * newButton = new TextButton(kFileButtonText);
@@ -707,10 +718,10 @@ void ConfigurationWindow::setUpStandardFields(int &                    widthSoFa
                     newButton->setCommandToTrigger(NULL, kConfigurationFileRequest, false);
                     newButton->addListener(this);
                     newButton->changeWidthToFitText(buttonHeight);
-                    newEditor->setButton(newButton);
-                    content->addAndMakeVisible(newEditor->getButton());
+                    newField->setButton(newButton);
+                    content->addAndMakeVisible(newField->getButton());
                 }
-                heightSoFar = newEditor->getY() + newEditor->getHeight() + (kButtonGap / 2);
+                heightSoFar = newField->getY() + newField->getHeight() + (kButtonGap / 2);
             }
             ++jj;
         }
@@ -736,22 +747,22 @@ void ConfigurationWindow::setUpStandardFields(int &                    widthSoFa
 void ConfigurationWindow::tellAllFieldsToIgnoreNextFocusLoss(void)
 {
     OD_LOG_ENTER(); //####
-    for (size_t ii = 0, maxf = _standardFieldEditors.size(); maxf > ii; ++ii)
+    for (size_t ii = 0, maxf = _standardFields.size(); maxf > ii; ++ii)
     {
-        TextEditorWithCaption * anEditor = _standardFieldEditors[static_cast<int>(ii)];
+        FormField * aField = _standardFields[static_cast<int>(ii)];
         
-        if (anEditor)
+        if (aField)
         {
-            anEditor->ignoreNextFocusLoss();
+            aField->ignoreNextFocusLoss();
         }
     }
-    for (size_t ii = 0, maxf = _extraFieldEditors.size(); maxf > ii; ++ii)
+    for (size_t ii = 0, maxf = _extraFields.size(); maxf > ii; ++ii)
     {
-        TextEditorWithCaption * anEditor = _extraFieldEditors[static_cast<int>(ii)];
-
-        if (anEditor)
+        FormField * aField = _extraFields[static_cast<int>(ii)];
+        
+        if (aField)
         {
-            anEditor->ignoreNextFocusLoss();
+            aField->ignoreNextFocusLoss();
         }
     }
     OD_LOG_EXIT(); //####

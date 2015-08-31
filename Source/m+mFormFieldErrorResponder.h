@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       m+mTextEditorErrorResponder.h
+//  File:       m+mFormFieldErrorResponder.h
 //
 //  Project:    m+m
 //
@@ -32,12 +32,12 @@
 //              ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 //              DAMAGE.
 //
-//  Created:    2015-06-11
+//  Created:    2015-08-31
 //
 //--------------------------------------------------------------------------------------------------
 
-#if (! defined(mpmTextEditorErrorResponder_H_))
-# define mpmTextEditorErrorResponder_H_ /* Header guard */
+#if (! defined(mpmFormFieldErrorResponder_H_))
+# define mpmFormFieldErrorResponder_H_ /* Header guard */
 
 # include "m+mManagerDataTypes.h"
 
@@ -55,22 +55,22 @@
 
 namespace MPlusM_Manager
 {
-    class TextEditorWithCaption;
+    class FormField;
     
     /*! @brief An error reporting abstraction. */
-    class TextEditorErrorResponder
+    class FormFieldErrorResponder
     {
     public :
         
         /*! @brief The constructor. */
-        TextEditorErrorResponder(void);
+        FormFieldErrorResponder(void);
         
         /*! @brief The destructor. */
-        virtual ~TextEditorErrorResponder(void);
+        virtual ~FormFieldErrorResponder(void);
         
         /*! @brief Report an error in a field.
          @param fieldOfInterest The field to be reported. */
-        virtual void reportErrorInField(TextEditorWithCaption & fieldOfInterest) = 0;
+        virtual void reportErrorInField(FormField & fieldOfInterest) = 0;
         
     protected :
         
@@ -82,10 +82,10 @@ namespace MPlusM_Manager
     
     private :
 
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(TextEditorErrorResponder)
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FormFieldErrorResponder)
         
-    }; // TextEditorErrorResponder
+    }; // FormFieldErrorResponder
     
 } // MPlusM_Manager
 
-#endif // ! defined(mpmTextEditorErrorResponder_H_)
+#endif // ! defined(mpmFormFieldErrorResponder_H_)
