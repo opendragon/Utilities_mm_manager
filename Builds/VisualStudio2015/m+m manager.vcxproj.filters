@@ -1080,12 +1080,6 @@
     <ClCompile Include="..\..\Source\m+mSettingsWindow.cpp">
       <Filter>m+m manager\Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\m+mTextEditorErrorResponder.cpp">
-      <Filter>m+m manager\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\m+mTextEditorWithCaption.cpp">
-      <Filter>m+m manager\Source</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\m+mTextValidator.cpp">
       <Filter>m+m manager\Source</Filter>
     </ClCompile>
@@ -1093,6 +1087,10 @@
       <Filter>m+m manager\Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\m+mConfigurationWindow.cpp" />
+    <ClCompile Include="..\..\Source\m+mCaptionedTextField.cpp" />
+    <ClCompile Include="..\..\Source\m+mFormField.cpp" />
+    <ClCompile Include="..\..\Source\m+mFormFieldErrorResponder.cpp" />
+    <ClCompile Include="..\..\Source\m+mValidatingTextEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_core\text\juce_CharacterFunctions.h">
@@ -2152,12 +2150,6 @@
     <ClInclude Include="..\..\Source\m+mSettingsWindow.h">
       <Filter>m+m manager\Source</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\m+mTextEditorErrorResponder.h">
-      <Filter>m+m manager\Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\m+mTextEditorWithCaption.h">
-      <Filter>m+m manager\Source</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\m+mTextValidator.h">
       <Filter>m+m manager\Source</Filter>
     </ClInclude>
@@ -2165,6 +2157,10 @@
       <Filter>m+m manager\Source</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\m+mConfigurationWindow.h" />
+    <ClInclude Include="..\..\Source\m+mCaptionedTextField.h" />
+    <ClInclude Include="..\..\Source\m+mFormField.h" />
+    <ClInclude Include="..\..\Source\m+mFormFieldErrorResponder.h" />
+    <ClInclude Include="..\..\Source\m+mValidatingTextEditor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\JuceLibraryCode\modules\juce_core\juce_module_info">

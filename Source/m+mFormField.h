@@ -66,13 +66,11 @@ namespace MPlusM_Manager
          @param responder The entity that will report errors in this field.
          @param regularLabelFont The font to use with the label when the text editor data is valid.
          @param errorLabelFont The font to use with the label when the text editor data is invalid.
-         @param index The order of the text editor.
-         @param componentName The name to pass to the component for it to use as its name. */
+         @param index The order of the text editor. */
         FormField(FormFieldErrorResponder & responder,
                   Font &                    regularLabelFont,
                   Font &                    errorLabelFont,
-                  const size_t              index,
-                  const String &            componentName = String::empty);
+                  const size_t              index);
         
         /*! @brief The destructor. */
         virtual ~FormField(void);

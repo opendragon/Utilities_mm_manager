@@ -246,6 +246,7 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\m+mCaptionedTextField.cpp" />
     <ClCompile Include="..\..\Source\m+mChannelContainer.cpp" />
     <ClCompile Include="..\..\Source\m+mChannelEntry.cpp" />
     <ClCompile Include="..\..\Source\m+mConfigurationWindow.cpp" />
@@ -253,6 +254,8 @@
     <ClCompile Include="..\..\Source\m+mEntitiesData.cpp" />
     <ClCompile Include="..\..\Source\m+mEntitiesPanel.cpp" />
     <ClCompile Include="..\..\Source\m+mEntityData.cpp" />
+    <ClCompile Include="..\..\Source\m+mFormField.cpp" />
+    <ClCompile Include="..\..\Source\m+mFormFieldErrorResponder.cpp" />
     <ClCompile Include="..\..\Source\m+mManagerApplication.cpp" />
     <ClCompile Include="..\..\Source\m+mManagerMain.cpp" />
     <ClCompile Include="..\..\Source\m+mManagerWindow.cpp" />
@@ -262,9 +265,8 @@
     <ClCompile Include="..\..\Source\m+mScannerThread.cpp" />
     <ClCompile Include="..\..\Source\m+mServiceLaunchThread.cpp" />
     <ClCompile Include="..\..\Source\m+mSettingsWindow.cpp" />
-    <ClCompile Include="..\..\Source\m+mTextEditorErrorResponder.cpp" />
-    <ClCompile Include="..\..\Source\m+mTextEditorWithCaption.cpp" />
     <ClCompile Include="..\..\Source\m+mTextValidator.cpp" />
+    <ClCompile Include="..\..\Source\m+mValidatingTextEditor.cpp" />
     <ClCompile Include="..\..\Source\m+mYarpLaunchThread.cpp" />
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_core\text\juce_CharacterFunctions.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
@@ -1090,6 +1092,7 @@
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_gui_extra\juce_gui_extra.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\m+mCaptionedTextField.h" />
     <ClInclude Include="..\..\Source\m+mChannelContainer.h" />
     <ClInclude Include="..\..\Source\m+mChannelEntry.h" />
     <ClInclude Include="..\..\Source\m+mConfigurationWindow.h" />
@@ -1097,6 +1100,8 @@
     <ClInclude Include="..\..\Source\m+mEntitiesData.h" />
     <ClInclude Include="..\..\Source\m+mEntitiesPanel.h" />
     <ClInclude Include="..\..\Source\m+mEntityData.h" />
+    <ClInclude Include="..\..\Source\m+mFormField.h" />
+    <ClInclude Include="..\..\Source\m+mFormFieldErrorResponder.h" />
     <ClInclude Include="..\..\Source\m+mManagerApplication.h" />
     <ClInclude Include="..\..\Source\m+mManagerDataTypes.h" />
     <ClInclude Include="..\..\Source\m+mManagerWindow.h" />
@@ -1106,9 +1111,8 @@
     <ClInclude Include="..\..\Source\m+mScannerThread.h" />
     <ClInclude Include="..\..\Source\m+mServiceLaunchThread.h" />
     <ClInclude Include="..\..\Source\m+mSettingsWindow.h" />
-    <ClInclude Include="..\..\Source\m+mTextEditorErrorResponder.h" />
-    <ClInclude Include="..\..\Source\m+mTextEditorWithCaption.h" />
     <ClInclude Include="..\..\Source\m+mTextValidator.h" />
+    <ClInclude Include="..\..\Source\m+mValidatingTextEditor.h" />
     <ClInclude Include="..\..\Source\m+mYarpLaunchThread.h" />
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_core\text\juce_CharacterFunctions.h" />
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_core\text\juce_CharPointer_ASCII.h" />

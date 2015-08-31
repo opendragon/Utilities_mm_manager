@@ -97,7 +97,7 @@ CaptionedTextField::CaptionedTextField(FormFieldErrorResponder & responder,
                                        TextValidator *           validator,
                                        const String &            componentName,
                                        juce_wchar                passwordCharacter) :
-    inherited(responder, regularLabelFont, errorLabelFont, index, componentName),
+    inherited(responder, regularLabelFont, errorLabelFont, index),
     _textEditor(new ValidatingTextEditor(*this, validator, componentName, passwordCharacter)),
     _validator(validator)
 {

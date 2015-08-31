@@ -89,8 +89,7 @@ using namespace std;
 FormField::FormField(FormFieldErrorResponder & responder,
                      Font &                    regularLabelFont,
                      Font &                    errorLabelFont,
-                     const size_t              index,
-                     const String &            componentName) :
+                     const size_t              index) :
     _errorFont(errorLabelFont), _regularFont(regularLabelFont), _responder(responder),
     _button(NULL), _caption(new Label), _index(index)
 {
@@ -98,7 +97,6 @@ FormField::FormField(FormFieldErrorResponder & responder,
     OD_LOG_P3("responder = ", &responder, "regularLabelFont = ", &regularLabelFont, //####
               "errorLabelFont = ", &errorLabelFont); //####
     OD_LOG_LL1("index = ", index); //####
-    OD_LOG_S1s("componentName = ", componentName.toStdString()); //####
     _caption->setFont(_regularFont);
     OD_LOG_EXIT_P(this); //####
 } // FormField::FormField
