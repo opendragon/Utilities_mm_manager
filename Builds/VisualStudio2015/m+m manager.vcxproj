@@ -249,6 +249,7 @@
     <ClCompile Include="..\..\Source\m+mCaptionedTextField.cpp" />
     <ClCompile Include="..\..\Source\m+mChannelContainer.cpp" />
     <ClCompile Include="..\..\Source\m+mChannelEntry.cpp" />
+    <ClCompile Include="..\..\Source\m+mCheckboxField.cpp" />
     <ClCompile Include="..\..\Source\m+mConfigurationWindow.cpp" />
     <ClCompile Include="..\..\Source\m+mContentPanel.cpp" />
     <ClCompile Include="..\..\Source\m+mEntitiesData.cpp" />
@@ -1095,6 +1096,7 @@
     <ClInclude Include="..\..\Source\m+mCaptionedTextField.h" />
     <ClInclude Include="..\..\Source\m+mChannelContainer.h" />
     <ClInclude Include="..\..\Source\m+mChannelEntry.h" />
+    <ClInclude Include="..\..\Source\m+mCheckboxField.h" />
     <ClInclude Include="..\..\Source\m+mConfigurationWindow.h" />
     <ClInclude Include="..\..\Source\m+mContentPanel.h" />
     <ClInclude Include="..\..\Source\m+mEntitiesData.h" />

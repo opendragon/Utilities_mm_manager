@@ -1091,6 +1091,7 @@
     <ClCompile Include="..\..\Source\m+mFormField.cpp" />
     <ClCompile Include="..\..\Source\m+mFormFieldErrorResponder.cpp" />
     <ClCompile Include="..\..\Source\m+mValidatingTextEditor.cpp" />
+    <ClCompile Include="..\..\Source\m+mCheckboxField.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_core\text\juce_CharacterFunctions.h">
@@ -2161,6 +2162,7 @@
     <ClInclude Include="..\..\Source\m+mFormField.h" />
     <ClInclude Include="..\..\Source\m+mFormFieldErrorResponder.h" />
     <ClInclude Include="..\..\Source\m+mValidatingTextEditor.h" />
+    <ClInclude Include="..\..\Source\m+mCheckboxField.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\JuceLibraryCode\modules\juce_core\juce_module_info">
