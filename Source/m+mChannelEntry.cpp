@@ -243,22 +243,22 @@ static void drawSourceAnchor(Graphics &       gg,
             second = anchorPos + Position(kArrowSize, kArrowSize);
             break;
             
-	    case kAnchorRight :
+        case kAnchorRight :
             first = anchorPos + Position(-kArrowSize, -kArrowSize);
             second = anchorPos + Position(-kArrowSize, kArrowSize);
             break;
             
-	    case kAnchorBottomCentre :
+        case kAnchorBottomCentre :
             first = anchorPos + Position(-kArrowSize, -kArrowSize);
             second = anchorPos + Position(kArrowSize, -kArrowSize);
             break;
             
-	    case kAnchorTopCentre :
+        case kAnchorTopCentre :
             first = anchorPos + Position(-kArrowSize, kArrowSize);
             second = anchorPos + Position(kArrowSize, kArrowSize);
             break;
             
-	    default :
+        default :
             break;
             
     }
@@ -292,27 +292,27 @@ static void drawTargetAnchor(Graphics &       gg,
     
     switch (anchor)
     {
-	    case kAnchorLeft :
+        case kAnchorLeft :
             first = anchorPos + Position(-kArrowSize, -kArrowSize);
             second = anchorPos + Position(-kArrowSize, kArrowSize);
             break;
             
-	    case kAnchorRight :
+        case kAnchorRight :
             first = anchorPos + Position(kArrowSize, -kArrowSize);
             second = anchorPos + Position(kArrowSize, kArrowSize);
             break;
             
-	    case kAnchorBottomCentre :
+        case kAnchorBottomCentre :
             first = anchorPos + Position(-kArrowSize, kArrowSize);
             second = anchorPos + Position(kArrowSize, kArrowSize);
             break;
             
-	    case kAnchorTopCentre :
+        case kAnchorTopCentre :
             first = anchorPos + Position(-kArrowSize, -kArrowSize);
             second = anchorPos + Position(kArrowSize, -kArrowSize);
             break;
             
-	    default :
+        default :
             break;
             
     }
@@ -368,7 +368,7 @@ static void drawBezier(Graphics &       gg,
         const float    dashes[] = { 5, 10 };
         const int      numDashes = (sizeof(dashes) / sizeof(*dashes));
         Path           strokedPath;
-
+        
         strokeType.createDashedStroke(strokedPath, bezPath, dashes, numDashes);
         gg.strokePath(strokedPath, PathStrokeType(newThickness));
     }
@@ -546,15 +546,15 @@ ChannelEntry::ChannelEntry(ChannelContainer *  parent,
             prefix = ((kPortUsageService == _usage) ? "S " : "In ");
             break;
             
-	    case kPortDirectionInputOutput :
+        case kPortDirectionInputOutput :
             prefix = ((kPortUsageClient == _usage) ? "C " : "I/O ");
             break;
             
-	    case kPortDirectionOutput :
+        case kPortDirectionOutput :
             prefix = "Out ";
             break;
             
-	    default :
+        default :
             prefix = "Unk ";
             break;
             
@@ -609,7 +609,7 @@ void ChannelEntry::addInputConnection(ChannelEntry *            other,
                 }
                 
             }
-        }            
+        }
         if (canAdd)
         {
             ChannelInfo newConnection;
@@ -793,13 +793,12 @@ void ChannelEntry::displayAndProcessPopupMenu(void)
 void ChannelEntry::displayChannelMetrics(void)
 {
     OD_LOG_ENTER(); //####
-                    // Popup of metrics.
     StringArray metricsArray;
     
     if (_parent)
     {
         metricsArray = _parent->getMetrics();
-        // Find our line and prepare it
+        // Find our line and prepare it.
         int numRows = metricsArray.size();
         
         for (int ii = 0; ii < numRows; ++ii)
@@ -1192,7 +1191,7 @@ void ChannelEntry::mouseDrag(const MouseEvent & ee)
 {
     OD_LOG_OBJENTER(); //####
     bool passOn = true;
-
+    
     if (ee.mods.isAltDown())
     {
         OD_LOG_P2("originalComponent = ", ee.originalComponent, //####
@@ -1240,7 +1239,7 @@ void ChannelEntry::mouseUp(const MouseEvent & ee)
                 bool       protocolsOverridden = ee.mods.isCtrlDown();
                 YarpString secondName(endEntry->getPortName());
                 YarpString secondProtocol(endEntry->getProtocol());
-
+                
                 if ((kPortDirectionOutput != endEntry->getDirection()) &&
                     (kPortUsageService != endEntry->getUsage()) &&
                     protocolsMatch(getProtocol(), secondProtocol, protocolsOverridden) &&

@@ -125,26 +125,26 @@ static const int kThreadKillTime = 3000;
 bool caseInsensitiveMatch(const char * string1,
                           const char * string2)
 {
-	OD_LOG_ENTER(); //####
-	OD_LOG_S2("string1 = ", string1, "string2 = ", string2); //####
-	bool matched = true;
-
-	if (! string1)
-	{
+    OD_LOG_ENTER(); //####
+    OD_LOG_S2("string1 = ", string1, "string2 = ", string2); //####
+    bool matched = true;
+    
+    if (! string1)
+    {
         ManagerWindow * mainWindow = ManagerApplication::getMainWindow();
         
-		AlertWindow::showMessageBox(AlertWindow::WarningIcon, "Bad first string pointer",
+        AlertWindow::showMessageBox(AlertWindow::WarningIcon, "Bad first string pointer",
                                     String::empty, String::empty, mainWindow);
         mainWindow->toFront(true);
-	}
-	else if (! string2)
-	{
+    }
+    else if (! string2)
+    {
         ManagerWindow * mainWindow = ManagerApplication::getMainWindow();
         
-		AlertWindow::showMessageBox(AlertWindow::WarningIcon, "Bad second string pointer",
+        AlertWindow::showMessageBox(AlertWindow::WarningIcon, "Bad second string pointer",
                                     String::empty, String::empty, mainWindow);
         mainWindow->toFront(true);
-	}
+    }
     else
     {
         for ( ; matched; ++string1, ++string2)
@@ -173,8 +173,8 @@ bool caseInsensitiveMatch(const char * string1,
             
         }
     }
-	OD_LOG_EXIT_B(matched); //####
-	return matched;
+    OD_LOG_EXIT_B(matched); //####
+    return matched;
 } // caseInsensitiveMatch
 
 #if defined(__APPLE__)
@@ -228,9 +228,9 @@ void ManagerApplication::anotherInstanceStarted(const String & commandLine)
 #endif // ! defined(OD_ENABLE_LOGGING_)
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("commandLine = ", commandLine.toStdString()); //####
-    // When another instance of the app is launched while this one is running,
-    // this method is invoked, and the commandLine parameter tells you what
-    // the other instance's command-line arguments were.
+    // When another instance of the app is launched while this one is running, this method is
+    // invoked, and the commandLine parameter tells you what the other instance's command-line
+    // arguments were.
     OD_LOG_OBJEXIT(); //####
 } // ManagerApplication::anotherInstanceStarted
 #if (! MAC_OR_LINUX_)
@@ -244,7 +244,7 @@ bool ManagerApplication::checkForRegistryServiceAndLaunchIfDesired(void)
 #if MAC_OR_LINUX_
     yarp::os::impl::Logger & theLogger = Common::GetLogger();
 #endif // MAC_OR_LINUX_
-
+    
     if (0 < _registryServicePath.length())
     {
         // If the Registry Service is installed, give the option of running it.
@@ -257,9 +257,9 @@ bool ManagerApplication::checkForRegistryServiceAndLaunchIfDesired(void)
     {
         // If YARP isn't installed, say so and leave.
         AlertWindow::showMessageBox(AlertWindow::WarningIcon, getApplicationName(),
-                                    "A Registry Service executable could not be found in the PATH "
-                                    "system environment variable. "
-                                    "Launching the Registry Service is not possible.",
+                                    T_("A Registry Service executable could not be found in the "
+                                       "PATH system environment variable. "
+                                       "Launching the Registry Service is not possible."),
                                     String::empty, _mainWindow);
         _mainWindow->toFront(true);
     }
@@ -303,14 +303,15 @@ yarp::os::Network * ManagerApplication::checkForYarpAndLaunchIfDesired(void)
                     _configuredYarpPort = serverPort;
                 }
             }
-			Utilities::GetMachineIPs(ipAddressVector);
+            Utilities::GetMachineIPs(ipAddressVector);
             int         initialSelection = 0;
             int         portChoice = serverPort;
             int         res = 0;
             StringArray ipAddressArray;
             String      appName(JUCEApplication::getInstance()->getApplicationName());
-            AlertWindow ww(appName, "Please select the IP address and port to be used to start the "
-                           "private YARP network:", AlertWindow::QuestionIcon, _mainWindow);
+            AlertWindow ww(appName, T_("Please select the IP address and port to be used to start "
+                                       "the private YARP network:"), AlertWindow::QuestionIcon,
+                           _mainWindow);
             
             for (unsigned ii = 0; ipAddressVector.size() > ii; ++ii)
             {
@@ -336,7 +337,7 @@ yarp::os::Network * ManagerApplication::checkForYarpAndLaunchIfDesired(void)
                 {
                     int    addressIndexChosen = cBox->getSelectedItemIndex();
                     String portText = ww.getTextEditorContents("NetworkPort");
-
+                    
                     selectedIpAddress = ipAddressArray[addressIndexChosen];
                     portChoice = portText.getIntValue();
                     if (Utilities::ValidPortNumber(portChoice))
@@ -346,8 +347,9 @@ yarp::os::Network * ManagerApplication::checkForYarpAndLaunchIfDesired(void)
                     else
                     {
                         AlertWindow::showMessageBox(AlertWindow::WarningIcon, getApplicationName(),
-                                                    "The port number is invalid. "
-                                                    "Please enter a value between 1024 and 65535",
+                                                    T_("The port number is invalid. "
+                                                       "Please enter a value between 1024 and "
+                                                       "65535."),
                                                     String::empty, _mainWindow);
                     }
                 }
@@ -386,9 +388,9 @@ yarp::os::Network * ManagerApplication::checkForYarpAndLaunchIfDesired(void)
     {
         // If YARP isn't installed, say so and leave.
         AlertWindow::showMessageBox(AlertWindow::WarningIcon, getApplicationName(),
-                                    "No YARP network was detected and a YARP executable could not "
-                                    "be found in the PATH system environment variable. "
-                                    "Execution is not possible.", String::empty, _mainWindow);
+                                    T_("No YARP network was detected and a YARP executable could "
+                                       "not be found in the PATH system environment variable. "
+                                       "Execution is not possible."), String::empty, _mainWindow);
         _mainWindow->toFront(true);
     }
     OD_LOG_OBJEXIT_P(result); //####
@@ -446,9 +448,9 @@ void ManagerApplication::doLaunchAService(const ApplicationInfo & appInfo)
             else
             {
                 AlertWindow::showMessageBox(AlertWindow::WarningIcon, caption,
-                                            "The service to which this adapter must attach is not "
-                                            "running on this YARP network. "
-                                            "It will not be possible to launch the adapter.",
+                                            T_("The service to which this adapter must attach is "
+                                               "not running on this YARP network. "
+                                               "It will not be possible to launch the adapter."),
                                             String::empty, _mainWindow);
                 _mainWindow->toFront(true);
             }
@@ -472,7 +474,7 @@ void ManagerApplication::doLaunchAService(const ApplicationInfo & appInfo)
                                                                   endpointToUse, tagToUse,
                                                                   portToUse, argsToUse));
         
-        if (SettingsWindow::kSettingsOK == settings->runModalLoop())
+        if (kConfigurationOK == settings->runModalLoop())
         {
             ServiceLaunchThread * aLauncher = new ServiceLaunchThread(appInfo._applicationPath,
                                                                       endpointToUse, tagToUse,
@@ -495,11 +497,11 @@ void ManagerApplication::doLaunchOtherApplication(void)
     OD_LOG_OBJENTER(); //####
     _applicationMenu.setLookAndFeel(&_mainWindow->getLookAndFeel());
     int res = _applicationMenu.show();
-
+    
     if (0 < res)
     {
         const ApplicationInfo & appInfo = _applicationList.at(res - 1);
-
+        
         doLaunchAService(appInfo);
     }
     OD_LOG_OBJEXIT(); //####
@@ -515,9 +517,9 @@ bool ManagerApplication::doLaunchRegistry(void)
     int                      portChoice = 0;
     int                      res = 0;
     String                   appName(JUCEApplication::getInstance()->getApplicationName());
-    AlertWindow              ww("Launching the Registry Service", "Please select the network port "
-                                "to be used to start the Registry Service\n(enter 0 to use the "
-                                "default port):",
+    AlertWindow              ww("Launching the Registry Service",
+                                T_("Please select the network port to be used to start the "
+                                   "Registry Service\n(enter 0 to use the default port):"),
                                 AlertWindow::QuestionIcon, _mainWindow);
     
 #if MAC_OR_LINUX_
@@ -542,8 +544,8 @@ bool ManagerApplication::doLaunchRegistry(void)
             {
                 AlertWindow::showMessageBox(AlertWindow::WarningIcon,
                                             "Launching the Registry Service",
-                                            "The port number is invalid. "
-                                            "Please enter a value between 1024 and 65535",
+                                            T_("The port number is invalid. "
+                                               "Please enter a value between 1024 and 65535."),
                                             String::empty, _mainWindow);
             }
         }
@@ -595,7 +597,7 @@ String ManagerApplication::findPathToExecutable(const String & execName)
 #if (! MAC_OR_LINUX_)
         else
         {
-			String temp(aFile.getFullPathName() + ".exe");
+            String temp(aFile.getFullPathName() + ".exe");
             
             aFile = juce::File::createFileWithoutCheckingPath(temp);
             if (aFile.existsAsFile())
@@ -611,8 +613,8 @@ String ManagerApplication::findPathToExecutable(const String & execName)
 #if MAC_OR_LINUX_
             if (! access(temp.toStdString().c_str(), X_OK))
 #else // ! MAC_OR_LINUX_
-            if (! _access(temp.toStdString().c_str(), 0)) // Note that there's no explicit check for
-                                                          // execute permission in Windows
+            if (! _access(temp.toStdString().c_str(), 0))
+                // Note that there's no explicit check for execute permission in Windows.
 #endif // ! MAC_OR_LINUX_
             {
                 // We've found an executable that we can use!
@@ -657,7 +659,7 @@ String ManagerApplication::findPathToExecutable(const String & execName)
                 else
                 {
                     String temp(aFile.getFullPathName() + ".exe");
-
+                    
                     aFile = juce::File::createFileWithoutCheckingPath(temp);
                     if (aFile.existsAsFile())
                     {
@@ -672,14 +674,13 @@ String ManagerApplication::findPathToExecutable(const String & execName)
 #if MAC_OR_LINUX_
                     if (! access(temp.toStdString().c_str(), X_OK))
 #else // ! MAC_OR_LINUX_
-                    if (! _access(temp.toStdString().c_str(), 0)) // Note that there's no explicit
-                                                                  // check for execute permission in
-                                                                  // Windows
+                    if (! _access(temp.toStdString().c_str(), 0))
+                        // Note that there's no explicit check for execute permission in Windows.
 #endif // ! MAC_OR_LINUX_
                     {
                         // We've found an executable that we can use!
                         result = temp;
-						pathVar = "";
+                        pathVar = "";
                     }
                 }
             }
@@ -693,7 +694,7 @@ ManagerApplication * ManagerApplication::getApp(void)
 {
     OD_LOG_ENTER(); //####
     ManagerApplication * result = static_cast<ManagerApplication *>(JUCEApplication::getInstance());
-
+    
     OD_LOG_EXIT_P(result); //####
     return result;
 } // ManagerApplication::getApp
@@ -719,27 +720,27 @@ bool ManagerApplication::getArgumentsForApplication(ApplicationInfo & theInfo)
     bool         okSoFar = false;
     ChildProcess runApplication;
     StringArray  nameAndArgs(theInfo._applicationPath);
-
+    
     nameAndArgs.add("--args");
     if (runApplication.start(nameAndArgs))
     {
         const String childOutput(runApplication.readAllProcessOutput());
-
+        
         runApplication.waitForProcessToFinish(kThreadKillTime);
         OD_LOG_S1s("childOutput = ", childOutput.toStdString()); //####
         if (0 < childOutput.length())
         {
             StringArray aRecord(StringArray::fromTokens(childOutput, ARGUMENT_SEPARATOR_, ""));
-
+            
             // The input lines should be composed of argument descriptions separated by the
             // ARGUMENT_SEPARATOR_ string.
             for (int ii = 0, mm = aRecord.size(); mm > ii; ++ii)
             {
-				String                              trimmedRecord(aRecord[ii].trim());
-				YarpString                          argString(trimmedRecord.toStdString());
+                String                              trimmedRecord(aRecord[ii].trim());
+                YarpString                          argString(trimmedRecord.toStdString());
                 Utilities::BaseArgumentDescriptor * argDesc =
                                                     Utilities::ConvertStringToArgument(argString);
-
+                
                 if (argDesc)
                 {
                     theInfo._argDescriptions.push_back(argDesc);
@@ -756,6 +757,24 @@ bool ManagerApplication::getArgumentsForApplication(ApplicationInfo & theInfo)
     return okSoFar;
 } // ManagerApplication::getArgumentsForApplication
 
+int ManagerApplication::getButtonHeight(void)
+{
+    OD_LOG_ENTER(); //####
+    ManagerApplication * ourApp = getApp();
+    int                  result;
+    
+    if (ourApp)
+    {
+        result = ourApp->_buttonHeight;
+    }
+    else
+    {
+        result = 32; // Arbitrary, should never reach here!
+    }
+    OD_LOG_EXIT_LL(result);
+    return result;
+} // ManagerApplication::getButtonHeight
+
 String ManagerApplication::getEnvironmentVar(const char * varName)
 {
     OD_LOG_ENTER(); //####
@@ -768,13 +787,13 @@ String ManagerApplication::getEnvironmentVar(const char * varName)
     getEnvironmentVars(keys, values);
     for (size_t ii = 0, mm = keys.size(); mm > ii; ++ii)
     {
-		const char * keysAsChars = keys[ii].c_str();
-
-		if (caseInsensitiveMatch(varName, keysAsChars))
-		{
-			result = values[ii].c_str();
-			break;
-		}
+        const char * keysAsChars = keys[ii].c_str();
+        
+        if (caseInsensitiveMatch(varName, keysAsChars))
+        {
+            result = values[ii].c_str();
+            break;
+        }
         
     }
     OD_LOG_EXIT_s(result.toStdString()); //####
@@ -791,7 +810,7 @@ void ManagerApplication::getEnvironmentVars(YarpStringVector & keys,
     YarpString         varsAsString(vars.toString());
     yarp::os::Bottle   varsAsBottle(varsAsString);
 #endif // ! defined(__APPLE__)
-
+    
     keys.clear();
     values.clear();
 #if defined(__APPLE__)
@@ -964,7 +983,7 @@ bool ManagerApplication::getPrimaryChannelForService(const ApplicationInfo & app
     bool         okSoFar = false;
     ChildProcess runApplication;
     StringArray  nameAndArgs(appInfo._applicationPath);
-
+    
     nameAndArgs.add("--channel");
     if (0 < portNumber.length())
     {
@@ -991,13 +1010,13 @@ bool ManagerApplication::getPrimaryChannelForService(const ApplicationInfo & app
     if (runApplication.start(nameAndArgs))
     {
         const String childOutput(runApplication.readAllProcessOutput());
-
+        
         runApplication.waitForProcessToFinish(kThreadKillTime);
         OD_LOG_S1s("childOutput = ", childOutput.toStdString()); //####
         if (0 < childOutput.length())
         {
             StringArray aRecord(StringArray::fromTokens(childOutput, "\t", ""));
-
+            
             if (1 <= aRecord.size())
             {
                 channelName = aRecord[0];
@@ -1106,14 +1125,15 @@ void ManagerApplication::initialise(const String & commandLine)
 #if defined(MpM_ReportOnConnections)
     ChannelStatusReporter * reporter = Utilities::GetGlobalStatusReporter();
 #endif // defined(MpM_ReportOnConnections)
-
+    
     Utilities::CheckForNameServerReporter();
     loadApplicationLists();
+    _buttonHeight = LookAndFeel::getDefaultLookAndFeel().getAlertWindowButtonHeight();
     _mainWindow = new ManagerWindow(ProjectInfo::projectName);
     if (Utilities::CheckForValidNetwork(true))
     {
         _yarp = new yarp::os::Network; // This is necessary to establish any connections to the YARP
-                                       // infrastructure
+                                       // infrastructure.
     }
     else
     {
@@ -1121,7 +1141,7 @@ void ManagerApplication::initialise(const String & commandLine)
 #if MAC_OR_LINUX_
         yarp::os::impl::Logger & theLogger = Common::GetLogger();
 #endif // MAC_OR_LINUX_
-
+        
 #if MAC_OR_LINUX_
         theLogger.warning("YARP network not running.");
 #endif // MAC_OR_LINUX_
@@ -1230,14 +1250,14 @@ void ManagerApplication::restoreYarpConfiguration(void)
     ChildProcess runYarp;
     String       appName(JUCEApplication::getInstance()->getApplicationName());
     StringArray  nameAndArgs(_yarpPath);
-
+    
     nameAndArgs.add("conf");
     nameAndArgs.add(_configuredYarpAddress);
     nameAndArgs.add(String(_configuredYarpPort));
     if (runYarp.start(nameAndArgs))
     {
         const String childOutput(runYarp.readAllProcessOutput());
-
+        
         runYarp.waitForProcessToFinish(kThreadKillTime);
         OD_LOG_S1s("childOutput = ", childOutput.toStdString()); //####
     }
@@ -1252,33 +1272,33 @@ void ManagerApplication::shutdown(void)
 {
     OD_LOG_OBJENTER(); //####
     SetExitRequest();
-	if (_scanner)
-	{
-		_scanner->signalThreadShouldExit();
-	}
+    if (_scanner)
+    {
+        _scanner->signalThreadShouldExit();
+    }
     for (int ii = 0, mm = _serviceLaunchers.size(); mm > ii; ++ii)
     {
         ServiceLaunchThread * aLauncher = _serviceLaunchers[ii];
-
+        
         aLauncher->killChildProcess();
     }
     if (_registryLauncher)
     {
         _registryLauncher->killChildProcess();
     }
-	if (_yarpLauncher)
-	{
-		_yarpLauncher->killChildProcess();
-	}
-	if (_scanner)
-	{
+    if (_yarpLauncher)
+    {
+        _yarpLauncher->killChildProcess();
+    }
+    if (_scanner)
+    {
         _scanner->stopThread(kThreadKillTime);
-		_scanner = NULL; // shuts down thread
-	}
+        _scanner = NULL; // shuts down thread
+    }
     for (int ii = 0, mm = _serviceLaunchers.size(); mm > ii; ++ii)
     {
         ServiceLaunchThread * aLauncher = _serviceLaunchers[ii];
-
+        
         aLauncher->stopThread(kThreadKillTime);
     }
     if (_registryLauncher)
@@ -1286,14 +1306,14 @@ void ManagerApplication::shutdown(void)
         _registryLauncher->stopThread(kThreadKillTime);
         _registryLauncher = NULL; // shuts down thread
     }
-	if (_yarpLauncher)
+    if (_yarpLauncher)
     {
         _yarpLauncher->stopThread(kThreadKillTime);
-		_yarpLauncher = NULL; // shuts down thread
+        _yarpLauncher = NULL; // shuts down thread
         restoreYarpConfiguration();
-	}
-	EntitiesPanel & entities = _mainWindow->getEntitiesPanel();
-
+    }
+    EntitiesPanel & entities = _mainWindow->getEntitiesPanel();
+    
     entities.rememberPositions();
 #if defined(MpM_DoExplicitClose)
     _peeker->close();
@@ -1309,8 +1329,8 @@ void ManagerApplication::shutdown(void)
 void ManagerApplication::systemRequestedQuit(void)
 {
     OD_LOG_OBJENTER(); //####
-    // This is called when the app is being asked to quit: you can ignore this
-    // request and let the app carry on running, or call quit() to allow the app to close.
+    // This is called when the app is being asked to quit: you can ignore this request and let the
+    // app carry on running, or call quit() to allow the app to close.
     quit();
     OD_LOG_OBJEXIT(); //####
 } // ManagerApplication::systemRequestedQuit
@@ -1335,27 +1355,27 @@ bool ManagerApplication::validateRegistryService(void)
             // We have a useable Registry Service executable - ask what the user wants to do.
             _registryServiceCanBeLaunched = true;
             doLaunch = (1 == AlertWindow::showOkCancelBox(AlertWindow::QuestionIcon,
-                                                          "No running Registry Service was "
-                                                          "detected - do you wish to launch the "
-                                                          "Registry Service?",
-                                                          "If you do, it may take a few moments to "
-                                                          "start, depending on network traffic and "
-                                                          "system activity. "
-                                                          "Also, the Registry Service will be "
-                                                          "shut down when this application exits, "
-                                                          "resulting in a potential loss of "
-                                                          "connectivity to any m+m services that "
-                                                          "were started after the Registry Service "
-                                                          "was launched.", "Yes", "No",
+                                                          T_("No running Registry Service was "
+                                                             "detected - do you wish to launch the "
+                                                             "Registry Service?"),
+                                                          T_("If you do, it may take a few moments "
+                                                             "to start, depending on network "
+                                                             "traffic and system activity. "
+                                                             "Also, the Registry Service will be "
+                                                             "shut down when this application "
+                                                             "exits, resulting in a potential loss "
+                                                             "of connectivity to any m+m services "
+                                                             "that were started after the Registry "
+                                                             "Service was launched."), "Yes", "No",
                                                           _mainWindow, NULL));
         }
         else
         {
             // The Registry Service executable can't actually be launched!
             AlertWindow::showMessageBox(AlertWindow::WarningIcon, appName,
-                                        "The Registry Service executable found in the PATH system "
-                                        "environment variable did not return valid data. "
-                                        "Launching the Registry Service is not possible.",
+                                        T_("The Registry Service executable found in the PATH "
+                                           "system environment variable did not return valid data. "
+                                           "Launching the Registry Service is not possible."),
                                         String::empty, _mainWindow);
         }
     }
@@ -1363,9 +1383,9 @@ bool ManagerApplication::validateRegistryService(void)
     {
         OD_LOG("! (runRegistryService.start(nameAndArgs))"); //####
         AlertWindow::showMessageBox(AlertWindow::WarningIcon, appName,
-                                    "The Registry Service executable found in the PATH system "
-                                    "environment variable could not be started. "
-                                    "Launching the Registry Service is not possible.",
+                                    T_("The Registry Service executable found in the PATH system "
+                                       "environment variable could not be started. "
+                                       "Launching the Registry Service is not possible."),
                                     String::empty, _mainWindow);
     }
     _mainWindow->toFront(true);
@@ -1392,36 +1412,39 @@ bool ManagerApplication::validateYarp(void)
         {
             // We have a useable YARP executable - ask what the user wants to do.
             doLaunch = (1 == AlertWindow::showOkCancelBox(AlertWindow::QuestionIcon,
-                                                          "No YARP network was detected - do you "
-                                                          "wish to launch a private YARP network?",
-                                                          "If you do, it may take a few moments to "
-                                                          "start, depending on network traffic and "
-                                                          "system activity. "
-                                                          "Also, the private YARP network will be "
-                                                          "shut down when this application exits, "
-                                                          "resulting in a potential loss of "
-                                                          "connectivity to any m+m services that "
-                                                          "were started after the private YARP "
-                                                          "network was launched.", "Yes", "No",
-                                                          _mainWindow, NULL));
+                                                          T_("No YARP network was detected - do "
+                                                             "you wish to launch a private YARP "
+                                                             "network?"),
+                                                          T_("If you do, it may take a few moments "
+                                                             "to start, depending on network "
+                                                             "traffic and system activity. "
+                                                             "Also, the private YARP network will "
+                                                             "be shut down when this application "
+                                                             "exits, resulting in a potential loss "
+                                                             "of connectivity to any m+m services "
+                                                             "that were started after the private "
+                                                             "YARP network was launched."), "Yes",
+                                                          "No", _mainWindow, NULL));
         }
         else
         {
             // The YARP executable can't actually be launched!
             AlertWindow::showMessageBox(AlertWindow::WarningIcon, appName,
-                                        "No YARP network was detected and the YARP executable "
-                                        "found in the PATH system environment variable did not "
-                                        "return valid data. "
-                                        "Execution is not possible.", String::empty, _mainWindow);
+                                        T_("No YARP network was detected and the YARP executable "
+                                           "found in the PATH system environment variable did not "
+                                           "return valid data. "
+                                           "Execution is not possible."), String::empty,
+                                        _mainWindow);
         }
     }
     else
     {
         OD_LOG("! (runYarp.start(nameAndArgs))"); //####
         AlertWindow::showMessageBox(AlertWindow::WarningIcon, appName,
-                                    "No YARP network was detected and the YARP executable found in "
-                                    "the PATH system environment variable could not be started. "
-                                    "Execution is not possible.", String::empty, _mainWindow);
+                                    T_("No YARP network was detected and the YARP executable found "
+                                       "in the PATH system environment variable could not be "
+                                       "started. "
+                                       "Execution is not possible."), String::empty, _mainWindow);
     }
     _mainWindow->toFront(true);
     OD_LOG_OBJEXIT_B(doLaunch); //####

@@ -132,9 +132,8 @@ ManagerWindow::~ManagerWindow(void)
 void ManagerWindow::closeButtonPressed(void)
 {
     OD_LOG_OBJENTER(); //####
-    // This is called when the user tries to close this window. Here, we'll just
-    // ask the app to quit when this happens, but you can change this to do
-    // whatever you need.
+    // This is called when the user tries to close this window. Here, we'll just ask the app to quit
+    // when this happens, but you can change this to do whatever you need.
     JUCEApplication::getInstance()->systemRequestedQuit();
     OD_LOG_OBJEXIT(); //####
 } // ManagerWindow::closeButtonPressed
@@ -164,7 +163,7 @@ void ManagerWindow::handleAsyncUpdate(void)
 {
     OD_LOG_OBJENTER(); //####
     ApplicationCommandManager & commandManager = getApplicationCommandManager();
-
+    
     commandManager.registerAllCommandsForTarget(_contentPanel);
     commandManager.registerAllCommandsForTarget(JUCEApplication::getInstance());
     OD_LOG_OBJEXIT(); //####

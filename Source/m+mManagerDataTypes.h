@@ -156,6 +156,26 @@ namespace MPlusM_Manager
         
     }; // ChannelPopupMenuSelection
     
+    /*! @brief The values to be returned by a configuration or settings window. */
+    enum ConfigurationRequest
+    {
+        /*! @brief 'Cancel' was requested. */
+        kConfigurationCancel,
+        
+        /*! @brief 'OK' was requested. */
+        kConfigurationOK,
+        
+        /*! @brief '+ argument' was requested. */
+        kConfigurationAddField,
+        
+        /*! @brief '...' was requested. */
+        kConfigurationFileRequest,
+        
+        /*! @brief '- argument' was requested. */
+        kConfigurationRemoveField
+        
+    }; // ConfigurationRequest
+    
     /*! @brief What kind of container. */
     enum ContainerKind
     {

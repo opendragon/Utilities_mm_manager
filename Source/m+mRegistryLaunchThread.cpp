@@ -88,11 +88,11 @@ using namespace std;
 
 RegistryLaunchThread::RegistryLaunchThread(const String & pathToExecutable,
                                            const int      portNumber) :
-	inherited("Registry Service launcher"), _registryServiceProcess(NULL),
+    inherited("Registry Service launcher"), _registryServiceProcess(NULL),
     _registryServicePath(pathToExecutable), _registryServicePort(portNumber)
 {
     OD_LOG_ENTER(); //####
-	OD_LOG_S1s("pathToExecutable = ", pathToExecutable.toStdString()); //####
+    OD_LOG_S1s("pathToExecutable = ", pathToExecutable.toStdString()); //####
     OD_LOG_LL1("portNumber = ", portNumber); //####
     OD_LOG_EXIT_P(this); //####
 } // RegistryLaunchThread::RegistryLaunchThread
@@ -100,8 +100,8 @@ RegistryLaunchThread::RegistryLaunchThread(const String & pathToExecutable,
 RegistryLaunchThread::~RegistryLaunchThread(void)
 {
     OD_LOG_OBJENTER(); //####
-	killChildProcess();
-	_registryServiceProcess = NULL;
+    killChildProcess();
+    _registryServiceProcess = NULL;
     OD_LOG_OBJEXIT(); //####
 } // RegistryLaunchThread::~RegistryLaunchThread
 
@@ -111,12 +111,12 @@ RegistryLaunchThread::~RegistryLaunchThread(void)
 
 void RegistryLaunchThread::killChildProcess(void)
 {
-	OD_LOG_OBJENTER(); //####
-	if (_registryServiceProcess)
-	{
-		_registryServiceProcess->kill();
-	}
-	OD_LOG_OBJEXIT(); //####
+    OD_LOG_OBJENTER(); //####
+    if (_registryServiceProcess)
+    {
+        _registryServiceProcess->kill();
+    }
+    OD_LOG_OBJEXIT(); //####
 } // RegistryLaunchThread::killChildProcess
 
 void RegistryLaunchThread::run(void)
@@ -127,7 +127,7 @@ void RegistryLaunchThread::run(void)
     {
         OD_LOG("(_registryServiceProcess)"); //####
         StringArray nameAndArgs(_registryServicePath);
-
+        
         if (0 < _registryServicePort)
         {
             OD_LOG("(0 < _registryServicePort)"); //####

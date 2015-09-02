@@ -74,6 +74,18 @@ using namespace std;
 # pragma mark Global constants and variables
 #endif // defined(__APPLE__)
 
+/*! @brief The font size for text. */
+const float FormField::kFontSize = 16;
+
+/*! @brief The horizontal gap between buttons. */
+const int FormField::kButtonGap = 10;
+
+/*! @brief The amount to inset text entry fields. */
+const int FormField::kFieldInset = (2 * kButtonGap);
+
+/*! @brief The amount to inset labels. */
+const int FormField::kLabelInset = (3 * kButtonGap);
+
 #if defined(__APPLE__)
 # pragma mark Local functions
 #endif // defined(__APPLE__)
@@ -90,14 +102,12 @@ FormField::FormField(FormFieldErrorResponder & responder,
                      Font &                    regularLabelFont,
                      Font &                    errorLabelFont,
                      const size_t              index) :
-    _errorFont(errorLabelFont), _regularFont(regularLabelFont), _responder(responder),
-    _button(NULL), _caption(new Label), _index(index)
+    _errorFont(errorLabelFont), _regularFont(regularLabelFont), _responder(responder), _index(index)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P3("responder = ", &responder, "regularLabelFont = ", &regularLabelFont, //####
               "errorLabelFont = ", &errorLabelFont); //####
     OD_LOG_LL1("index = ", index); //####
-    _caption->setFont(_regularFont);
     OD_LOG_EXIT_P(this); //####
 } // FormField::FormField
 
@@ -111,6 +121,14 @@ FormField::~FormField(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
+TextButton * FormField::getButton(void)
+const
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_OBJEXIT_P(NULL); //####
+    return NULL;
+} // FormField::getButton
+
 void FormField::performButtonAction(void)
 {
     OD_LOG_OBJENTER(); //####
@@ -121,7 +139,6 @@ void FormField::setButton(TextButton * newButton)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("newButton = ", newButton); //####
-    _button = newButton;
     OD_LOG_OBJEXIT(); //####
 } // FormField::setButton
 

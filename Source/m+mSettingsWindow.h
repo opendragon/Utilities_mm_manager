@@ -65,25 +65,6 @@ namespace MPlusM_Manager
     {
     public :
         
-        /*! @brief The values to be returned. */
-        enum
-        {
-            /*! @brief 'Cancel' was requested. */
-            kSettingsCancel,
-            
-            /*! @brief 'OK' was requested. */
-            kSettingsOK,
-            
-            /*! @brief '+ argument' was requested. */
-            kSettingsAddField,
-            
-            /*! @brief '...' was requested. */
-            kSettingsFileRequest,
-            
-            /*! @brief '- argument' was requested. */
-            kSettingsRemoveField
-        };
-        
         /*! @brief The constructor.
          @param title The title for the window.
          @param execType The kind of application being configured.
@@ -253,12 +234,6 @@ namespace MPlusM_Manager
 
         /*! @brief Set to the arguments provided by the user. */
         StringArray & _argsToUse;
-        
-        /*! @brief The width of the standard file popup invocation button. */
-        int _fileButtonWidth;
-        
-        /*! @brief The height to use for text editor fields. */
-        float _adjustedEditorHeight;
         
         /*! @brief @c true if the endpoint can be set and @c false if the endpoint is fixed. */
         bool _canSetEndpoint;

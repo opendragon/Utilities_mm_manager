@@ -41,7 +41,6 @@
 #include "m+mCaptionedTextField.h"
 #include "m+mManagerApplication.h"
 #include "m+mTextValidator.h"
-#include "m+mValidatingTextEditor.h"
 
 #include <m+m/m+mChannelArgumentDescriptor.h>
 #include <m+m/m+mEndpoint.h>
@@ -77,35 +76,11 @@ using namespace std;
 /*! @brief The colour to be used for the window background. */
 static const Colour & kWindowBackgroundColour(Colours::whitesmoke);
 
-/*! @brief The font size for text. */
-static const float kFontSize = 16;
-
-/*! @brief The horizontal gap between buttons. */
-static const int kButtonGap = 10;
-
-/*! @brief The amount to add to the height of text editor fields. */
-static const int kEditorHeightAdjustment = 4;
-
 /*! @brief The extra space around the content in the window. */
 static const int kExtraSpaceInWindow = 20;
 
-/*! @brief The amount to inset text entry fields. */
-static const int kFieldInset = (2 * kButtonGap);
-
-/*! @brief The amount to inset labels. */
-static const int kLabelInset = (3 * kButtonGap);
-
-/*! @brief The amount of space between a field and its label. */
-static const int kLabelToFieldGap = 2;
-
-/*! @brief The overhead for the buttons on the title bar. */
-static const int kTitleBarMinWidth = 80;
-
 /*! @brief The internal name for the endpoint text entry field. */
 static const String kEndpointFieldName("$$$endpoint$$$");
-
-/*! @brief The text of the file popup invocation button. */
-static const String kFileButtonText("...");
 
 /*! @brief The internal name for the port text entry field. */
 static const String kPortFieldName("$$$port$$$");
@@ -136,30 +111,37 @@ ConfigurationWindow::ConfigurationWindow(const String &                         
                                          yarp::os::Bottle &                          valuesToUse) :
     inherited1(), inherited2(), inherited3(title, kWindowBackgroundColour, 0), inherited4(),
     _topText("topText"), _cancelButton("Cancel"), _okButton("OK"),
-    _errorFont(Font::getDefaultMonospacedFontName(), kFontSize, Font::italic + Font::bold),
-    _regularFont(Font::getDefaultMonospacedFontName(), kFontSize, Font::plain), _execType(execType),
-    _descriptors(descriptors), _extraArgumentsGroup(NULL), _addArgumentsButton(NULL),
-    _removeArgumentsButton(NULL), _valuesToUse(valuesToUse), _hasExtraArguments(false),
-    _hasFileField(false)
+    _errorFont(Font::getDefaultMonospacedFontName(), FormField::kFontSize,
+               Font::italic + Font::bold), _regularFont(Font::getDefaultMonospacedFontName(),
+                                                        FormField::kFontSize, Font::plain),
+    _execType(execType), _descriptors(descriptors), _extraArgumentsGroup(NULL),
+    _addArgumentsButton(NULL), _removeArgumentsButton(NULL), _valuesToUse(valuesToUse),
+    _hasExtraArguments(false), _hasFileField(false)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_S2s("title = ", title, "execType = ", execType); //####
     OD_LOG_P2("descriptors = ", &descriptors, "argsToUse = ", &argsToUse); //####
+    ManagerApplication * ourApp = ManagerApplication::getApp();
+    
+    if (ourApp)
+    {
+        ourApp->doScanSoon();
+    }
     _contentArea.setSize(100, 100);
     setContentNonOwned(&_contentArea, true);
     BorderSize<int> bt = getBorderThickness();
     BorderSize<int> cb = getContentComponentBorder();
     int             heightSoFar = 0;
     int             widthSoFar = 0;
-
-    _adjustedEditorHeight = _regularFont.getHeight() + kEditorHeightAdjustment;
+    
     _valuesToUse.clear();
     setUpStandardFields(widthSoFar, heightSoFar, currentValues);
-	int minW = jmax(widthSoFar, _cancelButton.getWidth() + _okButton.getWidth() + (3 * kButtonGap));
+    int minW = jmax(widthSoFar,
+                    _cancelButton.getWidth() + _okButton.getWidth() + (3 * FormField::kButtonGap));
     int calcW = minW + bt.getLeftAndRight() + cb.getLeftAndRight();
     int calcH = heightSoFar + bt.getTopAndBottom() + cb.getTopAndBottom();
     
-	centreWithSize(calcW + kExtraSpaceInWindow, calcH + kExtraSpaceInWindow);
+    centreWithSize(calcW + kExtraSpaceInWindow, calcH + kExtraSpaceInWindow);
     adjustFields();
     setOpaque(true);
     setResizable(false, false);
@@ -182,23 +164,16 @@ ConfigurationWindow::~ConfigurationWindow(void)
 void ConfigurationWindow::addAnExtraField(void)
 {
     OD_LOG_ENTER(); //####
-    Component *          content = _extraArgumentsGroup;
     String               compCountAsString(static_cast<int>(_extraFields.size() + 1));
-    Point<int>           dimensions;
     CaptionedTextField * newField = new CaptionedTextField(*this, _regularFont, _errorFont,
-                                                           _extraFields.size(), NULL,
-                                                           _extraArgRootName + "_" +
+                                                           _extraFields.size(),
+                                                           _extraArgRootName + " " +
+                                                           compCountAsString, 0, true, false, NULL,
+                                                           NULL, _extraArgRootName + "_" +
                                                            compCountAsString);
-    Label *              newLabel = newField->getCaption();
     
-    newLabel->setText(_extraArgRootName + " " + compCountAsString, dontSendNotification);
     _extraFields.add(newField);
-    MPlusM_Manager::CalculateTextArea(dimensions, _regularFont, newLabel->getText());
-    newLabel->setBounds(kLabelInset, 0, dimensions.getX() + kLabelInset, dimensions.getY());
-    content->addAndMakeVisible(newLabel);
-    newField->setBounds(kFieldInset, 0, 0, static_cast<int>(_adjustedEditorHeight));
-    newField->setSelectAllWhenFocused(true);
-    content->addAndMakeVisible(newField->getComponent());
+    newField->addToComponent(_extraArgumentsGroup);
     recalculateArea();
     adjustFields();
     if (_removeArgumentsButton)
@@ -212,28 +187,29 @@ void ConfigurationWindow::adjustFields(void)
 {
     OD_LOG_OBJENTER(); //####
     Component * content = getContentComponent();
-    int         newButtonTop = content->getHeight() - (_cancelButton.getHeight() + kButtonGap);
-    int         newFieldWidth = content->getWidth() - (2 * kFieldInset);
+    int         newButtonTop = content->getHeight() - (_cancelButton.getHeight() +
+                                                       FormField::kButtonGap);
+    int         newFieldWidth = content->getWidth() - (2 * FormField::kFieldInset);
     
     if (_hasFileField)
     {
-        newFieldWidth -= (kButtonGap + _fileButtonWidth);
+        newFieldWidth -= (FormField::kButtonGap + CaptionedTextField::getFileButtonWidth());
     }
-    _cancelButton.setTopLeftPosition(getWidth() - (_cancelButton.getWidth() + kButtonGap),
-                                     newButtonTop);
-    _okButton.setTopLeftPosition(_cancelButton.getX() - (_okButton.getWidth() + kButtonGap),
-                                 newButtonTop);
+    _cancelButton.setTopLeftPosition(getWidth() - (_cancelButton.getWidth() +
+                                                   FormField::kButtonGap), newButtonTop);
+    _okButton.setTopLeftPosition(_cancelButton.getX() - (_okButton.getWidth() +
+                                                         FormField::kButtonGap), newButtonTop);
     if (_addArgumentsButton)
     {
         _addArgumentsButton->setTopLeftPosition(_okButton.getX() -
-                                                (_addArgumentsButton->getWidth() + kButtonGap),
-                                                newButtonTop);
+                                                (_addArgumentsButton->getWidth() +
+                                                 FormField::kButtonGap), newButtonTop);
     }
     if (_removeArgumentsButton)
     {
         _removeArgumentsButton->setTopLeftPosition(_addArgumentsButton->getX() -
-                                               (_removeArgumentsButton->getWidth() + kButtonGap),
-                                                   newButtonTop);
+                                                   (_removeArgumentsButton->getWidth() +
+                                                    FormField::kButtonGap), newButtonTop);
     }
     for (size_t ii = 0, maxf = _standardFields.size(); maxf > ii; ++ii)
     {
@@ -241,31 +217,20 @@ void ConfigurationWindow::adjustFields(void)
         
         if (aField)
         {
-            TextButton * aButton = aField->getButton();
-            
-            aField->setSize(newFieldWidth, aField->getHeight());
-            if (aButton)
-            {
-                Label * aLabel = aField->getCaption();
-                int     span = aField->getY() + aField->getHeight() - aLabel->getY();
-                int     offset = span - aButton->getHeight();
-                
-                aButton->setTopLeftPosition(aField->getX() + newFieldWidth + kButtonGap,
-                                            aLabel->getY() + (offset / 2));
-            }
+            aField->setWidth(newFieldWidth);
         }
     }
     if (_extraArgumentsGroup)
     {
-        int groupWidth = _cancelButton.getX() + _cancelButton.getWidth() -
-                            (_extraArgumentsGroup->getX() + kButtonGap);
-        int innerWidth = groupWidth - (kFieldInset + (2 * kButtonGap));
+        int groupWidth = (_cancelButton.getX() + _cancelButton.getWidth() -
+                          (_extraArgumentsGroup->getX() + FormField::kButtonGap));
+        int innerWidth = groupWidth - (FormField::kFieldInset + (2 * FormField::kButtonGap));
         
         for (size_t ii = 0, maxf = _extraFields.size(); maxf > ii; ++ii)
         {
             FormField * aField = _extraFields[static_cast<int>(ii)];
             
-            aField->setSize(innerWidth, aField->getHeight());
+            aField->setWidth(innerWidth);
         }
         _extraArgumentsGroup->setSize(groupWidth, _extraArgumentsGroup->getHeight());
     }
@@ -388,7 +353,7 @@ void ConfigurationWindow::focusGained(FocusChangeType cause)
 #if MAC_OR_LINUX_
 # pragma unused(cause)
 #endif // MAC_OR_LINUX_
-	OD_LOG_OBJENTER(); //####
+    OD_LOG_OBJENTER(); //####
     OD_LOG_OBJEXIT(); //####
 } // ConfigurationWindow::focusGained
 #if (! MAC_OR_LINUX_)
@@ -404,7 +369,7 @@ void ConfigurationWindow::focusLost(FocusChangeType cause)
 #if MAC_OR_LINUX_
 # pragma unused(cause)
 #endif // MAC_OR_LINUX_
-	OD_LOG_OBJENTER(); //####
+    OD_LOG_OBJENTER(); //####
     OD_LOG_OBJEXIT(); //####
 } // ConfigurationWindow::focusLost
 #if (! MAC_OR_LINUX_)
@@ -415,7 +380,7 @@ void ConfigurationWindow::handleAsyncUpdate(void)
 {
     OD_LOG_OBJENTER(); //####
     ApplicationCommandManager & commandManager = ManagerWindow::getApplicationCommandManager();
-
+    
     commandManager.registerAllCommandsForTarget(JUCEApplication::getInstance());
     OD_LOG_OBJEXIT(); //####
 } // ConfigurationWindow::handleAsyncUpdate
@@ -456,7 +421,7 @@ void ConfigurationWindow::recalculateArea(void)
     int    widthSoFar = 0;
     size_t numExtra = _extraFields.size();
     
-    heightSoFar = _topText.getY() + _topText.getHeight() + kButtonGap;
+    heightSoFar = _topText.getY() + _topText.getHeight() + FormField::kButtonGap;
     widthSoFar = jmax(widthSoFar, _topText.getX() + _topText.getWidth());
     for (size_t ii = 0, numDescriptors = _descriptors.size(), jj = 0; numDescriptors > ii; ++ii)
     {
@@ -473,42 +438,34 @@ void ConfigurationWindow::recalculateArea(void)
                 
                 if (aField)
                 {
-                    Label * aLabel = aField->getCaption();
-                    
-                    if (aLabel)
-                    {
-                        widthSoFar = jmax(widthSoFar, aLabel->getX() + aLabel->getWidth());
-                        heightSoFar = aField->getY() + aField->getHeight() + (kButtonGap / 2);
-                        ++jj;
-                    }
+                    widthSoFar = jmax(widthSoFar, aField->getMinimumWidth());
+                    heightSoFar = aField->getY() + aField->getHeight() +
+                    (FormField::kButtonGap / 2);
+                    ++jj;
                 }
             }
         }
     }
     if (_extraArgumentsGroup)
     {
-        int innerHeight = static_cast<int>(_regularFont.getHeight()) + (kButtonGap / 2);
-        int innerWidth = (2 * jmax(kFieldInset, kLabelInset));
-
-        _extraArgumentsGroup->setTopLeftPosition(kFieldInset, heightSoFar);
+        int innerHeight = static_cast<int>(_regularFont.getHeight()) + (FormField::kButtonGap / 2);
+        int innerWidth = (2 * jmax(FormField::kFieldInset, FormField::kLabelInset));
+        
+        _extraArgumentsGroup->setTopLeftPosition(FormField::kFieldInset, heightSoFar);
         for (size_t ii = 0; numExtra > ii; ++ii)
         {
             FormField * aField = _extraFields[static_cast<int>(ii)];
-            Label *     aLabel = aField->getCaption();
             
-            aLabel->setTopLeftPosition(kLabelInset, innerHeight);
-            innerHeight = aLabel->getY() + aLabel->getHeight() + kLabelToFieldGap;
-            innerWidth = jmax(innerWidth, aLabel->getX() + aLabel->getWidth());
-            aField->setTopLeftPosition(kFieldInset, innerHeight);
-            innerHeight = aField->getY() + aField->getHeight() + (kButtonGap / 2);
+            aField->setY(innerHeight);
+            innerHeight = aField->getY() + aField->getHeight() + (FormField::kButtonGap / 2);
         }
         if (0 < numExtra)
         {
-            innerHeight += (3 * kButtonGap / 4);
+            innerHeight += (3 * FormField::FormField::kButtonGap / 4);
         }
         else
         {
-            innerHeight += (kButtonGap / 2);
+            innerHeight += (FormField::kButtonGap / 2);
         }
         _extraArgumentsGroup->setSize(innerWidth, innerHeight);
         heightSoFar = _extraArgumentsGroup->getY() + _extraArgumentsGroup->getHeight();
@@ -517,7 +474,7 @@ void ConfigurationWindow::recalculateArea(void)
     }
     BorderSize<int> cb = getContentComponentBorder();
     int             minW = jmax(widthSoFar, _cancelButton.getWidth() + _okButton.getWidth() +
-                                (3 * kButtonGap));
+                                (3 * FormField::kButtonGap));
     
     setContentComponentSize(minW + kExtraSpaceInWindow + cb.getLeftAndRight(),
                             heightSoFar + kExtraSpaceInWindow + cb.getTopAndBottom());
@@ -527,13 +484,10 @@ void ConfigurationWindow::recalculateArea(void)
 void ConfigurationWindow::removeMostRecentlyAddedExtraField(void)
 {
     OD_LOG_ENTER(); //####
-    Component * content = _extraArgumentsGroup;
     FormField * lastField = _extraFields.getLast();
-    Label *     lastLabel = lastField->getCaption();
     
     _extraFields.removeLast();
-    content->removeChildComponent(lastField->getComponent());
-    content->removeChildComponent(lastLabel);
+    lastField->removeFromComponent(_extraArgumentsGroup);
     recalculateArea();
     adjustFields();
     if (_removeArgumentsButton)
@@ -549,8 +503,7 @@ void ConfigurationWindow::reportErrorInField(FormField & fieldOfInterest)
     OD_LOG_P1("fieldOfInterest = ", &fieldOfInterest); //####
     AlertWindow::showMessageBox(AlertWindow::WarningIcon, getName(), String("The ") +
                                 fieldOfInterest.getName() + " argument is invalid.\n"
-                                "Please correct the argument and try again.", String::empty,
-                                this);
+                                "Please correct the argument and try again.", String::empty, this);
     OD_LOG_OBJEXIT(); //####
 } // ConfigurationWindow::reportErrorInField
 
@@ -560,8 +513,7 @@ void ConfigurationWindow::reportErrorInField(ValidatingTextEditor & fieldOfInter
     OD_LOG_P1("fieldOfInterest = ", &fieldOfInterest); //####
     AlertWindow::showMessageBox(AlertWindow::WarningIcon, getName(), String("The ") +
                                 fieldOfInterest.getName() + " argument is invalid.\n"
-                                "Please correct the argument and try again.", String::empty,
-                                this);
+                                "Please correct the argument and try again.", String::empty, this);
     OD_LOG_OBJEXIT(); //####
 } // ConfigurationWindow::reportErrorInField
 
@@ -590,31 +542,28 @@ void ConfigurationWindow::setUpStandardFields(int &                    widthSoFa
     OD_LOG_OBJENTER(); //####
     OD_LOG_P3("widthSoFar = ", &widthSoFar, "heightSoFar = ", &heightSoFar, //####
               "currentValues = ", &currentValues); //####
-    Component *               content = getContentComponent();
-    int                       buttonHeight = getLookAndFeel().getAlertWindowButtonHeight();
-    Point<int>                dimensions;
-    size_t                    numDescriptors = _descriptors.size();
-    ScopedPointer<TextButton> fileButton(new TextButton(kFileButtonText));
+    Component * content = getContentComponent();
+    int         buttonHeight = ManagerApplication::getButtonHeight();
+    Point<int>  dimensions;
+    size_t      numDescriptors = _descriptors.size();
     
-    fileButton->changeWidthToFitText(buttonHeight);
-    _fileButtonWidth = fileButton->getWidth();
     widthSoFar = heightSoFar = 0;
     _topText.setFont(_regularFont);
     if (0 < numDescriptors)
     {
         _topText.setText(String("The ") + _execType +
-						 " has one or more values that can be configured.", dontSendNotification);
+                         " has one or more values that can be configured.", dontSendNotification);
     }
     else
     {
         _topText.setText(String("The ") + _execType + " has no configurable values.",
-						 dontSendNotification);
+                         dontSendNotification);
     }
     MPlusM_Manager::CalculateTextArea(dimensions, _regularFont, _topText.getText());
-    _topText.setBounds(kButtonGap, kButtonGap + getTitleBarHeight(), dimensions.getX() + kButtonGap,
-                       dimensions.getY());
+    _topText.setBounds(FormField::kButtonGap, FormField::kButtonGap + getTitleBarHeight(),
+                       dimensions.getX() + FormField::kButtonGap, dimensions.getY());
     content->addAndMakeVisible(&_topText, 0);
-    heightSoFar = _topText.getY() + _topText.getHeight() + kButtonGap;
+    heightSoFar = _topText.getY() + _topText.getHeight() + FormField::kButtonGap;
     widthSoFar = jmax(widthSoFar, _topText.getX() + _topText.getWidth());
     // Check for one or more file descriptors
     for (size_t ii = 0; numDescriptors > ii; ++ii)
@@ -627,7 +576,7 @@ void ConfigurationWindow::setUpStandardFields(int &                    widthSoFa
             _hasFileField = true;
             break;
         }
-
+        
     }
     for (size_t ii = 0, jj = 0; numDescriptors > ii; ++ii)
     {
@@ -645,13 +594,14 @@ void ConfigurationWindow::setUpStandardFields(int &                    widthSoFa
                     _hasExtraArguments = true;
                     _extraArgRootName = argName;
                     _extraArgumentsGroup = new GroupComponent("", argDescription);
-                    _extraArgumentsGroup->setBounds(kFieldInset, heightSoFar,
-                                                    widthSoFar - (kButtonGap + kFieldInset),
+                    _extraArgumentsGroup->setBounds(FormField::kFieldInset, heightSoFar,
+                                                    widthSoFar - (FormField::kButtonGap +
+                                                                  FormField::kFieldInset),
                                                     static_cast<int>(_regularFont.getHeight()) +
-                                                    kButtonGap);
+                                                    FormField::kButtonGap);
                     content->addAndMakeVisible(_extraArgumentsGroup);
-                    heightSoFar = _extraArgumentsGroup->getY() + _extraArgumentsGroup->getHeight() +
-                                    (kButtonGap / 2);
+                    heightSoFar = (_extraArgumentsGroup->getY() +
+                                   _extraArgumentsGroup->getHeight() + (FormField::kButtonGap / 2));
                     widthSoFar = jmax(widthSoFar, _extraArgumentsGroup->getX() +
                                       _extraArgumentsGroup->getWidth());
                     _addArgumentsButton = new TextButton(String("+ ") + argName);
@@ -673,31 +623,31 @@ void ConfigurationWindow::setUpStandardFields(int &                    widthSoFa
             }
             else if (aDescriptor->isModifiable())
             {
-                bool                 forOutput;
-                juce_wchar           fillChar = (aDescriptor->isPassword() ?
-                                                 CHAR_TO_USE_FOR_PASSWORD_ : 0);
-                String               descriptionPrefix;
-                String               valueToUse;
-                TextValidator *      newValidator = new TextValidator(*aDescriptor);
-                CaptionedTextField * newField = new CaptionedTextField(*this, _regularFont,
-                                                                       _errorFont, ii, newValidator,
-                                                                       argName, fillChar);
-                Label *              newLabel = newField->getCaption();
+                bool forFilePath;
+                bool forOutput;
                 
-                if (aDescriptor->isOptional())
+                if (aDescriptor->isForFiles(forOutput))
                 {
-                    descriptionPrefix = "(Optional) ";
+                    forFilePath = true;
                 }
-                newLabel->setText(descriptionPrefix + argDescription, dontSendNotification);
-                MPlusM_Manager::CalculateTextArea(dimensions, _regularFont, newLabel->getText());
-				newLabel->setBounds(kLabelInset, heightSoFar, dimensions.getX() + kLabelInset,
-									dimensions.getY());
-                content->addAndMakeVisible(newLabel);
-				heightSoFar = newLabel->getY() + newLabel->getHeight() + kLabelToFieldGap;
-                widthSoFar = jmax(widthSoFar, newLabel->getX() + newLabel->getWidth());
-                _standardFields.add(newField);
-                newField->setBounds(kFieldInset, heightSoFar, widthSoFar - kFieldInset,
-                                    static_cast<int>(_adjustedEditorHeight));
+                else
+                {
+                    forFilePath = false;
+                }
+                String               descriptionPrefix(aDescriptor->isOptional() ? "(Optional) " :
+                                                       "");
+                String               valueToUse;
+                CaptionedTextField * newField = new CaptionedTextField(*this, _regularFont,
+                                                                       _errorFont, ii,
+                                                                       descriptionPrefix +
+                                                                       argDescription, heightSoFar,
+                                                                       false, forFilePath, this,
+                                                                   new TextValidator(*aDescriptor),
+                                                                       argName,
+                                                                       aDescriptor->isPassword() ?
+                                                                       CHAR_TO_USE_FOR_PASSWORD_ :
+                                                                       0);
+                
                 if (jj < currentValues.size())
                 {
                     valueToUse = currentValues[jj].c_str();
@@ -707,21 +657,11 @@ void ConfigurationWindow::setUpStandardFields(int &                    widthSoFa
                     valueToUse = aDescriptor->getDefaultValue().c_str();
                 }
                 newField->setText(valueToUse, false);
-                newField->setSelectAllWhenFocused(true);
-                content->addAndMakeVisible(newField->getComponent());
-                if (aDescriptor->isForFiles(forOutput))
-                {
-                    TextButton * newButton = new TextButton(kFileButtonText);
-
-                    newButton->setWantsKeyboardFocus(true);
-                    newButton->setMouseClickGrabsKeyboardFocus(false);
-                    newButton->setCommandToTrigger(NULL, kConfigurationFileRequest, false);
-                    newButton->addListener(this);
-                    newButton->changeWidthToFitText(buttonHeight);
-                    newField->setButton(newButton);
-                    content->addAndMakeVisible(newField->getButton());
-                }
-                heightSoFar = newField->getY() + newField->getHeight() + (kButtonGap / 2);
+                _standardFields.add(newField);
+                newField->addToComponent(content);
+                widthSoFar = jmax(widthSoFar, newField->getMinimumWidth());
+                heightSoFar = newField->getY() + newField->getHeight() +
+                (FormField::kButtonGap / 2);
             }
             ++jj;
         }
@@ -731,14 +671,14 @@ void ConfigurationWindow::setUpStandardFields(int &                    widthSoFa
     _cancelButton.setCommandToTrigger(NULL, kConfigurationCancel, false);
     _cancelButton.addListener(this);
     _cancelButton.changeWidthToFitText(buttonHeight);
-    _cancelButton.setTopLeftPosition(0, heightSoFar + kButtonGap);
+    _cancelButton.setTopLeftPosition(0, heightSoFar + FormField::kButtonGap);
     content->addAndMakeVisible(&_cancelButton, 0);
     _okButton.setWantsKeyboardFocus(true);
     _okButton.setMouseClickGrabsKeyboardFocus(false);
     _okButton.setCommandToTrigger(NULL, kConfigurationOK, false);
     _okButton.addListener(this);
     _okButton.changeWidthToFitText(buttonHeight);
-    _okButton.setTopLeftPosition(0, heightSoFar + kButtonGap);
+    _okButton.setTopLeftPosition(0, heightSoFar + FormField::kButtonGap);
     content->addAndMakeVisible(&_okButton, 0);
     heightSoFar += buttonHeight;
     OD_LOG_OBJEXIT(); //####

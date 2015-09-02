@@ -150,7 +150,7 @@ ChannelContainer::~ChannelContainer(void)
     for (size_t ii = 0, mm = _argumentList.size(); mm > ii; ++ii)
     {
         Utilities::BaseArgumentDescriptor * argDesc = _argumentList[ii];
-
+        
         delete argDesc;
     }
     _argumentList.clear();
@@ -217,14 +217,14 @@ bool ChannelContainer::canBeConfigured(void)
     bool   gotOne = false;
     bool   result;
     size_t mm = _argumentList.size();
-
+    
     if (mm)
     {
         result = true;
         for (size_t ii = 0; result && (mm > ii); ++ii)
         {
             MplusM::Utilities::BaseArgumentDescriptor * argDesc = _argumentList[ii];
-
+            
             if (argDesc)
             {
                 // Skip over the required fields, since they won't be displayed. Also, ignore any
@@ -335,7 +335,7 @@ void ChannelContainer::configureTheService(void)
                                                                                       _argumentList,
                                                                                       valuesToUse));
                     
-                    if (ConfigurationWindow::kConfigurationOK == configuration->runModalLoop())
+                    if (kConfigurationOK == configuration->runModalLoop())
                     {
                         if (Utilities::SetConfigurationForService(aPort->getPortName(), valuesToUse,
                                                                   STANDARD_WAIT_TIME_))
@@ -370,7 +370,7 @@ void ChannelContainer::displayAndProcessPopupMenu(void)
 {
     OD_LOG_OBJENTER(); //####
     PopupMenu mm;
-
+    
     mm.setLookAndFeel(&getLookAndFeel());
     getOwner().getContent()->setUpContainerMenu(mm, *this);
     int result = mm.show();
@@ -396,7 +396,7 @@ void ChannelContainer::displayAndProcessPopupMenu(void)
         case kPopupDisplayServiceMetrics :
             displayMetrics();
             break;
-           
+            
         case kPopupHideEntity :
             hide();
             break;
@@ -404,7 +404,7 @@ void ChannelContainer::displayAndProcessPopupMenu(void)
         case kPopupRestartService :
             restartTheService();
             break;
-
+            
         case kPopupStopService :
             stopTheService();
             break;
@@ -420,7 +420,6 @@ void ChannelContainer::displayInformation(const bool moreDetails)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_B1("moreDetails = ", moreDetails); //####
-    // Popup of description.
     YarpString thePanelDescription;
     
     switch (_kind)
@@ -509,7 +508,7 @@ void ChannelContainer::displayInformation(const bool moreDetails)
 void ChannelContainer::displayMetrics(void)
 {
     OD_LOG_OBJENTER(); //####
-    // Popup of metrics.
+                       // Popup of metrics.
     String      result;
     StringArray metricsArray = getMetrics();
     int         numRows = metricsArray.size();
@@ -517,7 +516,7 @@ void ChannelContainer::displayMetrics(void)
     for (int ii = 0; ii < numRows; ++ii)
     {
         const String & aRow = metricsArray[ii];
-
+        
         if (0 < ii)
         {
             result += "\n";
@@ -560,7 +559,7 @@ String ChannelContainer::formatMetricRow(const String & aRow)
         String outBytes = asPieces[4];
         String inMessages = asPieces[5];
         String outMessages = asPieces[6];
-
+        
         result = "Channel:      " + channelName + "\n";
         result += "In bytes:     " + inBytes + "\n";
         result += "Out bytes:    " + outBytes + "\n";
@@ -578,7 +577,7 @@ const
     OD_LOG_ENTER(); //####
     OD_LOG_LL1(idx, idx); //####
     MplusM::Utilities::BaseArgumentDescriptor * result;
-
+    
     if (_argumentList.size() > idx)
     {
         result = _argumentList[idx];
@@ -821,7 +820,7 @@ void ChannelContainer::mouseDrag(const MouseEvent & ee)
     // Moves this Component according to the mouse drag event and applies our constraints to it
     if (ee.mods.isAltDown() || ee.mods.isCommandDown() || ee.mods.isPopupMenu())
     {
-		doDrag = false;
+        doDrag = false;
     }
     if (doDrag)
     {
@@ -843,16 +842,16 @@ void ChannelContainer::paint(Graphics & gg)
     as.append(getName(), _owner.getNormalFont(), kHeadingTextColour);
     juce::Rectangle<int> localBounds(getLocalBounds());
     juce::Rectangle<int> area1(localBounds.getX(), localBounds.getY(), localBounds.getWidth(),
-							   _titleHeight);
+                               _titleHeight);
     juce::Rectangle<int> area2(localBounds.getX(), localBounds.getY() + _titleHeight,
-							   localBounds.getWidth(), localBounds.getHeight() - _titleHeight);
+                               localBounds.getWidth(), localBounds.getHeight() - _titleHeight);
     
     gg.setColour(kHeadingBackgroundColour);
     gg.fillRect(area1);
     area1.setLeft(static_cast<int>(area1.getX() + getTextInset()));
     as.draw(gg, area1.toFloat());
     gg.setColour(kGapFillColour);
-    gg.fillRect(area2);    
+    gg.fillRect(area2);
     OD_LOG_OBJEXIT(); //####
 } // ChannelContainer::paint
 
@@ -887,11 +886,11 @@ void ChannelContainer::restartTheService(void)
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
     {
         ChannelEntry * aPort = getPort(ii);
-
+        
         if (aPort && aPort->isService())
         {
             bool restartable;
-
+            
             switch (Utilities::MapStringToServiceKind(_behaviour))
             {
                 case Common::kServiceKindAdapter :
@@ -900,7 +899,7 @@ void ChannelContainer::restartTheService(void)
                 case Common::kServiceKindOutput :
                     restartable = true;
                     break;
-
+                    
                 default :
                     restartable = false;
                     break;
@@ -911,7 +910,7 @@ void ChannelContainer::restartTheService(void)
                 Utilities::RestartAService(aPort->getPortName(), STANDARD_WAIT_TIME_);
             }
             break;
-
+            
         }
     }
     OD_LOG_OBJEXIT(); //####
@@ -989,19 +988,21 @@ void ChannelContainer::stopTheService(void)
             if (Utilities::PortIsRegistryService(aPort->getPortName()))
             {
                 doStop = (1 == AlertWindow::showOkCancelBox(AlertWindow::QuestionIcon,
-                                                            "Are you sure that you want to stop "
-                                                            "the Registry Service?", "If you do, "
-                                                            "it may take a few moments to "
-                                                            "disappear from the display, depending "
-                                                            "on network traffic. "
-                                                            "Also, stopping the Registry Service "
-                                                            "will interfere with the ability of "
-                                                            "clients and adapters to locate their "
-                                                            "corresponding services, and this "
-                                                            "application will not be able to "
-                                                            "identify services, clients or "
-                                                            "adapters or to group secondary ports "
-                                                            "together with their primary ports.",
+                                                            T_("Are you sure that you want to stop "
+                                                               "the Registry Service?"),
+                                                            T_("If you do, it may take a few "
+                                                               "moments to disappear from the "
+                                                               "display, depending on network "
+                                                               "traffic. "
+                                                               "Also, stopping the Registry "
+                                                               "Service will interfere with the "
+                                                               "ability of clients and adapters to "
+                                                               "locate their corresponding "
+                                                               "services, and this application "
+                                                               "will not be able to identify "
+                                                               "services, clients or adapters or "
+                                                               "to group secondary ports together "
+                                                               "with their primary ports."),
                                                             "Yes", String::empty, NULL,
                                                             NULL));
             }
@@ -1026,8 +1027,8 @@ void ChannelContainer::stopTheService(void)
                     containerType = "entity";
                 }
                 titleText += containerType + "?";
-                messageText += containerType + " will not exit if it is waiting on a command "
-                                "prompt, until a command is issued.";
+                messageText += containerType + T_(" will not exit if it is waiting on a command "
+                                                  "prompt, until a command is issued.");
                 doStop = (1 == AlertWindow::showOkCancelBox(AlertWindow::QuestionIcon, titleText,
                                                             messageText, "Yes", String::empty,
                                                             NULL, NULL));

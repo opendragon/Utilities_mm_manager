@@ -253,7 +253,7 @@ void ScannerThread::addEntities(const Utilities::PortVector & detectedPorts)
         PortData *                   aPort = anEntity->addPort(descriptor._channelName, "", "",
                                                                kPortUsageService,
                                                                kPortDirectionInput);
-
+        
         findMatchingIpAddressAndPort(detectedPorts, descriptor._channelName, ipAddress, ipPort);
         anEntity->setIPAddress(ipAddress);
         aPort->setPortNumber(ipPort);
@@ -293,7 +293,7 @@ void ScannerThread::addEntities(const Utilities::PortVector & detectedPorts)
         for (size_t ii = 0, mm = descriptor._argumentList.size(); mm > ii; ++ii)
         {
             Utilities::BaseArgumentDescriptor * argDesc = descriptor._argumentList[ii];
-
+            
             if (argDesc)
             {
                 anEntity->addArgumentDescription(argDesc);
@@ -674,7 +674,7 @@ bool ScannerThread::gatherEntities(Utilities::PortVector & detectedPorts,
     {
         bool             servicesSeen;
         YarpStringVector services;
-
+        
         _detectedServices.clear();
         _rememberedPorts.clear();
         _rememberedPorts.insert(_inputOnlyPortName);
@@ -725,7 +725,7 @@ void ScannerThread::relinquishFromWrite(void)
 void ScannerThread::run(void)
 {
     OD_LOG_OBJENTER(); //####
-	for ( ; ! threadShouldExit(); )
+    for ( ; ! threadShouldExit(); )
     {
         bool                  needToLeave = false;
         Utilities::PortVector detectedPorts;
@@ -885,7 +885,7 @@ void ScannerThread::run(void)
                         do
                         {
                             bool locked = conditionallyAcquireForRead();
-
+                            
                             for ( ; (! locked) && (! needToLeave);
                                  locked = conditionallyAcquireForRead())
                             {
@@ -929,7 +929,7 @@ void ScannerThread::run(void)
                                        "shouldScanSoon)"); //####
                                 break;
                             }
-
+                            
                         }
                         while (0 <= kk);
                     }
@@ -956,7 +956,7 @@ void ScannerThread::run(void)
             bool shouldCleanupSoon = false;
             bool shouldScanSoon = false;
             int  kk = (LONG_SLEEP_ / VERY_SHORT_SLEEP_);
-
+            
             do
             {
                 bool locked = conditionallyAcquireForRead();

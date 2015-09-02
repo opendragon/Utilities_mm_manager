@@ -75,27 +75,16 @@ namespace MPlusM_Manager
         /*! @brief The destructor. */
         virtual ~FormField(void);
         
+        /*! @brief Add the components of this field to the specified component and make them
+         visible.
+         @param whereToAdd The component to be added to. */
+        virtual void addToComponent(Component * whereToAdd) = 0;
+        
         /*! @brief Return the associated button.
          @returns The associated button. */
-        inline TextButton * getButton(void)
-        const
-        {
-            return _button;
-        } // getButton
+        virtual TextButton * getButton(void)
+        const;
         
-        /*! @brief Return the associated caption.
-         @returns The associated caption. */
-        inline Label * getCaption(void)
-        const
-        {
-            return _caption;
-        } // getCaption
-        
-        /*! @brief Return the component associated with the field.
-         @return The component associated with the field. */
-        virtual Component * getComponent(void)
-        const = 0;
-
         /*! @brief Return the height of the field in pixels.
          @return The height of the field in pixels. */
         virtual int getHeight(void)
@@ -109,6 +98,11 @@ namespace MPlusM_Manager
             return _index;
         } // getIndex
         
+        /*! @brief Return the minimum width of the field in pixels.
+         @return The minimum width of the field in pixels. */
+        virtual int getMinimumWidth(void)
+        const = 0;
+        
         /*! @brief Returns the name of the field.
          @returns The name of the field. */
         virtual const String & getName(void)
@@ -119,6 +113,11 @@ namespace MPlusM_Manager
         virtual String getText(void)
         const = 0;
 
+        /*! @brief Return the width of the field in pixels.
+         @return The width of the field in pixels. */
+        virtual int getWidth(void)
+        const = 0;
+        
         /*! @brief Return the left coordinate of the field.
          @return The left coordinate of the field. */
         virtual int getX(void)
@@ -135,29 +134,13 @@ namespace MPlusM_Manager
         /*! @brief Perform the action triggered by the button. */
         virtual void performButtonAction(void);
 
-        /*! @brief Set the position and size of the field.
-         @param xx The leftmost coordinate of the field.
-         @param yy The topmost coordinate of the field.
-         @param width The width of the field.
-         @param height The height of the field. */
-        virtual void setBounds(const int xx,
-                               const int yy,
-                               const int width,
-                               const int height) = 0;
+        /*! @brief Remove the components of this field from the specified component.
+         @param whereToRemove The component to be removed from. */
+        virtual void removeFromComponent(Component * whereToRemove) = 0;
         
         /*! @brief Sets the associated button.
          @param newButton The associated button. */
-        void setButton(TextButton * newButton = NULL);
-        
-        /*! @brief Set the action on receiving focus.
-         @param shouldSelectAll If @c true, obtaining focus will select all the content. */
-        virtual void setSelectAllWhenFocused(const bool shouldSelectAll) = 0;
-
-        /*! @brief Change the size of the field.
-         @param newWidth The new width of the field.
-         @param newHeight The new height of the field. */
-        virtual void setSize(const int newWidth,
-                             const int newHeight) = 0;
+        virtual void setButton(TextButton * newButton = NULL);
         
         /*! @brief Set the text value associated with the field.
          @param newText The text to be used.
@@ -165,12 +148,14 @@ namespace MPlusM_Manager
         virtual void setText(const String & newText,
                              const bool     sendTextChangeMessage) = 0;
 
-        /*! @brief Set the position of the field.
-         @param xx The new leftmost coordinate of the field.
-         @param yy The new topmost coordinate of the field. */
-        virtual void setTopLeftPosition(const int xx,
-                                        const int yy) = 0;
-
+        /*! @brief Set the width of the field.
+         @param ww The new width of the field. */
+        virtual void setWidth(const int ww) = 0;
+        
+        /*! @brief Set the top coordinate of the field.
+         @param yy The new top coordinate of the field. */
+        virtual void setY(const int yy) = 0;
+        
         /*! @brief Check the field for validity.
          @returns @c true if the validator accepts the field or there's no validation required or
          @c false if the validator rejects the field. */
@@ -188,6 +173,18 @@ namespace MPlusM_Manager
         
     public :
     
+        /*! @brief The font size for text. */
+        static const float kFontSize;
+        
+        /*! @brief The horizontal gap between buttons. */
+        static const int kButtonGap;
+        
+        /*! @brief The amount to inset text entry fields. */
+        static const int kFieldInset;
+        
+        /*! @brief The amount to inset labels. */
+        static const int kLabelInset;
+        
     protected :
     
         /*! @brief The font to use with the label when the text editor data is invalid. */
@@ -198,12 +195,6 @@ namespace MPlusM_Manager
         
         /*! @brief The entity that can report an error in this field. */
         FormFieldErrorResponder & _responder;
-        
-        /*! @brief An associated button for the text editor. */
-        ScopedPointer<TextButton> _button;
-        
-        /*! @brief The caption for the field. */
-        ScopedPointer<Label> _caption;
         
         /*! @brief The order of the field. */
         size_t _index;

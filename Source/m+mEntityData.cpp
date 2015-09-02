@@ -115,7 +115,7 @@ EntityData::~EntityData(void)
     for (size_t ii = 0, mm = _argumentList.size(); mm > ii; ++ii)
     {
         Utilities::BaseArgumentDescriptor * argDesc = _argumentList[ii];
-
+        
         delete argDesc;
     }
     _argumentList.clear();
@@ -157,7 +157,7 @@ const
     OD_LOG_ENTER(); //####
     OD_LOG_LL1(idx, idx); //####
     MplusM::Utilities::BaseArgumentDescriptor * result;
-
+    
     if (_argumentList.size() > idx)
     {
         result = _argumentList[idx];

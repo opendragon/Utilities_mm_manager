@@ -39,6 +39,7 @@
 #include "m+mCaptionedTextField.h"
 
 #include "m+mFormFieldErrorResponder.h"
+#include "m+mManagerApplication.h"
 #include "m+mTextValidator.h"
 #include "m+mValidatingTextEditor.h"
 
@@ -74,6 +75,21 @@ using namespace std;
 # pragma mark Private structures, constants and variables
 #endif // defined(__APPLE__)
 
+/*! @brief The amount to add to the height of text editor fields. */
+static const int kEditorHeightAdjustment = 4;
+
+/*! @brief The extra space around the content in the window. */
+static const int kExtraSpaceInWindow = 20;
+
+/*! @brief The amount of space between a field and its label. */
+static const int kLabelToFieldGap = 2;
+
+/*! @brief The text of the file popup invocation button. */
+static const String kFileButtonText("...");
+
+/*! @brief The width of a 'file' button. */
+static int lFileButtonWidth = -1;
+
 #if defined(__APPLE__)
 # pragma mark Global constants and variables
 #endif // defined(__APPLE__)
@@ -94,26 +110,65 @@ CaptionedTextField::CaptionedTextField(FormFieldErrorResponder & responder,
                                        Font &                    regularLabelFont,
                                        Font &                    errorLabelFont,
                                        const size_t              index,
+                                       const String &            captionTitle,
+                                       const int                 top,
+                                       const bool                boundsSetLater,
+                                       const bool                forFilePath,
+                                       ButtonListener *          buttonHandler,
                                        TextValidator *           validator,
                                        const String &            componentName,
                                        juce_wchar                passwordCharacter) :
     inherited(responder, regularLabelFont, errorLabelFont, index),
     _textEditor(new ValidatingTextEditor(*this, validator, componentName, passwordCharacter)),
-    _validator(validator)
+    _validator(validator), _caption(new Label), _button(NULL)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P4("responder = ", &responder, "regularLabelFont = ", &regularLabelFont, //####
-              "errorLabelFont = ", &errorLabelFont, "validator = ", validator); //####
-    OD_LOG_S1s("componentName = ", componentName.toStdString()); //####
-    OD_LOG_LL2("index = ", index, "passwordCharacter = ", passwordCharacter); //####
+              "errorLabelFont = ", &errorLabelFont, "buttonHandler = ", buttonHandler); //####
+    OD_LOG_P1("validator = ", validator); //####
+    OD_LOG_S2s("captionTitle = ", captionTitle, "componentName = ", //####
+               componentName.toStdString()); //####
+    OD_LOG_LL3("index = ", index, "top = ", top, "passwordCharacter = ", passwordCharacter); //####
+    OD_LOG_B2("boundsSetLater = ", boundsSetLater, "forFilePath = ", forFilePath); //####
+    Point<int> dimensions;
+    int        adjustedEditorHeight = static_cast<int>(_regularFont.getHeight() +
+                                                       kEditorHeightAdjustment);
+    
+    _caption->setFont(_regularFont);
+    _caption->setText(captionTitle, dontSendNotification);
     _textEditor->setFont(_regularFont);
     _textEditor->setEscapeAndReturnKeysConsumed(false);
+    _textEditor->setSelectAllWhenFocused(true);
+    MPlusM_Manager::CalculateTextArea(dimensions, _regularFont, _caption->getText());
+    _caption->setBounds(kLabelInset, top, dimensions.getX() + kLabelInset, dimensions.getY());
+    if (forFilePath)
+    {
+        _button = new TextButton(kFileButtonText);
+        _button->setWantsKeyboardFocus(true);
+        _button->setMouseClickGrabsKeyboardFocus(false);
+        _button->setCommandToTrigger(NULL, kConfigurationFileRequest, false);
+        _button->addListener(buttonHandler);
+        _button->changeWidthToFitText(ManagerApplication::getButtonHeight());
+    }
+    if (boundsSetLater)
+    {
+        _textEditor->setBounds(kFieldInset, 0, 0, adjustedEditorHeight);
+    }
+    else
+    {
+        _textEditor->setBounds(kFieldInset,
+                               _caption->getY() + _caption->getHeight() + kLabelToFieldGap,
+                               _caption->getX() + _caption->getWidth() - kFieldInset,
+                               adjustedEditorHeight);
+    }
     OD_LOG_EXIT_P(this); //####
 } // CaptionedTextField::CaptionedTextField
 
 CaptionedTextField::~CaptionedTextField(void)
 {
     OD_LOG_OBJENTER(); //####
+    _button = NULL;
+    _caption = NULL;
     _textEditor = NULL;
     OD_LOG_OBJEXIT(); //####
 } // CaptionedTextField::~CaptionedTextField
@@ -122,23 +177,57 @@ CaptionedTextField::~CaptionedTextField(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-Component * CaptionedTextField::getComponent(void)
-const
+void CaptionedTextField::addToComponent(Component * whereToAdd)
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_OBJEXIT_P(this); //####
-    return _textEditor;
-} // CaptionedTextField::getComponent
+    OD_LOG_P1("whereToAdd = ", whereToAdd); //####
+    if (whereToAdd)
+    {
+        whereToAdd->addAndMakeVisible(_caption);
+        whereToAdd->addAndMakeVisible(_textEditor);
+        if (_button)
+        {
+            whereToAdd->addAndMakeVisible(_button);
+        }
+    }
+    OD_LOG_OBJEXIT(); //####
+} // CaptionedTextField::addToComponent
+
+int CaptionedTextField::getFileButtonWidth(void)
+{
+    OD_LOG_ENTER(); //####
+    int result;
+    
+    if (lFileButtonWidth < 0)
+    {
+        ScopedPointer<TextButton> fileButton(new TextButton(kFileButtonText));
+        
+        fileButton->changeWidthToFitText(ManagerApplication::getButtonHeight());
+        lFileButtonWidth = fileButton->getWidth();
+    }
+    OD_LOG_EXIT_LL(lFileButtonWidth); //####
+    return lFileButtonWidth;
+} // CaptionedTextField::getFileButtonWidth
 
 int CaptionedTextField::getHeight(void)
 const
 {
     OD_LOG_OBJENTER(); //####
-    int result = _textEditor->getHeight();
+    int result = _textEditor->getHeight() + _caption->getHeight() + kLabelToFieldGap;
     
     OD_LOG_OBJEXIT_LL(result); //####
     return result;
 } // CaptionedTextField::getHeight
+
+int CaptionedTextField::getMinimumWidth(void)
+const
+{
+    OD_LOG_OBJENTER(); //####
+    int result = jmax(_textEditor->getX(), _caption->getWidth() + _caption->getX());
+    
+    OD_LOG_OBJEXIT_LL(result); //####
+    return result;
+} // CaptionedTextField::::getMinimumWidth
 
 const String & CaptionedTextField::getName(void)
 const
@@ -160,11 +249,23 @@ const
     return result;
 } // CaptionedTextField::getText
 
+int CaptionedTextField::getWidth(void)
+const
+{
+    OD_LOG_OBJENTER(); //####
+    int firstVal = _textEditor->getWidth() + _textEditor->getX();
+    int secondVal = _caption->getWidth() + _caption->getX();
+    int result = jmax(firstVal, secondVal) - getX();
+    
+    OD_LOG_OBJEXIT_LL(result); //####
+    return result;
+} // CaptionedTextField::getWidth
+
 int CaptionedTextField::getX(void)
 const
 {
     OD_LOG_OBJENTER(); //####
-    int result = _textEditor->getX();
+    int result = jmin(_textEditor->getX(), _caption->getX());
     
     OD_LOG_OBJEXIT_LL(result); //####
     return result;
@@ -174,7 +275,7 @@ int CaptionedTextField::getY(void)
 const
 {
     OD_LOG_OBJENTER(); //####
-    int result = _textEditor->getY();
+    int result = _caption->getY();
     
     OD_LOG_OBJEXIT_LL(result); //####
     return result;
@@ -250,6 +351,22 @@ void CaptionedTextField::performButtonAction(void)
     OD_LOG_OBJEXIT(); //####
 } // CaptionedTextField::performButtonAction
 
+void CaptionedTextField::removeFromComponent(Component * whereToRemove)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_P1("whereToRemove = ", whereToRemove); //####
+    if (whereToRemove)
+    {
+        whereToRemove->removeChildComponent(_caption);
+        whereToRemove->removeChildComponent(_textEditor);
+        if (_button)
+        {
+            whereToRemove->removeChildComponent(_button);
+        }
+    }
+    OD_LOG_OBJEXIT(); //####
+} // CaptionedTextField::removeFromComponent
+
 void CaptionedTextField::reportErrorInField(void)
 {
     OD_LOG_OBJENTER(); //####
@@ -257,33 +374,13 @@ void CaptionedTextField::reportErrorInField(void)
     OD_LOG_OBJEXIT(); //####
 } // CaptionedTextField::reportErrorInField
 
-void CaptionedTextField::setBounds(const int xx,
-                                   const int yy,
-                                   const int width,
-                                   const int height)
+void CaptionedTextField::setButton(TextButton * newButton)
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_LL4("xx = ", xx, "yy = ", yy, "width = ", width, "height = ", height); //####
-    _textEditor->setBounds(xx, yy, width, height);
+    OD_LOG_P1("newButton = ", newButton); //####
+    _button = newButton;
     OD_LOG_OBJEXIT(); //####
-} // CaptionedTextField::setBounds
-
-void CaptionedTextField::setSelectAllWhenFocused(const bool shouldSelectAll)
-{
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_B1("shouldSelectAll = ", shouldSelectAll); //####
-    _textEditor->setSelectAllWhenFocused(shouldSelectAll);
-    OD_LOG_OBJEXIT(); //####
-} // CaptionedTextField::setSelectAllWhenFocused
-
-void CaptionedTextField::setSize(const int newWidth,
-                                 const int newHeight)
-{
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_LL2("newWidth = ", newWidth, "newHeight = ", newHeight); //####
-    _textEditor->setSize(newWidth, newHeight);
-    OD_LOG_OBJEXIT(); //####
-} // CaptionedTextField::setSize
+} // CaptionedTextField::setButton
 
 void CaptionedTextField::setText(const String & newText,
                                  const bool     sendTextChangeMessage)
@@ -295,14 +392,39 @@ void CaptionedTextField::setText(const String & newText,
     OD_LOG_OBJEXIT(); //####
 } // CaptionedTextField::setText
 
-void CaptionedTextField::setTopLeftPosition(const int xx,
-                                            const int yy)
+void CaptionedTextField::setWidth(const int ww)
 {
     OD_LOG_OBJENTER(); //####
-    OD_LOG_LL2("xx = ", xx, "yy = ", yy); //####
-    _textEditor->setTopLeftPosition(xx, yy);
+    OD_LOG_LL1("ww = ", ww); //####
+    _textEditor->setSize(ww, _textEditor->getHeight());
+    if (_button)
+    {
+        int span = _textEditor->getY() + _textEditor->getHeight() - _caption->getY();
+        int offset = span - _button->getHeight();
+        
+        _button->setTopLeftPosition(_textEditor->getX() + ww + kButtonGap,
+                                    _caption->getY() + (offset / 2));
+    }
     OD_LOG_OBJEXIT(); //####
-} // CaptionedTextField::setTopLeftPosition
+} // CaptionedTextField::setWidth
+
+void CaptionedTextField::setY(const int yy)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_LL1("yy = ", yy); //####
+    _caption->setTopLeftPosition(kLabelInset, yy);
+    _textEditor->setTopLeftPosition(kFieldInset,
+                                    _caption->getY() + _caption->getHeight() + kLabelToFieldGap);
+    if (_button)
+    {
+        int span = _textEditor->getY() + _textEditor->getHeight() - _caption->getY();
+        int offset = span - _button->getHeight();
+        
+        _button->setTopLeftPosition(_textEditor->getX() + _textEditor->getWidth() + kButtonGap,
+                                    _caption->getY() + (offset / 2));
+    }
+    OD_LOG_OBJEXIT(); //####
+} // CaptionedTextField::setY
 
 bool CaptionedTextField::validateField(void)
 {

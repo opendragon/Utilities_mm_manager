@@ -42,6 +42,7 @@
 #include "m+mChannelContainer.h"
 #include "m+mChannelEntry.h"
 #include "m+mContentPanel.h"
+#include "m+mFormField.h"
 #include "m+mManagerWindow.h"
 
 //#include <odl/ODEnableLogging.h>
@@ -100,9 +101,6 @@ using namespace std;
 /*! @brief The name of the font to be used for text. */
 static const char * kFontName = "Courier New";
 
-/*! @brief The size of the font to be used for text. */
-static const float kFontSize = 15;
-
 /*! @brief The outer 'gutter' for the entities. */
 static const int kGutter = 10;
 
@@ -136,8 +134,8 @@ EntitiesPanel::EntitiesPanel(ContentPanel * theContainer,
     _dragConnectionActive(false), _dragIsForced(false)
 {
     OD_LOG_ENTER(); //####
-    _defaultBoldFont = new Font(kFontName, kFontSize, Font::bold);
-    _defaultNormalFont = new Font(kFontName, kFontSize, Font::plain);
+    _defaultBoldFont = new Font(kFontName, FormField::kFontSize - 1, Font::bold);
+    _defaultNormalFont = new Font(kFontName, FormField::kFontSize - 1, Font::plain);
     setSize(startingWidth ? startingWidth : kInitialPanelWidth,
             startingHeight ? startingHeight : kInitialPanelHeight);
     setVisible(true);
@@ -201,14 +199,14 @@ void EntitiesPanel::adjustSize(const bool andRepaint)
             if (anEntity)
             {
                 juce::Rectangle<int> entityBounds(anEntity->getBounds());
-                OD_LOG_LL4("eB.x = ", entityBounds.getX(), "eB.y = ", entityBounds.getY(), //####
-                           "eB.w = ", entityBounds.getWidth(), "eB.h = ", //####
-                           entityBounds.getHeight()); //####
                 int                  entityLeft = entityBounds.getX();
                 int                  entityTop = entityBounds.getY();
                 int                  entityRight = entityLeft + entityBounds.getWidth();
                 int                  entityBottom = entityTop + entityBounds.getHeight();
                 
+                OD_LOG_LL4("eB.x = ", entityBounds.getX(), "eB.y = ", entityBounds.getY(), //####
+                           "eB.w = ", entityBounds.getWidth(), "eB.h = ", //####
+                           entityBounds.getHeight()); //####
                 if (haveValues)
                 {
                     minX = jmin(minX, entityLeft);
@@ -404,7 +402,7 @@ void EntitiesPanel::displayAndProcessPopupMenu(void)
         mm.addCommandItem(commandManager, ManagerWindow::kCommandLaunchRegistryService);
         mm.addCommandItem(commandManager, ManagerWindow::kCommandLaunchExecutables);
         // Note that all the menu items are commands, so they are handled by the content panel.
-        mm.show();        
+        mm.show();
     }
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::displayAndProcessPopupMenu
@@ -449,7 +447,7 @@ ChannelContainer * EntitiesPanel::findKnownEntity(const YarpString & name)
                 result = anEntity;
                 break;
             }
-     
+            
         }
     }
     OD_LOG_OBJEXIT_P(result); //####

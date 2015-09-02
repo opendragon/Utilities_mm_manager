@@ -146,7 +146,7 @@ bool PeekInputHandler::handleInput(const yarp::os::Bottle &     input,
                     {
                         ourApp->doScanSoon();
                     }
-                }                
+                }
             }
         }
     }

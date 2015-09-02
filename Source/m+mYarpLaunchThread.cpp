@@ -89,20 +89,20 @@ using namespace std;
 YarpLaunchThread::YarpLaunchThread(const String & pathToExecutable,
                                    const String & ipAddress,
                                    const int      portNumber) :
-	inherited("YARP launcher"), _yarpProcess(NULL), _yarpAddress(ipAddress),
+    inherited("YARP launcher"), _yarpProcess(NULL), _yarpAddress(ipAddress),
     _yarpPath(pathToExecutable), _yarpPort(portNumber)
 {
     OD_LOG_ENTER(); //####
-	OD_LOG_S2s("pathToExecutable = ", pathToExecutable, "ipAddress = ", ipAddress); //####
-	OD_LOG_LL1("portNumber = ", portNumber); //####
+    OD_LOG_S2s("pathToExecutable = ", pathToExecutable, "ipAddress = ", ipAddress); //####
+    OD_LOG_LL1("portNumber = ", portNumber); //####
     OD_LOG_EXIT_P(this); //####
 } // YarpLaunchThread::YarpLaunchThread
 
 YarpLaunchThread::~YarpLaunchThread(void)
 {
     OD_LOG_OBJENTER(); //####
-	killChildProcess();
-	_yarpProcess = NULL;
+    killChildProcess();
+    _yarpProcess = NULL;
     OD_LOG_OBJEXIT(); //####
 } // YarpLaunchThread::~YarpLaunchThread
 
@@ -112,12 +112,12 @@ YarpLaunchThread::~YarpLaunchThread(void)
 
 void YarpLaunchThread::killChildProcess(void)
 {
-	OD_LOG_OBJENTER(); //####
-	if (_yarpProcess)
-	{
-		_yarpProcess->kill();
-	}
-	OD_LOG_OBJEXIT(); //####
+    OD_LOG_OBJENTER(); //####
+    if (_yarpProcess)
+    {
+        _yarpProcess->kill();
+    }
+    OD_LOG_OBJEXIT(); //####
 } // YarpLaunchThread::killChildProcess
 
 void YarpLaunchThread::run(void)
@@ -128,12 +128,12 @@ void YarpLaunchThread::run(void)
     {
         OD_LOG("_yarpProcess"); //####
         StringArray nameAndArgs(_yarpPath);
-
+        
         nameAndArgs.add("server");
         nameAndArgs.add("--ip");
         nameAndArgs.add(_yarpAddress);
-		nameAndArgs.add("--socket");
-		nameAndArgs.add(String(_yarpPort));
+        nameAndArgs.add("--socket");
+        nameAndArgs.add(String(_yarpPort));
         nameAndArgs.add("--write");
         if (_yarpProcess->start(nameAndArgs, 0))
         {

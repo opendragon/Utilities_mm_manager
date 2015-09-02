@@ -64,25 +64,6 @@ namespace MPlusM_Manager
     {
     public :
         
-        /*! @brief The values to be returned. */
-        enum
-        {
-            /*! @brief 'Cancel' was requested. */
-            kConfigurationCancel,
-            
-            /*! @brief 'OK' was requested. */
-            kConfigurationOK,
-            
-            /*! @brief '+ argument' was requested. */
-            kConfigurationAddField,
-            
-            /*! @brief '...' was requested. */
-            kConfigurationFileRequest,
-            
-            /*! @brief '- argument' was requested. */
-            kConfigurationRemoveField
-        };
-        
         /*! @brief The constructor.
          @param title The title for the window.
          @param execType The kind of application being configured.
@@ -223,12 +204,6 @@ namespace MPlusM_Manager
         
         /*! @brief Set to the values provided by the user. */
         yarp::os::Bottle & _valuesToUse;
-        
-        /*! @brief The width of the standard file popup invocation button. */
-        int _fileButtonWidth;
-        
-        /*! @brief The height to use for text editor fields. */
-        float _adjustedEditorHeight;
         
         /*! @brief @c true if extra arguments are present and @c false if they aren't used. */
         bool _hasExtraArguments;

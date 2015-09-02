@@ -186,15 +186,15 @@ void ContentPanel::getAllCommands(Array<CommandID> & commands)
 {
     OD_LOG_OBJENTER(); //####
     static const CommandID ids[] =
-        {
-            ManagerWindow::kCommandDoRepaint,
-            ManagerWindow::kCommandInvertBackground,
-            ManagerWindow::kCommandWhiteBackground,
-            ManagerWindow::kCommandClearSelection,
-            ManagerWindow::kCommandUnhideEntities,
-            ManagerWindow::kCommandLaunchRegistryService,
-            ManagerWindow::kCommandLaunchExecutables
-        };
+    {
+        ManagerWindow::kCommandDoRepaint,
+        ManagerWindow::kCommandInvertBackground,
+        ManagerWindow::kCommandWhiteBackground,
+        ManagerWindow::kCommandClearSelection,
+        ManagerWindow::kCommandUnhideEntities,
+        ManagerWindow::kCommandLaunchRegistryService,
+        ManagerWindow::kCommandLaunchExecutables
+    };
     
     commands.addArray(ids, numElementsInArray(ids));
     OD_LOG_OBJEXIT(); //####
@@ -205,7 +205,7 @@ void ContentPanel::getCommandInfo(CommandID                commandID,
 {
     OD_LOG_OBJENTER(); //####
     ManagerApplication * ourApp = ManagerApplication::getApp();
-
+    
     switch (commandID)
     {
         case ManagerWindow::kCommandDoRepaint :
@@ -261,7 +261,7 @@ StringArray ContentPanel::getMenuBarNames(void)
 {
     OD_LOG_OBJENTER(); //####
     const char * const names[] = { "m+m manager", "View", "Operation", NULL };
-
+    
     return StringArray(names);
 } // ContentPanel::getMenuBarNames
 
@@ -277,7 +277,7 @@ PopupMenu ContentPanel::getMenuForIndex(int            menuIndex,
 #  pragma unused(menuName)
 # endif // MAC_OR_LINUX_
 #endif // ! defined(OD_ENABLE_LOGGING_)
-	OD_LOG_OBJENTER(); //####
+    OD_LOG_OBJENTER(); //####
     OD_LOG_LL1("menuIndex = ", menuIndex); //####
     OD_LOG_S1s("menuName = ", menuName.toStdString()); //####
     ApplicationCommandManager * commandManager = &ManagerWindow::getApplicationCommandManager();
@@ -295,7 +295,7 @@ PopupMenu ContentPanel::getMenuForIndex(int            menuIndex,
             // View
             setUpViewMenu(menu);
             break;
-
+            
         case 2 :
             // Operation
             if (_selectedChannel)
@@ -311,7 +311,7 @@ PopupMenu ContentPanel::getMenuForIndex(int            menuIndex,
             menu.addCommandItem(commandManager, ManagerWindow::kCommandLaunchRegistryService);
             menu.addCommandItem(commandManager, ManagerWindow::kCommandLaunchExecutables);
             break;
-        
+            
         default :
             break;
             
@@ -343,7 +343,7 @@ void ContentPanel::menuItemSelected(int menuItemID,
 #  pragma unused(topLevelMenuIndex)
 # endif // MAC_OR_LINUX_
 #endif // ! defined(OD_ENABLE_LOGGING_)
-	OD_LOG_OBJENTER(); //####
+    OD_LOG_OBJENTER(); //####
     OD_LOG_LL2("menuItemID = ", menuItemID, "topLevelMenuIndex = ", topLevelMenuIndex); //####
     bool                 isChannel = false;
     ManagerApplication * ourApp = ManagerApplication::getApp();
@@ -358,7 +358,7 @@ void ContentPanel::menuItemSelected(int menuItemID,
         case kPopupConfigureService :
             //TBD!!!
             break;
-
+            
         case kPopupDisplayChangeServiceMetrics :
             _selectedContainer->setMetricsState(! _selectedContainer->getMetricsState());
             break;
@@ -382,7 +382,7 @@ void ContentPanel::menuItemSelected(int menuItemID,
         case kPopupRestartService :
             _selectedContainer->restartTheService();
             break;
-
+            
         case kPopupStopService :
             _selectedContainer->stopTheService();
             if (ourApp)
@@ -390,7 +390,7 @@ void ContentPanel::menuItemSelected(int menuItemID,
                 ourApp->doCleanupSoon();
             }
             break;
-           
+            
             // Channel menu items
         case kPopupAddScrollingMonitor :
             break;
@@ -438,7 +438,7 @@ void ContentPanel::paint(Graphics & gg)
         int   ww = getWidth();
         float halfH = static_cast<float>(hh / 2.0);
         float halfW = static_cast<float>(ww / 2.0);
-
+        
         if (_invertBackground)
         {
             ColourGradient theGradient2(kFirstBackgroundColour, halfW, halfH,
@@ -488,7 +488,7 @@ void ContentPanel::paint(Graphics & gg)
             {
                 selectionRectangle =
                             _selectedChannel->getBounds().translated(ofInterest->getX(),
-                                                                      ofInterest->getY()).toFloat();
+                                                                     ofInterest->getY()).toFloat();
             }
             else
             {
@@ -595,7 +595,7 @@ bool ContentPanel::perform(const InvocationInfo & info)
             requestWindowRepaint();
             wasProcessed = true;
             break;
-
+            
         case ManagerWindow::kCommandLaunchRegistryService :
             if (ourApp)
             {
@@ -661,7 +661,7 @@ void ContentPanel::rememberPositionOfEntity(ChannelContainer * anEntity)
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("anEntity = ", anEntity); //####
     YarpString entityName(anEntity->getName().toStdString());
-
+    
     _rememberedPositions[entityName] = anEntity->getPositionInPanel();
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::rememberPositionOfEntity
@@ -701,7 +701,7 @@ void ContentPanel::saveEntityPositions(void)
             std::stringstream buff;
             YarpString        tag = walker->first;
             Position          where = walker->second;
-
+            
             buff << "\t" << where.x << "\t" << where.y << std::endl;
             settingsFile.appendText(tag.c_str());
             settingsFile.appendText(buff.str());
@@ -746,9 +746,9 @@ void ContentPanel::setEntityPositions(void)
 {
     OD_LOG_OBJENTER(); //####
     float         offsetX = static_cast<float>(getX());
-	float         offsetY = static_cast<float>(getY());
-	float         maxX = static_cast<float>(getWidth());
-	float         maxY = static_cast<float>(getHeight());
+    float         offsetY = static_cast<float>(getY());
+    float         maxX = static_cast<float>(getWidth());
+    float         maxY = static_cast<float>(getHeight());
     Random        randomizer(Time::currentTimeMillis());
 #if defined(USE_OGDF_POSITIONING_)
     ogdf::Graph * gg;
@@ -805,7 +805,7 @@ void ContentPanel::setEntityPositions(void)
                     if (aContainer->isNew() || aContainer->wasHidden())
                     {
                         OD_LOG("(aContainer->isNew() || aContainer->wasHidden())"); //####
-                        // Check if the position was already known
+                        // Check if the position was already known.
                         YarpString                  entityName(aContainer->getName().toStdString());
                         PositionMap::const_iterator match(_rememberedPositions.find(entityName));
                         
@@ -835,7 +835,7 @@ void ContentPanel::setEntityPositions(void)
             if (positionsNeedUpdate)
             {
                 OD_LOG("(positionsNeedUpdate)"); //####
-                // Set up the edges (connections)
+                // Set up the edges (connections).
                 for (size_t ii = 0, mm = _entitiesPanel->getNumberOfEntities(); mm > ii; ++ii)
                 {
                     ChannelContainer * aContainer = _entitiesPanel->getEntity(ii);
@@ -848,7 +848,7 @@ void ContentPanel::setEntityPositions(void)
                         {
                             bool wasConnected = false;
                             
-                            // Add edges between entities that are connected via their entries
+                            // Add edges between entities that are connected via their entries.
                             for (int jj = 0, nn = aContainer->getNumPorts(); nn > jj; ++jj)
                             {
                                 ChannelEntry * aChannel = aContainer->getPort(jj);
@@ -856,7 +856,7 @@ void ContentPanel::setEntityPositions(void)
                                 if (aChannel)
                                 {
                                     const ChannelConnections & outputs =
-                                                                aChannel->getOutputConnections();
+                                    aChannel->getOutputConnections();
                                     
                                     for (size_t kk = 0, ll = outputs.size(); ll > kk; ++kk)
                                     {
@@ -865,7 +865,7 @@ void ContentPanel::setEntityPositions(void)
                                         if (otherChannel)
                                         {
                                             ChannelContainer * otherEntity =
-                                            otherChannel->getParent();
+                                                                        otherChannel->getParent();
                                             
                                             if (otherEntity)
                                             {
@@ -882,7 +882,7 @@ void ContentPanel::setEntityPositions(void)
                                         }
                                     }
                                     const ChannelConnections & inputs =
-                                                                    aChannel->getInputConnections();
+                                    aChannel->getInputConnections();
                                     
                                     if (0 < inputs.size())
                                     {
@@ -899,7 +899,7 @@ void ContentPanel::setEntityPositions(void)
                         }
                     }
                 }
-                // Apply an energy-based layout
+                // Apply an energy-based layout.
                 ScopedPointer<ogdf::FMMMLayout> fmmm(new ogdf::FMMMLayout);
                 
                 if (fmmm)
@@ -922,11 +922,11 @@ void ContentPanel::setEntityPositions(void)
                             
                             if (aNode)
                             {
-                                // Check if the position was already known
+                                // Check if the position was already known.
                                 YarpString entityName(aContainer->getName().toStdString());
                                 
                                 if (_rememberedPositions.end() ==
-                                                            _rememberedPositions.find(entityName))
+                                    _rememberedPositions.find(entityName))
                                 {
                                     aContainer->setTopLeftPosition(static_cast<int>(ga->x(aNode)),
                                                                    static_cast<int>(ga->y(aNode)));
@@ -955,7 +955,7 @@ void ContentPanel::setEntityPositions(void)
                 float                       ww = entityShape.getWidth();
                 YarpString                  entityName(aContainer->getName().toStdString());
                 PositionMap::const_iterator match(_rememberedPositions.find(entityName));
-
+                
                 if (_rememberedPositions.end() == match)
                 {
                     newX = offsetX + (randomizer.nextFloat() * (maxX - ww));
@@ -1029,13 +1029,11 @@ void ContentPanel::setUpChannelMenu(PopupMenu &    aMenu,
     aMenu.addItem(kPopupDisplayPortInfo, isChannel ? "Display channel information" :
                   "Display port information");
     aMenu.addItem(kPopupDetailedDisplayPortInfo, isChannel ?
-                  "Display detailed channel information" :
-                  "Display detailed port information");
+                  "Display detailed channel information" : "Display detailed port information");
     if (isChannel)
     {
         aMenu.addSeparator();
-        aMenu.addItem(kPopupDisplayChannelMetrics, "Display channel metrics",
-                      showMetrics);
+        aMenu.addItem(kPopupDisplayChannelMetrics, "Display channel metrics", showMetrics);
     }
     if ((kPortDirectionInput != aChannel.getDirection()) &&
         (kPortUsageClient != aChannel.getUsage()))
@@ -1073,7 +1071,7 @@ void ContentPanel::setUpContainerMenu(PopupMenu &        aMenu,
             kindOfContainer = "entity";
             serviceLike = false;
             break;
-
+            
     }
     aMenu.addItem(kPopupDisplayEntityInfo, String("Display ") + kindOfContainer + " information");
     aMenu.addItem(kPopupDetailedDisplayEntityInfo, String("Display detailed ") + kindOfContainer +
@@ -1101,12 +1099,12 @@ void ContentPanel::setUpContainerMenu(PopupMenu &        aMenu,
                 configurable = aContainer.canBeConfigured();
                 restartable = true;
                 break;
-
+                
             default :
                 configurable = false;
                 restartable = false;
                 break;
-
+                
         }
         aMenu.addSeparator();
         aMenu.addItem(kPopupConfigureService, String("Configure the ") + kindOfContainer,
@@ -1210,7 +1208,7 @@ void ContentPanel::updatePanels(ScannerThread & scanner)
                 {
                     Utilities::BaseArgumentDescriptor * argDesc =
                                                                 anEntity->getArgumentDescriptor(jj);
-
+                    
                     if (argDesc)
                     {
                         newContainer->addArgumentDescription(argDesc);

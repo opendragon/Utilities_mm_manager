@@ -93,7 +93,7 @@ ValidatingTextEditor::ValidatingTextEditor(CaptionedTextField & owner,
                                            TextValidator *      validator,
                                            const String &       componentName,
                                            juce_wchar           passwordCharacter) :
-	inherited(componentName, passwordCharacter), _owner(owner), _validator(validator),
+    inherited(componentName, passwordCharacter), _owner(owner), _validator(validator),
     _ignoreNextFocusLoss(false)
 {
     OD_LOG_ENTER(); //####
@@ -148,7 +148,7 @@ void ValidatingTextEditor::focusGained(FocusChangeType cause)
 #if MAC_OR_LINUX_
 # pragma unused(cause)
 #endif // MAC_OR_LINUX_
-	OD_LOG_OBJENTER(); //####
+    OD_LOG_OBJENTER(); //####
     OD_LOG_OBJEXIT(); //####
 } // ValidatingTextEditor::focusGained
 #if (! MAC_OR_LINUX_)
@@ -164,7 +164,7 @@ void ValidatingTextEditor::focusLost(FocusChangeType cause)
 #if MAC_OR_LINUX_
 # pragma unused(cause)
 #endif // MAC_OR_LINUX_
-	OD_LOG_OBJENTER(); //####
+    OD_LOG_OBJENTER(); //####
     if (_ignoreNextFocusLoss)
     {
         _ignoreNextFocusLoss = false;
@@ -232,7 +232,7 @@ void ValidatingTextEditor::performPopupMenuAction(int menuItemID)
         default :
             inherited::performPopupMenuAction(menuItemID);
             break;
-
+            
     }
     OD_LOG_OBJEXIT(); //####
 } // ValidatingTextEditor::performPopupMenuAction

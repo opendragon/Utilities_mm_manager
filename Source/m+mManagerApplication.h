@@ -136,6 +136,10 @@ namespace MPlusM_Manager
          @returns The application object. */
         static ManagerApplication * getApp(void);
         
+        /*! @brief Return the button height to use.
+         @returns The button height to use. */
+        static int getButtonHeight(void);
+        
         /*! @brief Return the number of launchable applications.
          @returns The number of launchable applications. */
         inline size_t getCountOfApplications(void)
@@ -317,6 +321,9 @@ namespace MPlusM_Manager
         
         /*! @brief The input handler for the 'peek' channel. */
         PeekInputHandler * _peekHandler;
+        
+        /*! @brief The height of a standard button. */
+        int _buttonHeight;
         
         /*! @brief The configured YARP port prior to launching a private YARP network. */
         int _configuredYarpPort;

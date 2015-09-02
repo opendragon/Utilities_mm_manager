@@ -92,12 +92,12 @@ ServiceLaunchThread::ServiceLaunchThread(const String &      pathToExecutable,
                                          const String &      portNumber,
                                          const StringArray & arguments,
                                          const bool          needsGo) :
-	inherited("General service launcher"), _serviceProcess(NULL), _serviceEndpoint(endpointName),
+    inherited("General service launcher"), _serviceProcess(NULL), _serviceEndpoint(endpointName),
     _servicePath(pathToExecutable), _servicePort(portNumber), _serviceTag(tag),
     _arguments(arguments), _needsGo(needsGo)
 {
     OD_LOG_ENTER(); //####
-	OD_LOG_S4s("pathToExecutable = ", pathToExecutable.toStdString(), "endpointName = ", //####
+    OD_LOG_S4s("pathToExecutable = ", pathToExecutable.toStdString(), "endpointName = ", //####
                endpointName.toStdString(), "tag = ", tag.toStdString(), "portNumber = ", //####
                portNumber.toStdString()); //####
     OD_LOG_P1("arguments = ", &arguments); //####
@@ -113,8 +113,8 @@ ServiceLaunchThread::ServiceLaunchThread(const String &      pathToExecutable,
 ServiceLaunchThread::~ServiceLaunchThread(void)
 {
     OD_LOG_OBJENTER(); //####
-	killChildProcess();
-	_serviceProcess = NULL;
+    killChildProcess();
+    _serviceProcess = NULL;
     OD_LOG_OBJEXIT(); //####
 } // ServiceLaunchThread::~ServiceLaunchThread
 
@@ -124,12 +124,12 @@ ServiceLaunchThread::~ServiceLaunchThread(void)
 
 void ServiceLaunchThread::killChildProcess(void)
 {
-	OD_LOG_OBJENTER(); //####
-	if (_serviceProcess)
-	{
-		_serviceProcess->kill();
-	}
-	OD_LOG_OBJEXIT(); //####
+    OD_LOG_OBJENTER(); //####
+    if (_serviceProcess)
+    {
+        _serviceProcess->kill();
+    }
+    OD_LOG_OBJEXIT(); //####
 } // ServiceLaunchThread::killChildProcess
 
 void ServiceLaunchThread::run(void)
@@ -140,7 +140,7 @@ void ServiceLaunchThread::run(void)
     {
         OD_LOG("(_serviceProcess)"); //####
         StringArray nameAndArgs(_servicePath);
-
+        
         if (0 < _servicePort.length())
         {
             OD_LOG("(0 < _servicePort.length())"); //####
