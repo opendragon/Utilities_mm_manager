@@ -326,7 +326,6 @@ void ChannelContainer::configureTheService(void)
                 if (Utilities::GetConfigurationForService(aPort->getPortName(), currentValues,
                                                           STANDARD_WAIT_TIME_))
                 {
-                    
                     yarp::os::Bottle                   valuesToUse;
                     ScopedPointer<ConfigurationWindow>
                                                 configuration(new ConfigurationWindow(caption,

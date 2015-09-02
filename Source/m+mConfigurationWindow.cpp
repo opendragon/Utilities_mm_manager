@@ -39,6 +39,7 @@
 #include "m+mConfigurationWindow.h"
 
 #include "m+mCaptionedTextField.h"
+#include "m+mCheckboxField.h"
 #include "m+mManagerApplication.h"
 #include "m+mTextValidator.h"
 
@@ -119,8 +120,8 @@ ConfigurationWindow::ConfigurationWindow(const String &                         
     _hasExtraArguments(false), _hasFileField(false)
 {
     OD_LOG_ENTER(); //####
-    OD_LOG_S2s("title = ", title, "execType = ", execType); //####
-    OD_LOG_P2("descriptors = ", &descriptors, "argsToUse = ", &argsToUse); //####
+    OD_LOG_S2s("title = ", title.toStdString(), "execType = ", execType.toStdString()); //####
+    OD_LOG_P2("descriptors = ", &descriptors, "argsToUse = ", &valuesToUse); //####
     ManagerApplication * ourApp = ManagerApplication::getApp();
     
     if (ourApp)
@@ -298,14 +299,23 @@ bool ConfigurationWindow::fieldsAreValid(void)
             if (aField->validateField())
             {
                 size_t jj = aField->getIndex();
-                
+
                 if (_descriptors.size() > jj)
                 {
                     Utilities::BaseArgumentDescriptor * aDescriptor = _descriptors[jj];
                     
-                    if (aDescriptor)
+                    if (aDescriptor && aDescriptor->validate(aField->getText().toStdString()))
                     {
                         aDescriptor->addValueToBottle(_valuesToUse);
+                    }
+                    else
+                    {
+                        if (0 < badArgs.length())
+                        {
+                            badArgs += "\n";
+                        }
+                        badArgs += aField->getName();
+                        ++badCount;
                     }
                 }
             }
@@ -623,45 +633,73 @@ void ConfigurationWindow::setUpStandardFields(int &                    widthSoFa
             }
             else if (aDescriptor->isModifiable())
             {
-                bool forFilePath;
-                bool forOutput;
-                
-                if (aDescriptor->isForFiles(forOutput))
+                if (aDescriptor->isBoolean())
                 {
-                    forFilePath = true;
+                    String          descriptionPrefix(aDescriptor->isOptional() ? "(Optional) " :
+                                                      "");
+                    String          valueToUse;
+                    CheckboxField * newField = new CheckboxField(_regularFont, ii,
+                                                                 descriptionPrefix +
+                                                                 argDescription, heightSoFar);
+                    
+                    if (jj < currentValues.size())
+                    {
+                        valueToUse = currentValues[jj].c_str();
+                    }
+                    else
+                    {
+                        valueToUse = aDescriptor->getDefaultValue().c_str();
+                    }
+                    newField->setText(valueToUse);
+                    _standardFields.add(newField);
+                    newField->addToComponent(content);
+                    widthSoFar = jmax(widthSoFar, newField->getMinimumWidth());
+                    heightSoFar = (newField->getY() + newField->getHeight() +
+                                   (FormField::kButtonGap / 2));
                 }
                 else
                 {
-                    forFilePath = false;
-                }
-                String               descriptionPrefix(aDescriptor->isOptional() ? "(Optional) " :
-                                                       "");
-                String               valueToUse;
-                CaptionedTextField * newField = new CaptionedTextField(*this, _regularFont,
-                                                                       _errorFont, ii,
-                                                                       descriptionPrefix +
-                                                                       argDescription, heightSoFar,
-                                                                       false, forFilePath, this,
+                    bool forFilePath;
+                    bool forOutput;
+                    
+                    if (aDescriptor->isForFiles(forOutput))
+                    {
+                        forFilePath = true;
+                    }
+                    else
+                    {
+                        forFilePath = false;
+                    }
+                    String               descriptionPrefix(aDescriptor->isOptional() ?
+                                                           "(Optional) " : "");
+                    String               valueToUse;
+                    CaptionedTextField * newField = new CaptionedTextField(*this, _regularFont,
+                                                                           _errorFont, ii,
+                                                                           descriptionPrefix +
+                                                                           argDescription,
+                                                                           heightSoFar, false,
+                                                                           forFilePath, this,
                                                                    new TextValidator(*aDescriptor),
-                                                                       argName,
+                                                                           argName,
                                                                        aDescriptor->isPassword() ?
                                                                        CHAR_TO_USE_FOR_PASSWORD_ :
-                                                                       0);
-                
-                if (jj < currentValues.size())
-                {
-                    valueToUse = currentValues[jj].c_str();
+                                                                           0);
+                    
+                    if (jj < currentValues.size())
+                    {
+                        valueToUse = currentValues[jj].c_str();
+                    }
+                    else
+                    {
+                        valueToUse = aDescriptor->getDefaultValue().c_str();
+                    }
+                    newField->setText(valueToUse);
+                    _standardFields.add(newField);
+                    newField->addToComponent(content);
+                    widthSoFar = jmax(widthSoFar, newField->getMinimumWidth());
+                    heightSoFar = (newField->getY() + newField->getHeight() +
+                                   (FormField::kButtonGap / 2));
                 }
-                else
-                {
-                    valueToUse = aDescriptor->getDefaultValue().c_str();
-                }
-                newField->setText(valueToUse, false);
-                _standardFields.add(newField);
-                newField->addToComponent(content);
-                widthSoFar = jmax(widthSoFar, newField->getMinimumWidth());
-                heightSoFar = newField->getY() + newField->getHeight() +
-                (FormField::kButtonGap / 2);
             }
             ++jj;
         }

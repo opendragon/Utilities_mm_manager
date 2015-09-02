@@ -122,8 +122,13 @@ static const int kThreadKillTime = 3000;
 # pragma mark Local functions
 #endif // defined(__APPLE__)
 
-bool caseInsensitiveMatch(const char * string1,
-                          const char * string2)
+/*! @brief DO a case-insensitive match.
+ @param string1 The first string to compare.
+ @param string2 The second string to compare.
+ @returns @c true if both strings are identical, ignoring case and @c false if the strings are of
+ different length or contain at least one character that is different. */
+static bool caseInsensitiveMatch(const char * string1,
+                                 const char * string2)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_S2("string1 = ", string1, "string2 = ", string2); //####
@@ -158,6 +163,7 @@ bool caseInsensitiveMatch(const char * string1,
                 else
                 {
                     // First string is longer.
+                    matched = false;
                 }
             }
             else if (*string2)
@@ -184,9 +190,6 @@ bool caseInsensitiveMatch(const char * string1,
 #if defined(__APPLE__)
 # pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
-
-//#include <odl/ODEnableLogging.h>
-#include <odl/ODLogging.h>
 
 ManagerApplication::ManagerApplication(void) :
     inherited(), _mainWindow(NULL), _yarp(NULL), _scanner(NULL),

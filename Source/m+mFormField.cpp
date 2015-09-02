@@ -98,15 +98,12 @@ const int FormField::kLabelInset = (3 * kButtonGap);
 # pragma mark Constructors and Destructors
 #endif // defined(__APPLE__)
 
-FormField::FormField(FormFieldErrorResponder & responder,
-                     Font &                    regularLabelFont,
-                     Font &                    errorLabelFont,
-                     const size_t              index) :
-    _errorFont(errorLabelFont), _regularFont(regularLabelFont), _responder(responder), _index(index)
+FormField::FormField(Font &       regularLabelFont,
+                     const size_t index) :
+    _regularFont(regularLabelFont), _index(index)
 {
     OD_LOG_ENTER(); //####
-    OD_LOG_P3("responder = ", &responder, "regularLabelFont = ", &regularLabelFont, //####
-              "errorLabelFont = ", &errorLabelFont); //####
+    OD_LOG_P1("regularLabelFont = ", &regularLabelFont); //####
     OD_LOG_LL1("index = ", index); //####
     OD_LOG_EXIT_P(this); //####
 } // FormField::FormField
@@ -128,6 +125,12 @@ const
     OD_LOG_OBJEXIT_P(NULL); //####
     return NULL;
 } // FormField::getButton
+
+void FormField::ignoreNextFocusLoss(void)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_OBJEXIT(); //####
+} // FormField::ignoreNextFocusLoss
 
 void FormField::performButtonAction(void)
 {
@@ -153,6 +156,13 @@ void FormField::setButton(TextButton * newButton)
 #if (! MAC_OR_LINUX_)
 # pragma warning(pop)
 #endif // ! MAC_OR_LINUX_
+
+bool FormField::validateField(void)
+{
+    OD_LOG_OBJENTER(); //####
+    OD_LOG_OBJEXIT_B(true); //####
+    return true;
+} // FormField::validateField
 
 #if defined(__APPLE__)
 # pragma mark Global functions

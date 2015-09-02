@@ -39,6 +39,7 @@
 
 #include "m+mSettingsWindow.h"
 
+#include "m+mCheckboxField.h"
 #include "m+mManagerApplication.h"
 #include "m+mTextValidator.h"
 #include "m+mValidatingTextEditor.h"
@@ -130,7 +131,7 @@ SettingsWindow::SettingsWindow(const String &          title,
     _hasExtraArguments(false), _hasFileField(false)
 {
     OD_LOG_ENTER(); //####
-    OD_LOG_S2s("title = ", title, "execType = ", execType); //####
+    OD_LOG_S2s("title = ", title.toStdString(), "execType = ", execType.toStdString()); //####
     OD_LOG_P4("appInfo = ", &appInfo, "endpointToUse = ", &endpointToUse, "tagToUse = ", //####
               &tagToUse, "portToUse = ", &portToUse); //####
     OD_LOG_P1("argsToUse = ", &argsToUse); //####
@@ -753,6 +754,21 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
                     content->addChildComponent(_removeArgumentsButton);
                 }
             }
+            else if (aDescriptor->isBoolean())
+            {
+                String          descriptionPrefix(aDescriptor->isOptional() ? "(Optional) " :
+                                                  "");
+                CheckboxField * newField = new CheckboxField(_regularFont, ii,
+                                                             descriptionPrefix +
+                                                             argDescription, heightSoFar);
+                
+                newField->setText(aDescriptor->getDefaultValue().c_str());
+                _standardFields.add(newField);
+                newField->addToComponent(content);
+                widthSoFar = jmax(widthSoFar, newField->getMinimumWidth());
+                heightSoFar = (newField->getY() + newField->getHeight() +
+                               (FormField::kButtonGap / 2));
+            }
             else
             {
                 bool forFilePath;
@@ -779,7 +795,7 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
                                                                        CHAR_TO_USE_FOR_PASSWORD_ :
                                                                        0);
                 
-                newField->setText(aDescriptor->getDefaultValue().c_str(), false);
+                newField->setText(aDescriptor->getDefaultValue().c_str());
                 _standardFields.add(newField);
                 newField->addToComponent(content);
                 widthSoFar = jmax(widthSoFar, newField->getMinimumWidth());

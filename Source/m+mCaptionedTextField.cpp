@@ -78,9 +78,6 @@ using namespace std;
 /*! @brief The amount to add to the height of text editor fields. */
 static const int kEditorHeightAdjustment = 4;
 
-/*! @brief The extra space around the content in the window. */
-static const int kExtraSpaceInWindow = 20;
-
 /*! @brief The amount of space between a field and its label. */
 static const int kLabelToFieldGap = 2;
 
@@ -118,9 +115,11 @@ CaptionedTextField::CaptionedTextField(FormFieldErrorResponder & responder,
                                        TextValidator *           validator,
                                        const String &            componentName,
                                        juce_wchar                passwordCharacter) :
-    inherited(responder, regularLabelFont, errorLabelFont, index),
-    _textEditor(new ValidatingTextEditor(*this, validator, componentName, passwordCharacter)),
-    _validator(validator), _caption(new Label), _button(NULL)
+    inherited(regularLabelFont, index), _textEditor(new ValidatingTextEditor(*this, validator,
+                                                                             componentName,
+                                                                             passwordCharacter)),
+    _validator(validator), _caption(new Label), _button(NULL), _errorFont(errorLabelFont),
+    _responder(responder)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P4("responder = ", &responder, "regularLabelFont = ", &regularLabelFont, //####
@@ -156,10 +155,9 @@ CaptionedTextField::CaptionedTextField(FormFieldErrorResponder & responder,
     }
     else
     {
-        _textEditor->setBounds(kFieldInset,
-                               _caption->getY() + _caption->getHeight() + kLabelToFieldGap,
-                               _caption->getX() + _caption->getWidth() - kFieldInset,
-                               adjustedEditorHeight);
+        _textEditor->setBounds(kFieldInset, _caption->getY() + _caption->getHeight() +
+                               kLabelToFieldGap, _caption->getX() + _caption->getWidth() -
+                               kFieldInset, adjustedEditorHeight);
     }
     OD_LOG_EXIT_P(this); //####
 } // CaptionedTextField::CaptionedTextField
@@ -380,13 +378,11 @@ void CaptionedTextField::setButton(TextButton * newButton)
     OD_LOG_OBJEXIT(); //####
 } // CaptionedTextField::setButton
 
-void CaptionedTextField::setText(const String & newText,
-                                 const bool     sendTextChangeMessage)
+void CaptionedTextField::setText(const String & newText)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("newText = ", newText.toStdString()); //####
-    OD_LOG_B1("sendTextChangeMessage = ", sendTextChangeMessage); //####
-    _textEditor->setText(newText, sendTextChangeMessage);
+    _textEditor->setText(newText, false);
     OD_LOG_OBJEXIT(); //####
 } // CaptionedTextField::setText
 

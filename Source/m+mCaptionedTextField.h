@@ -149,22 +149,20 @@ namespace MPlusM_Manager
         /*! @brief Perform the action triggered by the button. */
         virtual void performButtonAction(void);
         
-        /*! @brief Report an error in the field. */
-        void reportErrorInField(void);
-
         /*! @brief Remove the components of this field from the specified component.
          @param whereToRemove The component to be removed from. */
         virtual void removeFromComponent(Component * whereToRemove);
 
+        /*! @brief Report an error in the field. */
+        void reportErrorInField(void);
+        
         /*! @brief Sets the associated button.
          @param newButton The associated button. */
         virtual void setButton(TextButton * newButton = NULL);
         
         /*! @brief Set the text value associated with the field.
-         @param newText The text to be used.
-         @param sendTextChangeMessage @c true if a change message is sent to all listeners. */
-        virtual void setText(const String & newText,
-                             const bool     sendTextChangeMessage);
+         @param newText The text to be used. */
+        virtual void setText(const String & newText);
 
         /*! @brief Set the width of the field.
          @param ww The new width of the field. */
@@ -220,6 +218,12 @@ namespace MPlusM_Manager
         
         /*! @brief An associated button for the field. */
         ScopedPointer<TextButton> _button;
+        
+        /*! @brief The font to use with the label when the text editor data is invalid. */
+        Font & _errorFont;
+        
+        /*! @brief The entity that can report an error in this field. */
+        FormFieldErrorResponder & _responder;
         
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(CaptionedTextField)
         
