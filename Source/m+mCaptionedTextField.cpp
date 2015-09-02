@@ -196,8 +196,6 @@ void CaptionedTextField::addToComponent(Component * whereToAdd)
 int CaptionedTextField::getFileButtonWidth(void)
 {
     OD_LOG_ENTER(); //####
-    int result;
-    
     if (lFileButtonWidth < 0)
     {
         ScopedPointer<TextButton> fileButton(new TextButton(kFileButtonText));

@@ -135,12 +135,24 @@ void FormField::performButtonAction(void)
     OD_LOG_OBJEXIT(); //####
 } // FormField::performButtonAction
 
+#if (! MAC_OR_LINUX_)
+# pragma warning(push)
+# pragma warning(disable: 4100)
+#endif // ! MAC_OR_LINUX_
 void FormField::setButton(TextButton * newButton)
 {
+#if (! defined(OD_ENABLE_LOGGING_))
+# if MAC_OR_LINUX_
+#  pragma unused(newButton)
+# endif // MAC_OR_LINUX_
+#endif // (! defined(OD_ENABLE_LOGGING_)
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("newButton = ", newButton); //####
     OD_LOG_OBJEXIT(); //####
 } // FormField::setButton
+#if (! MAC_OR_LINUX_)
+# pragma warning(pop)
+#endif // ! MAC_OR_LINUX_
 
 #if defined(__APPLE__)
 # pragma mark Global functions
