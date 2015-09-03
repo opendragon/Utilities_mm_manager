@@ -78,7 +78,7 @@ using namespace std;
 /*! @brief The amount to add to the height of text editor fields. */
 static const int kEditorHeightAdjustment = 4;
 
-/*! @brief The amount of space between a field and its label. */
+/*! @brief The amount of extra space between a field and its label. */
 static const int kLabelToFieldGap = 2;
 
 /*! @brief The text of the file popup invocation button. */
@@ -118,8 +118,8 @@ CaptionedTextField::CaptionedTextField(FormFieldErrorResponder & responder,
     inherited(regularLabelFont, index), _textEditor(new ValidatingTextEditor(*this, validator,
                                                                              componentName,
                                                                              passwordCharacter)),
-    _validator(validator), _caption(new Label), _button(NULL), _errorFont(errorLabelFont),
-    _responder(responder)
+    _validator(validator), _caption(new Label("", captionTitle)), _button(NULL),
+    _errorFont(errorLabelFont), _responder(responder)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P4("responder = ", &responder, "regularLabelFont = ", &regularLabelFont, //####
@@ -134,7 +134,6 @@ CaptionedTextField::CaptionedTextField(FormFieldErrorResponder & responder,
                                                        kEditorHeightAdjustment);
     
     _caption->setFont(_regularFont);
-    _caption->setText(captionTitle, dontSendNotification);
     _textEditor->setFont(_regularFont);
     _textEditor->setEscapeAndReturnKeysConsumed(false);
     _textEditor->setSelectAllWhenFocused(true);

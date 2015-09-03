@@ -70,11 +70,13 @@ namespace MPlusM_Manager
          @param regularLabelFont The font to use with the label when the text editor data is valid.
          @param index The order of the text editor.
          @param captionTitle The text of the caption.
-         @param top The top coordinate of the field. */
+         @param top The top coordinate of the field.
+         @param componentName The name to pass to the component for it to use as its name. */
         CheckboxField(Font &         regularLabelFont,
                       const size_t   index,
                       const String & captionTitle,
-                      const int      top);
+                      const int      top,
+                      const String & componentName = String::empty);
         
         /*! @brief The destructor. */
         virtual ~CheckboxField(void);
@@ -156,6 +158,9 @@ namespace MPlusM_Manager
         
         /*! @brief The text editor within the field. */
         ScopedPointer<ToggleButton> _checkbox;
+        
+        /*! @brief The caption for the field. */
+        ScopedPointer<Label> _caption;
         
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(CheckboxField)
         

@@ -760,7 +760,7 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
                                                   "");
                 CheckboxField * newField = new CheckboxField(_regularFont, ii,
                                                              descriptionPrefix +
-                                                             argDescription, heightSoFar);
+                                                             argDescription, heightSoFar, argName);
                 
                 newField->setText(aDescriptor->getDefaultValue().c_str());
                 _standardFields.add(newField);

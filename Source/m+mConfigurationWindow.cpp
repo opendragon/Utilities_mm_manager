@@ -640,7 +640,8 @@ void ConfigurationWindow::setUpStandardFields(int &                    widthSoFa
                     String          valueToUse;
                     CheckboxField * newField = new CheckboxField(_regularFont, ii,
                                                                  descriptionPrefix +
-                                                                 argDescription, heightSoFar);
+                                                                 argDescription, heightSoFar,
+                                                                 argName);
                     
                     if (jj < currentValues.size())
                     {

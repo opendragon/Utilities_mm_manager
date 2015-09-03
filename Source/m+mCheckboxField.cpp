@@ -78,6 +78,9 @@ using namespace std;
 /*! @brief The amount to add to the height of checkbox fields. */
 static const int kCheckboxHeightAdjustment = 8;
 
+/*! @brief The amount of extra space between a field and its label. */
+static const int kCheckboxToLabelGap = 0;
+
 #if defined(__APPLE__)
 # pragma mark Global constants and variables
 #endif // defined(__APPLE__)
@@ -97,19 +100,25 @@ static const int kCheckboxHeightAdjustment = 8;
 CheckboxField::CheckboxField(Font &         regularLabelFont,
                              const size_t   index,
                              const String & captionTitle,
-                             const int      top) :
-    inherited(regularLabelFont, index), _checkbox(new ToggleButton(captionTitle))
+                             const int      top,
+                             const String & componentName) :
+    inherited(regularLabelFont, index), _checkbox(new ToggleButton("")),
+    _caption(new Label(componentName, captionTitle))
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P1("regularLabelFont = ", &regularLabelFont); //####
-    OD_LOG_S1s("captionTitle = ", captionTitle.toStdString()); //####
+    OD_LOG_S2s("captionTitle = ", captionTitle.toStdString(), "componentName = ", //####
+               componentName.toStdString()); //####
     OD_LOG_LL2("index = ", index, "top = ", top); //####
     Point<int> dimensions;
     int        adjustedEditorHeight = static_cast<int>(_regularFont.getHeight() +
                                                        kCheckboxHeightAdjustment);
     
+    _checkbox->setBounds(kFieldInset, top, adjustedEditorHeight, adjustedEditorHeight);
     MPlusM_Manager::CalculateTextArea(dimensions, _regularFont, captionTitle);
-    _checkbox->setBounds(kFieldInset, top, dimensions.getX(), adjustedEditorHeight);
+    _caption->setBounds(_checkbox->getX() + _checkbox->getWidth() + kCheckboxToLabelGap,
+                        _checkbox->getY(), dimensions.getX(), adjustedEditorHeight);
+    _caption->setFont(_regularFont);
     OD_LOG_EXIT_P(this); //####
 } // CheckboxField::CheckboxField
 
@@ -117,6 +126,7 @@ CheckboxField::~CheckboxField(void)
 {
     OD_LOG_OBJENTER(); //####
     _checkbox = NULL;
+    _caption = NULL;
     OD_LOG_OBJEXIT(); //####
 } // CheckboxField::~CheckboxField
 
@@ -131,6 +141,7 @@ void CheckboxField::addToComponent(Component * whereToAdd)
     if (whereToAdd)
     {
         whereToAdd->addAndMakeVisible(_checkbox);
+        whereToAdd->addAndMakeVisible(_caption);
     }
     OD_LOG_OBJEXIT(); //####
 } // CheckboxField::addToComponent
@@ -149,7 +160,8 @@ int CheckboxField::getMinimumWidth(void)
 const
 {
     OD_LOG_OBJENTER(); //####
-    int result = _checkbox->getX();
+    int result = (_checkbox->getX() + _checkbox->getWidth() + kCheckboxToLabelGap +
+                  _caption->getWidth());
     
     OD_LOG_OBJEXIT_LL(result); //####
     return result;
@@ -159,7 +171,7 @@ const String & CheckboxField::getName(void)
 const
 {
     OD_LOG_OBJENTER(); //####
-    const String & theName = _checkbox->getName();
+    const String & theName = _caption->getName();
     
     OD_LOG_OBJEXIT_s(theName.toStdString()); //####
     return theName;
@@ -179,7 +191,8 @@ int CheckboxField::getWidth(void)
 const
 {
     OD_LOG_OBJENTER(); //####
-    int result = _checkbox->getWidth() + _checkbox->getX();
+    int result = (_checkbox->getX() + _checkbox->getWidth() + kCheckboxToLabelGap +
+                  _caption->getWidth());
     
     OD_LOG_OBJEXIT_LL(result); //####
     return result;
@@ -212,6 +225,7 @@ void CheckboxField::removeFromComponent(Component * whereToRemove)
     if (whereToRemove)
     {
         whereToRemove->removeChildComponent(_checkbox);
+        whereToRemove->removeChildComponent(_caption);
     }
     OD_LOG_OBJEXIT(); //####
 } // CheckboxField::removeFromComponent
@@ -239,7 +253,9 @@ void CheckboxField::setWidth(const int ww)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_LL1("ww = ", ww); //####
-    _checkbox->setSize(ww, _checkbox->getHeight());
+    int newWidth = ww - (_checkbox->getX() + _checkbox->getWidth() + kCheckboxToLabelGap);
+    
+    _caption->setSize(ww, _caption->getHeight());
     OD_LOG_OBJEXIT(); //####
 } // CheckboxField::setWidth
 
@@ -247,7 +263,8 @@ void CheckboxField::setY(const int yy)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_LL1("yy = ", yy); //####
-    _checkbox->setTopLeftPosition(kFieldInset, yy);
+    _checkbox->setTopLeftPosition(_checkbox->getX(), yy);
+    _caption->setTopLeftPosition(_caption->getX(), yy);
     OD_LOG_OBJEXIT(); //####
 } // CheckboxField::setY
 

@@ -1285,11 +1285,10 @@ void MPlusM_Manager::DisplayInformationPanel(Component *    above,
     OD_LOG_S2s("bodyText = ", bodyText.toStdString(), "title = ", title.toStdString()); //####
     DialogWindow::LaunchOptions options;
     Font                        monoFont(Font::getDefaultMonospacedFontName(), 16, Font::plain);
-    Label *                     aLabel = new Label;
+    Label *                     aLabel = new Label("", bodyText);
     Point<int>                  dimensions;
     
     aLabel->setFont(monoFont);
-    aLabel->setText(bodyText, dontSendNotification);
     options.content.setOwned(aLabel);
     CalculateTextArea(dimensions, aLabel->getFont(), bodyText);
     options.content->setSize(dimensions.getX(), dimensions.getY());
