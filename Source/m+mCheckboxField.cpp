@@ -255,7 +255,7 @@ void CheckboxField::setWidth(const int ww)
     OD_LOG_LL1("ww = ", ww); //####
     int newWidth = ww - (_checkbox->getX() + _checkbox->getWidth() + kCheckboxToLabelGap);
     
-    _caption->setSize(ww, _caption->getHeight());
+    _caption->setSize(newWidth, _caption->getHeight());
     OD_LOG_OBJEXIT(); //####
 } // CheckboxField::setWidth
 
