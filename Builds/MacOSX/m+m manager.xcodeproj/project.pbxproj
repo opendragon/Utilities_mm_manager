@@ -2113,7 +2113,7 @@
 		A14AE462CB1A56EE6EDB70AB /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0710;
 			};
 			buildConfigurationList = E5E6C3EB8F2E58F5F28BDE5E /* Build configuration list for PBXProject "m+m manager" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -2231,6 +2231,7 @@
 					"-lOGDF",
 					"-headerpad_max_install_names",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.yourcompany.mpm-manager";
 				PRODUCT_NAME = "m+m manager";
 			};
 			name = Debug;
@@ -2246,6 +2247,7 @@
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
 				GCC_MODEL_TUNING = G5;
@@ -2320,6 +2322,7 @@
 					"-lOGDF",
 					"-headerpad_max_install_names",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.yourcompany.mpm-manager";
 				PRODUCT_NAME = "m+m manager";
 			};
 			name = Release;

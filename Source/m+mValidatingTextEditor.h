@@ -71,10 +71,10 @@ namespace MPlusM_Manager
          @param validator The function to use when checking the field on completion of text entry.
          @param componentName The name to pass to the component for it to use as its name.
          @param passwordCharacter The visual replacement to use for password fields. */
-        ValidatingTextEditor(CaptionedTextField & owner,
-                             TextValidator *      validator = NULL,
-                             const String &       componentName = String::empty,
-                             juce_wchar           passwordCharacter = 0);
+        explicit ValidatingTextEditor(CaptionedTextField & owner,
+                                      TextValidator *      validator = NULL,
+                                      const String &       componentName = String::empty,
+                                      juce_wchar           passwordCharacter = 0);
         
         /*! @brief The destructor. */
         virtual ~ValidatingTextEditor(void);

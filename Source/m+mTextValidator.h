@@ -62,7 +62,7 @@ namespace MPlusM_Manager
         
         /*! @brief The constructor.
          @param fieldDescriptor A description of the attributes of the field being validated. */
-        TextValidator(MplusM::Utilities::BaseArgumentDescriptor & fieldDescriptor);
+        explicit TextValidator(MplusM::Utilities::BaseArgumentDescriptor & fieldDescriptor);
         
         /*! @brief The destructor. */
         virtual ~TextValidator(void);

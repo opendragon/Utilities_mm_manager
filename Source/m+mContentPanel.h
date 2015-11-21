@@ -73,7 +73,7 @@ namespace MPlusM_Manager
         
         /*! @brief The constructor.
          @param containingWindow The window in which the panel is embedded. */
-        ContentPanel(ManagerWindow * containingWindow);
+        explicit ContentPanel(ManagerWindow * containingWindow);
         
         /*! @brief The destructor. */
         virtual ~ContentPanel(void);

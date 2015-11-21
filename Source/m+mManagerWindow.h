@@ -96,7 +96,7 @@ namespace MPlusM_Manager
 
         /*! @brief The constructor.
          @param title The window title. */
-        ManagerWindow(const YarpString & title);
+        explicit ManagerWindow(const YarpString & title);
         
         /*! @brief The destructor. */
         virtual ~ManagerWindow(void);
