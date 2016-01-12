@@ -245,6 +245,10 @@ namespace MPlusM_Manager
         /*! @brief @c true if a tag can be applied and @c false if the port names are fixed. */
         bool _canSetTag;
 
+        /*! @brief @c true if a modifier can be applied and @c false if modifiers are not
+         available. */
+        bool _canUseModifier;
+        
         /*! @brief @c true if extra arguments are present and @c false if they aren't used. */
         bool _hasExtraArguments;
         

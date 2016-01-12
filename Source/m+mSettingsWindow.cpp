@@ -128,7 +128,7 @@ SettingsWindow::SettingsWindow(const String &          title,
                                                           Utilities::kArgModeOptional, 0, false)),
     _appInfo(appInfo), _endpointToUse(endpointToUse), _portToUse(portToUse), _tagToUse(tagToUse),
     _argsToUse(argsToUse), _canSetEndpoint(false), _canSetPort(false), _canSetTag(false),
-    _hasExtraArguments(false), _hasFileField(false)
+    _canUseModifier(false), _hasExtraArguments(false), _hasFileField(false)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_S2s("title = ", title.toStdString(), "execType = ", execType.toStdString()); //####
@@ -146,6 +146,7 @@ SettingsWindow::SettingsWindow(const String &          title,
     _canSetEndpoint = appInfo._options.contains("e");
     _canSetPort = appInfo._options.contains("p");
     _canSetTag = appInfo._options.contains("t");
+    _canUseModifier = appInfo._options.contains("m");
     setUpStandardFields(widthSoFar, heightSoFar);
     int minW = jmax(widthSoFar, _cancelButton.getWidth() + _okButton.getWidth() +
                     (3 * FormField::kButtonGap));
@@ -376,6 +377,10 @@ bool SettingsWindow::fieldsAreValid(void)
     {
         _tagToUse = _tagField->getText();
     }
+    if (_canUseModifier)
+    {
+        //TBD!!
+    }
     if (0 < badCount)
     {
         String message1((1 < badCount) ? "arguments are" : "argument is");
@@ -508,6 +513,10 @@ void SettingsWindow::recalculateArea(void)
     {
         widthSoFar = jmax(widthSoFar, _tagField->getMinimumWidth());
         heightSoFar = _tagField->getY() + _tagField->getHeight() + (FormField::kButtonGap / 2);
+    }
+    if (_canUseModifier)
+    {
+        //TBD!!
     }
     for (size_t ii = 0, numDescriptors = _descriptors.size(), jj = 0; numDescriptors > ii; ++ii)
     {
@@ -648,7 +657,7 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
 
     widthSoFar = heightSoFar = 0;
     _topText.setFont(_regularFont);
-    if ((0 < numDescriptors) || _canSetEndpoint || _canSetPort || _canSetTag)
+    if ((0 < numDescriptors) || _canSetEndpoint || _canSetPort || _canSetTag || _canUseModifier)
     {
         _topText.setText(String("The ") + _execType + " has one or more arguments, that need to be "
                          "provided before it can be launched.", dontSendNotification);
@@ -697,6 +706,10 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
         _tagField->addToComponent(content);
         widthSoFar = jmax(widthSoFar, _tagField->getMinimumWidth());
         heightSoFar = _tagField->getY() + _tagField->getHeight() + (FormField::kButtonGap / 2);
+    }
+    if (_canUseModifier)
+    {
+        //TBD!!
     }
     // Check for one or more file descriptors.
     for (size_t ii = 0; numDescriptors > ii; ++ii)
