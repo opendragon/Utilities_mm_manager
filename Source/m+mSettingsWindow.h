@@ -72,6 +72,7 @@ namespace MPlusM_Manager
          @param endpointToUse The resulting endpoint for the application.
          @param tagToUse The resulting tag for the application.
          @param portToUse The resulting port for the application.
+         @param tagModifierCount The number of bytes of the IP address to use as a tag modifier.
          @param argsToUse The resulting arguments for the application. */
         SettingsWindow(const String &          title,
                        const String &          execType,
@@ -79,6 +80,7 @@ namespace MPlusM_Manager
                        String &                endpointToUse,
                        String &                tagToUse,
                        String &                portToUse,
+                       int &                   tagModifierCount,
                        StringArray &           argsToUse);
         
         /*! @brief The destructor. */
@@ -196,8 +198,14 @@ namespace MPlusM_Manager
         /*! @brief The set of standard fields. */
         OwnedArray<FormField> _standardFields;
         
+        /*! @brief The set of tag modifier buttons. */
+        OwnedArray<ToggleButton> _tagModifierButtons;
+        
         /*! @brief The 'extra arguments' area of the window. */
         ScopedPointer<GroupComponent> _extraArgumentsGroup;
+        
+        /*! @brief The 'tag modifier' area of the window. */
+        ScopedPointer<GroupComponent> _tagModifierGroup;
         
         /*! @brief The '+ arguments' button. */
         ScopedPointer<TextButton> _addArgumentsButton;
@@ -234,6 +242,9 @@ namespace MPlusM_Manager
 
         /*! @brief Set to the arguments provided by the user. */
         StringArray & _argsToUse;
+        
+        /*! @brief Set to the tag modifier count provided by the user. */
+        int & _tagModifierCount;
         
         /*! @brief @c true if the endpoint can be set and @c false if the endpoint is fixed. */
         bool _canSetEndpoint;

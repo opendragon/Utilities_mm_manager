@@ -469,19 +469,22 @@ void ManagerApplication::doLaunchAService(const ApplicationInfo & appInfo)
 #if MAC_OR_LINUX_
         theLogger.warning((appInfo._description + " being launched.").toStdString());
 #endif // MAC_OR_LINUX_
+        int                           tagModifierCount;
         String                        endpointToUse;
         String                        portToUse;
         String                        tagToUse;
         StringArray                   argsToUse;
         ScopedPointer<SettingsWindow> settings(new SettingsWindow(caption, execType, appInfo,
                                                                   endpointToUse, tagToUse,
-                                                                  portToUse, argsToUse));
+                                                                  portToUse, tagModifierCount,
+                                                                  argsToUse));
         
         if (kConfigurationOK == settings->runModalLoop())
         {
             ServiceLaunchThread * aLauncher = new ServiceLaunchThread(appInfo._applicationPath,
                                                                       endpointToUse, tagToUse,
-                                                                      portToUse, argsToUse,
+                                                                      portToUse, tagModifierCount,
+                                                                      argsToUse,
                                                                   appInfo._options.contains("g"));
             
             if (aLauncher)
@@ -976,6 +979,7 @@ bool ManagerApplication::getPrimaryChannelForService(const ApplicationInfo & app
                                                      const String &          tag,
                                                      const String &          portNumber,
                                                      const StringArray &     arguments,
+                                                     const int               tagModifierCount,
                                                      String &                channelName)
 {
     OD_LOG_OBJENTER(); //####
@@ -983,6 +987,7 @@ bool ManagerApplication::getPrimaryChannelForService(const ApplicationInfo & app
               &channelName); //####
     OD_LOG_S3s("endpointName = ", endpointName.toStdString(), "tag = ", tag.toStdString(), //####
                "portNumber = ", portNumber.toStdString()); //####
+    OD_LOG_LL1("tagModifierCount = ", tagModifierCount); //####
     bool         okSoFar = false;
     ChildProcess runApplication;
     StringArray  nameAndArgs(appInfo._applicationPath);
@@ -1005,6 +1010,12 @@ bool ManagerApplication::getPrimaryChannelForService(const ApplicationInfo & app
         OD_LOG("(0 < endpointName())"); //####
         nameAndArgs.add("--endpoint");
         nameAndArgs.add(endpointName);
+    }
+    if (0 < tagModifierCount)
+    {
+        OD_LOG("(0 < tagModifierCount)"); //####
+        nameAndArgs.add("--mod");
+        nameAndArgs.add(String(tagModifierCount));
     }
     if (0 < arguments.size())
     {

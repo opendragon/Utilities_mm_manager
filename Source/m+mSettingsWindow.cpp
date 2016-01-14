@@ -81,6 +81,12 @@ static const Colour & kWindowBackgroundColour(Colours::whitesmoke);
 /*! @brief The extra space around the content in the window. */
 static const int kExtraSpaceInWindow = 20;
 
+/*! @brief The width of each tag modifier button. */
+static const int kTagModifierButtonWidth = 60;
+
+/*! @brief The radio group identifier for the tag modifiers. */
+static const int kTagModifierGroupId = 42;
+
 /*! @brief The internal name for the endpoint text entry field. */
 static const String kEndpointFieldName("$$$endpoint$$$");
 
@@ -112,6 +118,7 @@ SettingsWindow::SettingsWindow(const String &          title,
                                String &                endpointToUse,
                                String &                tagToUse,
                                String &                portToUse,
+                               int &                   tagModifierCount,
                                StringArray &           argsToUse)  :
     inherited1(), inherited2(), inherited3(title, kWindowBackgroundColour, 0), inherited4(),
     _topText("topText"), _cancelButton("Cancel"), _okButton("OK"),
@@ -119,16 +126,18 @@ SettingsWindow::SettingsWindow(const String &          title,
     _errorFont(Font::getDefaultMonospacedFontName(), FormField::kFontSize,
                Font::italic + Font::bold), _regularFont(Font::getDefaultMonospacedFontName(),
                                                         FormField::kFontSize, Font::plain),
-    _execType(execType), _extraArgumentsGroup(NULL), _addArgumentsButton(NULL),
-    _removeArgumentsButton(NULL), _endpointField(NULL), _portField(NULL), _tagField(NULL),
+    _execType(execType), _extraArgumentsGroup(NULL), _tagModifierGroup(NULL),
+    _addArgumentsButton(NULL), _removeArgumentsButton(NULL), _endpointField(NULL), _portField(NULL),
+    _tagField(NULL),
     _endpointDescriptor(new Utilities::ChannelArgumentDescriptor(kEndpointFieldName.toStdString(),
                                                                  "", Utilities::kArgModeOptional,
                                                                  "")),
     _portDescriptor(new Utilities::PortArgumentDescriptor(kPortFieldName.toStdString(), "",
                                                           Utilities::kArgModeOptional, 0, false)),
     _appInfo(appInfo), _endpointToUse(endpointToUse), _portToUse(portToUse), _tagToUse(tagToUse),
-    _argsToUse(argsToUse), _canSetEndpoint(false), _canSetPort(false), _canSetTag(false),
-    _canUseModifier(false), _hasExtraArguments(false), _hasFileField(false)
+    _argsToUse(argsToUse), _tagModifierCount(tagModifierCount), _canSetEndpoint(false),
+    _canSetPort(false), _canSetTag(false), _canUseModifier(false), _hasExtraArguments(false),
+    _hasFileField(false)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_S2s("title = ", title.toStdString(), "execType = ", execType.toStdString()); //####
@@ -223,6 +232,13 @@ void SettingsWindow::adjustFields(void)
     {
         _tagField->setWidth(newFieldWidth);
     }
+    if (_tagModifierGroup)
+    {
+        int groupWidth = (_cancelButton.getX() + _cancelButton.getWidth() -
+                          (_tagModifierGroup->getX() + FormField::kButtonGap));
+        
+        _tagModifierGroup->setSize(groupWidth, _tagModifierGroup->getHeight());
+    }
     if (_addArgumentsButton)
     {
         _addArgumentsButton->setTopLeftPosition(_okButton.getX() -
@@ -311,6 +327,7 @@ bool SettingsWindow::fieldsAreValid(void)
 {
     OD_LOG_ENTER(); //####
     int    badCount = 0;
+    int    modCount = 0;
     String badArgs;
     String primaryChannel;
     
@@ -379,7 +396,29 @@ bool SettingsWindow::fieldsAreValid(void)
     }
     if (_canUseModifier)
     {
-        //TBD!!
+        // Determine which of the radio buttons has been selected.
+        for (int ii = 0, maxb = _tagModifierGroup->getNumChildComponents(); maxb > ii; ++ii)
+        {
+            ToggleButton * tb =
+                        reinterpret_cast<ToggleButton *>(_tagModifierGroup->getChildComponent(ii));
+            
+            if (tb && tb->getToggleState())
+            {
+                string       id(tb->getComponentID().toStdString());
+                const char * startPtr = id.c_str();
+                char *       endPtr;
+                int          intValue = static_cast<int>(strtol(startPtr, &endPtr, 10));
+                
+                if ((startPtr != endPtr) && (! *endPtr))
+                {
+                    _tagModifierCount = intValue;
+                }
+                else
+                {
+                    _tagModifierCount = 0;
+                }
+            }
+        }
     }
     if (0 < badCount)
     {
@@ -396,7 +435,7 @@ bool SettingsWindow::fieldsAreValid(void)
         ManagerApplication * ourApp = ManagerApplication::getApp();
         
         if (ourApp->getPrimaryChannelForService(_appInfo, _endpointToUse, _tagToUse, _portToUse,
-                                                _argsToUse, primaryChannel))
+                                                _argsToUse, _tagModifierCount, primaryChannel))
         {
             if (Utilities::CheckForChannel(primaryChannel.toStdString()))
             {
@@ -514,9 +553,14 @@ void SettingsWindow::recalculateArea(void)
         widthSoFar = jmax(widthSoFar, _tagField->getMinimumWidth());
         heightSoFar = _tagField->getY() + _tagField->getHeight() + (FormField::kButtonGap / 2);
     }
-    if (_canUseModifier)
+    if (_canUseModifier && _tagModifierGroup)
     {
-        //TBD!!
+        int innerHeight = static_cast<int>(_regularFont.getHeight()) + (FormField::kButtonGap / 2);
+        int innerWidth = (2 * jmax(FormField::kFieldInset, FormField::kLabelInset));
+        
+        _tagModifierGroup->setTopLeftPosition(FormField::kFieldInset, heightSoFar);
+        heightSoFar = _tagModifierGroup->getY() + _tagModifierGroup->getHeight();
+        widthSoFar = jmax(widthSoFar, _tagModifierGroup->getX() + _tagModifierGroup->getWidth());
     }
     for (size_t ii = 0, numDescriptors = _descriptors.size(), jj = 0; numDescriptors > ii; ++ii)
     {
@@ -709,7 +753,36 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
     }
     if (_canUseModifier)
     {
-        //TBD!!
+        _tagModifierGroup = new GroupComponent("", "(Optional) Tag modifier");
+        _tagModifierGroup->setBounds(FormField::kFieldInset, heightSoFar,
+                                        widthSoFar - (FormField::kButtonGap +
+                                                      FormField::kFieldInset),
+                                        static_cast<int>(2 * _regularFont.getHeight()) +
+                                        FormField::kButtonGap);
+        for (int ii = 0; 4 >= ii; ++ii)
+        {
+            ToggleButton * tb = new ToggleButton(String(ii) + ((1 == ii) ? " byte" : " bytes"));
+            
+            _tagModifierGroup->addAndMakeVisible(tb);
+            _tagModifierButtons.add(tb);
+            tb->setComponentID(String(ii));
+            tb->setRadioGroupId(kTagModifierGroupId);
+            tb->setBounds(FormField::kFieldInset + (kTagModifierButtonWidth * ii),
+                          FormField::kButtonGap + static_cast<int>(_regularFont.getHeight() / 2),
+                          kTagModifierButtonWidth, static_cast<int>(_regularFont.getHeight()));
+            tb->setTooltip("Modify tag with " + String(ii) + ((1 == ii) ?
+                                                              " byte of the IP address" :
+                                                              " bytes of the IP address"));
+            if (0 == ii)
+            {
+                tb->setToggleState(true, dontSendNotification);
+            }
+        }
+        content->addAndMakeVisible(_tagModifierGroup);
+        heightSoFar = (_tagModifierGroup->getY() + _tagModifierGroup->getHeight() +
+                       (FormField::kButtonGap / 2));
+        widthSoFar = jmax(widthSoFar, _tagModifierGroup->getX() +
+                          _tagModifierGroup->getWidth());
     }
     // Check for one or more file descriptors.
     for (size_t ii = 0; numDescriptors > ii; ++ii)

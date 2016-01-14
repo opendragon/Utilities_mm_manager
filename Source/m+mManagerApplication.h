@@ -177,6 +177,7 @@ namespace MPlusM_Manager
          @param tag The tag to use, if any.
          @param portNumber The network port number to use.
          @param arguments The current set of arguments to be applied.
+         @param tagModifierCount The number of bytes of the IP address to use as a tag modifier.
          @param channelName The channel that the service will be using.
          @returns @c true if the channel was retrieved and @c false otherwise. */
         bool getPrimaryChannelForService(const ApplicationInfo & appInfo,
@@ -184,6 +185,7 @@ namespace MPlusM_Manager
                                          const String &          tag,
                                          const String &          portNumber,
                                          const StringArray &     arguments,
+                                         const int               tagModifierCount,
                                          String &                channelName);
         
         /*! @brief Return the real name of the current user.

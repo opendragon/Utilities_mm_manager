@@ -90,11 +90,12 @@ ServiceLaunchThread::ServiceLaunchThread(const String &      pathToExecutable,
                                          const String &      endpointName,
                                          const String &      tag,
                                          const String &      portNumber,
+                                         const int           tagModifierCount,
                                          const StringArray & arguments,
                                          const bool          needsGo) :
     inherited("General service launcher"), _serviceProcess(NULL), _serviceEndpoint(endpointName),
     _servicePath(pathToExecutable), _servicePort(portNumber), _serviceTag(tag),
-    _arguments(arguments), _needsGo(needsGo)
+    _arguments(arguments), _tagModifierCount(tagModifierCount), _needsGo(needsGo)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_S4s("pathToExecutable = ", pathToExecutable.toStdString(), "endpointName = ", //####
@@ -158,6 +159,12 @@ void ServiceLaunchThread::run(void)
             OD_LOG("(0 < _serviceEndpoint())"); //####
             nameAndArgs.add("--endpoint");
             nameAndArgs.add(_serviceEndpoint);
+        }
+        if (0 < _tagModifierCount)
+        {
+            OD_LOG("(0 < tagModifierCount)"); //####
+            nameAndArgs.add("--mod");
+            nameAndArgs.add(String(_tagModifierCount));
         }
         if (_needsGo)
         {

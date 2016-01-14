@@ -65,12 +65,14 @@ namespace MPlusM_Manager
          @param endpointName The endpoint to use, if not the default.
          @param tag The tag to use, if any.
          @param portNumber The network port number to use.
+         @param tagModifierCount The number of bytes of the IP address to use as a tag modifier.
          @param arguments The arguments to the service.
          @param needsGo @c true if a '--go' option should be used with the executable. */
         ServiceLaunchThread(const String &      pathToExecutable,
                             const String &      endpointName,
                             const String &      tag,
                             const String &      portNumber,
+                            const int           tagModifierCount,
                             const StringArray & arguments,
                             const bool          needsGo);
 
@@ -114,6 +116,8 @@ namespace MPlusM_Manager
         /*! @brief The arguments to the executable. */
         StringArray _arguments;
 
+        int _tagModifierCount;
+        
         /*! @brief @c true if the '--go' option should be used. */
         bool _needsGo;
         
