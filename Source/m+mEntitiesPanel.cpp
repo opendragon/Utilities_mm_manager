@@ -155,7 +155,8 @@ EntitiesPanel::~EntitiesPanel(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-void EntitiesPanel::addEntity(ChannelContainer * anEntity)
+void
+EntitiesPanel::addEntity(ChannelContainer * anEntity)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("anEntity = ", anEntity); //####
@@ -169,7 +170,8 @@ void EntitiesPanel::addEntity(ChannelContainer * anEntity)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::addEntity
 
-void EntitiesPanel::adjustSize(const bool andRepaint)
+void
+EntitiesPanel::adjustSize(const bool andRepaint)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_B1("andRepaint = ", andRepaint); //####
@@ -296,7 +298,8 @@ void EntitiesPanel::adjustSize(const bool andRepaint)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::adjustSize
 
-void EntitiesPanel::clearAllNewlyCreatedFlags(void)
+void
+EntitiesPanel::clearAllNewlyCreatedFlags(void)
 {
     OD_LOG_OBJENTER(); //####
     for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
@@ -311,7 +314,8 @@ void EntitiesPanel::clearAllNewlyCreatedFlags(void)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::clearAllNewlyCreatedFlags
 
-void EntitiesPanel::clearAllVisitedFlags(void)
+void
+EntitiesPanel::clearAllVisitedFlags(void)
 {
     OD_LOG_OBJENTER(); //####
     for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
@@ -326,14 +330,16 @@ void EntitiesPanel::clearAllVisitedFlags(void)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::clearAllVisitedFlags
 
-void EntitiesPanel::clearDragInfo(void)
+void
+EntitiesPanel::clearDragInfo(void)
 {
     OD_LOG_OBJENTER(); //####
     _dragConnectionActive = _dragIsForced = false;
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::clearDragInfo
 
-void EntitiesPanel::clearMarkers(void)
+void
+EntitiesPanel::clearMarkers(void)
 {
     OD_LOG_OBJENTER(); //####
     for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
@@ -353,7 +359,8 @@ void EntitiesPanel::clearMarkers(void)
 } // EntitiesPanel::clearMarkers
 
 #if defined(USE_OGDF_POSITIONING_)
-void EntitiesPanel::clearNodeValues(void)
+void
+EntitiesPanel::clearNodeValues(void)
 {
     OD_LOG_OBJENTER(); //####
     for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
@@ -370,7 +377,8 @@ void EntitiesPanel::clearNodeValues(void)
 } // EntitiesPanel::clearNodeValues
 #endif // defined(USE_OGDF_POSITIONING_)
 
-void EntitiesPanel::clearOutData(void)
+void
+EntitiesPanel::clearOutData(void)
 {
     OD_LOG_OBJENTER(); //####
     for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
@@ -388,7 +396,8 @@ void EntitiesPanel::clearOutData(void)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::clearOutData
 
-void EntitiesPanel::displayAndProcessPopupMenu(void)
+void
+EntitiesPanel::displayAndProcessPopupMenu(void)
 {
     OD_LOG_OBJENTER(); //####
     if (_container)
@@ -407,7 +416,8 @@ void EntitiesPanel::displayAndProcessPopupMenu(void)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::displayAndProcessPopupMenu
 
-void EntitiesPanel::drawConnections(Graphics & gg)
+void
+EntitiesPanel::drawConnections(Graphics & gg)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("gg = ", &gg); //####
@@ -428,7 +438,8 @@ void EntitiesPanel::drawConnections(Graphics & gg)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::drawConnections
 
-ChannelContainer * EntitiesPanel::findKnownEntity(const YarpString & name)
+ChannelContainer *
+EntitiesPanel::findKnownEntity(const YarpString & name)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("name = ", name); //####
@@ -454,7 +465,8 @@ ChannelContainer * EntitiesPanel::findKnownEntity(const YarpString & name)
     return result;
 } // EntitiesPanel::findKnownEntity
 
-ChannelEntry * EntitiesPanel::findKnownPort(const YarpString & name)
+ChannelEntry *
+EntitiesPanel::findKnownPort(const YarpString & name)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("name = ", name); //####
@@ -473,7 +485,8 @@ ChannelEntry * EntitiesPanel::findKnownPort(const YarpString & name)
     return result;
 } // EntitiesPanel::findKnownPort
 
-void EntitiesPanel::forgetPort(ChannelEntry * aPort)
+void
+EntitiesPanel::forgetPort(ChannelEntry * aPort)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("aPort = ", aPort); //####
@@ -503,7 +516,8 @@ void EntitiesPanel::forgetPort(ChannelEntry * aPort)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::forgetPort
 
-ChannelContainer * EntitiesPanel::getEntity(const size_t index)
+ChannelContainer *
+EntitiesPanel::getEntity(const size_t index)
 const
 {
     OD_LOG_OBJENTER(); //####
@@ -522,7 +536,8 @@ const
     return result;
 } // EntitiesPanel::getEntity
 
-size_t EntitiesPanel::getNumberOfEntities(void)
+size_t
+EntitiesPanel::getNumberOfEntities(void)
 const
 {
     OD_LOG_OBJENTER(); //####
@@ -532,7 +547,8 @@ const
     return result;
 } // EntitiesPanel::getNumberOfEntities
 
-size_t EntitiesPanel::getNumberOfHiddenEntities(void)
+size_t
+EntitiesPanel::getNumberOfHiddenEntities(void)
 const
 {
     OD_LOG_OBJENTER(); //####
@@ -551,7 +567,8 @@ const
     return count;
 } // EntitiesPanel::getNumberOfHiddenEntities
 
-void EntitiesPanel::invalidateAllConnections(void)
+void
+EntitiesPanel::invalidateAllConnections(void)
 {
     OD_LOG_OBJENTER(); //####
     for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
@@ -566,7 +583,8 @@ void EntitiesPanel::invalidateAllConnections(void)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::invalidateAllConnections
 
-ChannelEntry * EntitiesPanel::locateEntry(const Position & location)
+ChannelEntry *
+EntitiesPanel::locateEntry(const Position & location)
 const
 {
     OD_LOG_OBJENTER(); //####
@@ -590,7 +608,8 @@ const
 # pragma warning(push)
 # pragma warning(disable: 4100)
 #endif // ! MAC_OR_LINUX_
-void EntitiesPanel::mouseDown(const MouseEvent & ee)
+void
+EntitiesPanel::mouseDown(const MouseEvent & ee)
 {
 #if (! defined(OD_ENABLE_LOGGING_))
 # if MAC_OR_LINUX_
@@ -614,7 +633,8 @@ void EntitiesPanel::mouseDown(const MouseEvent & ee)
 # pragma warning(push)
 # pragma warning(disable: 4100)
 #endif // ! MAC_OR_LINUX_
-void EntitiesPanel::mouseUp(const MouseEvent & ee)
+void
+EntitiesPanel::mouseUp(const MouseEvent & ee)
 {
 #if (! defined(OD_ENABLE_LOGGING_))
 # if MAC_OR_LINUX_
@@ -635,7 +655,8 @@ void EntitiesPanel::mouseUp(const MouseEvent & ee)
 # pragma warning(pop)
 #endif // ! MAC_OR_LINUX_
 
-void EntitiesPanel::paint(Graphics & gg)
+void
+EntitiesPanel::paint(Graphics & gg)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("gg = ", &gg); //####
@@ -643,15 +664,17 @@ void EntitiesPanel::paint(Graphics & gg)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::paint
 
-void EntitiesPanel::recallPositions(void)
+void
+EntitiesPanel::recallPositions(void)
 {
     OD_LOG_OBJENTER(); //####
     _container->recallEntityPositions();
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::recallPositions
 
-void EntitiesPanel::rememberConnectionStartPoint(ChannelEntry * aPort,
-                                                 const bool     beingAdded)
+void
+EntitiesPanel::rememberConnectionStartPoint(ChannelEntry * aPort,
+                                            const bool     beingAdded)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("aPort = ", aPort); //####
@@ -669,7 +692,8 @@ void EntitiesPanel::rememberConnectionStartPoint(ChannelEntry * aPort,
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::rememberConnectionStartPoint
 
-void EntitiesPanel::rememberPort(ChannelEntry * aPort)
+void
+EntitiesPanel::rememberPort(ChannelEntry * aPort)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("aPort = ", aPort); //####
@@ -680,7 +704,8 @@ void EntitiesPanel::rememberPort(ChannelEntry * aPort)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::rememberPort
 
-void EntitiesPanel::rememberPositions(void)
+void
+EntitiesPanel::rememberPositions(void)
 {
     OD_LOG_OBJENTER(); //####
     for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
@@ -696,7 +721,8 @@ void EntitiesPanel::rememberPositions(void)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::rememberPositions
 
-void EntitiesPanel::removeInvalidConnections(void)
+void
+EntitiesPanel::removeInvalidConnections(void)
 {
     OD_LOG_OBJENTER(); //####
     for (ContainerList::iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
@@ -711,7 +737,8 @@ void EntitiesPanel::removeInvalidConnections(void)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::removeInvalidConnections
 
-bool EntitiesPanel::removeUnvisitedEntities(void)
+bool
+EntitiesPanel::removeUnvisitedEntities(void)
 {
     OD_LOG_OBJENTER(); //####
     bool didRemove = false;
@@ -753,7 +780,8 @@ bool EntitiesPanel::removeUnvisitedEntities(void)
     return didRemove;
 } // EntitiesPanel::removeUnvisitedEntities
 
-void EntitiesPanel::resized(void)
+void
+EntitiesPanel::resized(void)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG("about to call adjustSize()"); //####
@@ -761,8 +789,9 @@ void EntitiesPanel::resized(void)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::resized
 
-void EntitiesPanel::setDragInfo(const Position position,
-                                const bool     isForced)
+void
+EntitiesPanel::setDragInfo(const Position position,
+                           const bool     isForced)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_B1("isForced = ", isForced); //####
@@ -775,7 +804,8 @@ void EntitiesPanel::setDragInfo(const Position position,
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::setDragInfo
 
-void EntitiesPanel::skipScan(void)
+void
+EntitiesPanel::skipScan(void)
 {
     OD_LOG_OBJENTER(); //####
     if (_container)
@@ -785,7 +815,8 @@ void EntitiesPanel::skipScan(void)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesPanel::skipScan
 
-void EntitiesPanel::unhideEntities(void)
+void
+EntitiesPanel::unhideEntities(void)
 {
     OD_LOG_OBJENTER(); //####
     for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)

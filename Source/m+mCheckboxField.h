@@ -65,6 +65,15 @@ namespace MPlusM_Manager
     class CheckboxField : public FormField
     {
     public :
+    
+    protected :
+    
+    private :
+    
+        /*! @brief The class that this class is derived from. */
+        typedef FormField inherited;
+        
+    public :
         
         /*! @brief The constructor.
          @param regularLabelFont The font to use with the label when the text editor data is valid.
@@ -79,64 +88,77 @@ namespace MPlusM_Manager
                       const String & componentName = String::empty);
         
         /*! @brief The destructor. */
-        virtual ~CheckboxField(void);
+        virtual
+        ~CheckboxField(void);
         
         /*! @brief Add the components of this field to the specified component and make them
          visible.
          @param whereToAdd The component to be added to. */
-        virtual void addToComponent(Component * whereToAdd);
+        virtual void
+        addToComponent(Component * whereToAdd);
 
         /*! @brief Return the height of the field in pixels.
          @return The height of the field in pixels. */
-        virtual int getHeight(void)
+        virtual int
+        getHeight(void)
         const;
         
         /*! @brief Return the minimum width of the field in pixels.
          @return The minimum width of the field in pixels. */
-        virtual int getMinimumWidth(void)
+        virtual int
+        getMinimumWidth(void)
         const;
         
         /*! @brief Returns the text value associated with the field.
          @returns The text value associated with the field. */
-        virtual String getText(void)
+        virtual String
+        getText(void)
         const;
         
         /*! @brief Return the width of the field in pixels.
          @return The width of the field in pixels. */
-        virtual int getWidth(void)
+        virtual int
+        getWidth(void)
         const;
 
         /*! @brief Return the left coordinate of the field.
          @return The left coordinate of the field. */
-        virtual int getX(void)
+        virtual int
+        getX(void)
         const;
         
         /*! @brief Return the top coordinate of the field.
          @return The top coordinate of the field. */
-        virtual int getY(void)
+        virtual int
+        getY(void)
         const;
 
         /*! @brief Remove the components of this field from the specified component.
          @param whereToRemove The component to be removed from. */
-        virtual void removeFromComponent(Component * whereToRemove);
+        virtual void
+        removeFromComponent(Component * whereToRemove);
 
         /*! @brief Set the text value associated with the field.
          @param newText The text to be used. */
-        virtual void setText(const String & newText);
+        virtual void
+        setText(const String & newText);
 
         /*! @brief Set the width of the field.
          @param ww The new width of the field. */
-        virtual void setWidth(const int ww);
+        virtual void
+        setWidth(const int ww);
 
         /*! @brief Set the top coordinate of the field.
          @param yy The new top coordinate of the field. */
-        virtual void setY(const int yy);
+        virtual void
+        setY(const int yy);
 
         /*! @brief Check the field for validity.
          @param argsToUse A set of valid arguments.
          @returns @c true if the validator accepts the field or there's no validation required or
          @c false if the validator rejects the field. */
-        virtual bool validateField(StringArray & argsToUse);
+        virtual bool
+        validateField(StringArray & argsToUse);
         
     protected :
         
@@ -144,7 +166,8 @@ namespace MPlusM_Manager
         
         /*! @brief Returns the name of the field.
          @returns The name of the field. */
-        virtual const String & getName(void)
+        virtual const String &
+        getName(void)
         const;
         
     public :
@@ -153,9 +176,6 @@ namespace MPlusM_Manager
     
     private :
 
-        /*! @brief The class that this class is derived from. */
-        typedef FormField inherited;
-        
         /*! @brief The text editor within the field. */
         ScopedPointer<ToggleButton> _checkbox;
         

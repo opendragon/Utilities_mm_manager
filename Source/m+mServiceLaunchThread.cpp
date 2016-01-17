@@ -123,7 +123,8 @@ ServiceLaunchThread::~ServiceLaunchThread(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-void ServiceLaunchThread::killChildProcess(void)
+void
+ServiceLaunchThread::killChildProcess(void)
 {
     OD_LOG_OBJENTER(); //####
     if (_serviceProcess)
@@ -133,7 +134,8 @@ void ServiceLaunchThread::killChildProcess(void)
     OD_LOG_OBJEXIT(); //####
 } // ServiceLaunchThread::killChildProcess
 
-void ServiceLaunchThread::run(void)
+void
+ServiceLaunchThread::run(void)
 {
     OD_LOG_OBJENTER(); //####
     _serviceProcess = new ChildProcess;

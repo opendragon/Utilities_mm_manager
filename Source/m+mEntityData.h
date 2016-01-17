@@ -59,6 +59,12 @@ namespace MPlusM_Manager
     class EntityData
     {
     public :
+    
+    protected :
+    
+    private :
+        
+    public :
         
         /*! @brief The constructor.
          @param kind The kind of entity.
@@ -75,11 +81,13 @@ namespace MPlusM_Manager
                    const YarpString &  requests);
         
         /*! @brief The destructor. */
-        virtual ~EntityData(void);
+        virtual
+        ~EntityData(void);
 
         /*! @brief Add an argument description to the entity.
          @param argDesc The argument descriptor to be added to the entity. */
-        void addArgumentDescription(MplusM::Utilities::BaseArgumentDescriptor * argDesc);
+        void
+        addArgumentDescription(MplusM::Utilities::BaseArgumentDescriptor * argDesc);
 
         /*! @brief Add a port to the entity.
          @param portName The name of the port.
@@ -88,21 +96,24 @@ namespace MPlusM_Manager
          @param portKind What the port will be used for.
          @param direction The primary direction of the port.
          @returns The newly-created port. */
-        PortData * addPort(const YarpString &  portName,
-                           const YarpString &  portProtocol = "",
-                           const YarpString &  protocolDescription = "",
-                           const PortUsage     portKind = kPortUsageOther,
-                           const PortDirection direction = kPortDirectionInputOutput);
+        PortData *
+        addPort(const YarpString &  portName,
+                const YarpString &  portProtocol = "",
+                const YarpString &  protocolDescription = "",
+                const PortUsage     portKind = kPortUsageOther,
+                const PortDirection direction = kPortDirectionInputOutput);
 
         /*! @brief Return a particular argument descriptor.
          @param idx The index of the argument of interest.
          @returns The argument descriptor at the specified index. */
-        MplusM::Utilities::BaseArgumentDescriptor * getArgumentDescriptor(const size_t idx)
+        MplusM::Utilities::BaseArgumentDescriptor *
+        getArgumentDescriptor(const size_t idx)
         const;
 
         /*! @brief Return the behavioural model for the entity.
          @returns The behavioural model for the entity. */
-        inline const YarpString & getBehaviour(void)
+        inline const YarpString &
+        getBehaviour(void)
         const
         {
             return _behaviour;
@@ -110,7 +121,8 @@ namespace MPlusM_Manager
         
         /*! @brief Return the description of the entity.
          @returns The description of the entity. */
-        inline const YarpString & getDescription(void)
+        inline const YarpString &
+        getDescription(void)
         const
         {
             return _description;
@@ -118,7 +130,8 @@ namespace MPlusM_Manager
         
         /*! @brief Return the extra information for the entity.
          @returns The extra information for the entity. */
-        inline const YarpString & getExtraInformation(void)
+        inline const YarpString &
+        getExtraInformation(void)
         const
         {
             return _extraInfo;
@@ -126,7 +139,8 @@ namespace MPlusM_Manager
 
         /*! @brief Return the kind of container.
          @returns The kind of container. */
-        inline ContainerKind getKind(void)
+        inline ContainerKind
+        getKind(void)
         const
         {
             return _kind;
@@ -134,7 +148,8 @@ namespace MPlusM_Manager
         
         /*! @brief Return the IP address of the entity.
          @returns The IP address of the entity. */
-        inline const YarpString & getIPAddress(void)
+        inline const YarpString &
+        getIPAddress(void)
         const
         {
             return _IPAddress;
@@ -142,7 +157,8 @@ namespace MPlusM_Manager
         
         /*! @brief Return the description of the entity.
          @returns The description of the entity. */
-        inline const YarpString & getName(void)
+        inline const YarpString &
+        getName(void)
         const
         {
             return _name;
@@ -150,7 +166,8 @@ namespace MPlusM_Manager
         
         /*! @brief Returns the number of argument descriptions in this container.
          @returns The number of argument descriptions in this container. */
-        inline size_t getNumArgumentDescriptors(void)
+        inline size_t
+        getNumArgumentDescriptors(void)
         const
         {
             return _argumentList.size();
@@ -158,18 +175,21 @@ namespace MPlusM_Manager
 
         /*! @brief Returns the number of ports in this panel.
          @returns The number of ports in this panel. */
-        int getNumPorts(void)
+        int
+        getNumPorts(void)
         const;
         
         /*! @brief Returns a port by index.
          @param num The zero-origin index of the port.
          @returns A port or @c NULL if the index is out of range. */
-        PortData * getPort(const int num)
+        PortData *
+        getPort(const int num)
         const;
         
         /*! @brief Return the requests supported by the entity.
          @returns The requests supported by the entity. */
-        inline const YarpString & getRequests(void)
+        inline const YarpString &
+        getRequests(void)
         const
         {
             return _requests;
@@ -177,7 +197,8 @@ namespace MPlusM_Manager
         
         /*! @brief Set the IP address of the entity.
          @param newAddress The IP address of the entity. */
-        inline void setIPAddress(const YarpString & newAddress)
+        inline void
+        setIPAddress(const YarpString & newAddress)
         {
             _IPAddress = newAddress;
         } // setIPAddress

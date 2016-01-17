@@ -127,8 +127,9 @@ static const int kThreadKillTime = 3000;
  @param string2 The second string to compare.
  @returns @c true if both strings are identical, ignoring case and @c false if the strings are of
  different length or contain at least one character that is different. */
-static bool caseInsensitiveMatch(const char * string1,
-                                 const char * string2)
+static bool
+caseInsensitiveMatch(const char * string1,
+                     const char * string2)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_S2("string1 = ", string1, "string2 = ", string2); //####
@@ -222,7 +223,8 @@ ManagerApplication::~ManagerApplication(void)
 # pragma warning(push)
 # pragma warning(disable: 4100)
 #endif // ! MAC_OR_LINUX_
-void ManagerApplication::anotherInstanceStarted(const String & commandLine)
+void
+ManagerApplication::anotherInstanceStarted(const String & commandLine)
 {
 #if (! defined(OD_ENABLE_LOGGING_))
 # if MAC_OR_LINUX_
@@ -240,7 +242,8 @@ void ManagerApplication::anotherInstanceStarted(const String & commandLine)
 # pragma warning(pop)
 #endif // ! MAC_OR_LINUX_
 
-bool ManagerApplication::checkForRegistryServiceAndLaunchIfDesired(void)
+bool
+ManagerApplication::checkForRegistryServiceAndLaunchIfDesired(void)
 {
     OD_LOG_OBJENTER(); //####
     bool                     didLaunch = false;
@@ -270,7 +273,8 @@ bool ManagerApplication::checkForRegistryServiceAndLaunchIfDesired(void)
     return didLaunch;
 } // ManagerApplication::checkForRegistryServiceAndLaunchIfDesired
 
-yarp::os::Network * ManagerApplication::checkForYarpAndLaunchIfDesired(void)
+yarp::os::Network *
+ManagerApplication::checkForYarpAndLaunchIfDesired(void)
 {
     OD_LOG_OBJENTER(); //####
     yarp::os::Network *      result = NULL;
@@ -400,7 +404,8 @@ yarp::os::Network * ManagerApplication::checkForYarpAndLaunchIfDesired(void)
     return result;
 } // ManagerApplication::checkForYarpAndLaunchIfDesired
 
-void ManagerApplication::connectPeekChannel(void)
+void
+ManagerApplication::connectPeekChannel(void)
 {
     OD_LOG_OBJENTER(); //####
     if (_peeker)
@@ -415,7 +420,8 @@ void ManagerApplication::connectPeekChannel(void)
     OD_LOG_OBJEXIT(); //####
 } // ManagerApplication::connectPeekChannel
 
-void ManagerApplication::doCleanupSoon(void)
+void
+ManagerApplication::doCleanupSoon(void)
 {
     OD_LOG_OBJENTER(); //####
     if (_scanner)
@@ -425,7 +431,8 @@ void ManagerApplication::doCleanupSoon(void)
     OD_LOG_OBJEXIT(); //####
 } // ManagerApplication::doCleanupSoon
 
-void ManagerApplication::doLaunchAService(const ApplicationInfo & appInfo)
+void
+ManagerApplication::doLaunchAService(const ApplicationInfo & appInfo)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("appInfo = ", &appInfo); //####
@@ -498,7 +505,8 @@ void ManagerApplication::doLaunchAService(const ApplicationInfo & appInfo)
     OD_LOG_OBJEXIT(); //####
 } // ManagerApplication::doLaunchAService
 
-void ManagerApplication::doLaunchOtherApplication(void)
+void
+ManagerApplication::doLaunchOtherApplication(void)
 {
     OD_LOG_OBJENTER(); //####
     _applicationMenu.setLookAndFeel(&_mainWindow->getLookAndFeel());
@@ -513,7 +521,8 @@ void ManagerApplication::doLaunchOtherApplication(void)
     OD_LOG_OBJEXIT(); //####
 } // ManagerApplication::doLaunchOtherApplication
 
-bool ManagerApplication::doLaunchRegistry(void)
+bool
+ManagerApplication::doLaunchRegistry(void)
 {
     OD_LOG_OBJENTER(); //####
     bool                     result = false;
@@ -575,7 +584,8 @@ bool ManagerApplication::doLaunchRegistry(void)
     return result;
 } // ManagerApplication::doLaunchRegistry
 
-void ManagerApplication::doScanSoon(void)
+void
+ManagerApplication::doScanSoon(void)
 {
     OD_LOG_OBJENTER(); //####
     if (_scanner)
@@ -585,7 +595,8 @@ void ManagerApplication::doScanSoon(void)
     OD_LOG_OBJEXIT(); //####
 } // ManagerApplication::doScanSoon
 
-String ManagerApplication::findPathToExecutable(const String & execName)
+String
+ManagerApplication::findPathToExecutable(const String & execName)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_S1s("execName = ", execName.toStdString()); //####
@@ -696,7 +707,8 @@ String ManagerApplication::findPathToExecutable(const String & execName)
     return result;
 } // ManagerApplication::findPathToExecutable
 
-ManagerApplication * ManagerApplication::getApp(void)
+ManagerApplication *
+ManagerApplication::getApp(void)
 {
     OD_LOG_ENTER(); //####
     ManagerApplication * result = static_cast<ManagerApplication *>(JUCEApplication::getInstance());
@@ -705,21 +717,24 @@ ManagerApplication * ManagerApplication::getApp(void)
     return result;
 } // ManagerApplication::getApp
 
-const String ManagerApplication::getApplicationName(void)
+const String
+ManagerApplication::getApplicationName(void)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_OBJEXIT_S(ProjectInfo::projectName); //####
     return ProjectInfo::projectName;
 } // ManagerApplication::getApplicationName
 
-const String ManagerApplication::getApplicationVersion(void)
+const String
+ManagerApplication::getApplicationVersion(void)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_OBJEXIT_S(ProjectInfo::versionString); //####
     return ProjectInfo::versionString;
 } // ManagerApplication::getApplicationVersion
 
-bool ManagerApplication::getArgumentsForApplication(ApplicationInfo & theInfo)
+bool
+ManagerApplication::getArgumentsForApplication(ApplicationInfo & theInfo)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("theInfo = ", &theInfo); //####
@@ -763,7 +778,8 @@ bool ManagerApplication::getArgumentsForApplication(ApplicationInfo & theInfo)
     return okSoFar;
 } // ManagerApplication::getArgumentsForApplication
 
-int ManagerApplication::getButtonHeight(void)
+int
+ManagerApplication::getButtonHeight(void)
 {
     OD_LOG_ENTER(); //####
     ManagerApplication * ourApp = getApp();
@@ -781,7 +797,8 @@ int ManagerApplication::getButtonHeight(void)
     return result;
 } // ManagerApplication::getButtonHeight
 
-String ManagerApplication::getEnvironmentVar(const char * varName)
+String
+ManagerApplication::getEnvironmentVar(const char * varName)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_S1("varName = ", varName); //####
@@ -806,8 +823,9 @@ String ManagerApplication::getEnvironmentVar(const char * varName)
     return result;
 } // ManagerApplication::getEnvironmentVar
 
-void ManagerApplication::getEnvironmentVars(YarpStringVector & keys,
-                                            YarpStringVector & values)
+void
+ManagerApplication::getEnvironmentVars(YarpStringVector & keys,
+                                       YarpStringVector & values)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P2("keys = ", &keys, "values = ", &values);
@@ -891,7 +909,8 @@ void ManagerApplication::getEnvironmentVars(YarpStringVector & keys,
     OD_LOG_EXIT(); //####
 } // ManagerApplication::getEnvironmentVars
 
-String ManagerApplication::getHomeDir(void)
+String
+ManagerApplication::getHomeDir(void)
 {
     OD_LOG_ENTER(); //####
     juce::File homeDir(juce::File::getSpecialLocation(juce::File::userHomeDirectory));
@@ -901,7 +920,8 @@ String ManagerApplication::getHomeDir(void)
     return result;
 } // ManagerApplication::getHomeDir
 
-ManagerWindow * ManagerApplication::getMainWindow(void)
+ManagerWindow *
+ManagerApplication::getMainWindow(void)
 {
     OD_LOG_ENTER(); //####
     ManagerWindow * result = getApp()->_mainWindow;
@@ -910,8 +930,9 @@ ManagerWindow * ManagerApplication::getMainWindow(void)
     return result;
 } // ManagerApplication::getMainWindow
 
-bool ManagerApplication::getParametersForApplication(const String &    execName,
-                                                     ApplicationInfo & theInfo)
+bool
+ManagerApplication::getParametersForApplication(const String &    execName,
+                                                ApplicationInfo & theInfo)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("execName = ", execName.toStdString()); //####
@@ -974,13 +995,14 @@ bool ManagerApplication::getParametersForApplication(const String &    execName,
     return okSoFar;
 } // ManagerApplication::getParametersForApplication
 
-bool ManagerApplication::getPrimaryChannelForService(const ApplicationInfo & appInfo,
-                                                     const String &          endpointName,
-                                                     const String &          tag,
-                                                     const String &          portNumber,
-                                                     const StringArray &     arguments,
-                                                     const int               tagModifierCount,
-                                                     String &                channelName)
+bool
+ManagerApplication::getPrimaryChannelForService(const ApplicationInfo & appInfo,
+                                                const String &          endpointName,
+                                                const String &          tag,
+                                                const String &          portNumber,
+                                                const StringArray &     arguments,
+                                                const int               tagModifierCount,
+                                                String &                channelName)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P3("appInfo = ", &appInfo, "arguments = ", &arguments, "channelName = ", //####
@@ -1046,7 +1068,8 @@ bool ManagerApplication::getPrimaryChannelForService(const ApplicationInfo & app
     return okSoFar;
 } // ManagerApplication::getPrimaryChannelForService
 
-String ManagerApplication::getRealName(void)
+String
+ManagerApplication::getRealName(void)
 {
     OD_LOG_ENTER(); //####
     String          result;
@@ -1081,7 +1104,8 @@ String ManagerApplication::getRealName(void)
     return result;
 } // ManagerApplication::getRealName
 
-String ManagerApplication::getUserName(void)
+String
+ManagerApplication::getUserName(void)
 {
     OD_LOG_ENTER(); //####
     String          result;
@@ -1120,7 +1144,8 @@ String ManagerApplication::getUserName(void)
 # pragma warning(push)
 # pragma warning(disable: 4100)
 #endif // ! MAC_OR_LINUX_
-void ManagerApplication::initialise(const String & commandLine)
+void
+ManagerApplication::initialise(const String & commandLine)
 {
 #if (! defined(OD_ENABLE_LOGGING_))
 # if MAC_OR_LINUX_
@@ -1197,7 +1222,8 @@ void ManagerApplication::initialise(const String & commandLine)
 # pragma warning(pop)
 #endif // ! MAC_OR_LINUX_
 
-void ManagerApplication::loadApplicationLists(void)
+void
+ManagerApplication::loadApplicationLists(void)
 {
     OD_LOG_OBJENTER(); //####
     juce::File  commonDir(juce::File::getSpecialLocation(juce::File::commonDocumentsDirectory));
@@ -1251,14 +1277,16 @@ void ManagerApplication::loadApplicationLists(void)
     OD_LOG_OBJEXIT(); //####
 } // ManagerApplication::loadApplicationLists
 
-bool ManagerApplication::moreThanOneInstanceAllowed(void)
+bool
+ManagerApplication::moreThanOneInstanceAllowed(void)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_OBJEXIT_B(true); //####
     return true;
 } // ManagerApplication::moreThanOneInstanceAllowed
 
-void ManagerApplication::restoreYarpConfiguration(void)
+void
+ManagerApplication::restoreYarpConfiguration(void)
 {
     OD_LOG_OBJENTER(); //####
     ChildProcess runYarp;
@@ -1282,7 +1310,8 @@ void ManagerApplication::restoreYarpConfiguration(void)
     OD_LOG_OBJEXIT(); //####
 } // ManagerApplication::restoreYarpConfiguration
 
-void ManagerApplication::shutdown(void)
+void
+ManagerApplication::shutdown(void)
 {
     OD_LOG_OBJENTER(); //####
     SetExitRequest();
@@ -1340,7 +1369,8 @@ void ManagerApplication::shutdown(void)
     OD_LOG_OBJEXIT(); //####
 } // ManagerApplication::shutdown
 
-void ManagerApplication::systemRequestedQuit(void)
+void
+ManagerApplication::systemRequestedQuit(void)
 {
     OD_LOG_OBJENTER(); //####
     // This is called when the app is being asked to quit: you can ignore this request and let the
@@ -1349,7 +1379,8 @@ void ManagerApplication::systemRequestedQuit(void)
     OD_LOG_OBJEXIT(); //####
 } // ManagerApplication::systemRequestedQuit
 
-bool ManagerApplication::validateRegistryService(void)
+bool
+ManagerApplication::validateRegistryService(void)
 {
     OD_LOG_OBJENTER(); //####
     bool         doLaunch = false;
@@ -1407,7 +1438,8 @@ bool ManagerApplication::validateRegistryService(void)
     return doLaunch;
 } // ManagerApplication::validateRegistryService
 
-bool ManagerApplication::validateYarp(void)
+bool
+ManagerApplication::validateYarp(void)
 {
     OD_LOG_OBJENTER(); //####
     bool         doLaunch = false;

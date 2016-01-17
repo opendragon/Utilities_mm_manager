@@ -59,19 +59,28 @@ namespace MPlusM_Manager
     class TextValidator
     {
     public :
+    
+    protected :
+    
+    private :
+        
+    public :
         
         /*! @brief The constructor.
          @param fieldDescriptor A description of the attributes of the field being validated. */
-        explicit TextValidator(MplusM::Utilities::BaseArgumentDescriptor & fieldDescriptor);
+        explicit
+        TextValidator(MplusM::Utilities::BaseArgumentDescriptor & fieldDescriptor);
         
         /*! @brief The destructor. */
-        virtual ~TextValidator(void);
+        virtual
+        ~TextValidator(void);
         
         /*! @brief Check if the provided value is valid according to the field description.
          @param toBeChecked The value to be checked.
          @returns @c true if the value is accepted by the field description and @c false
          otherwise. */
-        bool checkValidity(const String & toBeChecked)
+        bool
+        checkValidity(const String & toBeChecked)
         const;
         
         /*! @brief Check if the provided value is valid according to the field description.
@@ -79,15 +88,17 @@ namespace MPlusM_Manager
          @param argsToUse A set of valid arguments.
          @returns @c true if the value is accepted by the field description and @c false
          otherwise. */
-        bool checkValidity(const String & toBeChecked,
-                           StringArray &  argsToUse)
+        bool
+        checkValidity(const String & toBeChecked,
+                      StringArray &  argsToUse)
         const;
         
         /*! @brief Return @c true if the validator is for file paths and @c false otherwise.
          @param isForOutput Set to @c true if the validator is for output files and @c false
          otherwise.
          @returns @c true if the validator is for file paths and @c false otherwise. */
-        bool isForFiles(bool & isForOutput)
+        bool
+        isForFiles(bool & isForOutput)
         const;
         
     protected :

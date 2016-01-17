@@ -59,27 +59,39 @@ namespace MPlusM_Manager
     class YarpLaunchThread : public Thread
     {
     public :
+    
+    protected :
+    
+    private :
+        
+        /*! @brief The class that this class is derived from. */
+        typedef Thread inherited;
+        
+    public :
         
         /*! @brief The constructor.
          @param pathToExecutable The file system path for the executable.
          @param ipAddress The network address to use.
-		 @param portNumber The network port number to use. */
+         @param portNumber The network port number to use. */
         YarpLaunchThread(const String & pathToExecutable,
                          const String & ipAddress,
-			             const int      portNumber);
+                         const int      portNumber);
         
         /*! @brief The destructor. */
-        virtual ~YarpLaunchThread(void);
+        virtual
+        ~YarpLaunchThread(void);
         
-		/*! @brief Force the child process to terminate. */
-		void killChildProcess(void);
+        /*! @brief Force the child process to terminate. */
+        void
+        killChildProcess(void);
 
     protected :
         
     private :
         
         /*! @brief Perform the background scan. */
-        virtual void run(void);
+        virtual void
+        run(void);
         
     public :
     
@@ -87,9 +99,6 @@ namespace MPlusM_Manager
     
     private :
 
-        /*! @brief The class that this class is derived from. */
-        typedef Thread inherited;
-        
         /*! @brief The running YARP process. */
         ScopedPointer<ChildProcess> _yarpProcess;
         
@@ -99,8 +108,8 @@ namespace MPlusM_Manager
         /*! @brief The file system path to the executable. */
         String _yarpPath;
 
-		/*! @brief The network port number to use. */
-		int _yarpPort;
+        /*! @brief The network port number to use. */
+        int _yarpPort;
         
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(YarpLaunchThread)
         

@@ -59,25 +59,37 @@ namespace MPlusM_Manager
     class RegistryLaunchThread : public Thread
     {
     public :
+    
+    protected :
+    
+    private :
+        
+        /*! @brief The class that this class is derived from. */
+        typedef Thread inherited;
+        
+    public :
         
         /*! @brief The constructor.
          @param pathToExecutable The file system path for the executable.
-		 @param portNumber The network port number to use. */
-        explicit RegistryLaunchThread(const String & pathToExecutable,
-                                      const int      portNumber = 0);
+         @param portNumber The network port number to use. */
+        explicit
+        RegistryLaunchThread(const String & pathToExecutable,
+                             const int      portNumber = 0);
 
         /*! @brief The destructor. */
-        virtual ~RegistryLaunchThread(void);
+        virtual
+        ~RegistryLaunchThread(void);
         
-		/*! @brief Force the child process to terminate. */
-		void killChildProcess(void);
+        /*! @brief Force the child process to terminate. */
+        void killChildProcess(void);
 
     protected :
         
     private :
         
         /*! @brief Perform the background scan. */
-        virtual void run(void);
+        virtual void
+        run(void);
         
     public :
     
@@ -85,17 +97,14 @@ namespace MPlusM_Manager
     
     private :
 
-        /*! @brief The class that this class is derived from. */
-        typedef Thread inherited;
-        
         /*! @brief The running Registry Service process. */
         ScopedPointer<ChildProcess> _registryServiceProcess;
         
         /*! @brief The file system path to the executable. */
         String _registryServicePath;
 
-		/*! @brief The network port number to use. */
-		int _registryServicePort;
+        /*! @brief The network port number to use. */
+        int _registryServicePort;
         
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RegistryLaunchThread)
         

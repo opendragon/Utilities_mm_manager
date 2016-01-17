@@ -106,8 +106,9 @@ PortData::~PortData(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-void PortData::addInputConnection(PortData *          other,
-                                  Common::ChannelMode mode)
+void
+PortData::addInputConnection(PortData *          other,
+                             Common::ChannelMode mode)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("other = ", other); //####
@@ -146,8 +147,9 @@ void PortData::addInputConnection(PortData *          other,
     OD_LOG_OBJEXIT(); //####
 } // PortData::addInputConnection
 
-void PortData::addOutputConnection(PortData *          other,
-                                   Common::ChannelMode mode)
+void
+PortData::addOutputConnection(PortData *          other,
+                              Common::ChannelMode mode)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("other = ", other); //####
@@ -186,7 +188,8 @@ void PortData::addOutputConnection(PortData *          other,
     OD_LOG_OBJEXIT(); //####
 } // PortData::addOutputConnection
 
-bool PortData::hasOutgoingConnectionTo(const YarpString & otherPort)
+bool
+PortData::hasOutgoingConnectionTo(const YarpString & otherPort)
 const
 {
     OD_LOG_OBJENTER(); //####
@@ -210,7 +213,8 @@ const
     return result;
 } // PortData::hasOutgoingConnectionTo
 
-void PortData::invalidateConnections(void)
+void
+PortData::invalidateConnections(void)
 {
     OD_LOG_OBJENTER(); //####
     for (PortConnections::iterator walker(_inputConnections.begin());
@@ -236,7 +240,8 @@ void PortData::invalidateConnections(void)
     OD_LOG_OBJEXIT(); //####
 } // PortData::invalidateConnections
 
-void PortData::removeInputConnection(PortData * other)
+void
+PortData::removeInputConnection(PortData * other)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("other = ", other); //####
@@ -262,7 +267,8 @@ void PortData::removeInputConnection(PortData * other)
     OD_LOG_OBJEXIT(); //####
 } // PortData::removeInputConnection
 
-void PortData::removeInvalidConnections(void)
+void
+PortData::removeInvalidConnections(void)
 {
     OD_LOG_OBJENTER(); //####
     bool keepGoing;
@@ -314,7 +320,8 @@ void PortData::removeInvalidConnections(void)
     OD_LOG_OBJEXIT(); //####
 } // PortData::removeInvalidConnections
 
-void PortData::removeOutputConnection(PortData * other)
+void
+PortData::removeOutputConnection(PortData * other)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("other = ", other); //####

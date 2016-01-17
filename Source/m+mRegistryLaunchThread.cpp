@@ -109,7 +109,8 @@ RegistryLaunchThread::~RegistryLaunchThread(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-void RegistryLaunchThread::killChildProcess(void)
+void
+RegistryLaunchThread::killChildProcess(void)
 {
     OD_LOG_OBJENTER(); //####
     if (_registryServiceProcess)
@@ -119,7 +120,8 @@ void RegistryLaunchThread::killChildProcess(void)
     OD_LOG_OBJEXIT(); //####
 } // RegistryLaunchThread::killChildProcess
 
-void RegistryLaunchThread::run(void)
+void
+RegistryLaunchThread::run(void)
 {
     OD_LOG_OBJENTER(); //####
     _registryServiceProcess = new ChildProcess;

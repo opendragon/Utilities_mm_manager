@@ -60,6 +60,12 @@ namespace MPlusM_Manager
     class PortData
     {
     public :
+    
+    protected :
+    
+    private :
+        
+    public :
         
         /*! @brief The constructor.
          @param portName The port name for the entry.
@@ -74,23 +80,27 @@ namespace MPlusM_Manager
                  const PortDirection direction = kPortDirectionInput);
         
         /*! @brief The destructor. */
-        virtual ~PortData(void);
+        virtual
+        ~PortData(void);
         
         /*! @brief Add an input connection to the port.
          @param other The port that is to be connected.
          @param mode The mode of the connection. */
-        void addInputConnection(PortData *                  other,
-                                MplusM::Common::ChannelMode mode);
+        void
+        addInputConnection(PortData *                  other,
+                           MplusM::Common::ChannelMode mode);
         
         /*! @brief Add an output connection to the port.
          @param other The port that is to be connected.
          @param mode The mode of the connection. */
-        void addOutputConnection(PortData *                  other,
-                                 MplusM::Common::ChannelMode mode);
+        void
+        addOutputConnection(PortData *                  other,
+                            MplusM::Common::ChannelMode mode);
         
         /*! @brief Return the direction of the port entry.
          @returns The direction of the port entry. */
-        inline PortDirection getDirection(void)
+        inline PortDirection
+        getDirection(void)
         const
         {
             return _direction;
@@ -98,7 +108,8 @@ namespace MPlusM_Manager
         
         /*! @brief Return the set of input connections to the port.
          @returns The set of input connections to the port. */
-        inline const PortConnections & getInputConnections(void)
+        inline const PortConnections &
+        getInputConnections(void)
         const
         {
             return _inputConnections;
@@ -106,7 +117,8 @@ namespace MPlusM_Manager
         
         /*! @brief Return the set of output connections to the port.
          @returns The set of output connections to the port. */
-        inline const PortConnections & getOutputConnections(void)
+        inline const PortConnections &
+        getOutputConnections(void)
         const
         {
             return _outputConnections;
@@ -114,7 +126,8 @@ namespace MPlusM_Manager
         
         /*! @brief Return the name of the associated port.
          @returns The name of the associated port. */
-        inline const YarpString & getPortName(void)
+        inline const YarpString &
+        getPortName(void)
         const
         {
             return _portName;
@@ -122,7 +135,8 @@ namespace MPlusM_Manager
         
         /*! @brief Return the port number of the associated port.
          @returns The port number of the associated port. */
-        inline const YarpString & getPortNumber(void)
+        inline const YarpString &
+        getPortNumber(void)
         const
         {
             return _portPortNumber;
@@ -130,7 +144,8 @@ namespace MPlusM_Manager
         
         /*! @brief Return the protocol of the associated port.
          @returns The protocol of the associated port. */
-        inline const YarpString & getProtocol(void)
+        inline const YarpString &
+        getProtocol(void)
         const
         {
             return _portProtocol;
@@ -138,7 +153,8 @@ namespace MPlusM_Manager
         
         /*! @brief Return the description of the protocol for the associated port.
          @returns The description of the protocol for the associated port. */
-        inline const YarpString & getProtocolDescription(void)
+        inline const YarpString &
+        getProtocolDescription(void)
         const
         {
             return _protocolDescription;
@@ -146,7 +162,8 @@ namespace MPlusM_Manager
         
         /*! @brief Return the usage of the port entry.
          @returns The usage of the port entry. */
-        inline PortUsage getUsage(void)
+        inline PortUsage
+        getUsage(void)
         const
         {
             return _usage;
@@ -155,16 +172,19 @@ namespace MPlusM_Manager
         /*! @brief Returns @c true if there is an outgoing connection to the named port.
          @param otherPort The name of the destination port.
          @returns @c true if there is an outgoing connection to the named port. */
-        bool hasOutgoingConnectionTo(const YarpString & otherPort)
+        bool
+        hasOutgoingConnectionTo(const YarpString & otherPort)
         const;
         
         /*! @brief Mark all the connections as invalid. */
-        void invalidateConnections(void);
+        void
+        invalidateConnections(void);
         
         /*! @brief Returns @c true if the port entry is a secondary port of a service and @c false
          otherwise.
          @returns @c true if the port is a secondary port of a service and @c false otherwise. */
-        inline bool isInputOutput(void)
+        inline bool
+        isInputOutput(void)
         const
         {
             return (kPortUsageInputOutput == _usage);
@@ -173,7 +193,8 @@ namespace MPlusM_Manager
         /*! @brief Returns @c true if the port entry is part of a service and @c false
          otherwise.
          @returns @c true if the port is part of a service and @c false otherwise. */
-        inline bool isService(void)
+        inline bool
+        isService(void)
         const
         {
             return (kPortUsageService == _usage);
@@ -181,18 +202,22 @@ namespace MPlusM_Manager
 
         /*! @brief Remove an input connection from a port.
          @param other The port that is to be disconnected. */
-        void removeInputConnection(PortData * other);
+        void
+        removeInputConnection(PortData * other);
         
         /*! @brief Remove connections that are invalid. */
-        void removeInvalidConnections(void);
+        void
+        removeInvalidConnections(void);
         
         /*! @brief Remove an output connection from a port.
          @param other The port that is to be disconnected. */
-        void removeOutputConnection(PortData * other);
+        void
+        removeOutputConnection(PortData * other);
         
         /*! @brief Set the port number of the port.
          @param newPortNumber The port number of the port. */
-        inline void setPortNumber(const YarpString & newPortNumber)
+        inline void
+        setPortNumber(const YarpString & newPortNumber)
         {
             _portPortNumber = newPortNumber;
         } // setPortNumber

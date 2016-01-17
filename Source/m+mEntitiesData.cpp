@@ -99,9 +99,10 @@ EntitiesData::~EntitiesData(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-void EntitiesData::addConnection(const YarpString &  inName,
-                                 const YarpString &  outName,
-                                 Common::ChannelMode mode)
+void
+EntitiesData::addConnection(const YarpString &  inName,
+                            const YarpString &  outName,
+                            Common::ChannelMode mode)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S2s("inName = ", inName, "outName = ", outName); //####
@@ -114,7 +115,8 @@ void EntitiesData::addConnection(const YarpString &  inName,
     OD_LOG_OBJEXIT(); //####
 } // EntitiesData::addConnection
 
-void EntitiesData::addEntity(EntityData * anEntity)
+void
+EntitiesData::addEntity(EntityData * anEntity)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("anEntity = ", anEntity); //####
@@ -122,14 +124,16 @@ void EntitiesData::addEntity(EntityData * anEntity)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesData::addEntity
 
-void EntitiesData::clearConnections(void)
+void
+EntitiesData::clearConnections(void)
 {
     OD_LOG_OBJENTER(); //####
     _connections.clear();
     OD_LOG_OBJEXIT(); //####
 } // EntitiesData::clearConnections
 
-void EntitiesData::clearOutData(void)
+void
+EntitiesData::clearOutData(void)
 {
     OD_LOG_OBJENTER(); //####
     clearConnections();
@@ -146,7 +150,8 @@ void EntitiesData::clearOutData(void)
     OD_LOG_OBJEXIT(); //####
 } // EntitiesData::clearOutData
 
-EntityData * EntitiesData::getEntity(const size_t index)
+EntityData *
+EntitiesData::getEntity(const size_t index)
 const
 {
     OD_LOG_OBJENTER(); //####
@@ -165,7 +170,8 @@ const
     return result;
 } // EntitiesData::getEntity
 
-size_t EntitiesData::getNumberOfEntities(void)
+size_t
+EntitiesData::getNumberOfEntities(void)
 const
 {
     OD_LOG_OBJENTER(); //####

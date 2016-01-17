@@ -64,6 +64,24 @@ namespace MPlusM_Manager
                            public FormFieldErrorResponder
     {
     public :
+    
+    protected :
+    
+    private :
+        
+        /*! @brief The first class that this class is derived from. */
+        typedef AsyncUpdater inherited1;
+        
+        /*! @brief The second class that this class is derived from. */
+        typedef ButtonListener inherited2;
+        
+        /*! @brief The third class that this class is derived from. */
+        typedef DocumentWindow inherited3;
+        
+        /*! @brief The fourth class that this class is derived from. */
+        typedef FormFieldErrorResponder inherited4;
+        
+    public :
         
         /*! @brief The constructor.
          @param title The title for the window.
@@ -84,68 +102,84 @@ namespace MPlusM_Manager
                        StringArray &           argsToUse);
         
         /*! @brief The destructor. */
-        virtual ~SettingsWindow(void);
+        virtual
+        ~SettingsWindow(void);
         
     protected :
         
     private :
 
         /*! @brief Add an extra field. */
-        void addAnExtraField(void);
+        void
+        addAnExtraField(void);
         
         /*! @brief Adjust the fields to their proper locations and dimensions. */
-        void adjustFields(void);
+        void
+        adjustFields(void);
         
         /*! @brief Called when a button is clicked.
          @param aButton The button that was clicked. */
-        virtual void buttonClicked(Button * aButton);
+        virtual void
+        buttonClicked(Button * aButton);
 
         /*! @brief Check the values of the fields against their specifications.
          @returns @c true if all the fields are valid and @c false otherwise. */
-        bool fieldsAreValid(void);
+        bool
+        fieldsAreValid(void);
         
         /*! @brief Called when this component has just acquired the keyboard focus.
          @param cause The type of event that caused the change in focus. */
-        virtual void focusGained(FocusChangeType cause);
+        virtual void
+        focusGained(FocusChangeType cause);
         
         /*! @brief Called when this component has just lost the keyboard focus.
          @param cause The type of event that caused the change in focus. */
-        virtual void focusLost(FocusChangeType cause);
+        virtual void
+        focusLost(FocusChangeType cause);
         
         /*! @brief Called back to perform operations. */
-        virtual void handleAsyncUpdate(void);
+        virtual void
+        handleAsyncUpdate(void);
         
         /*! @brief Called when a key is pressed.
          @param key The key that was pressed.
          @returns @c true if the key was consumed and @c false otherwise. */
-        virtual bool keyPressed(const KeyPress & key);
+        virtual bool
+        keyPressed(const KeyPress & key);
 
         /*! @brief Recalculate the area occupied by the fields and adjust the button positions. */
-        void recalculateArea(void);
+        void
+        recalculateArea(void);
         
         /*! @brief Remove the most recently added extra field. */
-        void removeMostRecentlyAddedExtraField(void);
+        void
+        removeMostRecentlyAddedExtraField(void);
         
         /*! @brief Report an error in a field.
          @param fieldOfInterest The field to be reported. */
-        virtual void reportErrorInField(FormField & fieldOfInterest);
+        virtual void
+        reportErrorInField(FormField & fieldOfInterest);
 
         /*! @brief Report an error in a field.
          @param fieldOfInterest The field to be reported. */
-        virtual void reportErrorInField(ValidatingTextEditor & fieldOfInterest);
+        virtual void
+        reportErrorInField(ValidatingTextEditor & fieldOfInterest);
 
         /*! @brief Called when the component size has been changed. */
-        virtual void resized(void);
+        virtual void
+        resized(void);
         
         /*! @brief Set up the standard fields.
          @param widthSoFar The minimum width to show the fields.
          @param heightSoFar The minimum height to show the fields. */
-        void setUpStandardFields(int & widthSoFar,
-                                 int & heightSoFar);
+        void
+        setUpStandardFields(int & widthSoFar,
+                            int & heightSoFar);
         
         /*! @brief Tell all the text editor fields to ignore the next focus loss, so redundant
          validation is not done. */
-        void tellAllFieldsToIgnoreNextFocusLoss(void);
+        void
+        tellAllFieldsToIgnoreNextFocusLoss(void);
         
     public :
     
@@ -153,18 +187,6 @@ namespace MPlusM_Manager
     
     private :
         
-        /*! @brief The first class that this class is derived from. */
-        typedef AsyncUpdater inherited1;
-        
-        /*! @brief The second class that this class is derived from. */
-        typedef ButtonListener inherited2;
-        
-        /*! @brief The third class that this class is derived from. */
-        typedef DocumentWindow inherited3;
-        
-        /*! @brief The fourth class that this class is derived from. */
-        typedef FormFieldErrorResponder inherited4;
-
         /*! @brief The descriptive text at the top of the window. */
         Label _topText;
         

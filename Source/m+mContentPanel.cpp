@@ -131,7 +131,8 @@ static const int kExtraDisplayWidth = 32;
 
 /*! @brief Returns the absolute path to the settings file.
  @returns The absolute path to the settings file. */
-static String getPathToSettingsFile(void)
+static String
+getPathToSettingsFile(void)
 {
     File   baseDir = File::getSpecialLocation(File::userApplicationDataDirectory);
     String baseDirAsString = File::addTrailingSeparator(baseDir.getFullPathName());
@@ -182,7 +183,8 @@ ContentPanel::~ContentPanel(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-void ContentPanel::getAllCommands(Array<CommandID> & commands)
+void
+ContentPanel::getAllCommands(Array<CommandID> & commands)
 {
     OD_LOG_OBJENTER(); //####
     static const CommandID ids[] =
@@ -200,8 +202,9 @@ void ContentPanel::getAllCommands(Array<CommandID> & commands)
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::getAllCommands
 
-void ContentPanel::getCommandInfo(CommandID                commandID,
-                                  ApplicationCommandInfo & result)
+void
+ContentPanel::getCommandInfo(CommandID                commandID,
+                             ApplicationCommandInfo & result)
 {
     OD_LOG_OBJENTER(); //####
     ManagerApplication * ourApp = ManagerApplication::getApp();
@@ -257,7 +260,8 @@ void ContentPanel::getCommandInfo(CommandID                commandID,
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::getCommandInfo
 
-StringArray ContentPanel::getMenuBarNames(void)
+StringArray
+ContentPanel::getMenuBarNames(void)
 {
     OD_LOG_OBJENTER(); //####
     const char * const names[] = { "m+m manager", "View", "Operation", NULL };
@@ -269,8 +273,9 @@ StringArray ContentPanel::getMenuBarNames(void)
 # pragma warning(push)
 # pragma warning(disable: 4100)
 #endif // ! MAC_OR_LINUX_
-PopupMenu ContentPanel::getMenuForIndex(int            menuIndex,
-                                        const String & menuName)
+PopupMenu
+ContentPanel::getMenuForIndex(int            menuIndex,
+                              const String & menuName)
 {
 #if (! defined(OD_ENABLE_LOGGING_))
 # if MAC_OR_LINUX_
@@ -322,7 +327,8 @@ PopupMenu ContentPanel::getMenuForIndex(int            menuIndex,
 # pragma warning(pop)
 #endif // ! MAC_OR_LINUX_
 
-ApplicationCommandTarget * ContentPanel::getNextCommandTarget(void)
+ApplicationCommandTarget *
+ContentPanel::getNextCommandTarget(void)
 {
     OD_LOG_OBJENTER(); //####
     ApplicationCommandTarget * nextOne = findFirstTargetParentComponent();
@@ -335,8 +341,9 @@ ApplicationCommandTarget * ContentPanel::getNextCommandTarget(void)
 # pragma warning(push)
 # pragma warning(disable: 4100)
 #endif // ! MAC_OR_LINUX_
-void ContentPanel::menuItemSelected(int menuItemID,
-                                    int topLevelMenuIndex)
+void
+ContentPanel::menuItemSelected(int menuItemID,
+                               int topLevelMenuIndex)
 {
 #if (! defined(OD_ENABLE_LOGGING_))
 # if MAC_OR_LINUX_
@@ -420,7 +427,8 @@ void ContentPanel::menuItemSelected(int menuItemID,
 # pragma warning(pop)
 #endif // ! MAC_OR_LINUX_
 
-void ContentPanel::paint(Graphics & gg)
+void
+ContentPanel::paint(Graphics & gg)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("gg = ", &gg); //####
@@ -555,7 +563,8 @@ void ContentPanel::paint(Graphics & gg)
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::paint
 
-bool ContentPanel::perform(const InvocationInfo & info)
+bool
+ContentPanel::perform(const InvocationInfo & info)
 {
     OD_LOG_OBJENTER(); //####
     bool                 wasProcessed = false;
@@ -620,7 +629,8 @@ bool ContentPanel::perform(const InvocationInfo & info)
     return wasProcessed;
 } // ContentPanel::perform
 
-void ContentPanel::recallEntityPositions(void)
+void
+ContentPanel::recallEntityPositions(void)
 {
     OD_LOG_OBJENTER(); //####
     String filePath = getPathToSettingsFile();
@@ -656,7 +666,8 @@ void ContentPanel::recallEntityPositions(void)
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::recallEntityPositions
 
-void ContentPanel::rememberPositionOfEntity(ChannelContainer * anEntity)
+void
+ContentPanel::rememberPositionOfEntity(ChannelContainer * anEntity)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("anEntity = ", anEntity); //####
@@ -666,14 +677,16 @@ void ContentPanel::rememberPositionOfEntity(ChannelContainer * anEntity)
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::rememberPositionOfEntity
 
-void ContentPanel::requestWindowRepaint(void)
+void
+ContentPanel::requestWindowRepaint(void)
 {
     OD_LOG_OBJENTER(); //####
     _containingWindow->repaint();
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::requestWindowRepaint
 
-void ContentPanel::resized(void)
+void
+ContentPanel::resized(void)
 {
     OD_LOG_OBJENTER(); //####
     juce::Rectangle<int> area(getLocalBounds());
@@ -684,7 +697,8 @@ void ContentPanel::resized(void)
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::resized
 
-void ContentPanel::saveEntityPositions(void)
+void
+ContentPanel::saveEntityPositions(void)
 {
     OD_LOG_OBJENTER(); //####
     String filePath = getPathToSettingsFile();
@@ -710,7 +724,8 @@ void ContentPanel::saveEntityPositions(void)
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::saveEntityPositions
 
-void ContentPanel::setChannelOfInterest(ChannelEntry * aChannel)
+void
+ContentPanel::setChannelOfInterest(ChannelEntry * aChannel)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("aChannel = ", aChannel); //####
@@ -725,7 +740,8 @@ void ContentPanel::setChannelOfInterest(ChannelEntry * aChannel)
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::setChannelOfInterest
 
-void ContentPanel::setContainerOfInterest(ChannelContainer * aContainer)
+void
+ContentPanel::setContainerOfInterest(ChannelContainer * aContainer)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("aContainer = ", aContainer); //####
@@ -742,7 +758,8 @@ void ContentPanel::setContainerOfInterest(ChannelContainer * aContainer)
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::setContainerOfInterest
 
-void ContentPanel::setEntityPositions(void)
+void
+ContentPanel::setEntityPositions(void)
 {
     OD_LOG_OBJENTER(); //####
     float         offsetX = static_cast<float>(getX());
@@ -1013,8 +1030,9 @@ void ContentPanel::setEntityPositions(void)
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::setEntityPositions
 
-void ContentPanel::setUpChannelMenu(PopupMenu &    aMenu,
-                                    ChannelEntry & aChannel)
+void
+ContentPanel::setUpChannelMenu(PopupMenu &    aMenu,
+                               ChannelEntry & aChannel)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P2("aMenu = ", &aMenu, "aChannel = ", &aChannel); //####
@@ -1045,8 +1063,9 @@ void ContentPanel::setUpChannelMenu(PopupMenu &    aMenu,
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::setUpChannelMenu
 
-void ContentPanel::setUpContainerMenu(PopupMenu &        aMenu,
-                                      ChannelContainer & aContainer)
+void
+ContentPanel::setUpContainerMenu(PopupMenu &        aMenu,
+                                 ChannelContainer & aContainer)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P2("aMenu = ", &aMenu, "aContainer = ", &aContainer); //####
@@ -1115,7 +1134,8 @@ void ContentPanel::setUpContainerMenu(PopupMenu &        aMenu,
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::setUpContainerMenu
 
-void ContentPanel::setUpMainMenu(PopupMenu & aMenu)
+void
+ContentPanel::setUpMainMenu(PopupMenu & aMenu)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("aMenu = ", &aMenu); //####
@@ -1125,7 +1145,8 @@ void ContentPanel::setUpMainMenu(PopupMenu & aMenu)
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::setUpMainMenu
 
-void ContentPanel::setUpViewMenu(PopupMenu & aMenu)
+void
+ContentPanel::setUpViewMenu(PopupMenu & aMenu)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("aMenu = ", &aMenu); //####
@@ -1140,14 +1161,16 @@ void ContentPanel::setUpViewMenu(PopupMenu & aMenu)
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::setUpViewMenu
 
-void ContentPanel::skipScan(void)
+void
+ContentPanel::skipScan(void)
 {
     OD_LOG_OBJENTER(); //####
     _skipNextScan = true;
     OD_LOG_OBJEXIT(); //####
 } // ContentPanel::skipScan
 
-void ContentPanel::updatePanels(ScannerThread & scanner)
+void
+ContentPanel::updatePanels(ScannerThread & scanner)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("scanner = ", &scanner); //####
@@ -1255,7 +1278,8 @@ void ContentPanel::updatePanels(ScannerThread & scanner)
 # pragma warning(push)
 # pragma warning(disable: 4100)
 #endif // ! MAC_OR_LINUX_
-void ContentPanel::visibleAreaChanged(const juce::Rectangle<int> & newVisibleArea)
+void
+ContentPanel::visibleAreaChanged(const juce::Rectangle<int> & newVisibleArea)
 {
 #if (! defined(OD_ENABLE_LOGGING_))
 # if MAC_OR_LINUX_
@@ -1276,9 +1300,10 @@ void ContentPanel::visibleAreaChanged(const juce::Rectangle<int> & newVisibleAre
 # pragma mark Global functions
 #endif // defined(__APPLE__)
 
-void MPlusM_Manager::DisplayInformationPanel(Component *    above,
-                                             const String & bodyText,
-                                             const String & title)
+void
+MPlusM_Manager::DisplayInformationPanel(Component *    above,
+                                        const String & bodyText,
+                                        const String & title)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P1("above = ", above); //####

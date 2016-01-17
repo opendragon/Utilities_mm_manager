@@ -118,7 +118,8 @@ FormField::~FormField(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-TextButton * FormField::getButton(void)
+TextButton *
+FormField::getButton(void)
 const
 {
     OD_LOG_OBJENTER(); //####
@@ -126,13 +127,15 @@ const
     return NULL;
 } // FormField::getButton
 
-void FormField::ignoreNextFocusLoss(void)
+void
+FormField::ignoreNextFocusLoss(void)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_OBJEXIT(); //####
 } // FormField::ignoreNextFocusLoss
 
-void FormField::performButtonAction(void)
+void
+FormField::performButtonAction(void)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_OBJEXIT(); //####
@@ -142,7 +145,8 @@ void FormField::performButtonAction(void)
 # pragma warning(push)
 # pragma warning(disable: 4100)
 #endif // ! MAC_OR_LINUX_
-void FormField::setButton(TextButton * newButton)
+void
+FormField::setButton(TextButton * newButton)
 {
 #if (! defined(OD_ENABLE_LOGGING_))
 # if MAC_OR_LINUX_
@@ -157,7 +161,8 @@ void FormField::setButton(TextButton * newButton)
 # pragma warning(pop)
 #endif // ! MAC_OR_LINUX_
 
-bool FormField::validateField(void)
+bool
+FormField::validateField(void)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_OBJEXIT_B(true); //####

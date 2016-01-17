@@ -62,6 +62,15 @@ namespace MPlusM_Manager
     class ScannerThread : public Thread
     {
     public :
+    
+    protected :
+    
+    private :
+        
+        /*! @brief The class that this class is derived from. */
+        typedef Thread inherited;
+        
+    public :
         
         /*! @brief The constructor.
          @param window The window to be updated.
@@ -70,30 +79,36 @@ namespace MPlusM_Manager
                       const bool      delayFirstScan);
         
         /*! @brief The destructor. */
-        virtual ~ScannerThread(void);
+        virtual
+        ~ScannerThread(void);
         
         /*! @brief Returns @c true if the scan data is available and @c false otherwise.
          
          Note that what is returned is the value prior to the call; the flag is cleared so that the
          next call will return @c false.
          @returns @c true if the scan data is available and @c false otherwise. */
-        bool checkAndClearIfScanIsComplete(void);
+        bool
+        checkAndClearIfScanIsComplete(void);
         
         /*! @brief Indicate that a port cleanup should be performed as soon as possible. */
-        void doCleanupSoon(void);
+        void
+        doCleanupSoon(void);
         
         /*! @brief Indicate that a scan should be performed as soon as possible. */
-        void doScanSoon(void);
+        void
+        doScanSoon(void);
         
         /*! @brief Return the collected entities data.
          @returns The collected entities data. */
-        inline EntitiesData & getEntitiesData(void)
+        inline EntitiesData &
+        getEntitiesData(void)
         {
             return _workingData;
         } // getEntitiesData
         
         /*! @brief Indicate that the scan data has been processed and the scan can proceed. */
-        void scanCanProceed(void);
+        void
+        scanCanProceed(void);
         
     protected :
         
@@ -101,39 +116,45 @@ namespace MPlusM_Manager
         
         /*! @brief Add the detected entities and connections.
          @param detectedPorts The ports found by YARP. */
-        void addEntities(const MplusM::Utilities::PortVector & detectedPorts);
+        void
+        addEntities(const MplusM::Utilities::PortVector & detectedPorts);
         
         /*! @brief Add connections between detected ports in the to-be-displayed list.
          @param detectedPorts The set of detected YARP ports.
          @param checker A function that provides for early exit from loops.
          @param checkStuff The private data for the early exit function. */
-        void addPortConnections(const MplusM::Utilities::PortVector & detectedPorts,
-                                MplusM::Common::CheckFunction         checker = NULL,
-                                void *                                checkStuff = NULL);
+        void
+        addPortConnections(const MplusM::Utilities::PortVector & detectedPorts,
+                           MplusM::Common::CheckFunction         checker = NULL,
+                           void *                                checkStuff = NULL);
         
         /*! @brief Add regular YARP ports as distinct entities to the to-be-displayed list.
          @param detectedPorts The set of detected YARP ports.
          @param checker A function that provides for early exit from loops.
          @param checkStuff The private data for the early exit function. */
-        void addRegularPortEntities(const MplusM::Utilities::PortVector & detectedPorts,
-                                    MplusM::Common::CheckFunction         checker = NULL,
-                                    void *                                checkStuff = NULL);
+        void
+        addRegularPortEntities(const MplusM::Utilities::PortVector & detectedPorts,
+                               MplusM::Common::CheckFunction         checker = NULL,
+                               void *                                checkStuff = NULL);
         
         /*! @brief Add services as distinct entities to the list of entities.
          @param services The set of detected services.
          @param checker A function that provides for early exit from loops.
          @param checkStuff The private data for the early exit function. */
-        void addServices(const YarpStringVector &      services,
-                         MplusM::Common::CheckFunction checker = NULL,
-                         void *                        checkStuff = NULL);
+        void
+        addServices(const YarpStringVector &      services,
+                    MplusM::Common::CheckFunction checker = NULL,
+                    void *                        checkStuff = NULL);
         
         /*! @brief Request access for reading from shared resources.
          @returns @c true if the read lock has been acquired and @c false otherwise. */
-        bool conditionallyAcquireForRead(void);
+        bool
+        conditionallyAcquireForRead(void);
         
         /*! @brief Request access for writing to shared resources.
          @returns @c true if the write lock has been acquired and @c false otherwise. */
-        bool conditionallyAcquireForWrite(void);
+        bool
+        conditionallyAcquireForWrite(void);
         
         /*! @brief Determine whether a port can be used for input and/or output.
          @param oldEntry The previous record for the port, if it exists.
@@ -141,37 +162,45 @@ namespace MPlusM_Manager
          @param checker A function that provides for early exit from loops.
          @param checkStuff The private data for the early exit function.
          @returns The allowed directions for the port. */
-        PortDirection determineDirection(ChannelEntry *                oldEntry,
-                                         const YarpString &            portName,
-                                         MplusM::Common::CheckFunction checker = NULL,
-                                         void *                        checkStuff = NULL);
+        PortDirection
+        determineDirection(ChannelEntry *                oldEntry,
+                           const YarpString &            portName,
+                           MplusM::Common::CheckFunction checker = NULL,
+                           void *                        checkStuff = NULL);
         
         /*! @brief Identify the YARP network entities.
          @param detectedPorts The ports found by YARP.
          @param checker A function that provides for early exit from loops.
          @param checkStuff The private data for the early exit function.
          @returns @c true if the network entity information was gathered and @c false otherwise. */
-        bool gatherEntities(MplusM::Utilities::PortVector & detectedPorts,
-                            MplusM::Common::CheckFunction   checker = NULL,
-                            void *                          checkStuff = NULL);
+        bool
+        gatherEntities(MplusM::Utilities::PortVector & detectedPorts,
+                       MplusM::Common::CheckFunction   checker = NULL,
+                       void *                          checkStuff = NULL);
         
         /*! @brief Release access from reading from the shared resources. */
-        void relinquishFromRead(void);
+        void
+        relinquishFromRead(void);
         
         /*! @brief Release access from writing to the shared resources. */
-        void relinquishFromWrite(void);
+        void
+        relinquishFromWrite(void);
         
         /*! @brief Perform the background scan. */
-        virtual void run(void);
+        virtual void
+        run(void);
         
         /*! @brief Tell the displayed panel to do a repaint. */
-        void triggerRepaint(void);
+        void
+        triggerRepaint(void);
         
         /*! @brief Request access for reading from shared resources. */
-        void unconditionallyAcquireForRead(void);
+        void
+        unconditionallyAcquireForRead(void);
         
         /*! @brief Request access for writing to shared resources. */
-        void unconditionallyAcquireForWrite(void);
+        void
+        unconditionallyAcquireForWrite(void);
         
     public :
     
@@ -179,9 +208,6 @@ namespace MPlusM_Manager
     
     private :
 
-        /*! @brief The class that this class is derived from. */
-        typedef Thread inherited;
-        
         /*! @brief The window to be updated. */
         ManagerWindow & _window;
         

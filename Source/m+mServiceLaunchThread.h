@@ -59,6 +59,15 @@ namespace MPlusM_Manager
     class ServiceLaunchThread : public Thread
     {
     public :
+    
+    protected :
+    
+    private :
+        
+        /*! @brief The class that this class is derived from. */
+        typedef Thread inherited;
+        
+    public :
         
         /*! @brief The constructor.
          @param pathToExecutable The file system path for the executable.
@@ -77,17 +86,20 @@ namespace MPlusM_Manager
                             const bool          needsGo);
 
         /*! @brief The destructor. */
-        virtual ~ServiceLaunchThread(void);
+        virtual
+        ~ServiceLaunchThread(void);
         
-		/*! @brief Force the child process to terminate. */
-		void killChildProcess(void);
+        /*! @brief Force the child process to terminate. */
+        void
+        killChildProcess(void);
 
     protected :
         
     private :
         
         /*! @brief Perform the background scan. */
-        virtual void run(void);
+        virtual void
+        run(void);
         
     public :
     
@@ -95,9 +107,6 @@ namespace MPlusM_Manager
     
     private :
 
-        /*! @brief The class that this class is derived from. */
-        typedef Thread inherited;
-        
         /*! @brief The running background service process. */
         ScopedPointer<ChildProcess> _serviceProcess;
 

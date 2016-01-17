@@ -113,8 +113,9 @@ ValidatingTextEditor::~ValidatingTextEditor(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-void ValidatingTextEditor::addPopupMenuItems(PopupMenu &        menuToAddTo,
-                                             const MouseEvent * mouseClickEvent)
+void
+ValidatingTextEditor::addPopupMenuItems(PopupMenu &        menuToAddTo,
+                                        const MouseEvent * mouseClickEvent)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P2("menuToAddTo = ", &menuToAddTo, "mouseClickEvent = ", mouseClickEvent); //####
@@ -143,7 +144,8 @@ void ValidatingTextEditor::addPopupMenuItems(PopupMenu &        menuToAddTo,
 # pragma warning(push)
 # pragma warning(disable: 4100)
 #endif // ! MAC_OR_LINUX_
-void ValidatingTextEditor::focusGained(FocusChangeType cause)
+void
+ValidatingTextEditor::focusGained(FocusChangeType cause)
 {
 #if MAC_OR_LINUX_
 # pragma unused(cause)
@@ -159,7 +161,8 @@ void ValidatingTextEditor::focusGained(FocusChangeType cause)
 # pragma warning(push)
 # pragma warning(disable: 4100)
 #endif // ! MAC_OR_LINUX_
-void ValidatingTextEditor::focusLost(FocusChangeType cause)
+void
+ValidatingTextEditor::focusLost(FocusChangeType cause)
 {
 #if MAC_OR_LINUX_
 # pragma unused(cause)
@@ -179,14 +182,16 @@ void ValidatingTextEditor::focusLost(FocusChangeType cause)
 # pragma warning(pop)
 #endif // ! MAC_OR_LINUX_
 
-void ValidatingTextEditor::ignoreNextFocusLoss(void)
+void
+ValidatingTextEditor::ignoreNextFocusLoss(void)
 {
     OD_LOG_OBJENTER(); //####
     _ignoreNextFocusLoss = true;
     OD_LOG_OBJEXIT(); //####
 } // ValidatingTextEditor::ignoreNextFocusLoss
 
-bool ValidatingTextEditor::keyPressed(const KeyPress & key)
+bool
+ValidatingTextEditor::keyPressed(const KeyPress & key)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("key = ", &key); //####
@@ -218,7 +223,8 @@ bool ValidatingTextEditor::keyPressed(const KeyPress & key)
     return result;
 } // ValidatingTextEditor::keyPressed
 
-void ValidatingTextEditor::performPopupMenuAction(int menuItemID)
+void
+ValidatingTextEditor::performPopupMenuAction(int menuItemID)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_LL1("menuItemID = ", menuItemID); //####
@@ -237,7 +243,8 @@ void ValidatingTextEditor::performPopupMenuAction(int menuItemID)
     OD_LOG_OBJEXIT(); //####
 } // ValidatingTextEditor::performPopupMenuAction
 
-bool ValidatingTextEditor::validateField(void)
+bool
+ValidatingTextEditor::validateField(void)
 {
     OD_LOG_OBJENTER(); //####
     bool result;
@@ -254,7 +261,8 @@ bool ValidatingTextEditor::validateField(void)
     return result;
 } // ValidatingTextEditor::validateField
 
-bool ValidatingTextEditor::validateField(StringArray & argsToUse)
+bool
+ValidatingTextEditor::validateField(StringArray & argsToUse)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("argsToUse = ", &argsToUse); //####

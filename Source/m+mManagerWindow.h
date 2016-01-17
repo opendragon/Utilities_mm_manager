@@ -64,7 +64,7 @@ namespace MPlusM_Manager
                           public DocumentWindow
     {
     public :
-        
+    
         /*! @brief The commands that we respond to.
          
          Note that this must use the 'old-style' @c enum form, as it's referenced in code that
@@ -82,7 +82,7 @@ namespace MPlusM_Manager
             
             /*! @brief Deselect any selected entity. */
             kCommandClearSelection,
-
+            
             /*! @brief Unhide all entities. */
             kCommandUnhideEntities,
             
@@ -93,46 +93,7 @@ namespace MPlusM_Manager
             kCommandLaunchExecutables
             
         }; // CommandIDs
-
-        /*! @brief The constructor.
-         @param title The window title. */
-        explicit ManagerWindow(const YarpString & title);
         
-        /*! @brief The destructor. */
-        virtual ~ManagerWindow(void);
-        
-        /*! @brief Returns the command manager object used to dispatch command events.
-         @returns The command manager object used to dispatch command events. */
-        static ApplicationCommandManager & getApplicationCommandManager(void);
-        
-        /*! @brief Returns the entities panel.
-         @returns The entities panel. */
-        EntitiesPanel & getEntitiesPanel(void)
-        const;
-        
-        /*! @brief Return the reference to the background scanning thread.
-         @returns The reference to the background scanning thread. */
-        inline ScannerThread * getScannerThread(void)
-        const
-        {
-            return _scannerThread;
-        } // getScannerThread
-        
-        /*! @brief Set up the reference to the background scanning thread. */
-        void setScannerThread(ScannerThread * theScanner);
-        
-    protected :
-        
-    private :
-        
-        /*! @brief This method is called when the user tries to close the window. */
-        virtual void closeButtonPressed(void);
-        
-        /*! @brief Called back to perform operations. */
-        virtual void handleAsyncUpdate(void);
-        
-    public :
-    
     protected :
     
     private :
@@ -142,6 +103,59 @@ namespace MPlusM_Manager
         
         /*! @brief The first class that this class is derived from. */
         typedef DocumentWindow inherited2;
+        
+    public :
+        
+        /*! @brief The constructor.
+         @param title The window title. */
+        explicit
+        ManagerWindow(const YarpString & title);
+        
+        /*! @brief The destructor. */
+        virtual
+        ~ManagerWindow(void);
+        
+        /*! @brief Returns the command manager object used to dispatch command events.
+         @returns The command manager object used to dispatch command events. */
+        static ApplicationCommandManager &
+        getApplicationCommandManager(void);
+        
+        /*! @brief Returns the entities panel.
+         @returns The entities panel. */
+        EntitiesPanel &
+        getEntitiesPanel(void)
+        const;
+        
+        /*! @brief Return the reference to the background scanning thread.
+         @returns The reference to the background scanning thread. */
+        inline ScannerThread *
+        getScannerThread(void)
+        const
+        {
+            return _scannerThread;
+        } // getScannerThread
+        
+        /*! @brief Set up the reference to the background scanning thread. */
+        void
+        setScannerThread(ScannerThread * theScanner);
+        
+    protected :
+        
+    private :
+        
+        /*! @brief This method is called when the user tries to close the window. */
+        virtual void
+        closeButtonPressed(void);
+        
+        /*! @brief Called back to perform operations. */
+        virtual void
+        handleAsyncUpdate(void);
+        
+    public :
+    
+    protected :
+    
+    private :
         
         /*! @brief The connections panel. */
         ScopedPointer<Component> _connectionsPanel;

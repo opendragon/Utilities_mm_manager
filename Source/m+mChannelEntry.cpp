@@ -131,10 +131,11 @@ static const float kTargetBoxScale = 0.25;
  @param testPoint The point being checked.
  @param bestSoFar On input, the current closest point and output, the new closest point.
  @returns @c true if the new point is closer than the previous closest point. */
-static bool calculateMinDistance(float &          distanceSoFar,
-                                 const Position & refPoint,
-                                 const Position & testPoint,
-                                 Position &       bestSoFar)
+static bool
+calculateMinDistance(float &          distanceSoFar,
+                     const Position & refPoint,
+                     const Position & testPoint,
+                     Position &       bestSoFar)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P4("distanceSoFar = ", &distanceSoFar, "refPoint = ", &refPoint, "testPoint = ", //####
@@ -163,11 +164,12 @@ static bool calculateMinDistance(float &          distanceSoFar,
  @param testY The vertical coordinate for the point being checked.
  @param bestSoFar On input, the current closest point and output, the new closest point.
  @returns @c true if the new point is closer than the previous closest point. */
-inline static bool calculateMinDistance(float &          distanceSoFar,
-                                        const Position & refPoint,
-                                        const float      testX,
-                                        const float      testY,
-                                        Position &       bestSoFar)
+inline static bool
+calculateMinDistance(float &          distanceSoFar,
+                     const Position & refPoint,
+                     const float      testX,
+                     const float      testY,
+                     Position &       bestSoFar)
 {
     return calculateMinDistance(distanceSoFar, refPoint, Position(testX, testY), bestSoFar);
 } // calculateMinDistance
@@ -178,10 +180,11 @@ inline static bool calculateMinDistance(float &          distanceSoFar,
  @param targetPoint The target point.
  @param refCentre The reference point.
  @returns The side to which the anchor is attached. */
-static AnchorSide calculateAnchorForPoint(Position &       newCentre,
-                                          const bool       disallowBottom,
-                                          const Position & targetPoint,
-                                          const Position & refCentre)
+static AnchorSide
+calculateAnchorForPoint(Position &       newCentre,
+                        const bool       disallowBottom,
+                        const Position & targetPoint,
+                        const Position & refCentre)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P3("newCentre = ", &newCentre, "targetPoint = ", &targetPoint, //####
@@ -224,10 +227,11 @@ static AnchorSide calculateAnchorForPoint(Position &       newCentre,
  @param anchor The side to which the anchor is attached.
  @param anchorPos The coordinates of the anchor point.
  @param thickness The line thickness to be used. */
-static void drawSourceAnchor(Graphics &       gg,
-                             const AnchorSide anchor,
-                             const Position & anchorPos,
-                             const float      thickness)
+static void
+drawSourceAnchor(Graphics &       gg,
+                 const AnchorSide anchor,
+                 const Position & anchorPos,
+                 const float      thickness)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P2("gg = ", &gg, "anchorPos = ", &anchorPos); //####
@@ -278,10 +282,11 @@ static void drawSourceAnchor(Graphics &       gg,
  @param anchor The side to which the anchor is attached.
  @param anchorPos The coordinates of the anchor point.
  @param thickness The line thickness to be used. */
-static void drawTargetAnchor(Graphics &       gg,
-                             const AnchorSide anchor,
-                             const Position & anchorPos,
-                             const float      thickness)
+static void
+drawTargetAnchor(Graphics &       gg,
+                 const AnchorSide anchor,
+                 const Position & anchorPos,
+                 const float      thickness)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P2("gg = ", &gg, "anchorPos = ", &anchorPos); //####
@@ -337,13 +342,14 @@ static void drawTargetAnchor(Graphics &       gg,
  tangent.
  @param thickness The line thickness to be used.
  @param isDashed @c true if the line should be dashed and @c false otherwise. */
-static void drawBezier(Graphics &       gg,
-                       const Position & startPoint,
-                       const Position & endPoint,
-                       const Position & startCentre,
-                       const Position & endCentre,
-                       const float      thickness,
-                       const bool       isDashed)
+static void
+drawBezier(Graphics &       gg,
+           const Position & startPoint,
+           const Position & endPoint,
+           const Position & startCentre,
+           const Position & endCentre,
+           const float      thickness,
+           const bool       isDashed)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P4("gg = ", &gg, "startPoint = ", &startPoint, "endPoint = ", &endPoint, //####
@@ -385,11 +391,12 @@ static void drawBezier(Graphics &       gg,
  @param destination The terminating entry.
  @param mode The kind of connection.
  @param forced @c true if the protocols were overridden and @c false otherwise. */
-static void drawConnection(Graphics &                gg,
-                           ChannelEntry *            source,
-                           ChannelEntry *            destination,
-                           const Common::ChannelMode mode,
-                           const bool                forced)
+static void
+drawConnection(Graphics &                gg,
+               ChannelEntry *            source,
+               ChannelEntry *            destination,
+               const Common::ChannelMode mode,
+               const bool                forced)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P3("gg = ", &gg, "source = ", source, "destination = ", destination); //####
@@ -486,9 +493,10 @@ static void drawConnection(Graphics &                gg,
  @param ignoreConstraints @c true if the protocols don't have to match.
  @returns @c true if the protocols permit a connection to be made and @c false
  otherwise. */
-static bool protocolsMatch(const YarpString & sourceProtocol,
-                           const YarpString & destinationProtocol,
-                           const bool         ignoreConstraints)
+static bool
+protocolsMatch(const YarpString & sourceProtocol,
+               const YarpString & destinationProtocol,
+               const bool         ignoreConstraints)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_S2s("sourceProtocol = ", sourceProtocol, "destinationProtocol = ", //####
@@ -581,9 +589,10 @@ ChannelEntry::~ChannelEntry(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-void ChannelEntry::addInputConnection(ChannelEntry *            other,
-                                      const Common::ChannelMode mode,
-                                      const bool                wasOverridden)
+void
+ChannelEntry::addInputConnection(ChannelEntry *            other,
+                                 const Common::ChannelMode mode,
+                                 const bool                wasOverridden)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("other = ", other); //####
@@ -624,9 +633,10 @@ void ChannelEntry::addInputConnection(ChannelEntry *            other,
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::addInputConnection
 
-void ChannelEntry::addOutputConnection(ChannelEntry *            other,
-                                       const Common::ChannelMode mode,
-                                       const bool                wasOverridden)
+void
+ChannelEntry::addOutputConnection(ChannelEntry *            other,
+                                  const Common::ChannelMode mode,
+                                  const bool                wasOverridden)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("other = ", other); //####
@@ -667,10 +677,11 @@ void ChannelEntry::addOutputConnection(ChannelEntry *            other,
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::addOutputConnection
 
-AnchorSide ChannelEntry::calculateClosestAnchor(Position &       result,
-                                                const bool       isSource,
-                                                const bool       disallowBottom,
-                                                const Position & pp)
+AnchorSide
+ChannelEntry::calculateClosestAnchor(Position &       result,
+                                     const bool       isSource,
+                                     const bool       disallowBottom,
+                                     const Position & pp)
 const
 {
     OD_LOG_OBJENTER(); //####
@@ -720,8 +731,9 @@ const
     return anchor;
 } // ChannelEntry::calculateClosestAnchor
 
-bool ChannelEntry::checkConnection(ChannelInfo & otherEnd,
-                                   const bool    isOutgoing)
+bool
+ChannelEntry::checkConnection(ChannelInfo & otherEnd,
+                              const bool    isOutgoing)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("otherEnd = ", &otherEnd); //####
@@ -740,21 +752,24 @@ bool ChannelEntry::checkConnection(ChannelInfo & otherEnd,
     return result;
 } // ChannelEntry::checkConnection
 
-void ChannelEntry::clearConnectMarker(void)
+void
+ChannelEntry::clearConnectMarker(void)
 {
     OD_LOG_ENTER(); //####
     _drawConnectMarker = false;
     OD_LOG_EXIT(); //####
 } // ChannelEntry::clearConnectMarker
 
-void ChannelEntry::clearDisconnectMarker(void)
+void
+ChannelEntry::clearDisconnectMarker(void)
 {
     OD_LOG_ENTER(); //####
     _drawDisconnectMarker = false;
     OD_LOG_EXIT(); //####
 } // ChannelEntry::clearDisconnectMarker
 
-void ChannelEntry::displayAndProcessPopupMenu(void)
+void
+ChannelEntry::displayAndProcessPopupMenu(void)
 {
     OD_LOG_OBJENTER(); //####
     PopupMenu mm;
@@ -790,7 +805,8 @@ void ChannelEntry::displayAndProcessPopupMenu(void)
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::displayAndProcessPopupMenu
 
-void ChannelEntry::displayChannelMetrics(void)
+void
+ChannelEntry::displayChannelMetrics(void)
 {
     OD_LOG_ENTER(); //####
     StringArray metricsArray;
@@ -823,8 +839,9 @@ void ChannelEntry::displayChannelMetrics(void)
     OD_LOG_EXIT(); //####
 } // ChannelEntry::displayChannelMetrics
 
-void ChannelEntry::displayInformation(const bool isChannel,
-                                      const bool moreDetails)
+void
+ChannelEntry::displayInformation(const bool isChannel,
+                                 const bool moreDetails)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_B2("isChannel = ", isChannel, "moreDetails = ", moreDetails); //####
@@ -896,10 +913,11 @@ void ChannelEntry::displayInformation(const bool isChannel,
     OD_LOG_EXIT(); //####
 } // ChannelEntry::displayInformation
 
-void ChannelEntry::drawDragLine(Graphics &       gg,
-                                const Position & position,
-                                const bool       isUDP,
-                                const bool       isForced)
+void
+ChannelEntry::drawDragLine(Graphics &       gg,
+                           const Position & position,
+                           const bool       isUDP,
+                           const bool       isForced)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_B2("isUDP = ", isUDP, "isForced = ", isForced); //####
@@ -943,7 +961,8 @@ void ChannelEntry::drawDragLine(Graphics &       gg,
     OD_LOG_EXIT(); //####
 } // ChannelEntry::drawDragLine
 
-void ChannelEntry::drawOutgoingConnections(Graphics & gg)
+void
+ChannelEntry::drawOutgoingConnections(Graphics & gg)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("gg = ", &gg); //####
@@ -969,7 +988,8 @@ void ChannelEntry::drawOutgoingConnections(Graphics & gg)
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::drawOutgoingConnections
 
-Position ChannelEntry::getCentre(void)
+Position
+ChannelEntry::getCentre(void)
 const
 {
     OD_LOG_OBJENTER(); //####
@@ -979,7 +999,8 @@ const
     return outer.getCentre();
 } // ChannelEntry::getCentre
 
-EntitiesPanel & ChannelEntry::getOwningPanel(void)
+EntitiesPanel &
+ChannelEntry::getOwningPanel(void)
 const
 {
     OD_LOG_OBJENTER(); //####
@@ -989,7 +1010,8 @@ const
     return result;
 } // ChannelEntry::getOwningPanel
 
-Position ChannelEntry::getPositionInPanel(void)
+Position
+ChannelEntry::getPositionInPanel(void)
 const
 {
     OD_LOG_OBJENTER(); //####
@@ -999,7 +1021,8 @@ const
     return result;
 } // ChannelEntry::getPositionInPanel
 
-bool ChannelEntry::hasOutgoingConnectionTo(const YarpString & otherPort)
+bool
+ChannelEntry::hasOutgoingConnectionTo(const YarpString & otherPort)
 const
 {
     OD_LOG_OBJENTER(); //####
@@ -1023,7 +1046,8 @@ const
     return result;
 } // ChannelEntry::hasOutgoingConnectionTo
 
-void ChannelEntry::invalidateConnections(void)
+void
+ChannelEntry::invalidateConnections(void)
 {
     OD_LOG_OBJENTER(); //####
     for (ChannelConnections::iterator walker(_inputConnections.begin());
@@ -1049,7 +1073,8 @@ void ChannelEntry::invalidateConnections(void)
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::invalidateConnections
 
-bool ChannelEntry::isChannel(void)
+bool
+ChannelEntry::isChannel(void)
 const
 {
     OD_LOG_ENTER(); //####
@@ -1068,7 +1093,8 @@ const
     return result;
 } // ChannelEntry::isChannel
 
-void ChannelEntry::mouseDown(const MouseEvent & ee)
+void
+ChannelEntry::mouseDown(const MouseEvent & ee)
 {
     OD_LOG_OBJENTER(); //####
     bool            passOn = true;
@@ -1187,7 +1213,8 @@ void ChannelEntry::mouseDown(const MouseEvent & ee)
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::mouseDown
 
-void ChannelEntry::mouseDrag(const MouseEvent & ee)
+void
+ChannelEntry::mouseDrag(const MouseEvent & ee)
 {
     OD_LOG_OBJENTER(); //####
     bool passOn = true;
@@ -1214,7 +1241,8 @@ void ChannelEntry::mouseDrag(const MouseEvent & ee)
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::mouseDrag
 
-void ChannelEntry::mouseUp(const MouseEvent & ee)
+void
+ChannelEntry::mouseUp(const MouseEvent & ee)
 {
     OD_LOG_OBJENTER(); //####
     bool            passOn = true;
@@ -1274,7 +1302,8 @@ void ChannelEntry::mouseUp(const MouseEvent & ee)
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::mouseUp
 
-void ChannelEntry::paint(Graphics & gg)
+void
+ChannelEntry::paint(Graphics & gg)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("gg = ", &gg); //####
@@ -1322,7 +1351,8 @@ void ChannelEntry::paint(Graphics & gg)
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::paint
 
-void ChannelEntry::removeAllConnections(void)
+void
+ChannelEntry::removeAllConnections(void)
 {
     OD_LOG_OBJENTER(); //####
     for (ChannelConnections::iterator walker(_inputConnections.begin());
@@ -1350,7 +1380,8 @@ void ChannelEntry::removeAllConnections(void)
     OD_LOG_EXIT(); //####
 } // ChannelEntry::removeAllConnections
 
-void ChannelEntry::removeInputConnection(ChannelEntry * other)
+void
+ChannelEntry::removeInputConnection(ChannelEntry * other)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("other = ", other); //####
@@ -1376,7 +1407,8 @@ void ChannelEntry::removeInputConnection(ChannelEntry * other)
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::removeInputConnection
 
-void ChannelEntry::removeInvalidConnections(void)
+void
+ChannelEntry::removeInvalidConnections(void)
 {
     OD_LOG_OBJENTER(); //####
     bool keepGoing;
@@ -1444,7 +1476,8 @@ void ChannelEntry::removeInvalidConnections(void)
     OD_LOG_EXIT(); //####
 } // ChannelEntry::removeInvalidConnections
 
-void ChannelEntry::removeOutputConnection(ChannelEntry * other)
+void
+ChannelEntry::removeOutputConnection(ChannelEntry * other)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("other = ", other); //####
@@ -1470,28 +1503,32 @@ void ChannelEntry::removeOutputConnection(ChannelEntry * other)
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::removeOutputConnection
 
-void ChannelEntry::setAsLastPort(void)
+void
+ChannelEntry::setAsLastPort(void)
 {
     OD_LOG_OBJENTER(); //####
     _isLastPort = true;
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::setAsLastPort
 
-void ChannelEntry::setConnectMarker(void)
+void
+ChannelEntry::setConnectMarker(void)
 {
     OD_LOG_OBJENTER(); //####
     _drawConnectMarker = true;
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::setConnectMarker
 
-void ChannelEntry::setDisconnectMarker(void)
+void
+ChannelEntry::setDisconnectMarker(void)
 {
     OD_LOG_OBJENTER(); //####
     _drawDisconnectMarker = true;
     OD_LOG_OBJEXIT(); //####
 } // ChannelEntry::setDisconnectMarker
 
-void ChannelEntry::unsetAsLastPort(void)
+void
+ChannelEntry::unsetAsLastPort(void)
 {
     OD_LOG_OBJENTER(); //####
     _isLastPort = false;

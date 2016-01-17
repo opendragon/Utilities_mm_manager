@@ -126,7 +126,8 @@ EntityData::~EntityData(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-void EntityData::addArgumentDescription(MplusM::Utilities::BaseArgumentDescriptor * argDesc)
+void
+EntityData::addArgumentDescription(MplusM::Utilities::BaseArgumentDescriptor * argDesc)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("argDesc = ", argDesc); //####
@@ -134,11 +135,12 @@ void EntityData::addArgumentDescription(MplusM::Utilities::BaseArgumentDescripto
     OD_LOG_OBJEXIT(); //####
 } // EntityData::addArgumentDescription
 
-PortData * EntityData::addPort(const YarpString &  portName,
-                               const YarpString &  portProtocol,
-                               const YarpString &  protocolDescription,
-                               const PortUsage     portKind,
-                               const PortDirection direction)
+PortData *
+EntityData::addPort(const YarpString &  portName,
+                    const YarpString &  portProtocol,
+                    const YarpString &  protocolDescription,
+                    const PortUsage     portKind,
+                    const PortDirection direction)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S3s("portName = ", portName, "portProtocol = ", portProtocol, //####
@@ -151,7 +153,8 @@ PortData * EntityData::addPort(const YarpString &  portName,
     return aPort;
 } // EntityData::addPort
 
-MplusM::Utilities::BaseArgumentDescriptor * EntityData::getArgumentDescriptor(const size_t idx)
+MplusM::Utilities::BaseArgumentDescriptor *
+EntityData::getArgumentDescriptor(const size_t idx)
 const
 {
     OD_LOG_ENTER(); //####
@@ -170,7 +173,8 @@ const
     return result;
 } // EntityData::getArgumentDescriptor
 
-int EntityData::getNumPorts(void)
+int
+EntityData::getNumPorts(void)
 const
 {
     OD_LOG_OBJENTER(); //####
@@ -180,7 +184,8 @@ const
     return result;
 } // EntityData::getNumPorts
 
-PortData * EntityData::getPort(const int num)
+PortData *
+EntityData::getPort(const int num)
 const
 {
     OD_LOG_OBJENTER(); //####

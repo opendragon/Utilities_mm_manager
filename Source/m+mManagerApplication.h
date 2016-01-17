@@ -92,57 +92,77 @@ namespace MPlusM_Manager
     class ManagerApplication : public JUCEApplication
     {
     public :
+    
+    protected :
+    
+    private :
+        
+        /*! @brief The class that this class is derived from. */
+        typedef JUCEApplication inherited;
+        
+    public :
         
         /*! @brief The constructor. */
         ManagerApplication(void);
         
         /*! @brief The destructor. */
-        virtual ~ManagerApplication(void);
+        virtual
+        ~ManagerApplication(void);
         
         /*! @brief Returns @c true if there is a Registry Service executable available but no
          running Registry Service was detected.
          @returns @c true if the Registry Service can be launched and @c false otherwise. */
-        inline bool canTheRegistryServiceBeLaunched(void)
+        inline bool
+        canTheRegistryServiceBeLaunched(void)
         const
         {
             return _registryServiceCanBeLaunched;
         } // canTheRegistryServiceBeLaunched
         
         /*! @brief Connect (or reconnect) the peek channel to the Registry Service. */
-        void connectPeekChannel(void);
+        void
+        connectPeekChannel(void);
         
         /*! @brief Indicate that a port cleanup should be performed as soon as possible. */
-        void doCleanupSoon(void);
+        void
+        doCleanupSoon(void);
         
         /*! @brief Ask the user to select an application, provide information required to launch the
          application and launch it if the user requests. */
-        void doLaunchOtherApplication(void);
+        void
+        doLaunchOtherApplication(void);
         
         /*! @brief Ask the user for information required to launch the Registry Service and launch
          it if the user requests.
          @returns @c true if the Registry Service was launched and @c false otherwise. */
-        bool doLaunchRegistry(void);
+        bool
+        doLaunchRegistry(void);
 
         /*! @brief Indicate that a scan should be performed as soon as possible. */
-        void doScanSoon(void);
+        void
+        doScanSoon(void);
         
         /*! @brief Determine the path to an executable, using the system PATH environment variable.
          @param execName The short name of the executable.
          @returns The full path to the first executable found in the system PATH environment
          variable. */
-        static String findPathToExecutable(const String & execName);
+        static String
+        findPathToExecutable(const String & execName);
         
         /*! @brief Return the application object.
          @returns The application object. */
-        static ManagerApplication * getApp(void);
+        static
+        ManagerApplication * getApp(void);
         
         /*! @brief Return the button height to use.
          @returns The button height to use. */
-        static int getButtonHeight(void);
+        static int
+        getButtonHeight(void);
         
         /*! @brief Return the number of launchable applications.
          @returns The number of launchable applications. */
-        inline size_t getCountOfApplications(void)
+        inline size_t
+        getCountOfApplications(void)
         const
         {
             return _applicationList.size();
@@ -151,7 +171,8 @@ namespace MPlusM_Manager
         /*! @brief Return the value of a system environment variable.
          @param varName The name of the system environment variable.
          @returns The value of the system environment variable, or an empty value. */
-        static String getEnvironmentVar(const char * varName);
+        static String
+        getEnvironmentVar(const char * varName);
         
         /*! @brief Collect the set of system environment variables.
          
@@ -160,16 +181,19 @@ namespace MPlusM_Manager
          critical, since the environment variables are only used once.
          @param keys The list of environment variable names.
          @param values The list of environment variable values. */
-        static void getEnvironmentVars(YarpStringVector & keys,
-                                       YarpStringVector & values);
+        static void
+        getEnvironmentVars(YarpStringVector & keys,
+                           YarpStringVector & values);
         
         /*! @brief Return the home directory of the current user.
          @returns The home directory of the current user. */
-        String getHomeDir(void);
+        String
+        getHomeDir(void);
         
         /*! @brief Return the main window of the application.
          @returns The main window of the application. */
-        static ManagerWindow * getMainWindow(void);
+        static ManagerWindow *
+        getMainWindow(void);
         
         /*! @brief Get the primary channel for a service.
          @param appInfo The description of the executable.
@@ -180,21 +204,24 @@ namespace MPlusM_Manager
          @param tagModifierCount The number of bytes of the IP address to use as a tag modifier.
          @param channelName The channel that the service will be using.
          @returns @c true if the channel was retrieved and @c false otherwise. */
-        bool getPrimaryChannelForService(const ApplicationInfo & appInfo,
-                                         const String &          endpointName,
-                                         const String &          tag,
-                                         const String &          portNumber,
-                                         const StringArray &     arguments,
-                                         const int               tagModifierCount,
-                                         String &                channelName);
+        bool
+        getPrimaryChannelForService(const ApplicationInfo & appInfo,
+                                    const String &          endpointName,
+                                    const String &          tag,
+                                    const String &          portNumber,
+                                    const StringArray &     arguments,
+                                    const int               tagModifierCount,
+                                    String &                channelName);
         
         /*! @brief Return the real name of the current user.
          @returns The real name of the current user. */
-        String getRealName(void);
+        String
+        getRealName(void);
         
         /*! @brief Return the name of the current user.
          @returns The set of name of the current user. */
-        String getUserName(void);
+        String
+        getUserName(void);
         
     protected :
         
@@ -202,77 +229,93 @@ namespace MPlusM_Manager
         
         /*! @brief Called when an attempt was made to launch another instance of the application.
          @param commandLine The arguments passed to the new instance. */
-        virtual void anotherInstanceStarted(const String & commandLine);
+        virtual void
+        anotherInstanceStarted(const String & commandLine);
         
         /*! @brief If the Registry Service is not currently running, give the user the option to
          launch it.
          @returns @c true if the Registry Service was launched and @c false otherwise. */
-        bool checkForRegistryServiceAndLaunchIfDesired(void);
+        bool
+        checkForRegistryServiceAndLaunchIfDesired(void);
         
         /*! @brief If YARP is not currently running, give the user the option to launch a private
          copy.
          @returns A pointer to the %Network object used for YARP access. */
-        yarp::os::Network * checkForYarpAndLaunchIfDesired(void);
+        yarp::os::Network *
+        checkForYarpAndLaunchIfDesired(void);
         
         /*! @brief Ask the user for information required to launch a service and launch it if the
          user requests.
          @param appInfo The description of the executable. */
-        void doLaunchAService(const ApplicationInfo & appInfo);
+        void
+        doLaunchAService(const ApplicationInfo & appInfo);
         
         /*! @brief Return the application name.
          @returns The application's name. */
-        virtual const String getApplicationName(void);
+        virtual const String
+        getApplicationName(void);
         
         /*! @brief Return the application version number.
          @returns The application's version number. */
-        virtual const String getApplicationVersion(void);
+        virtual const String
+        getApplicationVersion(void);
         
         /*! @brief Get the operational arguments for an application.
          @param theInfo The retrieved parameters.
          @returns @c true if the operational arguments were retrieved and @c false otherwise. */
-        bool getArgumentsForApplication(ApplicationInfo & theInfo);
+        bool
+        getArgumentsForApplication(ApplicationInfo & theInfo);
 
         /*! @brief Get the operational parameters for an application.
          @param execName The name of the executable to be analyzed.
          @param theInfo The retrieved parameters.
          @returns @c true if the operational parameters were retrieved and @c false otherwise. */
-        bool getParametersForApplication(const String &    execName,
-                                         ApplicationInfo & theInfo);
+        bool
+        getParametersForApplication(const String &    execName,
+                                    ApplicationInfo & theInfo);
 
         /*! @brief Called when the application starts.
          @param commandLine The parameters passed to the application. */
-        virtual void initialise(const String & commandLine);
+        virtual void
+        initialise(const String & commandLine);
         
         /*! @brief Load the text files containing the standard and user-defined applications, and
          set up for later use. */
-        void loadApplicationLists(void);
+        void
+        loadApplicationLists(void);
         
         /*! @brief Return @c true if multiple instances of the application are allowed and @c false
          otherwise.
          @returns @c true if multiple instanaces of the application are allowed and @c false
          otherwise. */
-        virtual bool moreThanOneInstanceAllowed(void);
+        virtual bool
+        moreThanOneInstanceAllowed(void);
         
         /*! @brief Put back the YARP configuration settings that were in effect prior to launching a
          private YARP network. */
-        void restoreYarpConfiguration(void);
+        void
+        restoreYarpConfiguration(void);
         
         /*! @brief Called to allow the application to clear up before exiting. */
-        virtual void shutdown(void);
+        virtual void
+        shutdown(void);
         
         /*! @brief Called when the operating system is trying to close the application. */
-        virtual void systemRequestedQuit(void);
+        virtual void
+        systemRequestedQuit(void);
         
         /*! @brief Check if the Registry Service can be launched and if the user wishes it to be.
          @returns @c true if the user requests that the Registry Service be started and @ c false
          if the YARP executable is invalid or the user does not want to launch the Registry
          Service. */
-        bool validateRegistryService(void);
+        bool
+        validateRegistryService(void);
         
         /*! @brief Check if YARP can be launched and if the user wishes it to be.
          @returns @c true if the user requests that a private YARP network be set up and @ c false
          if the YARP executable is invalid or the user does not want a private YARP network. */
-        bool validateYarp(void);
+        bool
+        validateYarp(void);
         
         COPY_AND_ASSIGNMENT_(ManagerApplication);
 
@@ -281,9 +324,6 @@ namespace MPlusM_Manager
     protected :
     
     private :
-        
-        /*! @brief The class that this class is derived from. */
-        typedef JUCEApplication inherited;
         
         /*! @brief The primary window of the application. */
         ScopedPointer<ManagerWindow> _mainWindow;
@@ -315,8 +355,8 @@ namespace MPlusM_Manager
         /*! @brief The file system path to the Registry Service executable. */
         String _registryServicePath;
         
-		/*! @brief The file system path to the YARP executable. */
-		String _yarpPath;
+        /*! @brief The file system path to the YARP executable. */
+        String _yarpPath;
 
         /*! @brief A channel to watch the Registry Service status. */
         MplusM::Common::GeneralChannel * _peeker;

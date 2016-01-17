@@ -97,10 +97,11 @@ static const int64 kMinStaleInterval = 60000;
  @param portName The port name to search for.
  @param ipAddress The IP address of the port.
  @param ipPort The IP port of the port. */
-static void findMatchingIpAddressAndPort(const Utilities::PortVector & detectedPorts,
-                                         const YarpString &            portName,
-                                         YarpString &                  ipAddress,
-                                         YarpString &                  ipPort)
+static void
+findMatchingIpAddressAndPort(const Utilities::PortVector & detectedPorts,
+                             const YarpString &            portName,
+                             YarpString &                  ipAddress,
+                             YarpString &                  ipPort)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_P3("detectedPorts = ", &detectedPorts, "ipAddress = ", &ipAddress, "ipPort = ", //####
@@ -127,9 +128,10 @@ static void findMatchingIpAddressAndPort(const Utilities::PortVector & detectedP
  @param combined The combined IP address and port number.
  @param ipAddress The IP address of the port.
  @param ipPort The IP port of the port. */
-static void splitCombinedAddressAndPort(const YarpString & combined,
-                                        YarpString &       ipAddress,
-                                        YarpString &       ipPort)
+static void
+splitCombinedAddressAndPort(const YarpString & combined,
+                            YarpString &       ipAddress,
+                            YarpString &       ipPort)
 {
     OD_LOG_ENTER(); //####
     OD_LOG_S1s("combined = ", combined); //####
@@ -227,7 +229,8 @@ ScannerThread::~ScannerThread(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-void ScannerThread::addEntities(const Utilities::PortVector & detectedPorts)
+void
+ScannerThread::addEntities(const Utilities::PortVector & detectedPorts)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("detectedPorts = ", &detectedPorts); //####
@@ -338,9 +341,10 @@ void ScannerThread::addEntities(const Utilities::PortVector & detectedPorts)
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::addEntities
 
-void ScannerThread::addPortConnections(const Utilities::PortVector & detectedPorts,
-                                       Common::CheckFunction         checker,
-                                       void *                        checkStuff)
+void
+ScannerThread::addPortConnections(const Utilities::PortVector & detectedPorts,
+                                  Common::CheckFunction         checker,
+                                  void *                        checkStuff)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P2("detectedPorts = ", &detectedPorts, "checkStuff = ", checkStuff); //####
@@ -375,9 +379,10 @@ void ScannerThread::addPortConnections(const Utilities::PortVector & detectedPor
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::addPortConnections
 
-void ScannerThread::addRegularPortEntities(const Utilities::PortVector & detectedPorts,
-                                           Common::CheckFunction         checker,
-                                           void *                        checkStuff)
+void
+ScannerThread::addRegularPortEntities(const Utilities::PortVector & detectedPorts,
+                                      Common::CheckFunction         checker,
+                                      void *                        checkStuff)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P2("detectedPorts = ", &detectedPorts, "checkStuff = ", checkStuff); //####
@@ -404,9 +409,10 @@ void ScannerThread::addRegularPortEntities(const Utilities::PortVector & detecte
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::addRegularPortEntities
 
-void ScannerThread::addServices(const YarpStringVector & services,
-                                Common::CheckFunction    checker,
-                                void *                   checkStuff)
+void
+ScannerThread::addServices(const YarpStringVector & services,
+                           Common::CheckFunction    checker,
+                           void *                   checkStuff)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P2("services = ", &services, "checkStuff = ", checkStuff); //####
@@ -460,7 +466,8 @@ void ScannerThread::addServices(const YarpStringVector & services,
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::addServices
 
-bool ScannerThread::checkAndClearIfScanIsComplete(void)
+bool
+ScannerThread::checkAndClearIfScanIsComplete(void)
 {
     OD_LOG_OBJENTER(); //####
     for (bool locked = conditionallyAcquireForRead(); ! locked;
@@ -477,7 +484,8 @@ bool ScannerThread::checkAndClearIfScanIsComplete(void)
     return result;
 } // ScannerThread::checkAndClearIfScanIsComplete
 
-bool ScannerThread::conditionallyAcquireForRead(void)
+bool
+ScannerThread::conditionallyAcquireForRead(void)
 {
     OD_LOG_OBJENTER(); //####
     bool result = _lock.tryEnterRead();
@@ -486,7 +494,8 @@ bool ScannerThread::conditionallyAcquireForRead(void)
     return result;
 } // ScannerThread::conditionallyAcquireForRead
 
-bool ScannerThread::conditionallyAcquireForWrite(void)
+bool
+ScannerThread::conditionallyAcquireForWrite(void)
 {
     OD_LOG_OBJENTER(); //####
     bool result = _lock.tryEnterWrite();
@@ -495,10 +504,11 @@ bool ScannerThread::conditionallyAcquireForWrite(void)
     return result;
 } // ScannerThread::conditionallyAcquireForWrite
 
-PortDirection ScannerThread::determineDirection(ChannelEntry *        oldEntry,
-                                                const YarpString &    portName,
-                                                Common::CheckFunction checker,
-                                                void *                checkStuff)
+PortDirection
+ScannerThread::determineDirection(ChannelEntry *        oldEntry,
+                                  const YarpString &    portName,
+                                  Common::CheckFunction checker,
+                                  void *                checkStuff)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("portName = ", portName); //####
@@ -582,7 +592,8 @@ PortDirection ScannerThread::determineDirection(ChannelEntry *        oldEntry,
     return result;
 } // ScannerThread::determineDirection
 
-void ScannerThread::doCleanupSoon(void)
+void
+ScannerThread::doCleanupSoon(void)
 {
     OD_LOG_OBJENTER(); //####
     bool locked = conditionallyAcquireForWrite();
@@ -608,7 +619,8 @@ void ScannerThread::doCleanupSoon(void)
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::doCleanupSoon
 
-void ScannerThread::doScanSoon(void)
+void
+ScannerThread::doScanSoon(void)
 {
     OD_LOG_OBJENTER(); //####
     bool locked = conditionallyAcquireForWrite();
@@ -634,9 +646,10 @@ void ScannerThread::doScanSoon(void)
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::doScanSoon
 
-bool ScannerThread::gatherEntities(Utilities::PortVector & detectedPorts,
-                                   Common::CheckFunction   checker,
-                                   void *                  checkStuff)
+bool
+ScannerThread::gatherEntities(Utilities::PortVector & detectedPorts,
+                              Common::CheckFunction   checker,
+                              void *                  checkStuff)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P2("detectedPorts = ", &detectedPorts, "checkStuff = ", checkStuff); //####
@@ -708,21 +721,24 @@ bool ScannerThread::gatherEntities(Utilities::PortVector & detectedPorts,
     return okSoFar;
 } // ScannerThread::gatherEntities
 
-void ScannerThread::relinquishFromRead(void)
+void
+ScannerThread::relinquishFromRead(void)
 {
     OD_LOG_OBJENTER(); //####
     _lock.exitRead();
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::relinquishFromRead
 
-void ScannerThread::relinquishFromWrite(void)
+void
+ScannerThread::relinquishFromWrite(void)
 {
     OD_LOG_OBJENTER(); //####
     _lock.exitWrite();
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::relinquishFromWrite
 
-void ScannerThread::run(void)
+void
+ScannerThread::run(void)
 {
     OD_LOG_OBJENTER(); //####
     for ( ; ! threadShouldExit(); )
@@ -1005,7 +1021,8 @@ void ScannerThread::run(void)
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::run
 
-void ScannerThread::scanCanProceed(void)
+void
+ScannerThread::scanCanProceed(void)
 {
     OD_LOG_OBJENTER(); //####
     unconditionallyAcquireForWrite();
@@ -1015,7 +1032,8 @@ void ScannerThread::scanCanProceed(void)
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::scanCanProceed
 
-void ScannerThread::triggerRepaint(void)
+void
+ScannerThread::triggerRepaint(void)
 {
     OD_LOG_OBJENTER(); //####
     // Because this is a background thread, we mustn't do any UI work without first grabbing a
@@ -1031,14 +1049,16 @@ void ScannerThread::triggerRepaint(void)
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::triggerRepaint
 
-void ScannerThread::unconditionallyAcquireForRead(void)
+void
+ScannerThread::unconditionallyAcquireForRead(void)
 {
     OD_LOG_OBJENTER(); //####
     _lock.enterRead();
     OD_LOG_OBJEXIT(); //####
 } // ScannerThread::unconditionallyAcquireForRead
 
-void ScannerThread::unconditionallyAcquireForWrite(void)
+void
+ScannerThread::unconditionallyAcquireForWrite(void)
 {
     OD_LOG_OBJENTER(); //####
     _lock.enterWrite();

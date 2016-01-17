@@ -59,34 +59,46 @@ namespace MPlusM_Manager
     class EntitiesData
     {
     public :
+    
+    protected :
+    
+    private :
+        
+    public :
         
         /*! @brief The constructor. */
         EntitiesData(void);
         
         /*! @brief The destructor. */
-        virtual ~EntitiesData(void);
+        virtual
+        ~EntitiesData(void);
         
         /*! @brief Record a connection between ports.
          @param inName The name of the destination port.
          @param outName The name of the source port.
          @param mode The mode of the connection. */
-        void addConnection(const YarpString &          inName,
-                           const YarpString &          outName,
-                           MplusM::Common::ChannelMode mode);
+        void
+        addConnection(const YarpString &          inName,
+                      const YarpString &          outName,
+                      MplusM::Common::ChannelMode mode);
          
         /*! @brief Add an entity to the list of known entities.
          @param anEntity The entity to be added. */
-        void addEntity(EntityData * anEntity);
+        void
+        addEntity(EntityData * anEntity);
         
         /*! @brief Clear out connection information. */
-        void clearConnections(void);
+        void
+        clearConnections(void);
         
         /*! @brief Release all data held by the panel. */
-        void clearOutData(void);
+        void
+        clearOutData(void);
         
         /*! @brief Return the list of detected connections.
          @returns The list of detected connections. */
-        inline const ConnectionList & getConnections(void)
+        inline const ConnectionList &
+        getConnections(void)
         const
         {
             return _connections;
@@ -95,12 +107,14 @@ namespace MPlusM_Manager
         /*! @brief Return an entity by index.
          @param index The zero-origin index of the entity.
          @returns The entity if the index is within range and @c NULL otherwise. */
-        EntityData * getEntity(const size_t index)
+        EntityData *
+        getEntity(const size_t index)
         const;
         
         /*! @brief Return the number of entities.
          @returns The number of entities. */
-        size_t getNumberOfEntities(void)
+        size_t
+        getNumberOfEntities(void)
         const;
         
     protected :

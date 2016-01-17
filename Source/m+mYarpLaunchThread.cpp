@@ -110,7 +110,8 @@ YarpLaunchThread::~YarpLaunchThread(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-void YarpLaunchThread::killChildProcess(void)
+void
+YarpLaunchThread::killChildProcess(void)
 {
     OD_LOG_OBJENTER(); //####
     if (_yarpProcess)
@@ -120,7 +121,8 @@ void YarpLaunchThread::killChildProcess(void)
     OD_LOG_OBJEXIT(); //####
 } // YarpLaunchThread::killChildProcess
 
-void YarpLaunchThread::run(void)
+void
+YarpLaunchThread::run(void)
 {
     OD_LOG_OBJENTER(); //####
     _yarpProcess = new ChildProcess;

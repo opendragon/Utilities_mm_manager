@@ -104,7 +104,8 @@ TextValidator::~TextValidator(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-bool TextValidator::checkValidity(const String & toBeChecked)
+bool
+TextValidator::checkValidity(const String & toBeChecked)
 const
 {
     OD_LOG_OBJENTER(); //####
@@ -134,8 +135,9 @@ const
     return result;
 } // TextValidator::checkValidity
 
-bool TextValidator::checkValidity(const String & toBeChecked,
-                                  StringArray &  argsToUse)
+bool
+TextValidator::checkValidity(const String & toBeChecked,
+                             StringArray &  argsToUse)
 const
 {
     OD_LOG_OBJENTER(); //####
@@ -168,7 +170,8 @@ const
     return result;
 } // TextValidator::checkValidity
 
-bool TextValidator::isForFiles(bool & isForOutput)
+bool
+TextValidator::isForFiles(bool & isForOutput)
 const
 {
     OD_LOG_OBJENTER(); //####

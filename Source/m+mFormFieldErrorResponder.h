@@ -61,16 +61,24 @@ namespace MPlusM_Manager
     class FormFieldErrorResponder
     {
     public :
+    
+    protected :
+    
+    private :
+        
+    public :
         
         /*! @brief The constructor. */
         FormFieldErrorResponder(void);
         
         /*! @brief The destructor. */
-        virtual ~FormFieldErrorResponder(void);
+        virtual
+        ~FormFieldErrorResponder(void);
         
         /*! @brief Report an error in a field.
          @param fieldOfInterest The field to be reported. */
-        virtual void reportErrorInField(FormField & fieldOfInterest) = 0;
+        virtual void
+        reportErrorInField(FormField & fieldOfInterest) = 0;
         
     protected :
         

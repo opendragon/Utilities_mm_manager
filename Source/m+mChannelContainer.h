@@ -75,6 +75,15 @@ namespace MPlusM_Manager
     class ChannelContainer : public Component
     {
     public :
+    
+    protected :
+    
+    private :
+        
+        /*! @brief The class that this class is derived from. */
+        typedef Component inherited;
+        
+    public :
         
         /*! @brief The constructor.
          @param kind The kind of entity.
@@ -95,11 +104,13 @@ namespace MPlusM_Manager
                          EntitiesPanel &     owner);
         
         /*! @brief The destructor. */
-        virtual ~ChannelContainer(void);
+        virtual
+        ~ChannelContainer(void);
         
         /*! @brief Add an argument description to the container.
          @param argDesc The argument descriptor to be added to the container. */
-        void addArgumentDescription(MplusM::Utilities::BaseArgumentDescriptor * argDesc);
+        void
+        addArgumentDescription(MplusM::Utilities::BaseArgumentDescriptor * argDesc);
 
         /*! @brief Add a port to the panel.
          @param portName The name of the port.
@@ -109,57 +120,70 @@ namespace MPlusM_Manager
          @param portKind What the port will be used for.
          @param direction The primary direction of the port.
          @returns The newly-created port. */
-        ChannelEntry * addPort(const YarpString &  portName,
-                               const YarpString &  portNumber,
-                               const YarpString &  portProtocol = "",
-                               const YarpString &  protocolDescription = "",
-                               const PortUsage     portKind = kPortUsageOther,
-                               const PortDirection direction = kPortDirectionInputOutput);
+        ChannelEntry *
+        addPort(const YarpString &  portName,
+                const YarpString &  portNumber,
+                const YarpString &  portProtocol = "",
+                const YarpString &  protocolDescription = "",
+                const PortUsage     portKind = kPortUsageOther,
+                const PortDirection direction = kPortDirectionInputOutput);
 
         /*! @brief Returns @c true if the container has configurable values and @c false otherwise.
          @returns @c true if the container has configurable values and @c false otherwise. */
-        bool canBeConfigured(void);
+        bool
+        canBeConfigured(void);
 
         /*! @brief Clears the hidden flag for the entity. */
-        void clearHidden(void);
+        void
+        clearHidden(void);
         
         /*! @brief Clear any connect / disconnect markers. */
-        void clearMarkers(void);
+        void
+        clearMarkers(void);
         
         /*! @brief Clears the visited flag for the entity. */
-        void clearVisited(void);
+        void
+        clearVisited(void);
         
         /*! @brief Set the configuration of the corresponding service. */
-        void configureTheService(void);
+        void
+        configureTheService(void);
         
         /*! @brief Deselect the entity. */
-        void deselect(void);
+        void
+        deselect(void);
         
         /*! @brief Display information for a container.
          @param moreDetails @c true if more details are to be shown and @c false otherwise. */
-        void displayInformation(const bool moreDetails);
+        void
+        displayInformation(const bool moreDetails);
         
         /*! @brief Display metrics for a service. */
-        void displayMetrics(void);
+        void
+        displayMetrics(void);
         
         /*! @brief Display the connections between containers.
          @param gg The graphics context in which to draw. */
-        void drawOutgoingConnections(Graphics & gg);
+        void
+        drawOutgoingConnections(Graphics & gg);
         
         /*! @brief Convert a tab-delimited line of metric data into a more readable form.
          @param aRow A line of metric data.
          @returns The metric data reformatted. */
-        String formatMetricRow(const String & aRow);
+        String
+        formatMetricRow(const String & aRow);
 
         /*! @brief Return a particular argument descriptor.
          @param idx The index of the argument of interest.
          @returns The argument descriptor at the specified index. */
-        MplusM::Utilities::BaseArgumentDescriptor * getArgumentDescriptor(const size_t idx)
+        MplusM::Utilities::BaseArgumentDescriptor *
+        getArgumentDescriptor(const size_t idx)
         const;
 
         /*! @brief Return the behavioural model for the entity.
          @returns The behavioural model for the entity. */
-        inline const YarpString & getBehaviour(void)
+        inline const YarpString &
+        getBehaviour(void)
         const
         {
             return _behaviour;
@@ -167,7 +191,8 @@ namespace MPlusM_Manager
         
         /*! @brief Return the description of the entity.
          @returns The description of the entity. */
-        inline const YarpString & getDescription(void)
+        inline const YarpString &
+        getDescription(void)
         const
         {
             return _description;
@@ -175,7 +200,8 @@ namespace MPlusM_Manager
         
         /*! @brief Return the extra information for the entity.
          @returns The extra information for the entity. */
-        inline const YarpString & getExtraInformation(void)
+        inline const YarpString &
+        getExtraInformation(void)
         const
         {
             return _extraInfo;
@@ -183,7 +209,8 @@ namespace MPlusM_Manager
 
         /*! @brief Return the IP address of the container.
          @returns The IP address of the container. */
-        inline const YarpString & getIPAddress(void)
+        inline const YarpString &
+        getIPAddress(void)
         const
         {
             return _IPAddress;
@@ -191,7 +218,8 @@ namespace MPlusM_Manager
         
         /*! @brief Return the kind of container.
          @returns The kind of container. */
-        inline ContainerKind getKind(void)
+        inline ContainerKind
+        getKind(void)
         const
         {
             return _kind;
@@ -199,23 +227,27 @@ namespace MPlusM_Manager
 
         /*! @brief Return the metrics for the container, if it is a service.
          @returns The metrics for the container, if it is a service or an empty string. */
-        StringArray getMetrics(void);
+        StringArray
+        getMetrics(void);
         
         /*! @brief Return the state of measurment collection for the container, if it is a service.
          @returns @c true if the service is collecting measurements and @c false if it is not a
          service or if it is a service that is not collecting measurements. */
-        bool getMetricsState(void);
+        bool
+        getMetricsState(void);
         
 # if defined(USE_OGDF_POSITIONING_)
         /*! @brief Return the node corresponding to the entity.
          @returns The node corresponding to the entity. */
-        ogdf::node getNode(void)
+        ogdf::node
+        getNode(void)
         const;
 # endif // defined(USE_OGDF_POSITIONING_)
         
         /*! @brief Returns the number of argument descriptions in this container.
          @returns The number of argument descriptions in this container. */
-        inline size_t getNumArgumentDescriptors(void)
+        inline size_t
+        getNumArgumentDescriptors(void)
         const
         {
             return _argumentList.size();
@@ -223,13 +255,15 @@ namespace MPlusM_Manager
 
         /*! @brief Returns the number of ports in this container.
          @returns The number of ports in this container. */
-        inline int getNumPorts(void)
+        inline int
+        getNumPorts(void)
         const
         {
             return getNumChildComponents();
         } // getNumPorts
         
-        inline EntitiesPanel & getOwner(void)
+        inline EntitiesPanel &
+        getOwner(void)
         const
         {
             return _owner;
@@ -238,17 +272,20 @@ namespace MPlusM_Manager
         /*! @brief Returns a port by index.
          @param num The zero-origin index of the port.
          @returns A port or @c NULL if the index is out of range. */
-        ChannelEntry * getPort(const int num)
+        ChannelEntry *
+        getPort(const int num)
         const;
         
         /*! @brief Return the position of the entity within it's containing panel.
          @returns The position of the entity within it's containing panel. */
-        Position getPositionInPanel(void)
+        Position
+        getPositionInPanel(void)
         const;
         
         /*! @brief Return the requests supported by the entity.
          @returns The requests supported by the entity. */
-        inline const YarpString & getRequests(void)
+        inline const YarpString &
+        getRequests(void)
         const
         {
             return _requests;
@@ -256,28 +293,34 @@ namespace MPlusM_Manager
         
         /*! @brief Return the amount of space to the left of the text being displayed.
          @returns The amount of space to the left of the text being displayed. */
-        float getTextInset(void)
+        float
+        getTextInset(void)
         const;
         
         /*! @brief Check if a port is part of the entity.
          @param aPort The port to be checked for.
          @returns @c true if the port is contained within the entity and @c false otherwise. */
-        bool hasPort(const ChannelEntry * aPort);
+        bool
+        hasPort(const ChannelEntry * aPort);
         
         /*! @brief Mark the entity as invisible. */
-        void hide(void);
+        void
+        hide(void);
         
         /*! @brief Mark all the connections as invalid. */
-        void invalidateConnections(void);
+        void
+        invalidateConnections(void);
         
         /*! @brief Returns @c true if one of the port entries is marked and @c false otherwise.
          @returns @c true if one of the port entries is marked and @c false otherwise. */
-        bool isMarked(void)
+        bool
+        isMarked(void)
         const;
         
         /*! @brief Return @c true is the entity is newly created.
          @returns @c true if the entity is newly created and @c false otherwise. */
-        inline bool isNew(void)
+        inline bool
+        isNew(void)
         const
         {
             return _newlyCreated;
@@ -285,7 +328,8 @@ namespace MPlusM_Manager
         
         /*! @brief Return @c true is the entity is selected.
          @returns @c true if the entity is selected and @c false otherwise. */
-        inline bool isSelected(void)
+        inline bool
+        isSelected(void)
         const
         {
             return _selected;
@@ -294,54 +338,68 @@ namespace MPlusM_Manager
         /*! @brief Returns an entry at the given location, if it exists.
          @param location The coordinates to check.
          @returns A pointer to the entry at the given location, or @c NULL if there is none. */
-        ChannelEntry * locateEntry(const Position & location)
+        ChannelEntry *
+        locateEntry(const Position & location)
         const;
         
         /*! @brief Called when a mouse button is pressed.
          @param ee Details about the position and status of the mouse event. */
-        virtual void mouseDown(const MouseEvent & ee);
+        virtual void
+        mouseDown(const MouseEvent & ee);
         
         /*! @brief Called when the mouse is moved while a button is held down.
          @param ee Details about the position and status of the mouse event. */
-        virtual void mouseDrag(const MouseEvent & ee);
+        virtual void
+        mouseDrag(const MouseEvent & ee);
         
         /*! @brief Remove connections that are invalid. */
-        void removeInvalidConnections(void);
+        void
+        removeInvalidConnections(void);
         
         /*! @brief Called when the component size has been changed. */
-        virtual void resized(void);
+        virtual void
+        resized(void);
         
         /*! @brief Tell the corresponding service to restart. */
-        void restartTheService(void);
+        void
+        restartTheService(void);
 
         /*! @brief Select the entity. */
-        void select(void);
+        void
+        select(void);
         
         /*! @brief Sets the hidden flag for the entity. */
-        void setHidden(void);
+        void
+        setHidden(void);
         
         /*! @brief Change the state of service metrics collection.
          @param newState The requested state of service metrics collection. */
-        void setMetricsState(const bool newState);
+        void
+        setMetricsState(const bool newState);
         
 # if defined(USE_OGDF_POSITIONING_)
         /*! @brief Sets the node corresponding to the entity.
          @param newNode The new value for the node corresponding to the entity. */
-        void setNode(ogdf::node newNode);
+        void
+        setNode(ogdf::node newNode);
 # endif // defined(USE_OGDF_POSITIONING_)
         
         /*! @brief Marks the entity as not newly created. */
-        void setOld(void);
+        void
+        setOld(void);
         
         /*! @brief Sets the visited flag for the entity. */
-        void setVisited(void);
+        void
+        setVisited(void);
         
         /*! @brief Tell the corresponding service to stop. */
-        void stopTheService(void);
+        void
+        stopTheService(void);
         
         /*! @brief Returns the state of the hidden flag.
          @returns The state of the hidden flag. */
-        inline bool wasHidden(void)
+        inline bool
+        wasHidden(void)
         const
         {
             return _hidden;
@@ -349,7 +407,8 @@ namespace MPlusM_Manager
         
         /*! @brief Returns the state of the visited flag.
          @returns The state of the visited flag. */
-        inline bool wasVisited(void)
+        inline bool
+        wasVisited(void)
         const
         {
             return _visited;
@@ -360,20 +419,19 @@ namespace MPlusM_Manager
     private :
         
         /*! @brief Respond to a request for a popup menu. */
-        void displayAndProcessPopupMenu(void);
+        void
+        displayAndProcessPopupMenu(void);
         
         /*! @brief Draw the content of the component.
          @param gg The graphics context in which to draw. */
-        virtual void paint(Graphics & gg);
+        virtual void
+        paint(Graphics & gg);
         
     public :
     
     protected :
     
     private :
-        
-        /*! @brief The class that this class is derived from. */
-        typedef Component inherited;
         
         /*! @brief The argument descriptions if it is a service or an adapter. */
         MplusM::Utilities::DescriptorVector _argumentList;

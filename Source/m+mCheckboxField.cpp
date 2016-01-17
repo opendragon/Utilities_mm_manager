@@ -134,7 +134,8 @@ CheckboxField::~CheckboxField(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-void CheckboxField::addToComponent(Component * whereToAdd)
+void
+CheckboxField::addToComponent(Component * whereToAdd)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("whereToAdd = ", whereToAdd); //####
@@ -146,7 +147,8 @@ void CheckboxField::addToComponent(Component * whereToAdd)
     OD_LOG_OBJEXIT(); //####
 } // CheckboxField::addToComponent
 
-int CheckboxField::getHeight(void)
+int
+CheckboxField::getHeight(void)
 const
 {
     OD_LOG_OBJENTER(); //####
@@ -156,7 +158,8 @@ const
     return result;
 } // CheckboxField::getHeight
 
-int CheckboxField::getMinimumWidth(void)
+int
+CheckboxField::getMinimumWidth(void)
 const
 {
     OD_LOG_OBJENTER(); //####
@@ -167,7 +170,8 @@ const
     return result;
 } // CheckboxField::::getMinimumWidth
 
-const String & CheckboxField::getName(void)
+const String &
+CheckboxField::getName(void)
 const
 {
     OD_LOG_OBJENTER(); //####
@@ -177,7 +181,8 @@ const
     return theName;
 } // CheckboxField::getName
 
-String CheckboxField::getText(void)
+String
+CheckboxField::getText(void)
 const
 {
     OD_LOG_OBJENTER(); //####
@@ -187,7 +192,8 @@ const
     return result;
 } // CheckboxField::getText
 
-int CheckboxField::getWidth(void)
+int
+CheckboxField::getWidth(void)
 const
 {
     OD_LOG_OBJENTER(); //####
@@ -198,7 +204,8 @@ const
     return result;
 } // CheckboxField::getWidth
 
-int CheckboxField::getX(void)
+int
+CheckboxField::getX(void)
 const
 {
     OD_LOG_OBJENTER(); //####
@@ -208,7 +215,8 @@ const
     return result;
 } // CheckboxField::getX
 
-int CheckboxField::getY(void)
+int
+CheckboxField::getY(void)
 const
 {
     OD_LOG_OBJENTER(); //####
@@ -218,7 +226,8 @@ const
     return result;
 } // CheckboxField::getY
 
-void CheckboxField::removeFromComponent(Component * whereToRemove)
+void
+CheckboxField::removeFromComponent(Component * whereToRemove)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("whereToRemove = ", whereToRemove); //####
@@ -230,7 +239,8 @@ void CheckboxField::removeFromComponent(Component * whereToRemove)
     OD_LOG_OBJEXIT(); //####
 } // CheckboxField::removeFromComponent
 
-void CheckboxField::setText(const String & newText)
+void
+CheckboxField::setText(const String & newText)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_S1s("newText = ", newText.toStdString()); //####
@@ -249,7 +259,8 @@ void CheckboxField::setText(const String & newText)
     OD_LOG_OBJEXIT(); //####
 } // CheckboxField::setText
 
-void CheckboxField::setWidth(const int ww)
+void
+CheckboxField::setWidth(const int ww)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_LL1("ww = ", ww); //####
@@ -259,7 +270,8 @@ void CheckboxField::setWidth(const int ww)
     OD_LOG_OBJEXIT(); //####
 } // CheckboxField::setWidth
 
-void CheckboxField::setY(const int yy)
+void
+CheckboxField::setY(const int yy)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_LL1("yy = ", yy); //####
@@ -268,7 +280,8 @@ void CheckboxField::setY(const int yy)
     OD_LOG_OBJEXIT(); //####
 } // CheckboxField::setY
 
-bool CheckboxField::validateField(StringArray & argsToUse)
+bool
+CheckboxField::validateField(StringArray & argsToUse)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("argsToUse = ", &argsToUse); //####

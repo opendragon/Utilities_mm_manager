@@ -61,6 +61,12 @@ namespace MPlusM_Manager
     class FormField
     {
     public :
+    
+    protected :
+    
+    private :
+        
+    public :
         
         /*! @brief The constructor.
          @param regularLabelFont The font to use with the label when the text editor data is valid.
@@ -69,26 +75,31 @@ namespace MPlusM_Manager
                   const size_t index);
         
         /*! @brief The destructor. */
-        virtual ~FormField(void);
+        virtual
+        ~FormField(void);
         
         /*! @brief Add the components of this field to the specified component and make them
          visible.
          @param whereToAdd The component to be added to. */
-        virtual void addToComponent(Component * whereToAdd) = 0;
+        virtual void
+        addToComponent(Component * whereToAdd) = 0;
         
         /*! @brief Return the associated button.
          @returns The associated button. */
-        virtual TextButton * getButton(void)
+        virtual TextButton *
+        getButton(void)
         const;
         
         /*! @brief Return the height of the field in pixels.
          @return The height of the field in pixels. */
-        virtual int getHeight(void)
+        virtual int
+        getHeight(void)
         const = 0;
         
         /*! @brief Return the order of the text editor.
          @returns The order of the text editor. */
-        inline size_t getIndex(void)
+        inline size_t
+        getIndex(void)
         const
         {
             return _index;
@@ -96,70 +107,85 @@ namespace MPlusM_Manager
         
         /*! @brief Return the minimum width of the field in pixels.
          @return The minimum width of the field in pixels. */
-        virtual int getMinimumWidth(void)
+        virtual int
+        getMinimumWidth(void)
         const = 0;
         
         /*! @brief Returns the name of the field.
          @returns The name of the field. */
-        virtual const String & getName(void)
+        virtual const String &
+        getName(void)
         const = 0;
         
         /*! @brief Returns the text value associated with the field.
          @returns The text value associated with the field. */
-        virtual String getText(void)
+        virtual String
+        getText(void)
         const = 0;
 
         /*! @brief Return the width of the field in pixels.
          @return The width of the field in pixels. */
-        virtual int getWidth(void)
+        virtual int
+        getWidth(void)
         const = 0;
         
         /*! @brief Return the left coordinate of the field.
          @return The left coordinate of the field. */
-        virtual int getX(void)
+        virtual int
+        getX(void)
         const = 0;
         
         /*! @brief Return the top coordinate of the field.
          @return The top coordinate of the field. */
-        virtual int getY(void)
+        virtual int
+        getY(void)
         const = 0;
         
         /*! @brief Do not perform validation on next loss of focus. */
-        virtual void ignoreNextFocusLoss(void);
+        virtual void
+        ignoreNextFocusLoss(void);
         
         /*! @brief Perform the action triggered by the button. */
-        virtual void performButtonAction(void);
+        virtual void
+        performButtonAction(void);
 
         /*! @brief Remove the components of this field from the specified component.
          @param whereToRemove The component to be removed from. */
-        virtual void removeFromComponent(Component * whereToRemove) = 0;
+        virtual void
+        removeFromComponent(Component * whereToRemove) = 0;
         
         /*! @brief Sets the associated button.
          @param newButton The associated button. */
-        virtual void setButton(TextButton * newButton = NULL);
+        virtual void
+        setButton(TextButton * newButton = NULL);
         
         /*! @brief Set the text value associated with the field.
          @param newText The text to be used. */
-        virtual void setText(const String & newText) = 0;
+        virtual void
+        setText(const String & newText) = 0;
 
         /*! @brief Set the width of the field.
          @param ww The new width of the field. */
-        virtual void setWidth(const int ww) = 0;
+        virtual void
+        setWidth(const int ww) = 0;
         
         /*! @brief Set the top coordinate of the field.
          @param yy The new top coordinate of the field. */
-        virtual void setY(const int yy) = 0;
+        virtual void
+        setY(const int yy) = 0;
         
         /*! @brief Check the field for validity.
          @returns @c true if the validator accepts the field or there's no validation required or
          @c false if the validator rejects the field. */
-        virtual bool validateField(void);
+        virtual bool
+        validateField(void);
         
         /*! @brief Check the field for validity.
          @param argsToUse A set of valid arguments.
          @returns @c true if the validator accepts the field or there's no validation required or
          @c false if the validator rejects the field. */
-        virtual bool validateField(StringArray & argsToUse) = 0;
+        virtual bool
+        validateField(StringArray & argsToUse) = 0;
         
     protected :
         

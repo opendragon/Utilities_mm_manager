@@ -182,7 +182,8 @@ SettingsWindow::~SettingsWindow(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-void SettingsWindow::addAnExtraField(void)
+void
+SettingsWindow::addAnExtraField(void)
 {
     OD_LOG_ENTER(); //####
     String               compCountAsString(static_cast<int>(_extraFields.size() + 1));
@@ -204,7 +205,8 @@ void SettingsWindow::addAnExtraField(void)
     OD_LOG_EXIT(); //####
 } // SettingsWindow::addAnExtraField
 
-void SettingsWindow::adjustFields(void)
+void
+SettingsWindow::adjustFields(void)
 {
     OD_LOG_OBJENTER(); //####
     Component * content = getContentComponent();
@@ -277,7 +279,8 @@ void SettingsWindow::adjustFields(void)
     OD_LOG_OBJEXIT(); //####
 } // SettingsWindow::adjustFields
 
-void SettingsWindow::buttonClicked(Button * aButton)
+void
+SettingsWindow::buttonClicked(Button * aButton)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("aButton = ", aButton); //####
@@ -323,7 +326,8 @@ void SettingsWindow::buttonClicked(Button * aButton)
     OD_LOG_OBJEXIT(); //####
 } // SettingsWindow::buttonClicked
 
-bool SettingsWindow::fieldsAreValid(void)
+bool
+SettingsWindow::fieldsAreValid(void)
 {
     OD_LOG_ENTER(); //####
     int    badCount = 0;
@@ -464,7 +468,8 @@ bool SettingsWindow::fieldsAreValid(void)
 # pragma warning(push)
 # pragma warning(disable: 4100)
 #endif // ! MAC_OR_LINUX_
-void SettingsWindow::focusGained(FocusChangeType cause)
+void
+SettingsWindow::focusGained(FocusChangeType cause)
 {
 #if MAC_OR_LINUX_
 # pragma unused(cause)
@@ -480,7 +485,8 @@ void SettingsWindow::focusGained(FocusChangeType cause)
 # pragma warning(push)
 # pragma warning(disable: 4100)
 #endif // ! MAC_OR_LINUX_
-void SettingsWindow::focusLost(FocusChangeType cause)
+void
+SettingsWindow::focusLost(FocusChangeType cause)
 {
 #if MAC_OR_LINUX_
 # pragma unused(cause)
@@ -492,7 +498,8 @@ void SettingsWindow::focusLost(FocusChangeType cause)
 # pragma warning(pop)
 #endif // ! MAC_OR_LINUX_
 
-void SettingsWindow::handleAsyncUpdate(void)
+void
+SettingsWindow::handleAsyncUpdate(void)
 {
     OD_LOG_OBJENTER(); //####
     ApplicationCommandManager & commandManager = ManagerWindow::getApplicationCommandManager();
@@ -501,7 +508,8 @@ void SettingsWindow::handleAsyncUpdate(void)
     OD_LOG_OBJEXIT(); //####
 } // SettingsWindow::handleAsyncUpdate
 
-bool SettingsWindow::keyPressed(const KeyPress & key)
+bool
+SettingsWindow::keyPressed(const KeyPress & key)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("key = ", &key); //####
@@ -530,7 +538,8 @@ bool SettingsWindow::keyPressed(const KeyPress & key)
     return result;
 } // SettingsWindow::keyPressed
 
-void SettingsWindow::recalculateArea(void)
+void
+SettingsWindow::recalculateArea(void)
 {
     OD_LOG_ENTER(); //####
     int    heightSoFar = _topText.getY() + _topText.getHeight() + FormField::kButtonGap;
@@ -620,7 +629,8 @@ void SettingsWindow::recalculateArea(void)
     OD_LOG_EXIT(); //####
 } // SettingsWindow::recalculateArea
 
-void SettingsWindow::removeMostRecentlyAddedExtraField(void)
+void
+SettingsWindow::removeMostRecentlyAddedExtraField(void)
 {
     OD_LOG_ENTER(); //####
     FormField * lastField = _extraFields.getLast();
@@ -636,7 +646,8 @@ void SettingsWindow::removeMostRecentlyAddedExtraField(void)
     OD_LOG_EXIT(); //####
 } // SettingsWindow::removeMostRecentlyAddedExtraField
 
-void SettingsWindow::reportErrorInField(FormField & fieldOfInterest)
+void
+SettingsWindow::reportErrorInField(FormField & fieldOfInterest)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("fieldOfInterest = ", &fieldOfInterest); //####
@@ -660,7 +671,8 @@ void SettingsWindow::reportErrorInField(FormField & fieldOfInterest)
     OD_LOG_OBJEXIT(); //####
 } // SettingsWindow::reportErrorInField
 
-void SettingsWindow::reportErrorInField(ValidatingTextEditor & fieldOfInterest)
+void
+SettingsWindow::reportErrorInField(ValidatingTextEditor & fieldOfInterest)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("fieldOfInterest = ", &fieldOfInterest); //####
@@ -671,7 +683,8 @@ void SettingsWindow::reportErrorInField(ValidatingTextEditor & fieldOfInterest)
     OD_LOG_OBJEXIT(); //####
 } // SettingsWindow::reportErrorInField
 
-void SettingsWindow::resized(void)
+void
+SettingsWindow::resized(void)
 {
     OD_LOG_OBJENTER(); //####
     Button * close = getCloseButton();
@@ -689,8 +702,9 @@ void SettingsWindow::resized(void)
     OD_LOG_OBJEXIT(); //####
 } // SettingsWindow::resized
 
-void SettingsWindow::setUpStandardFields(int & widthSoFar,
-                                         int & heightSoFar)
+void
+SettingsWindow::setUpStandardFields(int & widthSoFar,
+                                    int & heightSoFar)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P2("widthSoFar = ", &widthSoFar, "heightSoFar = ", &heightSoFar); //####
@@ -908,7 +922,8 @@ void SettingsWindow::setUpStandardFields(int & widthSoFar,
     OD_LOG_OBJEXIT(); //####
 } // SettingsWindow::setUpStandardFields
 
-void SettingsWindow::tellAllFieldsToIgnoreNextFocusLoss(void)
+void
+SettingsWindow::tellAllFieldsToIgnoreNextFocusLoss(void)
 {
     OD_LOG_ENTER(); //####
     if (_endpointField)

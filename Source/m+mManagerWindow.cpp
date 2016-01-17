@@ -129,7 +129,8 @@ ManagerWindow::~ManagerWindow(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-void ManagerWindow::closeButtonPressed(void)
+void
+ManagerWindow::closeButtonPressed(void)
 {
     OD_LOG_OBJENTER(); //####
     // This is called when the user tries to close this window. Here, we'll just ask the app to quit
@@ -138,7 +139,8 @@ void ManagerWindow::closeButtonPressed(void)
     OD_LOG_OBJEXIT(); //####
 } // ManagerWindow::closeButtonPressed
 
-ApplicationCommandManager & ManagerWindow::getApplicationCommandManager(void)
+ApplicationCommandManager &
+ManagerWindow::getApplicationCommandManager(void)
 {
     OD_LOG_ENTER(); //####
     if (! lApplicationCommandManager)
@@ -149,7 +151,8 @@ ApplicationCommandManager & ManagerWindow::getApplicationCommandManager(void)
     return *lApplicationCommandManager;
 } // ManagerWindow::getApplicationCommandManager
 
-EntitiesPanel & ManagerWindow::getEntitiesPanel(void)
+EntitiesPanel &
+ManagerWindow::getEntitiesPanel(void)
 const
 {
     OD_LOG_OBJENTER(); //####
@@ -159,7 +162,8 @@ const
     return thePanel;
 } // ManagerWindow::getEntitiesPanel
 
-void ManagerWindow::handleAsyncUpdate(void)
+void
+ManagerWindow::handleAsyncUpdate(void)
 {
     OD_LOG_OBJENTER(); //####
     ApplicationCommandManager & commandManager = getApplicationCommandManager();
@@ -169,7 +173,8 @@ void ManagerWindow::handleAsyncUpdate(void)
     OD_LOG_OBJEXIT(); //####
 } // ManagerWindow::handleAsyncUpdate
 
-void ManagerWindow::setScannerThread(ScannerThread * theScanner)
+void
+ManagerWindow::setScannerThread(ScannerThread * theScanner)
 {
     OD_LOG_OBJENTER(); //####
     _scannerThread = theScanner;

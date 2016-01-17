@@ -62,6 +62,15 @@ namespace MPlusM_Manager
     class ChannelEntry : public Component
     {
     public :
+    
+    protected :
+    
+    private :
+        
+        /*! @brief The class that this class is derived from. */
+        typedef Component inherited;
+        
+    public :
         
         /*! @brief The constructor.
          @param parent The GUI element containing this element.
@@ -80,25 +89,28 @@ namespace MPlusM_Manager
                      const PortDirection direction = kPortDirectionInput);
         
         /*! @brief The destructor. */
-        virtual ~ChannelEntry(void);
+        virtual
+        ~ChannelEntry(void);
         
         /*! @brief Add an input connection to the port.
          @param other The port that is to be connected.
          @param mode The mode of the connection.
          @param wasOverridden @c true if the protocol matching was overridden and @c false
          otherwise. */
-        void addInputConnection(ChannelEntry *                    other,
-                                const MplusM::Common::ChannelMode mode,
-                                const bool                        wasOverridden);
+        void
+        addInputConnection(ChannelEntry *                    other,
+                           const MplusM::Common::ChannelMode mode,
+                           const bool                        wasOverridden);
         
         /*! @brief Add an output connection to the port.
          @param other The port that is to be connected.
          @param mode The mode of the connection.
          @param wasOverridden @c true if the protocol matching was overridden and @c false
          otherwise. */
-        void addOutputConnection(ChannelEntry *                    other,
-                                 const MplusM::Common::ChannelMode mode,
-                                 const bool                        wasOverridden);
+        void
+        addOutputConnection(ChannelEntry *                    other,
+                            const MplusM::Common::ChannelMode mode,
+                            const bool                        wasOverridden);
         
         /*! @brief Determine the anchor point that is the minimum distance from a given point.
          @param result The coordinates of the anchor point.
@@ -107,11 +119,12 @@ namespace MPlusM_Manager
          @param xx The horizontal coordinate for the point of interest.
          @param yy The vertical coordinate for the point of interest.
          @returns The side to which the anchor is attached. */
-        inline AnchorSide calculateClosestAnchor(Position &  result,
-                                                 const bool  isSource,
-                                                 const bool  disallowBottom,
-                                                 const float xx,
-                                                 const float yy)
+        inline AnchorSide
+        calculateClosestAnchor(Position &  result,
+                               const bool  isSource,
+                               const bool  disallowBottom,
+                               const float xx,
+                               const float yy)
         const
         {
             return calculateClosestAnchor(result, isSource, disallowBottom, Position(xx, yy));
@@ -123,49 +136,58 @@ namespace MPlusM_Manager
          @param disallowBottom @c true if the anchor cannot be bottom-centre.
          @param pp The point of interest.
          @returns The side to which the anchor is attached. */
-        AnchorSide calculateClosestAnchor(Position &       result,
-                                          const bool       isSource,
-                                          const bool       disallowBottom,
-                                          const Position & pp)
+        AnchorSide
+        calculateClosestAnchor(Position &       result,
+                               const bool       isSource,
+                               const bool       disallowBottom,
+                               const Position & pp)
         const;
         
         /*! @brief Stop displaying the connect marker. */
-        void clearConnectMarker(void);
+        void
+        clearConnectMarker(void);
         
         /*! @brief Stop displaying the disconnect marker. */
-        void clearDisconnectMarker(void);
+        void
+        clearDisconnectMarker(void);
         
         /*! @brief Display metrics for a channel. */
-        void displayChannelMetrics(void);
+        void
+        displayChannelMetrics(void);
         
         /*! @brief Display information for a port.
          @param isChannel @c true if the port is a channel and @c false otherwise.
          @param moreDetails @c true if more details are to be shown and @c false otherwise. */
-        void displayInformation(const bool isChannel,
-                                const bool moreDetails);
+        void
+        displayInformation(const bool isChannel,
+                           const bool moreDetails);
         
         /*! @brief Draw a drag line from an entry.
          @param gg The graphics context in which to draw.
          @param position The coordinates of the drag line endpoint.
          @param isUDP @c true if the connection is UDP and @c false otherwise.
          @param isForced @c true if the connection is forced and @c false otherwise. */
-        void drawDragLine(Graphics &       gg,
-                          const Position & position,
-                          const bool       isUDP,
-                          const bool       isForced);
+        void
+        drawDragLine(Graphics &       gg,
+                     const Position & position,
+                     const bool       isUDP,
+                     const bool       isForced);
         
         /*! @brief Display the connections between containers.
          @param gg The graphics context in which to draw. */
-        void drawOutgoingConnections(Graphics & gg);
+        void
+        drawOutgoingConnections(Graphics & gg);
         
         /*! @brief Return the location of the centre of the port entry.
          @returns The location of the centre of the port entry. */
-        Position getCentre(void)
+        Position
+        getCentre(void)
         const;
         
         /*! @brief Return the direction of the port entry.
          @returns The direction of the port entry. */
-        inline PortDirection getDirection(void)
+        inline PortDirection
+        getDirection(void)
         const
         {
             return _direction;
@@ -173,7 +195,8 @@ namespace MPlusM_Manager
         
         /*! @brief Return the set of input connections to the port.
          @returns The set of input connections to the port. */
-        inline const ChannelConnections & getInputConnections(void)
+        inline const ChannelConnections &
+        getInputConnections(void)
         const
         {
             return _inputConnections;
@@ -181,7 +204,8 @@ namespace MPlusM_Manager
         
         /*! @brief Return the set of output connections to the port.
          @returns The set of output connections to the port. */
-        inline const ChannelConnections & getOutputConnections(void)
+        inline const ChannelConnections &
+        getOutputConnections(void)
         const
         {
             return _outputConnections;
@@ -189,12 +213,14 @@ namespace MPlusM_Manager
         
         /*! @brief Return the panel which contains the entry.
          @returns The panel which contains the entry. */
-        EntitiesPanel & getOwningPanel(void)
+        EntitiesPanel &
+        getOwningPanel(void)
         const;
         
         /*! @brief Return the container holding this entry.
          @returns The container holding this entry. */
-        inline ChannelContainer * getParent(void)
+        inline ChannelContainer *
+        getParent(void)
         const
         {
             return _parent;
@@ -202,7 +228,8 @@ namespace MPlusM_Manager
         
         /*! @brief Return the name of the associated port.
          @returns The name of the associated port. */
-        inline const YarpString & getPortName(void)
+        inline const YarpString &
+        getPortName(void)
         const
         {
             return _portName;
@@ -210,7 +237,8 @@ namespace MPlusM_Manager
         
         /*! @brief Return the port number of the associated port.
          @returns The port number of the associated port. */
-        inline const YarpString & getPortNumber(void)
+        inline const YarpString &
+        getPortNumber(void)
         const
         {
             return _portPortNumber;
@@ -218,12 +246,14 @@ namespace MPlusM_Manager
         
         /*! @brief Return the position of the entity within it's containing panel.
          @returns The position of the entity within it's containing panel. */
-        Position getPositionInPanel(void)
+        Position
+        getPositionInPanel(void)
         const;
         
         /*! @brief Return the protocol of the associated port.
          @returns The protocol of the associated port. */
-        inline const YarpString & getProtocol(void)
+        inline const YarpString &
+        getProtocol(void)
         const
         {
             return _portProtocol;
@@ -231,7 +261,8 @@ namespace MPlusM_Manager
         
         /*! @brief Return the description of the protocol for the associated port.
          @returns The description of the protocol for the associated port. */
-        inline const YarpString & getProtocolDescription(void)
+        inline const YarpString &
+        getProtocolDescription(void)
         const
         {
             return _protocolDescription;
@@ -239,7 +270,8 @@ namespace MPlusM_Manager
         
         /*! @brief Return the usage of the port entry.
          @returns The usage of the port entry. */
-        inline PortUsage getUsage(void)
+        inline PortUsage
+        getUsage(void)
         const
         {
             return _usage;
@@ -248,15 +280,18 @@ namespace MPlusM_Manager
         /*! @brief Returns @c true if there is an outgoing connection to the named port.
          @param otherPort The name of the destination port.
          @returns @c true if there is an outgoing connection to the named port. */
-        bool hasOutgoingConnectionTo(const YarpString & otherPort)
+        bool
+        hasOutgoingConnectionTo(const YarpString & otherPort)
         const;
         
         /*! @brief Mark all the connections as invalid. */
-        void invalidateConnections(void);
+        void
+        invalidateConnections(void);
         
         /*! @brief Returns @c true if the channel is being monitored and @c false otherwise.
          @returns @c true if the channel is being monitored and @c false otherwise. */
-        inline bool isBeingMonitored(void)
+        inline bool
+        isBeingMonitored(void)
         const
         {
             return _beingMonitored;
@@ -264,13 +299,15 @@ namespace MPlusM_Manager
 
         /*! @brief Returns @c true if the port is a channel and @c false if it is a standard port.
          @returns @c true if the port is a channel and @c false otherwise. */
-        bool isChannel(void)
+        bool
+        isChannel(void)
         const;
         
         /*! @brief Returns @c true if the port entry is a secondary port of a service and @c false
          otherwise.
          @returns @c true if the port is a secondary port of a service and @c false otherwise. */
-        inline bool isInputOutput(void)
+        inline bool
+        isInputOutput(void)
         const
         {
             return (kPortUsageInputOutput == _usage);
@@ -280,7 +317,8 @@ namespace MPlusM_Manager
          panel and @c false otherwise.
          @returns @c true if the port is the last port entry in a panel and @c false
          otherwise. */
-        inline bool isLastPort(void)
+        inline bool
+        isLastPort(void)
         const
         {
             return _isLastPort;
@@ -288,7 +326,8 @@ namespace MPlusM_Manager
         
         /*! @brief Returns @c true if the port entry is marked and @c false otherwise.
          @returns @c true if the port entry is marked and @c false otherwise. */
-        inline bool isMarked(void)
+        inline bool
+        isMarked(void)
         const
         {
             return (_drawConnectMarker || _drawDisconnectMarker);
@@ -297,7 +336,8 @@ namespace MPlusM_Manager
         /*! @brief Returns @c true if the port entry is part of a service and @c false
          otherwise.
          @returns @c true if the port is part of a service and @c false otherwise. */
-        inline bool isService(void)
+        inline bool
+        isService(void)
         const
         {
             return (kPortUsageService == _usage);
@@ -305,31 +345,39 @@ namespace MPlusM_Manager
         
         /*! @brief Remove an input connection from a port.
          @param other The port that is to be disconnected. */
-        void removeInputConnection(ChannelEntry * other);
+        void
+        removeInputConnection(ChannelEntry * other);
         
         /*! @brief Remove connections that are invalid. */
-        void removeInvalidConnections(void);
+        void
+        removeInvalidConnections(void);
         
         /*! @brief Remove an output connection from a port.
          @param other The port that is to be disconnected. */
-        void removeOutputConnection(ChannelEntry * other);
+        void
+        removeOutputConnection(ChannelEntry * other);
         
         /*! @brief Mark the port entry as the bottom-most (last) port entry in a panel. */
-        void setAsLastPort(void);
+        void
+        setAsLastPort(void);
         
         /*! @brief Start displaying the connect marker. */
-        void setConnectMarker(void);
+        void
+        setConnectMarker(void);
         
         /*! @brief Start displaying the disconnect marker. */
-        void setDisconnectMarker(void);
+        void
+        setDisconnectMarker(void);
         
         /*! @brief Mark the port entry as not being the bottom-most port entry in a panel. */
-        void unsetAsLastPort(void);
+        void
+        unsetAsLastPort(void);
         
         /*! @brief Return @c true if the current connection request was UDP and @c false
          otherwise.
          @returns @c true if the current connection request was UDP and @c false otherwise. */
-        inline bool wasUdpConnectionRequest(void)
+        inline bool
+        wasUdpConnectionRequest(void)
         const
         {
             return _wasUdp;
@@ -343,30 +391,37 @@ namespace MPlusM_Manager
          @param otherEnd The connection information.
          @param isOutgoing @c true if this is an outgoing connection and @c false otherwise.
          @returns @c true if the YARP connection exists and @c false otherwise. */
-        bool checkConnection(ChannelInfo & otherEnd,
-                             const bool    isOutgoing);
+        bool
+        checkConnection(ChannelInfo & otherEnd,
+                        const bool    isOutgoing);
         
         /*! @brief Respond to a request for a popup menu. */
-        void displayAndProcessPopupMenu(void);
+        void
+        displayAndProcessPopupMenu(void);
         
         /*! @brief Called when a mouse button is pressed.
          @param ee Details about the position and status of the mouse event. */
-        virtual void mouseDown(const MouseEvent & ee);
+        virtual void
+        mouseDown(const MouseEvent & ee);
         
         /*! @brief Called when the mouse is moved while a button is held down.
          @param ee Details about the position and status of the mouse event. */
-        virtual void mouseDrag(const MouseEvent & ee);
+        virtual void
+        mouseDrag(const MouseEvent & ee);
         
         /*! @brief Called when a mouse button is released.
          @param ee Details about the position and status of the mouse event. */
-        virtual void mouseUp(const MouseEvent & ee);
+        virtual void
+        mouseUp(const MouseEvent & ee);
         
         /*! @brief Draw the content of the component.
          @param gg The graphics context in which to draw. */
-        virtual void paint(Graphics & gg);
+        virtual void
+        paint(Graphics & gg);
         
         /*! @brief Remove all connections. */
-        void removeAllConnections(void);
+        void
+        removeAllConnections(void);
         
     public :
     
@@ -374,9 +429,6 @@ namespace MPlusM_Manager
     
     private :
         
-        /*! @brief The class that this class is derived from. */
-        typedef Component inherited;
-
         /*! @brief The connections to the port. */
         ChannelConnections _inputConnections;
         

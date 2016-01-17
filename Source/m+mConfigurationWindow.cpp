@@ -162,7 +162,8 @@ ConfigurationWindow::~ConfigurationWindow(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-void ConfigurationWindow::addAnExtraField(void)
+void
+ConfigurationWindow::addAnExtraField(void)
 {
     OD_LOG_ENTER(); //####
     String               compCountAsString(static_cast<int>(_extraFields.size() + 1));
@@ -184,7 +185,8 @@ void ConfigurationWindow::addAnExtraField(void)
     OD_LOG_EXIT(); //####
 } // ConfigurationWindow::addAnExtraField
 
-void ConfigurationWindow::adjustFields(void)
+void
+ConfigurationWindow::adjustFields(void)
 {
     OD_LOG_OBJENTER(); //####
     Component * content = getContentComponent();
@@ -238,7 +240,8 @@ void ConfigurationWindow::adjustFields(void)
     OD_LOG_OBJEXIT(); //####
 } // ConfigurationWindow::adjustFields
 
-void ConfigurationWindow::buttonClicked(Button * aButton)
+void
+ConfigurationWindow::buttonClicked(Button * aButton)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("aButton = ", aButton); //####
@@ -284,7 +287,8 @@ void ConfigurationWindow::buttonClicked(Button * aButton)
     OD_LOG_OBJEXIT(); //####
 } // ConfigurationWindow::buttonClicked
 
-bool ConfigurationWindow::fieldsAreValid(void)
+bool
+ConfigurationWindow::fieldsAreValid(void)
 {
     OD_LOG_ENTER(); //####
     int    badCount = 0;
@@ -358,7 +362,8 @@ bool ConfigurationWindow::fieldsAreValid(void)
 # pragma warning(push)
 # pragma warning(disable: 4100)
 #endif // ! MAC_OR_LINUX_
-void ConfigurationWindow::focusGained(FocusChangeType cause)
+void
+ConfigurationWindow::focusGained(FocusChangeType cause)
 {
 #if MAC_OR_LINUX_
 # pragma unused(cause)
@@ -374,7 +379,8 @@ void ConfigurationWindow::focusGained(FocusChangeType cause)
 # pragma warning(push)
 # pragma warning(disable: 4100)
 #endif // ! MAC_OR_LINUX_
-void ConfigurationWindow::focusLost(FocusChangeType cause)
+void
+ConfigurationWindow::focusLost(FocusChangeType cause)
 {
 #if MAC_OR_LINUX_
 # pragma unused(cause)
@@ -386,7 +392,8 @@ void ConfigurationWindow::focusLost(FocusChangeType cause)
 # pragma warning(pop)
 #endif // ! MAC_OR_LINUX_
 
-void ConfigurationWindow::handleAsyncUpdate(void)
+void
+ConfigurationWindow::handleAsyncUpdate(void)
 {
     OD_LOG_OBJENTER(); //####
     ApplicationCommandManager & commandManager = ManagerWindow::getApplicationCommandManager();
@@ -395,7 +402,8 @@ void ConfigurationWindow::handleAsyncUpdate(void)
     OD_LOG_OBJEXIT(); //####
 } // ConfigurationWindow::handleAsyncUpdate
 
-bool ConfigurationWindow::keyPressed(const KeyPress & key)
+bool
+ConfigurationWindow::keyPressed(const KeyPress & key)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("key = ", &key); //####
@@ -424,7 +432,8 @@ bool ConfigurationWindow::keyPressed(const KeyPress & key)
     return result;
 } // ConfigurationWindow::keyPressed
 
-void ConfigurationWindow::recalculateArea(void)
+void
+ConfigurationWindow::recalculateArea(void)
 {
     OD_LOG_ENTER(); //####
     int    heightSoFar = 0;
@@ -491,7 +500,8 @@ void ConfigurationWindow::recalculateArea(void)
     OD_LOG_EXIT(); //####
 } // ConfigurationWindow::recalculateArea
 
-void ConfigurationWindow::removeMostRecentlyAddedExtraField(void)
+void
+ConfigurationWindow::removeMostRecentlyAddedExtraField(void)
 {
     OD_LOG_ENTER(); //####
     FormField * lastField = _extraFields.getLast();
@@ -507,7 +517,8 @@ void ConfigurationWindow::removeMostRecentlyAddedExtraField(void)
     OD_LOG_EXIT(); //####
 } // ConfigurationWindow::removeMostRecentlyAddedExtraField
 
-void ConfigurationWindow::reportErrorInField(FormField & fieldOfInterest)
+void
+ConfigurationWindow::reportErrorInField(FormField & fieldOfInterest)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("fieldOfInterest = ", &fieldOfInterest); //####
@@ -517,7 +528,8 @@ void ConfigurationWindow::reportErrorInField(FormField & fieldOfInterest)
     OD_LOG_OBJEXIT(); //####
 } // ConfigurationWindow::reportErrorInField
 
-void ConfigurationWindow::reportErrorInField(ValidatingTextEditor & fieldOfInterest)
+void
+ConfigurationWindow::reportErrorInField(ValidatingTextEditor & fieldOfInterest)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("fieldOfInterest = ", &fieldOfInterest); //####
@@ -527,7 +539,8 @@ void ConfigurationWindow::reportErrorInField(ValidatingTextEditor & fieldOfInter
     OD_LOG_OBJEXIT(); //####
 } // ConfigurationWindow::reportErrorInField
 
-void ConfigurationWindow::resized(void)
+void
+ConfigurationWindow::resized(void)
 {
     OD_LOG_OBJENTER(); //####
     Button * close = getCloseButton();
@@ -545,9 +558,10 @@ void ConfigurationWindow::resized(void)
     OD_LOG_OBJEXIT(); //####
 } // ConfigurationWindow::resized
 
-void ConfigurationWindow::setUpStandardFields(int &                    widthSoFar,
-                                              int &                    heightSoFar,
-                                              const YarpStringVector & currentValues)
+void
+ConfigurationWindow::setUpStandardFields(int &                    widthSoFar,
+                                         int &                    heightSoFar,
+                                         const YarpStringVector & currentValues)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P3("widthSoFar = ", &widthSoFar, "heightSoFar = ", &heightSoFar, //####
@@ -723,7 +737,8 @@ void ConfigurationWindow::setUpStandardFields(int &                    widthSoFa
     OD_LOG_OBJEXIT(); //####
 } // ConfigurationWindow::setUpStandardFields
 
-void ConfigurationWindow::tellAllFieldsToIgnoreNextFocusLoss(void)
+void
+ConfigurationWindow::tellAllFieldsToIgnoreNextFocusLoss(void)
 {
     OD_LOG_ENTER(); //####
     for (size_t ii = 0, maxf = _standardFields.size(); maxf > ii; ++ii)

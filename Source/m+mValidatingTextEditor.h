@@ -65,70 +65,10 @@ namespace MPlusM_Manager
     class ValidatingTextEditor : public TextEditor
     {
     public :
-        
-        /*! @brief The constructor.
-         @param owner The field that contains this editor.
-         @param validator The function to use when checking the field on completion of text entry.
-         @param componentName The name to pass to the component for it to use as its name.
-         @param passwordCharacter The visual replacement to use for password fields. */
-        explicit ValidatingTextEditor(CaptionedTextField & owner,
-                                      TextValidator *      validator = NULL,
-                                      const String &       componentName = String::empty,
-                                      juce_wchar           passwordCharacter = 0);
-        
-        /*! @brief The destructor. */
-        virtual ~ValidatingTextEditor(void);
-        
-        /*! @brief Do not perform validation on next loss of focus. */
-        void ignoreNextFocusLoss(void);
-        
-        /*! @brief Check the field for validity.
-         @returns @c true if the validator accepts the field or there's no validation required or
-         @c false if the validator rejects the field. */
-        bool validateField(void);
-        
-        /*! @brief Check the field for validity.
-         @param argsToUse A set of valid arguments.
-         @returns @c true if the validator accepts the field or there's no validation required or
-         @c false if the validator rejects the field. */
-        bool validateField(StringArray & argsToUse);
-        
-    protected :
-        
-    private :
-        
-        /*! @brief Add items to the popup menu.
-         @param menuToAddTo The popup menu to be modified.
-         @param mouseClickEvent Non-@c NULL when triggered by a mouse click and @c NULL otherwise.
-         */
-        virtual void addPopupMenuItems(PopupMenu &        menuToAddTo,
-                                       const MouseEvent * mouseClickEvent);
-        
-        /*! @brief Called when this component has just acquired the keyboard focus.
-         @param cause The type of event that caused the change in focus. */
-        virtual void focusGained(FocusChangeType cause);
-        
-        /*! @brief Called when this component has just lost the keyboard focus.
-         @param cause The type of event that caused the change in focus. */
-        virtual void focusLost(FocusChangeType cause);
-        
-        /*! @brief Called when a key is pressed.
-         @param key The key that was pressed.
-         @returns @c true if the key was consumed and @c false otherwise. */
-        virtual bool keyPressed(const KeyPress & key);
-        
-        /*! @brief Perform one of the items from the popup menu.
-         @param menuItemID The item that was selected. */
-        virtual void performPopupMenuAction(int menuItemID);
-        
-    public :
     
     protected :
     
     private :
-
-        /*! @brief The class that this class is derived from. */
-        typedef TextEditor inherited;
         
         /*! @brief The menu selection from the popup menu. */
         enum TextEditorPopupMenuSelection
@@ -141,6 +81,82 @@ namespace MPlusM_Manager
             
         }; // EntityPopupMenuSelection
         
+        /*! @brief The class that this class is derived from. */
+        typedef TextEditor inherited;
+        
+    public :
+        
+        /*! @brief The constructor.
+         @param owner The field that contains this editor.
+         @param validator The function to use when checking the field on completion of text entry.
+         @param componentName The name to pass to the component for it to use as its name.
+         @param passwordCharacter The visual replacement to use for password fields. */
+        explicit
+        ValidatingTextEditor(CaptionedTextField & owner,
+                             TextValidator *      validator = NULL,
+                             const String &       componentName = String::empty,
+                             juce_wchar           passwordCharacter = 0);
+        
+        /*! @brief The destructor. */
+        virtual
+        ~ValidatingTextEditor(void);
+        
+        /*! @brief Do not perform validation on next loss of focus. */
+        void
+        ignoreNextFocusLoss(void);
+        
+        /*! @brief Check the field for validity.
+         @returns @c true if the validator accepts the field or there's no validation required or
+         @c false if the validator rejects the field. */
+        bool
+        validateField(void);
+        
+        /*! @brief Check the field for validity.
+         @param argsToUse A set of valid arguments.
+         @returns @c true if the validator accepts the field or there's no validation required or
+         @c false if the validator rejects the field. */
+        bool
+        validateField(StringArray & argsToUse);
+        
+    protected :
+        
+    private :
+        
+        /*! @brief Add items to the popup menu.
+         @param menuToAddTo The popup menu to be modified.
+         @param mouseClickEvent Non-@c NULL when triggered by a mouse click and @c NULL otherwise.
+         */
+        virtual void
+        addPopupMenuItems(PopupMenu &        menuToAddTo,
+                          const MouseEvent * mouseClickEvent);
+        
+        /*! @brief Called when this component has just acquired the keyboard focus.
+         @param cause The type of event that caused the change in focus. */
+        virtual void
+        focusGained(FocusChangeType cause);
+        
+        /*! @brief Called when this component has just lost the keyboard focus.
+         @param cause The type of event that caused the change in focus. */
+        virtual void
+        focusLost(FocusChangeType cause);
+        
+        /*! @brief Called when a key is pressed.
+         @param key The key that was pressed.
+         @returns @c true if the key was consumed and @c false otherwise. */
+        virtual bool
+        keyPressed(const KeyPress & key);
+        
+        /*! @brief Perform one of the items from the popup menu.
+         @param menuItemID The item that was selected. */
+        virtual void
+        performPopupMenuAction(int menuItemID);
+        
+    public :
+    
+    protected :
+    
+    private :
+
         /*! @brief The field that contains this editor. */
         CaptionedTextField & _owner;
         
