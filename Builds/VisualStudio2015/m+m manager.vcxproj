@@ -148,7 +148,7 @@
       <ProgramDatabaseFile>$(IntDir)\m+m manager.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
-      <AdditionalLibraryDirectories>$(MPlusM_ROOT)\m+m\Debug;$(MPlusM_ROOT)\odl\Debug;$(OGDF)\x64\Debug;$(ACE_ROOT)\lib;$(YARP_DIR)\lib\Debug;c:\program files\bonjour sdk\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(MPlusM_ROOT)\..\lib;$(OGDF)\x64\Debug;$(ACE_ROOT)\lib;$(YARP_DIR)\lib\Debug;c:\program files\bonjour sdk\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <LargeAddressAware>true</LargeAddressAware>
       <AdditionalDependencies>ACEd.lib;YARP_OSd.lib;YARP_initd.lib;odLogging.lib;m+mCommon.lib;ogdf.lib;Psapi.lib;dnssd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -236,7 +236,7 @@
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <AdditionalLibraryDirectories>$(MPlusM_ROOT)\m+m\Release;$(MPlusM_ROOT)\odl\Release;$(OGDF)\x64\Release;$(ACE_ROOT)\lib;$(YARP_DIR)\lib\Release;c:\program files\bonjour sdk\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(MPlusM_ROOT)\..\lib;$(OGDF)\x64\Release;$(ACE_ROOT)\lib;$(YARP_DIR)\lib\Release;c:\program files\bonjour sdk\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <LargeAddressAware>true</LargeAddressAware>
       <AdditionalDependencies>ACE.lib;YARP_OS.lib;YARP_init.lib;odLogging.lib;m+mCommon.lib;ogdf.lib;Psapi.lib;dnssd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>

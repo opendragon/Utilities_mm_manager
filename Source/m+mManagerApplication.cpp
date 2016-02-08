@@ -476,7 +476,7 @@ ManagerApplication::doLaunchAService(const ApplicationInfo & appInfo)
 #if MAC_OR_LINUX_
         theLogger.warning((appInfo._description + " being launched.").toStdString());
 #endif // MAC_OR_LINUX_
-        int                           tagModifierCount;
+        int                           tagModifierCount = 0;
         String                        endpointToUse;
         String                        portToUse;
         String                        tagToUse;
