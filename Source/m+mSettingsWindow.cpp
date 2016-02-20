@@ -829,7 +829,8 @@ SettingsWindow::setUpStandardFields(int & widthSoFar,
                                                     static_cast<int>(_regularFont.getHeight()) +
                                                     FormField::kButtonGap);
                     content->addAndMakeVisible(_extraArgumentsGroup);
-                    heightSoFar = (_extraArgumentsGroup->getY() + _extraArgumentsGroup->getHeight() +
+                    heightSoFar = (_extraArgumentsGroup->getY() +
+                                   _extraArgumentsGroup->getHeight() +
                                    (FormField::kButtonGap / 2));
                     widthSoFar = jmax(widthSoFar, _extraArgumentsGroup->getX() +
                                       _extraArgumentsGroup->getWidth());

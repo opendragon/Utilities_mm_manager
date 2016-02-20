@@ -1205,8 +1205,9 @@ ManagerApplication::initialise(const String & commandLine)
             _peeker->setReporter(reporter);
             _peeker->getReport(reporter);
 #endif // defined(MpM_ReportOnConnections)
-            YarpString peekName = Common::GetRandomChannelName(HIDDEN_CHANNEL_PREFIX_ "peek_/"
-                                                               DEFAULT_CHANNEL_ROOT_);
+            YarpString peekName = Common::GetRandomChannelName(BUILD_NAME_(HIDDEN_CHANNEL_PREFIX_
+                                                                           "peek_",
+                                                                           DEFAULT_CHANNEL_ROOT_));
             
             if (_peeker->openWithRetries(peekName, STANDARD_WAIT_TIME_))
             {
