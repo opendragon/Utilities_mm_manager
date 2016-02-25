@@ -104,6 +104,7 @@ ManagerWindow::ManagerWindow(const YarpString & title)  :
     _contentPanel(new ContentPanel(this)), _scannerThread(NULL)
 {
     OD_LOG_ENTER(); //####
+    setUsingNativeTitleBar(true);
     setOpaque(true);
     setResizable(true, true);
     setContentOwned(_contentPanel, true);
