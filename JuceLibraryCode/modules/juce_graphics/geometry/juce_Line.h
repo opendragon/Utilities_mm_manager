@@ -2,7 +2,7 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2013 - Raw Material Software Ltd.
+   Copyright (c) 2015 - ROLI Ltd.
 
    Permission is granted to use this software under the terms of either:
    a) the GPL v2 (or any later version)
@@ -125,6 +125,9 @@ public:
     //==============================================================================
     /** Returns the length of the line. */
     ValueType getLength() const noexcept                                    { return start.getDistanceFrom (end); }
+
+    /** Returns the length of the line. */
+    ValueType getLengthSquared() const noexcept                             { return start.getDistanceSquaredFrom (end); }
 
     /** Returns true if the line's start and end x coordinates are the same. */
     bool isVertical() const noexcept                                        { return start.x == end.x; }

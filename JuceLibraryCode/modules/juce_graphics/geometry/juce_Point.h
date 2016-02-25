@@ -2,7 +2,7 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2013 - Raw Material Software Ltd.
+   Copyright (c) 2015 - ROLI Ltd.
 
    Permission is granted to use this software under the terms of either:
    a) the GPL v2 (or any later version)
@@ -57,6 +57,9 @@ public:
 
     /** Returns true if the point is (0, 0). */
     bool isOrigin() const noexcept                                  { return x == ValueType() && y == ValueType(); }
+
+    /** Returns true if the coordinates are finite values. */
+    inline bool isFinite() const noexcept                           { return juce_isfinite(x) && juce_isfinite(y); }
 
     /** Returns the point's x coordinate. */
     inline ValueType getX() const noexcept                          { return x; }
@@ -143,6 +146,12 @@ public:
 
     /** Returns the straight-line distance between this point and another one. */
     ValueType getDistanceFrom (Point other) const noexcept          { return juce_hypot (x - other.x, y - other.y); }
+
+    /** Returns the square of the straight-line distance between this point and the origin. */
+    ValueType getDistanceSquaredFromOrigin() const noexcept         { return x * x + y * y; }
+
+    /** Returns the square of the straight-line distance between this point and another one. */
+    ValueType getDistanceSquaredFrom (Point other) const noexcept   { return (*this - other).getDistanceSquaredFromOrigin(); }
 
     /** Returns the angle from this point to another one.
 

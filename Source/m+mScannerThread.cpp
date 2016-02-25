@@ -175,10 +175,10 @@ ScannerThread::ScannerThread(ManagerWindow & window,
     OD_LOG_ENTER(); //####
     OD_LOG_S1s("name = ", name); //####
     OD_LOG_P1("window = ", &window); //####
-    _inputOnlyPortName = Common::GetRandomChannelName(BUILD_NAME_(HIDDEN_CHANNEL_PREFIX_
-                                                      "checkdirection", DEFAULT_CHANNEL_ROOT_));
-    _outputOnlyPortName = Common::GetRandomChannelName(BUILD_NAME_(HIDDEN_CHANNEL_PREFIX_
-                                                       "checkdirection", DEFAULT_CHANNEL_ROOT_));
+    _inputOnlyPortName = Common::GetRandomChannelName(HIDDEN_CHANNEL_PREFIX_
+                                                      "checkdirection/channel_");
+    _outputOnlyPortName = Common::GetRandomChannelName(HIDDEN_CHANNEL_PREFIX_
+                                                       "checkdirection/channel_");
     _inputOnlyPort = new Common::GeneralChannel(false);
     if (_inputOnlyPort)
     {
@@ -958,8 +958,8 @@ ScannerThread::run(void)
                         
 #if MAC_OR_LINUX_
                         buff << ((loopEndTime - loopStartTime) / 1000.0);
-                        theLogger.info(YarpString("actual interval = ") + buff.str() +
-                                       YarpString(" seconds"));
+                        theLogger.info((YarpString("actual interval = ") + buff.str() +
+                                       YarpString(" seconds")).c_str());
 #else // ! MAC_OR_LINUX_
 #endif // ! MAC_OR_LINUX_
                         yield();

@@ -2,7 +2,7 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2013 - Raw Material Software Ltd.
+   Copyright (c) 2015 - ROLI Ltd.
 
    Permission is granted to use this software under the terms of either:
    a) the GPL v2 (or any later version)
@@ -131,7 +131,7 @@ public:
     */
     void addTextEditor (const String& name,
                         const String& initialContents,
-                        const String& onScreenLabel = String::empty,
+                        const String& onScreenLabel = String(),
                         bool isPasswordBox = false);
 
     /** Returns the contents of a named textbox.
@@ -161,7 +161,7 @@ public:
     */
     void addComboBox (const String& name,
                       const StringArray& items,
-                      const String& onScreenLabel = String::empty);
+                      const String& onScreenLabel = String());
 
     /** Returns a drop-down list that was added to the AlertWindow.
 
@@ -246,7 +246,7 @@ public:
     static void JUCE_CALLTYPE showMessageBox (AlertIconType iconType,
                                               const String& title,
                                               const String& message,
-                                              const String& buttonText = String::empty,
+                                              const String& buttonText = String(),
                                               Component* associatedComponent = nullptr);
    #endif
 
@@ -274,7 +274,7 @@ public:
     static void JUCE_CALLTYPE showMessageBoxAsync (AlertIconType iconType,
                                                    const String& title,
                                                    const String& message,
-                                                   const String& buttonText = String::empty,
+                                                   const String& buttonText = String(),
                                                    Component* associatedComponent = nullptr,
                                                    ModalComponentManager::Callback* callback = nullptr);
 
@@ -317,8 +317,8 @@ public:
                                                const String& title,
                                                const String& message,
                                             #if JUCE_MODAL_LOOPS_PERMITTED
-                                               const String& button1Text = String::empty,
-                                               const String& button2Text = String::empty,
+                                               const String& button1Text = String(),
+                                               const String& button2Text = String(),
                                                Component* associatedComponent = nullptr,
                                                ModalComponentManager::Callback* callback = nullptr);
                                             #else
@@ -371,9 +371,9 @@ public:
                                                  const String& title,
                                                  const String& message,
                                                #if JUCE_MODAL_LOOPS_PERMITTED
-                                                 const String& button1Text = String::empty,
-                                                 const String& button2Text = String::empty,
-                                                 const String& button3Text = String::empty,
+                                                 const String& button1Text = String(),
+                                                 const String& button2Text = String(),
+                                                 const String& button3Text = String(),
                                                  Component* associatedComponent = nullptr,
                                                  ModalComponentManager::Callback* callback = nullptr);
                                                #else
@@ -437,6 +437,7 @@ public:
 
         virtual int getAlertWindowButtonHeight() = 0;
 
+        virtual Font getAlertWindowTitleFont() = 0;
         virtual Font getAlertWindowMessageFont() = 0;
         virtual Font getAlertWindowFont() = 0;
     };

@@ -2,7 +2,7 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2013 - Raw Material Software Ltd.
+   Copyright (c) 2015 - ROLI Ltd.
 
    Permission is granted to use this software under the terms of either:
    a) the GPL v2 (or any later version)
@@ -666,9 +666,6 @@ void PathStrokeType::createDashedStroke (Path& destPath,
     if (thickness <= 0)
         return;
 
-    // this should really be an even number..
-    jassert ((numDashLengths & 1) == 0);
-
     Path newDestPath;
     PathFlatteningIterator it (sourcePath, transform, PathFlatteningIterator::defaultTolerance / extraAccuracy);
 
@@ -695,7 +692,7 @@ void PathStrokeType::createDashedStroke (Path& destPath,
                 if (isSolid && ! first)
                     newDestPath.lineTo (it.x2, it.y2);
 
-                createStrokedPath (destPath, newDestPath, AffineTransform::identity, extraAccuracy);
+                createStrokedPath (destPath, newDestPath, AffineTransform(), extraAccuracy);
                 return;
             }
 

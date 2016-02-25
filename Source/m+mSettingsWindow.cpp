@@ -331,6 +331,7 @@ SettingsWindow::fieldsAreValid(void)
 {
     OD_LOG_ENTER(); //####
     int    badCount = 0;
+    int    modCount = 0;
     String badArgs;
     String primaryChannel;
     
@@ -563,6 +564,9 @@ SettingsWindow::recalculateArea(void)
     }
     if (_canUseModifier && _tagModifierGroup)
     {
+        int innerHeight = static_cast<int>(_regularFont.getHeight()) + (FormField::kButtonGap / 2);
+        int innerWidth = (2 * jmax(FormField::kFieldInset, FormField::kLabelInset));
+        
         _tagModifierGroup->setTopLeftPosition(FormField::kFieldInset, heightSoFar);
         heightSoFar = _tagModifierGroup->getY() + _tagModifierGroup->getHeight();
         widthSoFar = jmax(widthSoFar, _tagModifierGroup->getX() + _tagModifierGroup->getWidth());
@@ -829,8 +833,7 @@ SettingsWindow::setUpStandardFields(int & widthSoFar,
                                                     static_cast<int>(_regularFont.getHeight()) +
                                                     FormField::kButtonGap);
                     content->addAndMakeVisible(_extraArgumentsGroup);
-                    heightSoFar = (_extraArgumentsGroup->getY() +
-                                   _extraArgumentsGroup->getHeight() +
+                    heightSoFar = (_extraArgumentsGroup->getY() + _extraArgumentsGroup->getHeight() +
                                    (FormField::kButtonGap / 2));
                     widthSoFar = jmax(widthSoFar, _extraArgumentsGroup->getX() +
                                       _extraArgumentsGroup->getWidth());

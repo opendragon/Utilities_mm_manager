@@ -794,7 +794,7 @@ ContentPanel::setEntityPositions(void)
             bool       positionsNeedUpdate = false;
             ogdf::node phantomNode = gg->newNode();
             
-            ga->directed(true);
+            ga->setDirected(true);
             // If nodes are not connected, OGDF will pile them all at the origin; by adding a
             // 'phantom' node that is connected to every other node, we force OGDF to spread the
             // nodes out.

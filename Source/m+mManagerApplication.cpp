@@ -77,7 +77,11 @@
 # pragma warning(disable: 4996)
 # pragma warning(disable: 4458)
 #endif // ! MAC_OR_LINUX_
-#include <yarp/os/impl/SystemInfo.h>
+#if YARP_SYSTEM_INFO_MOVED_
+# include <yarp/os/SystemInfo.h>
+#else // ! YARP_SYSTEM_INFO_MOVED_
+# include <yarp/os/impl/SystemInfo.h>
+#endif // ! YARP_SYSTEM_INFO_MOVED_
 #if (! MAC_OR_LINUX_)
 # pragma warning(pop)
 #endif // ! MAC_OR_LINUX_
@@ -474,9 +478,9 @@ ManagerApplication::doLaunchAService(const ApplicationInfo & appInfo)
     if (okSoFar)
     {
 #if MAC_OR_LINUX_
-        theLogger.warning((appInfo._description + " being launched.").toStdString());
+        theLogger.warning((appInfo._description + " being launched.").toStdString().c_str());
 #endif // MAC_OR_LINUX_
-        int                           tagModifierCount = 0;
+        int                           tagModifierCount;
         String                        endpointToUse;
         String                        portToUse;
         String                        tagToUse;
@@ -830,7 +834,11 @@ ManagerApplication::getEnvironmentVars(YarpStringVector & keys,
     OD_LOG_ENTER(); //####
     OD_LOG_P2("keys = ", &keys, "values = ", &values);
 #if (! defined(__APPLE__))
+# if YARP_SYSTEM_INFO_MOVED_
+    yarp::os::Property vars(yarp::os::SystemInfo::getPlatformInfo().environmentVars);
+# else // ! YARP_SYSTEM_INFO_MOVED_
     yarp::os::Property vars(yarp::os::impl::SystemInfo::getPlatformInfo().environmentVars);
+# endif // ! YARP_SYSTEM_INFO_MOVED_
     YarpString         varsAsString(vars.toString());
     yarp::os::Bottle   varsAsBottle(varsAsString);
 #endif // ! defined(__APPLE__)
@@ -1080,7 +1088,7 @@ ManagerApplication::getRealName(void)
     long            bufSize = sysconf(_SC_GETPW_R_SIZE_MAX);
 #endif // defined(__APPLE__)
     
-    // Note that yarp::os::impl::SystemInfo::getUserInfo() does nothing in Mac OS X!
+    // Note that SystemInfo::getUserInfo() does nothing in Mac OS X!
 #if defined(__APPLE__)
     if (-1 == bufSize)
     {
@@ -1098,7 +1106,11 @@ ManagerApplication::getRealName(void)
         free(buf);
     }
 #else // ! defined(__APPLE__)
+# if YARP_SYSTEM_INFO_MOVED_
+    result = yarp::os::SystemInfo::getUserInfo().realName.c_str();
+# else // ! YARP_SYSTEM_INFO_MOVED_
     result = yarp::os::impl::SystemInfo::getUserInfo().realName.c_str();
+# endif // ! YARP_SYSTEM_INFO_MOVED_
 #endif // ! defined(__APPLE__)
     OD_LOG_EXIT_s(result.toStdString()); //####
     return result;
@@ -1116,7 +1128,7 @@ ManagerApplication::getUserName(void)
     long            bufSize = sysconf(_SC_GETPW_R_SIZE_MAX);
 #endif // defined(__APPLE__)
     
-    // Note that yarp::os::impl::SystemInfo::getUserInfo() does nothing in Mac OS X!
+    // Note that SystemInfo::getUserInfo() does nothing in Mac OS X!
 #if defined(__APPLE__)
     if (-1 == bufSize)
     {
@@ -1134,7 +1146,11 @@ ManagerApplication::getUserName(void)
         free(buf);
     }
 #else // ! defined(__APPLE__)
+# if YARP_SYSTEM_INFO_MOVED_
+    result = yarp::os::SystemInfo::getUserInfo().userName.c_str();
+# else // ! YARP_SYSTEM_INFO_MOVED_
     result = yarp::os::impl::SystemInfo::getUserInfo().userName.c_str();
+# endif // ! YARP_SYSTEM_INFO_MOVED_
 #endif // ! defined(__APPLE__)
     OD_LOG_EXIT_s(result.toStdString()); //####
     return result;
@@ -1205,9 +1221,8 @@ ManagerApplication::initialise(const String & commandLine)
             _peeker->setReporter(reporter);
             _peeker->getReport(reporter);
 #endif // defined(MpM_ReportOnConnections)
-            YarpString peekName = Common::GetRandomChannelName(BUILD_NAME_(HIDDEN_CHANNEL_PREFIX_
-                                                                           "peek_",
-                                                                           DEFAULT_CHANNEL_ROOT_));
+            YarpString peekName = Common::GetRandomChannelName(HIDDEN_CHANNEL_PREFIX_ "peek_/"
+                                                               DEFAULT_CHANNEL_ROOT_);
             
             if (_peeker->openWithRetries(peekName, STANDARD_WAIT_TIME_))
             {

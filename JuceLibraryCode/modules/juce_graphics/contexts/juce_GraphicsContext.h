@@ -2,7 +2,7 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2013 - Raw Material Software Ltd.
+   Copyright (c) 2015 - ROLI Ltd.
 
    Permission is granted to use this software under the terms of either:
    a) the GPL v2 (or any later version)
@@ -374,21 +374,29 @@ public:
     //==============================================================================
     /** Draws a line between two points.
         The line is 1 pixel wide and drawn with the current colour or brush.
+        TIP: If you're trying to draw horizontal or vertical lines, don't use this -
+        it's better to use fillRect() instead unless you really need an angled line.
     */
     void drawLine (float startX, float startY, float endX, float endY) const;
 
     /** Draws a line between two points with a given thickness.
+        TIP: If you're trying to draw horizontal or vertical lines, don't use this -
+        it's better to use fillRect() instead unless you really need an angled line.
         @see Path::addLineSegment
     */
     void drawLine (float startX, float startY, float endX, float endY, float lineThickness) const;
 
     /** Draws a line between two points.
         The line is 1 pixel wide and drawn with the current colour or brush.
+        TIP: If you're trying to draw horizontal or vertical lines, don't use this -
+        it's better to use fillRect() instead unless you really need an angled line.
     */
     void drawLine (const Line<float>& line) const;
 
     /** Draws a line between two points with a given thickness.
         @see Path::addLineSegment
+        TIP: If you're trying to draw horizontal or vertical lines, don't use this -
+        it's better to use fillRect() instead unless you really need an angled line.
     */
     void drawLine (const Line<float>& line, float lineThickness) const;
 
@@ -428,13 +436,15 @@ public:
 
     //==============================================================================
     /** Fills a path using the currently selected colour or brush. */
-    void fillPath (const Path& path,
-                   const AffineTransform& transform = AffineTransform::identity) const;
+    void fillPath (const Path& path) const;
+
+    /** Fills a path using the currently selected colour or brush, and adds a transform. */
+    void fillPath (const Path& path, const AffineTransform& transform) const;
 
     /** Draws a path's outline using the currently selected colour or brush. */
     void strokePath (const Path& path,
                      const PathStrokeType& strokeType,
-                     const AffineTransform& transform = AffineTransform::identity) const;
+                     const AffineTransform& transform = AffineTransform()) const;
 
     /** Draws a line with an arrowhead at its end.
 
@@ -599,7 +609,7 @@ public:
         @returns true if the resulting clipping region is non-zero in size
         @see reduceClipRegion
     */
-    bool reduceClipRegion (const Path& path, const AffineTransform& transform = AffineTransform::identity);
+    bool reduceClipRegion (const Path& path, const AffineTransform& transform = AffineTransform());
 
     /** Intersects the current clipping region with an image's alpha-channel.
 

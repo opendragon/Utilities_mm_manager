@@ -2,7 +2,7 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2013 - Raw Material Software Ltd.
+   Copyright (c) 2015 - ROLI Ltd.
 
    Permission is granted to use this software under the terms of either:
    a) the GPL v2 (or any later version)
@@ -309,7 +309,7 @@ TextEditor* Label::createEditorComponent()
 
     copyColourIfSpecified (*this, *ed, textWhenEditingColourId, TextEditor::textColourId);
     copyColourIfSpecified (*this, *ed, backgroundWhenEditingColourId, TextEditor::backgroundColourId);
-    copyColourIfSpecified (*this, *ed, outlineWhenEditingColourId, TextEditor::outlineColourId);
+    copyColourIfSpecified (*this, *ed, outlineWhenEditingColourId, TextEditor::focusedOutlineColourId);
 
     return ed;
 }
@@ -391,7 +391,7 @@ public:
 
     static Component* getComp (Component* current)
     {
-        return dynamic_cast <TextEditor*> (current) != nullptr
+        return dynamic_cast<TextEditor*> (current) != nullptr
                  ? current->getParentComponent() : current;
     }
 };
@@ -460,7 +460,7 @@ void Label::textEditorEscapeKeyPressed (TextEditor& ed)
     if (editor != nullptr)
     {
         jassert (&ed == editor);
-        (void) ed;
+        ignoreUnused (ed);
 
         editor->setText (textValue.toString(), false);
         hideEditor (true);

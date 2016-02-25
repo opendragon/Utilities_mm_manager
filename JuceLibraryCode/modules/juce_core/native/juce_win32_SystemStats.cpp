@@ -2,7 +2,7 @@
   ==============================================================================
 
    This file is part of the juce_core module of the JUCE library.
-   Copyright (c) 2013 - Raw Material Software Ltd.
+   Copyright (c) 2015 - ROLI Ltd.
 
    Permission to use, copy, modify, and/or distribute this software for any purpose with
    or without fee is hereby granted, provided that the above copyright notice and this
@@ -105,7 +105,15 @@ void CPUInformation::initialise() noexcept
     hasSSE   = (info[3] & (1 << 25)) != 0;
     hasSSE2  = (info[3] & (1 << 26)) != 0;
     hasSSE3  = (info[2] & (1 <<  0)) != 0;
+    hasAVX   = (info[2] & (1 << 28)) != 0;
+    hasSSSE3 = (info[2] & (1 <<  9)) != 0;
+    hasSSE41 = (info[2] & (1 << 19)) != 0;
+    hasSSE42 = (info[2] & (1 << 20)) != 0;
     has3DNow = (info[1] & (1 << 31)) != 0;
+
+    callCPUID (info, 7);
+
+    hasAVX2 = (info[1] & (1 << 5)) != 0;
 
     SYSTEM_INFO systemInfo;
     GetNativeSystemInfo (&systemInfo);
@@ -131,7 +139,12 @@ static bool isWindowsVersionOrLater (SystemStats::OperatingSystemType target)
     zerostruct (info);
     info.dwOSVersionInfoSize = sizeof (OSVERSIONINFOEX);
 
-    if (target >= SystemStats::WinVista)
+    if (target >= SystemStats::Windows10)
+    {
+        info.dwMajorVersion = 10;
+        info.dwMinorVersion = 0;
+    }
+    else if (target >= SystemStats::WinVista)
     {
         info.dwMajorVersion = 6;
 
@@ -166,7 +179,7 @@ static bool isWindowsVersionOrLater (SystemStats::OperatingSystemType target)
 SystemStats::OperatingSystemType SystemStats::getOperatingSystemType()
 {
     const SystemStats::OperatingSystemType types[]
-            = { Windows8_1, Windows8_0, Windows7, WinVista, WinXP, Win2000 };
+            = { Windows10, Windows8_1, Windows8_0, Windows7, WinVista, WinXP, Win2000 };
 
     for (int i = 0; i < numElementsInArray (types); ++i)
         if (isWindowsVersionOrLater (types[i]))
@@ -182,6 +195,7 @@ String SystemStats::getOperatingSystemName()
 
     switch (getOperatingSystemType())
     {
+        case Windows10:         name = "Windows 10";        break;
         case Windows8_1:        name = "Windows 8.1";       break;
         case Windows8_0:        name = "Windows 8.0";       break;
         case Windows7:          name = "Windows 7";         break;
@@ -267,7 +281,7 @@ public:
 
        #if JUCE_WIN32_TIMER_PERIOD > 0
         const MMRESULT res = timeBeginPeriod (JUCE_WIN32_TIMER_PERIOD);
-        (void) res;
+        ignoreUnused (res);
         jassert (res == TIMERR_NOERROR);
        #endif
 
@@ -421,7 +435,7 @@ String SystemStats::getFullUserName()
 
 String SystemStats::getComputerName()
 {
-    TCHAR text [MAX_COMPUTERNAME_LENGTH + 1] = { 0 };
+    TCHAR text[128] = { 0 };
     DWORD len = (DWORD) numElementsInArray (text) - 1;
     GetComputerName (text, &len);
     return String (text, len);

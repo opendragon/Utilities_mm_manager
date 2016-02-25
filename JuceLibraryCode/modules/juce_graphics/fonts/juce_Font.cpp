@@ -2,7 +2,7 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2013 - Raw Material Software Ltd.
+   Copyright (c) 2015 - ROLI Ltd.
 
    Permission is granted to use this software under the terms of either:
    a) the GPL v2 (or any later version)
@@ -159,9 +159,7 @@ void Typeface::setTypefaceCacheSize (int numFontsToCache)
     TypefaceCache::getInstance()->setSize (numFontsToCache);
 }
 
-#if JUCE_MODULE_AVAILABLE_juce_opengl
-extern void clearOpenGLGlyphCache();
-#endif
+void (*clearOpenGLGlyphCache)() = nullptr;
 
 void Typeface::clearTypefaceCache()
 {
@@ -169,9 +167,8 @@ void Typeface::clearTypefaceCache()
 
     RenderingHelpers::SoftwareRendererSavedState::clearGlyphCache();
 
-   #if JUCE_MODULE_AVAILABLE_juce_opengl
-    clearOpenGLGlyphCache();
-   #endif
+    if (clearOpenGLGlyphCache != nullptr)
+        clearOpenGLGlyphCache();
 }
 
 //==============================================================================
@@ -631,7 +628,7 @@ float Font::getDescentInPoints() const      { return getDescent() * getHeightToP
 
 int Font::getStringWidth (const String& text) const
 {
-    return roundToInt (getStringWidthFloat (text));
+    return (int) std::ceil (getStringWidthFloat (text));
 }
 
 float Font::getStringWidthFloat (const String& text) const

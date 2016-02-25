@@ -2,7 +2,7 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2013 - Raw Material Software Ltd.
+   Copyright (c) 2015 - ROLI Ltd.
 
    Permission is granted to use this software under the terms of either:
    a) the GPL v2 (or any later version)
@@ -109,7 +109,7 @@ ComponentBuilder::~ComponentBuilder()
    #if JUCE_DEBUG
     // Don't delete the managed component!! The builder owns that component, and will delete
     // it automatically when it gets deleted.
-    jassert (componentRef.get() == static_cast <Component*> (component));
+    jassert (componentRef.get() == static_cast<Component*> (component));
    #endif
 }
 

@@ -2,7 +2,7 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2013 - Raw Material Software Ltd.
+   Copyright (c) 2015 - ROLI Ltd.
 
    Permission is granted to use this software under the terms of either:
    a) the GPL v2 (or any later version)
@@ -405,17 +405,7 @@ void CoreGraphicsContext::fillCGRect (const CGRect& cgRect, const bool replaceEx
 {
     if (replaceExistingContents)
     {
-      #if MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_5
-        CGContextClearRect (context, cgRect);
-      #else
-       #if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_5
-        if (CGContextDrawLinearGradient == 0) // (just a way of checking whether we're running in 10.5 or later)
-            CGContextClearRect (context, cgRect);
-        else
-       #endif
-            CGContextSetBlendMode (context, kCGBlendModeCopy);
-      #endif
-
+        CGContextSetBlendMode (context, kCGBlendModeCopy);
         fillCGRect (cgRect, false);
         CGContextSetBlendMode (context, kCGBlendModeNormal);
     }
@@ -498,15 +488,15 @@ void CoreGraphicsContext::drawImage (const Image& sourceImage, const AffineTrans
       #if JUCE_IOS
         CGContextDrawTiledImage (context, imageRect, image);
       #else
-       #if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5
         // There's a bug in CGContextDrawTiledImage that makes it incredibly slow
         // if it's doing a transformation - it's quicker to just draw lots of images manually
         if (&CGContextDrawTiledImage != 0 && transform.isOnlyTranslation())
-            CGContextDrawTiledImage (context, imageRect, image);
-        else
-       #endif
         {
-            // Fallback to manually doing a tiled fill on 10.4
+            CGContextDrawTiledImage (context, imageRect, image);
+        }
+        else
+        {
+            // Fallback to manually doing a tiled fill
             CGRect clip = CGRectIntegral (CGContextGetClipBoundingBox (context));
 
             int x = 0, y = 0;
@@ -555,7 +545,7 @@ void CoreGraphicsContext::drawLine (const Line<float>& line)
     {
         Path p;
         p.addLineSegment (line, 1.0f);
-        fillPath (p, AffineTransform::identity);
+        fillPath (p, AffineTransform());
     }
 }
 
@@ -666,7 +656,7 @@ bool CoreGraphicsContext::drawTextLayout (const AttributedString& text, const Re
     CoreTextTypeLayout::drawToCGContext (text, area, context, (float) flipHeight);
     return true;
    #else
-    (void) text; (void) area;
+    ignoreUnused (text, area);
     return false;
    #endif
 }
