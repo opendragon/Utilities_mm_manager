@@ -951,17 +951,11 @@ ScannerThread::run(void)
                     }
                     else
                     {
-#if MAC_OR_LINUX_
-                        std::stringstream        buff;
-                        yarp::os::impl::Logger & theLogger = Common::GetLogger();
-#endif // MAC_OR_LINUX_
+                        std::stringstream buff;
                         
-#if MAC_OR_LINUX_
                         buff << ((loopEndTime - loopStartTime) / 1000.0);
-                        theLogger.info((YarpString("actual interval = ") + buff.str() +
-                                       YarpString(" seconds")).c_str());
-#else // ! MAC_OR_LINUX_
-#endif // ! MAC_OR_LINUX_
+                        MpM_INFO_((YarpString("actual interval = ") + buff.str() +
+                                   YarpString(" seconds")).c_str());
                         yield();
                     }
                 }

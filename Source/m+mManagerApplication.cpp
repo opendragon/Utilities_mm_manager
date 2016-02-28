@@ -250,10 +250,7 @@ bool
 ManagerApplication::checkForRegistryServiceAndLaunchIfDesired(void)
 {
     OD_LOG_OBJENTER(); //####
-    bool                     didLaunch = false;
-#if MAC_OR_LINUX_
-    yarp::os::impl::Logger & theLogger = Common::GetLogger();
-#endif // MAC_OR_LINUX_
+    bool didLaunch = false;
     
     if (0 < _registryServicePath.length())
     {
@@ -281,10 +278,7 @@ yarp::os::Network *
 ManagerApplication::checkForYarpAndLaunchIfDesired(void)
 {
     OD_LOG_OBJENTER(); //####
-    yarp::os::Network *      result = NULL;
-#if MAC_OR_LINUX_
-    yarp::os::impl::Logger & theLogger = Common::GetLogger();
-#endif // MAC_OR_LINUX_
+    yarp::os::Network * result = NULL;
     
     // No running YARP server was detected - first check if YARP is actually available:
     if (0 < _yarpPath.length())
@@ -300,9 +294,7 @@ ManagerApplication::checkForYarpAndLaunchIfDesired(void)
             String           serverPortAsString;
             YarpStringVector ipAddressVector;
             
-#if MAC_OR_LINUX_
-            theLogger.warning("Private YARP network being launched.");
-#endif // MAC_OR_LINUX_
+            MpM_WARNING_("Private YARP network being launched.");
             if (Utilities::GetCurrentYarpConfiguration(serverAddress, serverPort))
             {
                 if (INADDR_NONE != serverAddress.s_addr)
@@ -440,12 +432,9 @@ ManagerApplication::doLaunchAService(const ApplicationInfo & appInfo)
 {
     OD_LOG_OBJENTER(); //####
     OD_LOG_P1("appInfo = ", &appInfo); //####
-    bool                     okSoFar = false;
-    String                   caption("Launching the ");
-    String                   execType;
-#if MAC_OR_LINUX_
-    yarp::os::impl::Logger & theLogger = Common::GetLogger();
-#endif // MAC_OR_LINUX_
+    bool   okSoFar = false;
+    String caption("Launching the ");
+    String execType;
     
     caption += appInfo._description;
     if (0 < appInfo._criteria.length())
@@ -478,7 +467,7 @@ ManagerApplication::doLaunchAService(const ApplicationInfo & appInfo)
     if (okSoFar)
     {
 #if MAC_OR_LINUX_
-        theLogger.warning((appInfo._description + " being launched.").toStdString().c_str());
+        MpM_WARNING_((appInfo._description + " being launched.").toStdString().c_str());
 #endif // MAC_OR_LINUX_
         int                           tagModifierCount;
         String                        endpointToUse;
@@ -529,21 +518,16 @@ bool
 ManagerApplication::doLaunchRegistry(void)
 {
     OD_LOG_OBJENTER(); //####
-    bool                     result = false;
-#if MAC_OR_LINUX_
-    yarp::os::impl::Logger & theLogger = Common::GetLogger();
-#endif // MAC_OR_LINUX_
-    int                      portChoice = 0;
-    int                      res = 0;
-    String                   appName(JUCEApplication::getInstance()->getApplicationName());
-    AlertWindow              ww("Launching the Registry Service",
-                                T_("Please select the network port to be used to start the "
-                                   "Registry Service\n(enter 0 to use the default port):"),
-                                AlertWindow::QuestionIcon, _mainWindow);
+    bool        result = false;
+    int         portChoice = 0;
+    int         res = 0;
+    String      appName(JUCEApplication::getInstance()->getApplicationName());
+    AlertWindow ww("Launching the Registry Service",
+                   T_("Please select the network port to be used to start the Registry Service\n"
+                      "(enter 0 to use the default port):"), AlertWindow::QuestionIcon,
+                   _mainWindow);
     
-#if MAC_OR_LINUX_
-    theLogger.warning("Registry Service being launched.");
-#endif // MAC_OR_LINUX_
+    MpM_WARNING_("Registry Service being launched.");
     ww.addTextEditor("NetworkPort", "0", "Network port [0 for the default port]:");
     ww.addButton("OK", 1, KeyPress(KeyPress::returnKey, 0, 0));
     ww.addButton("Cancel", 0, KeyPress(KeyPress::escapeKey, 0, 0));
@@ -1192,14 +1176,8 @@ ManagerApplication::initialise(const String & commandLine)
     }
     else
     {
-        OD_LOG("! (yarp::os::Network::checkNetwork())"); //####
-#if MAC_OR_LINUX_
-        yarp::os::impl::Logger & theLogger = Common::GetLogger();
-#endif // MAC_OR_LINUX_
-        
-#if MAC_OR_LINUX_
-        theLogger.warning("YARP network not running.");
-#endif // MAC_OR_LINUX_
+        OD_LOG("! (yarp::os::Network::checkNetwork())"); //####        
+        MpM_WARNING_("YARP network not running.");
         _yarpPath = findPathToExecutable("yarp");
         _yarp = checkForYarpAndLaunchIfDesired();
     }

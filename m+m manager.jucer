@@ -159,10 +159,10 @@
     </VS2013>
     <LINUX_MAKE targetFolder="Builds/LinuxMakefile" externalLibraries="YARP_OS&#10;YARP_init&#10;m+mCommon&#10;odLogging&#10;OGDF&#10;ACE&#10;dns_sd">
       <CONFIGURATIONS>
-        <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/&#10;/opt/test/lib"
-                       isDebug="1" optimisation="1" targetName="m+m manager" headerPath="/opt/test/include"/>
-        <CONFIGURATION name="Release" libraryPath="/usr/X11R6/lib/&#10;/opt/test/lib"
-                       isDebug="0" optimisation="3" targetName="m+m manager" headerPath="/opt/test/include"/>
+        <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/&#10;/opt/m+m/lib"
+                       isDebug="1" optimisation="1" targetName="m+m manager" headerPath="/opt/m+m/include"/>
+        <CONFIGURATION name="Release" libraryPath="/usr/X11R6/lib/&#10;/opt/m+m/lib"
+                       isDebug="0" optimisation="3" targetName="m+m manager" headerPath="/opt/m+m/include"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_gui_extra" path="../JUCE/modules/juce_gui_extra"/>
