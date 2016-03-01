@@ -124,7 +124,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>..\..\JuceLibraryCode;..\..\JuceLibraryCode\modules;$(MPlusM_ROOT);$(ACE_ROOT);$(YARP_DIR)\generated_include;$(YARP_DIR)\src\libYARP_OS\include;$(OGDF);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\JuceLibraryCode;..\..\JuceLibraryCode\modules;$(MPlusM_ROOT);$(ACE_ROOT);$(YARP_DIR)\generated_include;$(YARP_DIR)\src\libYARP_OS\include;$(OGDF)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;DEBUG;_DEBUG;JUCER_VS2013_78A5020=1;JUCE_APP_VERSION=1.4.21;JUCE_APP_VERSION_HEX=0x10415;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -211,7 +211,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Full</Optimization>
-      <AdditionalIncludeDirectories>..\..\JuceLibraryCode;..\..\JuceLibraryCode\modules;$(MPlusM_ROOT);$(ACE_ROOT);$(YARP_DIR)\generated_include;$(YARP_DIR)\src\libYARP_OS\include;$(OGDF);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\JuceLibraryCode;..\..\JuceLibraryCode\modules;$(MPlusM_ROOT);$(ACE_ROOT);$(YARP_DIR)\generated_include;$(YARP_DIR)\src\libYARP_OS\include;$(OGDF)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;JUCER_VS2013_78A5020=1;JUCE_APP_VERSION=1.4.21;JUCE_APP_VERSION_HEX=0x10415;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
