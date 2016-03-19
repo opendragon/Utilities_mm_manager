@@ -115,6 +115,9 @@ using namespace std;
 /*! @brief @c true if an exit has been requested and @c false otherwise. */
 static bool lExitRequested = false;
 
+/*! @brief The number of milliseconds to sleep while waiting for a process to finish. */
+static const int kProcessSleepSlice = 5;
+
 /*! @brief The number of milliseconds before a thread is force-killed. */
 static const int kThreadKillTime = 3000;
 
@@ -735,7 +738,7 @@ ManagerApplication::getArgumentsForApplication(ApplicationInfo & theInfo)
     {
         const String childOutput(runApplication.readAllProcessOutput());
         
-        runApplication.waitForProcessToFinish(kThreadKillTime);
+        LazyLaunchProcess(runApplication, kThreadKillTime);
         OD_LOG_S1s("childOutput = ", childOutput.toStdString()); //####
         if (0 < childOutput.length())
         {
@@ -846,7 +849,7 @@ ManagerApplication::getEnvironmentVars(YarpStringVector & keys,
     {
         const String childOutput(runApplication.readAllProcessOutput());
         
-        runApplication.waitForProcessToFinish(kThreadKillTime);
+        LazyLaunchProcess(runApplication, kThreadKillTime);
         OD_LOG_S1s("childOutput = ", childOutput.toStdString()); //####
         if (0 < childOutput.length())
         {
@@ -942,7 +945,7 @@ ManagerApplication::getParametersForApplication(const String &    execName,
         {
             const String childOutput(runApplication.readAllProcessOutput());
             
-            runApplication.waitForProcessToFinish(kThreadKillTime);
+            LazyLaunchProcess(runApplication, kThreadKillTime);
             OD_LOG_S1s("childOutput = ", childOutput.toStdString()); //####
             if (0 < childOutput.length())
             {
@@ -1039,7 +1042,7 @@ ManagerApplication::getPrimaryChannelForService(const ApplicationInfo & appInfo,
     {
         const String childOutput(runApplication.readAllProcessOutput());
         
-        runApplication.waitForProcessToFinish(kThreadKillTime);
+        LazyLaunchProcess(runApplication, kThreadKillTime);
         OD_LOG_S1s("childOutput = ", childOutput.toStdString()); //####
         if (0 < childOutput.length())
         {
@@ -1294,7 +1297,7 @@ ManagerApplication::restoreYarpConfiguration(void)
     {
         const String childOutput(runYarp.readAllProcessOutput());
         
-        runYarp.waitForProcessToFinish(kThreadKillTime);
+        LazyLaunchProcess(runYarp, kThreadKillTime);
         OD_LOG_S1s("childOutput = ", childOutput.toStdString()); //####
     }
     else
@@ -1387,7 +1390,7 @@ ManagerApplication::validateRegistryService(void)
     {
         const String childOutput(runRegistryService.readAllProcessOutput());
         
-        runRegistryService.waitForProcessToFinish(kThreadKillTime);
+        LazyLaunchProcess(runRegistryService, kThreadKillTime);
         OD_LOG_S1s("childOutput = ", childOutput.toStdString()); //####
         if (0 < childOutput.length())
         {
@@ -1446,7 +1449,7 @@ ManagerApplication::validateYarp(void)
     {
         const String childOutput(runYarp.readAllProcessOutput());
         
-        runYarp.waitForProcessToFinish(kThreadKillTime);
+        LazyLaunchProcess(runYarp, kThreadKillTime);
         OD_LOG_S1s("childOutput = ", childOutput.toStdString()); //####
         if (0 < childOutput.length())
         {
@@ -1542,6 +1545,50 @@ bool CheckForExit(void * stuff)
 #if (! MAC_OR_LINUX_)
 # pragma warning(pop)
 #endif // ! MAC_OR_LINUX_
+
+bool LazyLaunchProcess(ChildProcess & aProcess,
+                       const int      timeout)
+{
+    OD_LOG_ENTER(); //####
+    OD_LOG_P1("aProcess = ", &aProcess); //####
+    OD_LOG_LL1("timeout = ", timeout); //####
+    bool result = false;
+    
+    if (0 < timeout)
+    {
+        uint32_t       now = Time::getMillisecondCounter();
+        const uint32_t timeoutTime = now + static_cast<uint32_t>(timeout);
+
+        for ( ; (! result) && (now < timeoutTime); )
+        {
+            if (aProcess.isRunning())
+            {
+                Thread::sleep(kProcessSleepSlice);
+                now = Time::getMillisecondCounter();
+            }
+            else
+            {
+                result = true;
+            }
+        }
+    }
+    else
+    {
+        for ( ; ! result; )
+        {
+            if (aProcess.isRunning())
+            {
+                Thread::sleep(kProcessSleepSlice);
+            }
+            else
+            {
+                result = true;
+            }
+        }
+    }
+    OD_LOG_EXIT_B(result); //####
+    return result;
+} // LazyLaunchProcess
 
 void SetExitRequest(void)
 {

@@ -394,6 +394,13 @@ namespace MPlusM_Manager
  @returns @c true if exit has been requested. */
 bool CheckForExit(void * stuff);
 
+/*! @brief Launch a process, checking periodically for completion.
+ @param aProcess The process to execute.
+ @param timeout The number of milliseconds allowed for the process to complete (<= 0 == forever).
+ @returns @c true if the process completed in the time provided. */
+bool LazyLaunchProcess(ChildProcess & aProcess,
+                       const int      timeout);
+
 /*! @brief Indicate that an exit has been requested. */
 void SetExitRequest(void);
 

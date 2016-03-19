@@ -182,7 +182,7 @@ ServiceLaunchThread::run(void)
             OD_LOG("(_serviceProcess->start(nameAndArgs, 0))"); //####
             const String childOutput(_serviceProcess->readAllProcessOutput());
             
-            _serviceProcess->waitForProcessToFinish(-1);
+            LazyLaunchProcess(*_serviceProcess, -1);
             OD_LOG_S1s("childOutput = ", childOutput.toStdString()); //####
         }
         else

@@ -141,7 +141,7 @@ RegistryLaunchThread::run(void)
             OD_LOG("(_registryServiceProcess->start(nameAndArgs, 0))"); //####
             const String childOutput(_registryServiceProcess->readAllProcessOutput());
             
-            _registryServiceProcess->waitForProcessToFinish(-1);
+            LazyLaunchProcess(*_registryServiceProcess, -1);
             OD_LOG_S1s("childOutput = ", childOutput.toStdString()); //####
         }
         else
