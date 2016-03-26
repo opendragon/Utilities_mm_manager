@@ -118,25 +118,25 @@ ChannelContainer::ChannelContainer(const ContainerKind kind,
     _owner(owner), _kind(kind), _hidden(false), _newlyCreated(true), _selected(false),
     _visited(false)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_S4s("title = ", title, "behaviour = ", behaviour, "description = ", description, //####
+    ODL_ENTER(); //####
+    ODL_S4s("title = ", title, "behaviour = ", behaviour, "description = ", description, //####
                "extraInfo = ", extraInfo); //####
-    OD_LOG_S2s("requests = ", requests, "ipAddress = ", ipAddress); //####
+    ODL_S2s("requests = ", requests, "ipAddress = ", ipAddress); //####
     Font & headerFont = _owner.getNormalFont();
     
     _titleHeight = static_cast<int>(headerFont.getHeight());
     setSize(static_cast<int>(headerFont.getStringWidthFloat(getName() + " ") + getTextInset()),
             _titleHeight);
-    OD_LOG_LL2("width = ", getWidth(), "height = ", getHeight()); //####
+    ODL_LL2("width = ", getWidth(), "height = ", getHeight()); //####
     setOpaque(true);
     setVisible(true);
-    OD_LOG_EXIT_P(this); //####
+    ODL_EXIT_P(this); //####
 } // ChannelContainer::ChannelContainer
 
 ChannelContainer::~ChannelContainer(void)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_S1s("getName() = ", getName().toStdString()); //####
+    ODL_OBJENTER(); //####
+    ODL_S1s("getName() = ", getName().toStdString()); //####
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
     {
         ChannelEntry * aPort = getPort(ii);
@@ -154,7 +154,7 @@ ChannelContainer::~ChannelContainer(void)
         delete argDesc;
     }
     _argumentList.clear();
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelContainer::~ChannelContainer
 
 #if defined(__APPLE__)
@@ -164,10 +164,10 @@ ChannelContainer::~ChannelContainer(void)
 void
 ChannelContainer::addArgumentDescription(MplusM::Utilities::BaseArgumentDescriptor * argDesc)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("argDesc = ", argDesc); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("argDesc = ", argDesc); //####
     _argumentList.push_back(argDesc->clone());
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelContainer::addArgumentDescription
 
 ChannelEntry *
@@ -178,8 +178,8 @@ ChannelContainer::addPort(const YarpString &  portName,
                                          const PortUsage     portKind,
                                          const PortDirection direction)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_S4s("portName = ", portName, "portNumber = ", portNumber, "portProtocol = ", //####
+    ODL_OBJENTER(); //####
+    ODL_S4s("portName = ", portName, "portNumber = ", portNumber, "portProtocol = ", //####
                portProtocol, "protocolDescription = ", protocolDescription); //####
     int            countBefore = getNumPorts();
     ChannelEntry * aPort = new ChannelEntry(this, portName, portNumber, portProtocol,
@@ -187,7 +187,7 @@ ChannelContainer::addPort(const YarpString &  portName,
     float          newWidth = static_cast<float>(jmax(aPort->getWidth(), getWidth()));
     float          newHeight = aPort->getHeight() + getHeight() + kEntryGap;
     
-    OD_LOG_LL2("newWidth = ", newWidth, "newHeight = ", newHeight); //####
+    ODL_LL2("newWidth = ", newWidth, "newHeight = ", newHeight); //####
     aPort->setTopLeftPosition(0, static_cast<int>(getHeight() + kEntryGap));
     setSize(static_cast<int>(newWidth), static_cast<int>(newHeight));
     addAndMakeVisible(aPort);
@@ -209,14 +209,14 @@ ChannelContainer::addPort(const YarpString &  portName,
             bPort->unsetAsLastPort();
         }
     }
-    OD_LOG_OBJEXIT_P(aPort); //####
+    ODL_OBJEXIT_P(aPort); //####
     return aPort;
 } // ChannelContainer::addPort
 
 bool
 ChannelContainer::canBeConfigured(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     bool   gotOne = false;
     bool   result;
     size_t mm = _argumentList.size();
@@ -251,22 +251,22 @@ ChannelContainer::canBeConfigured(void)
     {
         result = false;
     }
-    OD_LOG_OBJEXIT_B(result); //####
+    ODL_OBJEXIT_B(result); //####
     return result;
 } // ChannelContainer::canBeConfigured
 
 void
 ChannelContainer::clearHidden(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     _hidden = false;
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelContainer::clearHidden
 
 void
 ChannelContainer::clearMarkers(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
     {
         ChannelEntry * aPort = getPort(ii);
@@ -277,21 +277,21 @@ ChannelContainer::clearMarkers(void)
             aPort->clearDisconnectMarker();
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelContainer::clearMarkers
 
 void
 ChannelContainer::clearVisited(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     _visited = false;
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelContainer::clearVisited
 
 void
 ChannelContainer::configureTheService(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
     {
         ChannelEntry * aPort = getPort(ii);
@@ -362,21 +362,21 @@ ChannelContainer::configureTheService(void)
             
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelContainer::configureTheService
 
 void
 ChannelContainer::deselect(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     _selected = false;
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelContainer::deselect
 
 void
 ChannelContainer::displayAndProcessPopupMenu(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     PopupMenu mm;
     
     mm.setLookAndFeel(&getLookAndFeel());
@@ -421,14 +421,14 @@ ChannelContainer::displayAndProcessPopupMenu(void)
             break;
             
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelContainer::displayAndProcessPopupMenu
 
 void
 ChannelContainer::displayInformation(const bool moreDetails)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_B1("moreDetails = ", moreDetails); //####
+    ODL_OBJENTER(); //####
+    ODL_B1("moreDetails = ", moreDetails); //####
     YarpString thePanelDescription;
     
     switch (_kind)
@@ -511,13 +511,13 @@ ChannelContainer::displayInformation(const bool moreDetails)
         }
     }
     DisplayInformationPanel(this, bodyText, getName());
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelContainer::displayInformation
 
 void
 ChannelContainer::displayMetrics(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
                        // Popup of metrics.
     String      result;
     StringArray metricsArray = getMetrics();
@@ -534,14 +534,14 @@ ChannelContainer::displayMetrics(void)
         result += formatMetricRow(aRow) + "\n";
     }
     DisplayInformationPanel(this, result, String("Metrics for ") + getName());
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelContainer::displayMetrics
 
 void
 ChannelContainer::drawOutgoingConnections(Graphics & gg)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("gg = ", &gg); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("gg = ", &gg); //####
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
     {
         ChannelEntry * aPort = getPort(ii);
@@ -551,14 +551,14 @@ ChannelContainer::drawOutgoingConnections(Graphics & gg)
             aPort->drawOutgoingConnections(gg);
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelContainer::drawOutgoingConnections
 
 String
 ChannelContainer::formatMetricRow(const String & aRow)
 {
-    OD_LOG_OBJENTER();
-    OD_LOG_S1s("aRow = ", aRow.toStdString()); //####
+    ODL_OBJENTER();
+    ODL_S1s("aRow = ", aRow.toStdString()); //####
     String      result;
     StringArray asPieces;
     
@@ -578,7 +578,7 @@ ChannelContainer::formatMetricRow(const String & aRow)
         result += "In messages:  " + inMessages + "\n";
         result += "Out messages: " + outMessages;
     }
-    OD_LOG_OBJEXIT_S(result.toStdString().c_str());
+    ODL_OBJEXIT_S(result.toStdString().c_str());
     return result;
 } // ChannelContainer::formatMetricRow
 
@@ -586,8 +586,8 @@ MplusM::Utilities::BaseArgumentDescriptor *
 ChannelContainer::getArgumentDescriptor(const size_t idx)
 const
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_LL1(idx, idx); //####
+    ODL_ENTER(); //####
+    ODL_LL1(idx, idx); //####
     MplusM::Utilities::BaseArgumentDescriptor * result;
     
     if (_argumentList.size() > idx)
@@ -598,14 +598,14 @@ const
     {
         result = NULL;
     }
-    OD_LOG_EXIT_P(result); //####
+    ODL_EXIT_P(result); //####
     return result;
 } // ChannelContainer::getArgumentDescriptor
 
 StringArray
 ChannelContainer::getMetrics(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     StringArray result;
     
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
@@ -627,14 +627,14 @@ ChannelContainer::getMetrics(void)
             
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
     return result;
 } // ChannelContainer::getMetrics
 
 bool
 ChannelContainer::getMetricsState(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     bool result = false;
     
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
@@ -651,7 +651,7 @@ ChannelContainer::getMetricsState(void)
             
         }
     }
-    OD_LOG_OBJEXIT_B(result); //####
+    ODL_OBJEXIT_B(result); //####
     return result;
 } // ChannelContainer::getMetricsState
 
@@ -660,8 +660,8 @@ ogdf::node
 ChannelContainer::getNode(void)
 const
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_OBJEXIT_P(_node); //####
+    ODL_OBJENTER(); //####
+    ODL_OBJEXIT_P(_node); //####
     return _node;
 } // ChannelContainer::getNode
 #endif // defined(USE_OGDF_POSITIONING_)
@@ -670,8 +670,8 @@ ChannelEntry *
 ChannelContainer::getPort(const int num)
 const
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_LL1("num = ", num); //####
+    ODL_OBJENTER(); //####
+    ODL_LL1("num = ", num); //####
     ChannelEntry * result;
     
     if ((0 <= num) && (getNumPorts() > num))
@@ -682,7 +682,7 @@ const
     {
         result = NULL;
     }
-    OD_LOG_OBJEXIT_P(result); //####
+    ODL_OBJEXIT_P(result); //####
     return result;
 } // ChannelContainer::getPort
 
@@ -690,10 +690,10 @@ Position
 ChannelContainer::getPositionInPanel(void)
 const
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     Position result(getPosition().toFloat());
     
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
     return result;
 } // ChannelContainer::getPositionInPanel
 
@@ -701,15 +701,15 @@ float
 ChannelContainer::getTextInset(void)
 const
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_OBJEXIT_D(kTextInset); //####
+    ODL_OBJENTER(); //####
+    ODL_OBJEXIT_D(kTextInset); //####
     return kTextInset;
 } // ChannelContainer::getTextInset
 
 bool
 ChannelContainer::hasPort(const ChannelEntry * aPort)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     bool result = false;
     
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
@@ -723,14 +723,14 @@ ChannelContainer::hasPort(const ChannelEntry * aPort)
         }
         
     }
-    OD_LOG_OBJEXIT_B(result); //####
+    ODL_OBJEXIT_B(result); //####
     return result;
 } // ChannelContainer::hasPort
 
 void
 ChannelContainer::hide(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     ContentPanel * thePanel = _owner.getContent();
     
     setVisible(false);
@@ -740,13 +740,13 @@ ChannelContainer::hide(void)
         thePanel->setContainerOfInterest(NULL);
         thePanel->requestWindowRepaint();
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelContainer::hide
 
 void
 ChannelContainer::invalidateConnections(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
     {
         ChannelEntry * aPort = getPort(ii);
@@ -756,14 +756,14 @@ ChannelContainer::invalidateConnections(void)
             aPort->invalidateConnections();
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelContainer::invalidateConnections
 
 bool
 ChannelContainer::isMarked(void)
 const
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     bool marked = false;
     
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
@@ -777,7 +777,7 @@ const
         }
         
     }
-    OD_LOG_OBJEXIT_B(marked); //####
+    ODL_OBJEXIT_B(marked); //####
     return marked;
 } // ChannelContainer::isMarked
 
@@ -785,7 +785,7 @@ ChannelEntry *
 ChannelContainer::locateEntry(const Position & location)
 const
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     ChannelEntry * result = NULL;
     
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
@@ -804,14 +804,14 @@ const
             
         }
     }
-    OD_LOG_OBJEXIT_P(result); //####
+    ODL_OBJEXIT_P(result); //####
     return result;
 } // ChannelContainer::locateEntry
 
 void
 ChannelContainer::mouseDown(const MouseEvent & ee)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     bool doDrag = true;
     
     // Prepares our dragger to drag this Component
@@ -833,13 +833,13 @@ ChannelContainer::mouseDown(const MouseEvent & ee)
     {
         _dragger.startDraggingComponent(this, ee);
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelContainer::mouseDown
 
 void
 ChannelContainer::mouseDrag(const MouseEvent & ee)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     bool doDrag = true;
     
     // Moves this Component according to the mouse drag event and applies our constraints to it
@@ -854,14 +854,14 @@ ChannelContainer::mouseDrag(const MouseEvent & ee)
 #endif // ! SETTINGS_FOR_MANUAL_
         _owner.repaint();
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelContainer::mouseDrag
 
 void
 ChannelContainer::paint(Graphics & gg)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("gg = ", &gg); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("gg = ", &gg); //####
     AttributedString as;
     
     as.setJustification(Justification::left);
@@ -878,13 +878,13 @@ ChannelContainer::paint(Graphics & gg)
     as.draw(gg, area1.toFloat());
     gg.setColour(kGapFillColour);
     gg.fillRect(area2);
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelContainer::paint
 
 void
 ChannelContainer::removeInvalidConnections(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
     {
         ChannelEntry * aPort = getPort(ii);
@@ -894,24 +894,24 @@ ChannelContainer::removeInvalidConnections(void)
             aPort->removeInvalidConnections();
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelContainer::invalidateConnections
 
 void
 ChannelContainer::resized(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     // Just set the limits of our constrainer so that we don't drag ourselves off the screen
     _constrainer.setMinimumOnscreenAmounts(getHeight(), getWidth(),
                                            static_cast<int>(getHeight() * 0.8),
                                            static_cast<int>(getWidth() * 0.8));
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelContainer::resized
 
 void
 ChannelContainer::restartTheService(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
     {
         ChannelEntry * aPort = getPort(ii);
@@ -942,30 +942,30 @@ ChannelContainer::restartTheService(void)
             
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelContainer::restartTheService
 
 void
 ChannelContainer::select(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     _selected = true;
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelContainer::select
 
 void
 ChannelContainer::setHidden(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     _hidden = true;
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelContainer::setHidden
 
 void
 ChannelContainer::setMetricsState(const bool newState)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_B1("newState = ", newState); //####
+    ODL_OBJENTER(); //####
+    ODL_B1("newState = ", newState); //####
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
     {
         ChannelEntry * aPort = getPort(ii);
@@ -980,39 +980,39 @@ ChannelContainer::setMetricsState(const bool newState)
             
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelContainer::setMetricsState
 
 #if defined(USE_OGDF_POSITIONING_)
 void
 ChannelContainer::setNode(ogdf::node newNode)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     _node = newNode;
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelContainer::setNode
 #endif // defined(USE_OGDF_POSITIONING_)
 
 void
 ChannelContainer::setOld(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     _newlyCreated = false;
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelContainer::setOld
 
 void
 ChannelContainer::setVisited(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     _visited = true;
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelContainer::setVisited
 
 void
 ChannelContainer::stopTheService(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
     {
         ChannelEntry * aPort = getPort(ii);
@@ -1096,7 +1096,7 @@ ChannelContainer::stopTheService(void)
             
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelContainer::stopTheService
 
 #if defined(__APPLE__)

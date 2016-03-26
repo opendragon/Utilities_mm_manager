@@ -139,11 +139,11 @@ SettingsWindow::SettingsWindow(const String &          title,
     _canSetPort(false), _canSetTag(false), _canUseModifier(false), _hasExtraArguments(false),
     _hasFileField(false)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_S2s("title = ", title.toStdString(), "execType = ", execType.toStdString()); //####
-    OD_LOG_P4("appInfo = ", &appInfo, "endpointToUse = ", &endpointToUse, "tagToUse = ", //####
+    ODL_ENTER(); //####
+    ODL_S2s("title = ", title.toStdString(), "execType = ", execType.toStdString()); //####
+    ODL_P4("appInfo = ", &appInfo, "endpointToUse = ", &endpointToUse, "tagToUse = ", //####
               &tagToUse, "portToUse = ", &portToUse); //####
-    OD_LOG_P1("argsToUse = ", &argsToUse); //####
+    ODL_P1("argsToUse = ", &argsToUse); //####
     _contentArea.setSize(100, 100);
     setContentNonOwned(&_contentArea, true);
     BorderSize<int> bt = getBorderThickness();
@@ -169,13 +169,13 @@ SettingsWindow::SettingsWindow(const String &          title,
     setVisible(true);
     addKeyListener(ManagerWindow::getApplicationCommandManager().getKeyMappings());
     triggerAsyncUpdate();
-    OD_LOG_EXIT_P(this); //####
+    ODL_EXIT_P(this); //####
 } // SettingsWindow::SettingsWindow
 
 SettingsWindow::~SettingsWindow(void)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJENTER(); //####
+    ODL_OBJEXIT(); //####
 } // SettingsWindow::~SettingsWindow
 
 #if defined(__APPLE__)
@@ -185,7 +185,7 @@ SettingsWindow::~SettingsWindow(void)
 void
 SettingsWindow::addAnExtraField(void)
 {
-    OD_LOG_ENTER(); //####
+    ODL_ENTER(); //####
     String               compCountAsString(static_cast<int>(_extraFields.size() + 1));
     CaptionedTextField * newField = new CaptionedTextField(*this, _regularFont, _errorFont,
                                                            _extraFields.size(),
@@ -202,13 +202,13 @@ SettingsWindow::addAnExtraField(void)
     {
         _removeArgumentsButton->setVisible(true);
     }
-    OD_LOG_EXIT(); //####
+    ODL_EXIT(); //####
 } // SettingsWindow::addAnExtraField
 
 void
 SettingsWindow::adjustFields(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     Component * content = getContentComponent();
     int         newButtonTop = content->getHeight() - (_cancelButton.getHeight() +
                                                        FormField::kButtonGap);
@@ -276,14 +276,14 @@ SettingsWindow::adjustFields(void)
         }
         _extraArgumentsGroup->setSize(groupWidth, _extraArgumentsGroup->getHeight());
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // SettingsWindow::adjustFields
 
 void
 SettingsWindow::buttonClicked(Button * aButton)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("aButton = ", aButton); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("aButton = ", aButton); //####
     int commandId = aButton->getCommandID();
     
     tellAllFieldsToIgnoreNextFocusLoss();
@@ -323,13 +323,13 @@ SettingsWindow::buttonClicked(Button * aButton)
             break;
             
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // SettingsWindow::buttonClicked
 
 bool
 SettingsWindow::fieldsAreValid(void)
 {
-    OD_LOG_ENTER(); //####
+    ODL_ENTER(); //####
     int    badCount = 0;
     String badArgs;
     String primaryChannel;
@@ -459,7 +459,7 @@ SettingsWindow::fieldsAreValid(void)
             badCount = -1; // Flag this as bad.
         }
     }
-    OD_LOG_EXIT_B(0 == badCount); //####
+    ODL_EXIT_B(0 == badCount); //####
     return (0 == badCount);
 } // SettingsWindow::fieldsAreValid
 
@@ -473,8 +473,8 @@ SettingsWindow::focusGained(FocusChangeType cause)
 #if MAC_OR_LINUX_
 # pragma unused(cause)
 #endif // MAC_OR_LINUX_
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJENTER(); //####
+    ODL_OBJEXIT(); //####
 } // SettingsWindow::focusGained
 #if (! MAC_OR_LINUX_)
 # pragma warning(pop)
@@ -490,8 +490,8 @@ SettingsWindow::focusLost(FocusChangeType cause)
 #if MAC_OR_LINUX_
 # pragma unused(cause)
 #endif // MAC_OR_LINUX_
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJENTER(); //####
+    ODL_OBJEXIT(); //####
 } // SettingsWindow::focusLost
 #if (! MAC_OR_LINUX_)
 # pragma warning(pop)
@@ -500,18 +500,18 @@ SettingsWindow::focusLost(FocusChangeType cause)
 void
 SettingsWindow::handleAsyncUpdate(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     ApplicationCommandManager & commandManager = ManagerWindow::getApplicationCommandManager();
     
     commandManager.registerAllCommandsForTarget(JUCEApplication::getInstance());
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // SettingsWindow::handleAsyncUpdate
 
 bool
 SettingsWindow::keyPressed(const KeyPress & key)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("key = ", &key); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("key = ", &key); //####
     bool result;
     
     if (key == KeyPress::escapeKey)
@@ -533,14 +533,14 @@ SettingsWindow::keyPressed(const KeyPress & key)
     {
         result = inherited3::keyPressed(key);
     }
-    OD_LOG_OBJEXIT_B(result); //####
+    ODL_OBJEXIT_B(result); //####
     return result;
 } // SettingsWindow::keyPressed
 
 void
 SettingsWindow::recalculateArea(void)
 {
-    OD_LOG_ENTER(); //####
+    ODL_ENTER(); //####
     int    heightSoFar = _topText.getY() + _topText.getHeight() + FormField::kButtonGap;
     int    widthSoFar = _topText.getX() + _topText.getWidth();
     size_t numExtra = _extraFields.size();
@@ -625,13 +625,13 @@ SettingsWindow::recalculateArea(void)
     
     setContentComponentSize(minW + kExtraSpaceInWindow + cb.getLeftAndRight(),
                             heightSoFar + kExtraSpaceInWindow + cb.getTopAndBottom());
-    OD_LOG_EXIT(); //####
+    ODL_EXIT(); //####
 } // SettingsWindow::recalculateArea
 
 void
 SettingsWindow::removeMostRecentlyAddedExtraField(void)
 {
-    OD_LOG_ENTER(); //####
+    ODL_ENTER(); //####
     FormField * lastField = _extraFields.getLast();
     
     _extraFields.removeLast();
@@ -642,14 +642,14 @@ SettingsWindow::removeMostRecentlyAddedExtraField(void)
     {
         _removeArgumentsButton->setVisible(0 < _extraFields.size());
     }
-    OD_LOG_EXIT(); //####
+    ODL_EXIT(); //####
 } // SettingsWindow::removeMostRecentlyAddedExtraField
 
 void
 SettingsWindow::reportErrorInField(FormField & fieldOfInterest)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("fieldOfInterest = ", &fieldOfInterest); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("fieldOfInterest = ", &fieldOfInterest); //####
     String nameToDisplay;
     
     if (&fieldOfInterest == _endpointField)
@@ -667,25 +667,25 @@ SettingsWindow::reportErrorInField(FormField & fieldOfInterest)
     AlertWindow::showMessageBox(AlertWindow::WarningIcon, getName(),
                                 String("The ") + nameToDisplay + " argument is invalid.\n"
                                 "Please correct the argument and try again.", String::empty, this);
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // SettingsWindow::reportErrorInField
 
 void
 SettingsWindow::reportErrorInField(ValidatingTextEditor & fieldOfInterest)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("fieldOfInterest = ", &fieldOfInterest); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("fieldOfInterest = ", &fieldOfInterest); //####
     AlertWindow::showMessageBox(AlertWindow::WarningIcon, getName(),
                                 String("The ") + fieldOfInterest.getName() +
                                 " argument is invalid.\n"
                                 "Please correct the argument and try again.", String::empty, this);
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // SettingsWindow::reportErrorInField
 
 void
 SettingsWindow::resized(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     Button * close = getCloseButton();
     
     inherited3::resized();
@@ -698,15 +698,15 @@ SettingsWindow::resized(void)
             close->addShortcut(esc);
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // SettingsWindow::resized
 
 void
 SettingsWindow::setUpStandardFields(int & widthSoFar,
                                     int & heightSoFar)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P2("widthSoFar = ", &widthSoFar, "heightSoFar = ", &heightSoFar); //####
+    ODL_OBJENTER(); //####
+    ODL_P2("widthSoFar = ", &widthSoFar, "heightSoFar = ", &heightSoFar); //####
     Component * content = getContentComponent();
     int         buttonHeight = ManagerApplication::getButtonHeight();
     Point<int>  dimensions;
@@ -918,13 +918,13 @@ SettingsWindow::setUpStandardFields(int & widthSoFar,
     _okButton.setTopLeftPosition(0, heightSoFar + FormField::kButtonGap);
     content->addAndMakeVisible(&_okButton, 0);
     heightSoFar += buttonHeight;
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // SettingsWindow::setUpStandardFields
 
 void
 SettingsWindow::tellAllFieldsToIgnoreNextFocusLoss(void)
 {
-    OD_LOG_ENTER(); //####
+    ODL_ENTER(); //####
     if (_endpointField)
     {
         _endpointField->ignoreNextFocusLoss();
@@ -955,7 +955,7 @@ SettingsWindow::tellAllFieldsToIgnoreNextFocusLoss(void)
             aField->ignoreNextFocusLoss();
         }
     }
-    OD_LOG_EXIT(); //####
+    ODL_EXIT(); //####
 } // SettingsWindow::tellAllFieldsToIgnoreNextFocusLoss
 
 #if defined(__APPLE__)

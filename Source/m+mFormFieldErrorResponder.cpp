@@ -88,14 +88,14 @@ using namespace std;
 
 FormFieldErrorResponder::FormFieldErrorResponder(void)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_EXIT_P(this); //####
+    ODL_ENTER(); //####
+    ODL_EXIT_P(this); //####
 } // FormFieldErrorResponder::FormFieldErrorResponder
 
 FormFieldErrorResponder::~FormFieldErrorResponder(void)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJENTER(); //####
+    ODL_OBJEXIT(); //####
 } // FormFieldErrorResponder::~FormFieldErrorResponder
 
 #if defined(__APPLE__)

@@ -88,18 +88,18 @@ PortData::PortData(const YarpString &  portName,
     _portName(portName), _portPortNumber(), _portProtocol(portProtocol),
     _protocolDescription(protocolDescription), _direction(direction), _usage(portKind)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_S3s("portName = ", portName, "portProtocol = ", portProtocol, //####
+    ODL_ENTER(); //####
+    ODL_S3s("portName = ", portName, "portProtocol = ", portProtocol, //####
                "protocolDescription = ", protocolDescription); //####
-    OD_LOG_LL2("portKind = ", portKind, "direction = ", direction); //####
-    OD_LOG_EXIT_P(this); //####
+    ODL_LL2("portKind = ", portKind, "direction = ", direction); //####
+    ODL_EXIT_P(this); //####
 } // PortData::PortData
 
 PortData::~PortData(void)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_S1s("getPortName() = ", getPortName()); //####
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJENTER(); //####
+    ODL_S1s("getPortName() = ", getPortName()); //####
+    ODL_OBJEXIT(); //####
 } // PortData::~PortData
 
 #if defined(__APPLE__)
@@ -110,8 +110,8 @@ void
 PortData::addInputConnection(PortData *          other,
                              Common::ChannelMode mode)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("other = ", other); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("other = ", other); //####
     if (other)
     {
         bool canAdd = true;
@@ -126,7 +126,7 @@ PortData::addInputConnection(PortData *          other,
                 if ((candidate->_otherPort == other) ||
                     (candidate->_otherPort->getPortName() == other->getPortName()))
                 {
-                    OD_LOG("already present"); //####
+                    ODL_LOG("already present"); //####
                     candidate->_valid = true;
                     canAdd = false;
                     break;
@@ -144,15 +144,15 @@ PortData::addInputConnection(PortData *          other,
             _inputConnections.push_back(newConnection);
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // PortData::addInputConnection
 
 void
 PortData::addOutputConnection(PortData *          other,
                               Common::ChannelMode mode)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("other = ", other); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("other = ", other); //####
     if (other)
     {
         bool canAdd = true;
@@ -167,7 +167,7 @@ PortData::addOutputConnection(PortData *          other,
                 if ((candidate->_otherPort == other) ||
                     (candidate->_otherPort->getPortName() == other->getPortName()))
                 {
-                    OD_LOG("already present"); //####
+                    ODL_LOG("already present"); //####
                     candidate->_valid = true;
                     canAdd = false;
                     break;
@@ -185,15 +185,15 @@ PortData::addOutputConnection(PortData *          other,
             _outputConnections.push_back(newConnection);
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // PortData::addOutputConnection
 
 bool
 PortData::hasOutgoingConnectionTo(const YarpString & otherPort)
 const
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_S1s("otherPort = ", otherPort); //####
+    ODL_OBJENTER(); //####
+    ODL_S1s("otherPort = ", otherPort); //####
     bool result = false;
     
     for (PortConnections::const_iterator walker(_outputConnections.begin());
@@ -209,14 +209,14 @@ const
         }
         
     }
-    OD_LOG_OBJEXIT_B(result); //####
+    ODL_OBJEXIT_B(result); //####
     return result;
 } // PortData::hasOutgoingConnectionTo
 
 void
 PortData::invalidateConnections(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     for (PortConnections::iterator walker(_inputConnections.begin());
          _inputConnections.end() != walker; ++walker)
     {
@@ -237,14 +237,14 @@ PortData::invalidateConnections(void)
             candidate->_valid = false;
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // PortData::invalidateConnections
 
 void
 PortData::removeInputConnection(PortData * other)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("other = ", other); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("other = ", other); //####
     if (other)
     {
         PortConnections::iterator walker(_inputConnections.begin());
@@ -264,13 +264,13 @@ PortData::removeInputConnection(PortData * other)
             _inputConnections.erase(walker);
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // PortData::removeInputConnection
 
 void
 PortData::removeInvalidConnections(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     bool keepGoing;
     
     do
@@ -317,14 +317,14 @@ PortData::removeInvalidConnections(void)
         }
     }
     while (keepGoing);
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // PortData::removeInvalidConnections
 
 void
 PortData::removeOutputConnection(PortData * other)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("other = ", other); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("other = ", other); //####
     if (other)
     {
         PortConnections::iterator walker(_outputConnections.begin());
@@ -344,7 +344,7 @@ PortData::removeOutputConnection(PortData * other)
             _outputConnections.erase(walker);
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // PortData::removeOutputConnection
 
 #if defined(__APPLE__)

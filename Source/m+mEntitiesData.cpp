@@ -84,15 +84,15 @@ using namespace MPlusM_Manager;
 
 EntitiesData::EntitiesData(void)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_EXIT_P(this); //####
+    ODL_ENTER(); //####
+    ODL_EXIT_P(this); //####
 } // EntitiesData::EntitiesData
 
 EntitiesData::~EntitiesData(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     clearOutData();
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // EntitiesData::~EntitiesData
 
 #if defined(__APPLE__)
@@ -104,38 +104,38 @@ EntitiesData::addConnection(const YarpString &  inName,
                             const YarpString &  outName,
                             Common::ChannelMode mode)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_S2s("inName = ", inName, "outName = ", outName); //####
+    ODL_OBJENTER(); //####
+    ODL_S2s("inName = ", inName, "outName = ", outName); //####
     ConnectionDetails details;
     
     details._inPortName = inName;
     details._outPortName = outName;
     details._mode = mode;
     _connections.push_back(details);
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // EntitiesData::addConnection
 
 void
 EntitiesData::addEntity(EntityData * anEntity)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("anEntity = ", anEntity); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("anEntity = ", anEntity); //####
     _entities.push_back(anEntity);
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // EntitiesData::addEntity
 
 void
 EntitiesData::clearConnections(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     _connections.clear();
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // EntitiesData::clearConnections
 
 void
 EntitiesData::clearOutData(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     clearConnections();
     for (EntitiesList::const_iterator it(_entities.begin()); _entities.end() != it; ++it)
     {
@@ -147,15 +147,15 @@ EntitiesData::clearOutData(void)
         }
     }
     _entities.clear();
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // EntitiesData::clearOutData
 
 EntityData *
 EntitiesData::getEntity(const size_t index)
 const
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_LL1("index = ", index); //####
+    ODL_OBJENTER(); //####
+    ODL_LL1("index = ", index); //####
     EntityData * result;
     
     if (_entities.size() > index)
@@ -166,7 +166,7 @@ const
     {
         result = NULL;
     }
-    OD_LOG_OBJEXIT_P(result); //####
+    ODL_OBJEXIT_P(result); //####
     return result;
 } // EntitiesData::getEntity
 
@@ -174,10 +174,10 @@ size_t
 EntitiesData::getNumberOfEntities(void)
 const
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     size_t result = _entities.size();
     
-    OD_LOG_OBJEXIT_LL(result); //####
+    ODL_OBJEXIT_LL(result); //####
     return result;
 } // EntitiesData::getNumberOfEntities
 

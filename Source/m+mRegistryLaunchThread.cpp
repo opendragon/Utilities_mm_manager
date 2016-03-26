@@ -91,18 +91,18 @@ RegistryLaunchThread::RegistryLaunchThread(const String & pathToExecutable,
     inherited("Registry Service launcher"), _registryServiceProcess(NULL),
     _registryServicePath(pathToExecutable), _registryServicePort(portNumber)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_S1s("pathToExecutable = ", pathToExecutable.toStdString()); //####
-    OD_LOG_LL1("portNumber = ", portNumber); //####
-    OD_LOG_EXIT_P(this); //####
+    ODL_ENTER(); //####
+    ODL_S1s("pathToExecutable = ", pathToExecutable.toStdString()); //####
+    ODL_LL1("portNumber = ", portNumber); //####
+    ODL_EXIT_P(this); //####
 } // RegistryLaunchThread::RegistryLaunchThread
 
 RegistryLaunchThread::~RegistryLaunchThread(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     killChildProcess();
     _registryServiceProcess = NULL;
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // RegistryLaunchThread::~RegistryLaunchThread
 
 #if defined(__APPLE__)
@@ -112,44 +112,44 @@ RegistryLaunchThread::~RegistryLaunchThread(void)
 void
 RegistryLaunchThread::killChildProcess(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     if (_registryServiceProcess)
     {
         _registryServiceProcess->kill();
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // RegistryLaunchThread::killChildProcess
 
 void
 RegistryLaunchThread::run(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     _registryServiceProcess = new ChildProcess;
     if (_registryServiceProcess)
     {
-        OD_LOG("(_registryServiceProcess)"); //####
+        ODL_LOG("(_registryServiceProcess)"); //####
         StringArray nameAndArgs(_registryServicePath);
         
         if (0 < _registryServicePort)
         {
-            OD_LOG("(0 < _registryServicePort)"); //####
+            ODL_LOG("(0 < _registryServicePort)"); //####
             nameAndArgs.add("--port");
             nameAndArgs.add(String(_registryServicePort));
         }
         if (_registryServiceProcess->start(nameAndArgs, 0))
         {
-            OD_LOG("(_registryServiceProcess->start(nameAndArgs, 0))"); //####
+            ODL_LOG("(_registryServiceProcess->start(nameAndArgs, 0))"); //####
             const String childOutput(_registryServiceProcess->readAllProcessOutput());
             
             LazyLaunchProcess(*_registryServiceProcess, -1);
-            OD_LOG_S1s("childOutput = ", childOutput.toStdString()); //####
+            ODL_S1s("childOutput = ", childOutput.toStdString()); //####
         }
         else
         {
-            OD_LOG("! (_registryServiceProcess->start(nameAndArgs, 0))"); //####
+            ODL_LOG("! (_registryServiceProcess->start(nameAndArgs, 0))"); //####
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // RegistryLaunchThread::run
 
 #if defined(__APPLE__)

@@ -96,17 +96,17 @@ ValidatingTextEditor::ValidatingTextEditor(CaptionedTextField & owner,
     inherited(componentName, passwordCharacter), _owner(owner), _validator(validator),
     _ignoreNextFocusLoss(false)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_P2("owner = ", &owner, "validator = ", validator); //####
-    OD_LOG_S1s("componentName = ", componentName.toStdString()); //####
-    OD_LOG_LL1("passwordCharacter = ", passwordCharacter); //####
-    OD_LOG_EXIT_P(this); //####
+    ODL_ENTER(); //####
+    ODL_P2("owner = ", &owner, "validator = ", validator); //####
+    ODL_S1s("componentName = ", componentName.toStdString()); //####
+    ODL_LL1("passwordCharacter = ", passwordCharacter); //####
+    ODL_EXIT_P(this); //####
 } // ValidatingTextEditor::ValidatingTextEditor
 
 ValidatingTextEditor::~ValidatingTextEditor(void)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJENTER(); //####
+    ODL_OBJEXIT(); //####
 } // ValidatingTextEditor::~ValidatingTextEditor
 
 #if defined(__APPLE__)
@@ -117,8 +117,8 @@ void
 ValidatingTextEditor::addPopupMenuItems(PopupMenu &        menuToAddTo,
                                         const MouseEvent * mouseClickEvent)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P2("menuToAddTo = ", &menuToAddTo, "mouseClickEvent = ", mouseClickEvent); //####
+    ODL_OBJENTER(); //####
+    ODL_P2("menuToAddTo = ", &menuToAddTo, "mouseClickEvent = ", mouseClickEvent); //####
     inherited::addPopupMenuItems(menuToAddTo, mouseClickEvent);
     if (_validator)
     {
@@ -137,7 +137,7 @@ ValidatingTextEditor::addPopupMenuItems(PopupMenu &        menuToAddTo,
             }
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ValidatingTextEditor::addPopupMenuItems
 
 #if (! MAC_OR_LINUX_)
@@ -150,8 +150,8 @@ ValidatingTextEditor::focusGained(FocusChangeType cause)
 #if MAC_OR_LINUX_
 # pragma unused(cause)
 #endif // MAC_OR_LINUX_
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJENTER(); //####
+    ODL_OBJEXIT(); //####
 } // ValidatingTextEditor::focusGained
 #if (! MAC_OR_LINUX_)
 # pragma warning(pop)
@@ -167,7 +167,7 @@ ValidatingTextEditor::focusLost(FocusChangeType cause)
 #if MAC_OR_LINUX_
 # pragma unused(cause)
 #endif // MAC_OR_LINUX_
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     if (_ignoreNextFocusLoss)
     {
         _ignoreNextFocusLoss = false;
@@ -176,7 +176,7 @@ ValidatingTextEditor::focusLost(FocusChangeType cause)
     {
         _owner.reportErrorInField();
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ValidatingTextEditor::focusLost
 #if (! MAC_OR_LINUX_)
 # pragma warning(pop)
@@ -185,16 +185,16 @@ ValidatingTextEditor::focusLost(FocusChangeType cause)
 void
 ValidatingTextEditor::ignoreNextFocusLoss(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     _ignoreNextFocusLoss = true;
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ValidatingTextEditor::ignoreNextFocusLoss
 
 bool
 ValidatingTextEditor::keyPressed(const KeyPress & key)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("key = ", &key); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("key = ", &key); //####
     bool result;
     
     if (key == KeyPress::tabKey)
@@ -219,15 +219,15 @@ ValidatingTextEditor::keyPressed(const KeyPress & key)
     {
         result = inherited::keyPressed(key);
     }
-    OD_LOG_OBJEXIT_B(result); //####
+    ODL_OBJEXIT_B(result); //####
     return result;
 } // ValidatingTextEditor::keyPressed
 
 void
 ValidatingTextEditor::performPopupMenuAction(int menuItemID)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_LL1("menuItemID = ", menuItemID); //####
+    ODL_OBJENTER(); //####
+    ODL_LL1("menuItemID = ", menuItemID); //####
     switch (menuItemID)
     {
         case kPopupSelectFileToOpen :
@@ -240,13 +240,13 @@ ValidatingTextEditor::performPopupMenuAction(int menuItemID)
             break;
             
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ValidatingTextEditor::performPopupMenuAction
 
 bool
 ValidatingTextEditor::validateField(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     bool result;
     
     if (_validator)
@@ -257,15 +257,15 @@ ValidatingTextEditor::validateField(void)
     {
         result = true;
     }
-    OD_LOG_OBJEXIT_B(result); //####
+    ODL_OBJEXIT_B(result); //####
     return result;
 } // ValidatingTextEditor::validateField
 
 bool
 ValidatingTextEditor::validateField(StringArray & argsToUse)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("argsToUse = ", &argsToUse); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("argsToUse = ", &argsToUse); //####
     bool result;
     
     if (_validator)
@@ -277,7 +277,7 @@ ValidatingTextEditor::validateField(StringArray & argsToUse)
         result = true;
         argsToUse.add(getText());
     }
-    OD_LOG_OBJEXIT_B(result); //####
+    ODL_OBJEXIT_B(result); //####
     return result;
 } // ValidatingTextEditor::validateField
 

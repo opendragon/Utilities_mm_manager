@@ -105,11 +105,11 @@ CheckboxField::CheckboxField(Font &         regularLabelFont,
     inherited(regularLabelFont, index), _checkbox(new ToggleButton("")),
     _caption(new Label(componentName, captionTitle))
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_P1("regularLabelFont = ", &regularLabelFont); //####
-    OD_LOG_S2s("captionTitle = ", captionTitle.toStdString(), "componentName = ", //####
+    ODL_ENTER(); //####
+    ODL_P1("regularLabelFont = ", &regularLabelFont); //####
+    ODL_S2s("captionTitle = ", captionTitle.toStdString(), "componentName = ", //####
                componentName.toStdString()); //####
-    OD_LOG_LL2("index = ", index, "top = ", top); //####
+    ODL_LL2("index = ", index, "top = ", top); //####
     Point<int> dimensions;
     int        adjustedEditorHeight = static_cast<int>(_regularFont.getHeight() +
                                                        kCheckboxHeightAdjustment);
@@ -119,15 +119,15 @@ CheckboxField::CheckboxField(Font &         regularLabelFont,
     _caption->setBounds(_checkbox->getX() + _checkbox->getWidth() + kCheckboxToLabelGap,
                         _checkbox->getY(), dimensions.getX(), adjustedEditorHeight);
     _caption->setFont(_regularFont);
-    OD_LOG_EXIT_P(this); //####
+    ODL_EXIT_P(this); //####
 } // CheckboxField::CheckboxField
 
 CheckboxField::~CheckboxField(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     _checkbox = NULL;
     _caption = NULL;
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // CheckboxField::~CheckboxField
 
 #if defined(__APPLE__)
@@ -137,24 +137,24 @@ CheckboxField::~CheckboxField(void)
 void
 CheckboxField::addToComponent(Component * whereToAdd)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("whereToAdd = ", whereToAdd); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("whereToAdd = ", whereToAdd); //####
     if (whereToAdd)
     {
         whereToAdd->addAndMakeVisible(_checkbox);
         whereToAdd->addAndMakeVisible(_caption);
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // CheckboxField::addToComponent
 
 int
 CheckboxField::getHeight(void)
 const
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     int result = _checkbox->getHeight();
     
-    OD_LOG_OBJEXIT_LL(result); //####
+    ODL_OBJEXIT_LL(result); //####
     return result;
 } // CheckboxField::getHeight
 
@@ -162,11 +162,11 @@ int
 CheckboxField::getMinimumWidth(void)
 const
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     int result = (_checkbox->getX() + _checkbox->getWidth() + kCheckboxToLabelGap +
                   _caption->getWidth());
     
-    OD_LOG_OBJEXIT_LL(result); //####
+    ODL_OBJEXIT_LL(result); //####
     return result;
 } // CheckboxField::::getMinimumWidth
 
@@ -174,10 +174,10 @@ const String &
 CheckboxField::getName(void)
 const
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     const String & theName = _caption->getName();
     
-    OD_LOG_OBJEXIT_s(theName.toStdString()); //####
+    ODL_OBJEXIT_s(theName.toStdString()); //####
     return theName;
 } // CheckboxField::getName
 
@@ -185,10 +185,10 @@ String
 CheckboxField::getText(void)
 const
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     String result = (_checkbox->getToggleState() ? "1" : "0");
     
-    OD_LOG_OBJEXIT_s(result.toStdString()); //####
+    ODL_OBJEXIT_s(result.toStdString()); //####
     return result;
 } // CheckboxField::getText
 
@@ -196,11 +196,11 @@ int
 CheckboxField::getWidth(void)
 const
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     int result = (_checkbox->getX() + _checkbox->getWidth() + kCheckboxToLabelGap +
                   _caption->getWidth());
     
-    OD_LOG_OBJEXIT_LL(result); //####
+    ODL_OBJEXIT_LL(result); //####
     return result;
 } // CheckboxField::getWidth
 
@@ -208,10 +208,10 @@ int
 CheckboxField::getX(void)
 const
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     int result = _checkbox->getX();
     
-    OD_LOG_OBJEXIT_LL(result); //####
+    ODL_OBJEXIT_LL(result); //####
     return result;
 } // CheckboxField::getX
 
@@ -219,31 +219,31 @@ int
 CheckboxField::getY(void)
 const
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     int result = _checkbox->getY();
     
-    OD_LOG_OBJEXIT_LL(result); //####
+    ODL_OBJEXIT_LL(result); //####
     return result;
 } // CheckboxField::getY
 
 void
 CheckboxField::removeFromComponent(Component * whereToRemove)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("whereToRemove = ", whereToRemove); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("whereToRemove = ", whereToRemove); //####
     if (whereToRemove)
     {
         whereToRemove->removeChildComponent(_checkbox);
         whereToRemove->removeChildComponent(_caption);
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // CheckboxField::removeFromComponent
 
 void
 CheckboxField::setText(const String & newText)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_S1s("newText = ", newText.toStdString()); //####
+    ODL_OBJENTER(); //####
+    ODL_S1s("newText = ", newText.toStdString()); //####
     bool       boolValue;
     juce_wchar firstChar = tolower(newText[0]);
     
@@ -256,37 +256,37 @@ CheckboxField::setText(const String & newText)
         boolValue = false;
     }
     _checkbox->setToggleState(boolValue, dontSendNotification);
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // CheckboxField::setText
 
 void
 CheckboxField::setWidth(const int ww)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_LL1("ww = ", ww); //####
+    ODL_OBJENTER(); //####
+    ODL_LL1("ww = ", ww); //####
     int newWidth = ww - (_checkbox->getX() + _checkbox->getWidth() + kCheckboxToLabelGap);
     
     _caption->setSize(newWidth, _caption->getHeight());
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // CheckboxField::setWidth
 
 void
 CheckboxField::setY(const int yy)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_LL1("yy = ", yy); //####
+    ODL_OBJENTER(); //####
+    ODL_LL1("yy = ", yy); //####
     _checkbox->setTopLeftPosition(_checkbox->getX(), yy);
     _caption->setTopLeftPosition(_caption->getX(), yy);
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // CheckboxField::setY
 
 bool
 CheckboxField::validateField(StringArray & argsToUse)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("argsToUse = ", &argsToUse); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("argsToUse = ", &argsToUse); //####
     argsToUse.add(getText());
-    OD_LOG_OBJEXIT_B(true); //####
+    ODL_OBJEXIT_B(true); //####
     return true;
 } // CheckboxField::validateField
 

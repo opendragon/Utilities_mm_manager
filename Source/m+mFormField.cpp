@@ -102,16 +102,16 @@ FormField::FormField(Font &       regularLabelFont,
                      const size_t index) :
     _regularFont(regularLabelFont), _index(index)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_P1("regularLabelFont = ", &regularLabelFont); //####
-    OD_LOG_LL1("index = ", index); //####
-    OD_LOG_EXIT_P(this); //####
+    ODL_ENTER(); //####
+    ODL_P1("regularLabelFont = ", &regularLabelFont); //####
+    ODL_LL1("index = ", index); //####
+    ODL_EXIT_P(this); //####
 } // FormField::FormField
 
 FormField::~FormField(void)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJENTER(); //####
+    ODL_OBJEXIT(); //####
 } // FormField::~FormField
 
 #if defined(__APPLE__)
@@ -122,23 +122,23 @@ TextButton *
 FormField::getButton(void)
 const
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_OBJEXIT_P(NULL); //####
+    ODL_OBJENTER(); //####
+    ODL_OBJEXIT_P(NULL); //####
     return NULL;
 } // FormField::getButton
 
 void
 FormField::ignoreNextFocusLoss(void)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJENTER(); //####
+    ODL_OBJEXIT(); //####
 } // FormField::ignoreNextFocusLoss
 
 void
 FormField::performButtonAction(void)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJENTER(); //####
+    ODL_OBJEXIT(); //####
 } // FormField::performButtonAction
 
 #if (! MAC_OR_LINUX_)
@@ -153,9 +153,9 @@ FormField::setButton(TextButton * newButton)
 #  pragma unused(newButton)
 # endif // MAC_OR_LINUX_
 #endif // (! defined(OD_ENABLE_LOGGING_)
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("newButton = ", newButton); //####
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("newButton = ", newButton); //####
+    ODL_OBJEXIT(); //####
 } // FormField::setButton
 #if (! MAC_OR_LINUX_)
 # pragma warning(pop)
@@ -164,8 +164,8 @@ FormField::setButton(TextButton * newButton)
 bool
 FormField::validateField(void)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_OBJEXIT_B(true); //####
+    ODL_OBJENTER(); //####
+    ODL_OBJEXIT_B(true); //####
     return true;
 } // FormField::validateField
 

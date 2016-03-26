@@ -97,26 +97,26 @@ ServiceLaunchThread::ServiceLaunchThread(const String &      pathToExecutable,
     _servicePath(pathToExecutable), _servicePort(portNumber), _serviceTag(tag),
     _arguments(arguments), _tagModifierCount(tagModifierCount), _needsGo(needsGo)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_S4s("pathToExecutable = ", pathToExecutable.toStdString(), "endpointName = ", //####
+    ODL_ENTER(); //####
+    ODL_S4s("pathToExecutable = ", pathToExecutable.toStdString(), "endpointName = ", //####
                endpointName.toStdString(), "tag = ", tag.toStdString(), "portNumber = ", //####
                portNumber.toStdString()); //####
-    OD_LOG_P1("arguments = ", &arguments); //####
-    OD_LOG_B1("needsGo = ", needsGo); //####
+    ODL_P1("arguments = ", &arguments); //####
+    ODL_B1("needsGo = ", needsGo); //####
 #if defined(OD_ENABLE_LOGGING_)
     String allArgs(arguments.joinIntoString(", "));
     
-    OD_LOG_S1s("allArgs <- ", allArgs.toStdString()); //####
+    ODL_S1s("allArgs <- ", allArgs.toStdString()); //####
 #endif // defined(OD_ENABLE_LOGGING_)
-    OD_LOG_EXIT_P(this); //####
+    ODL_EXIT_P(this); //####
 } // ServiceLaunchThread::ServiceLaunchThread
 
 ServiceLaunchThread::~ServiceLaunchThread(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     killChildProcess();
     _serviceProcess = NULL;
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ServiceLaunchThread::~ServiceLaunchThread
 
 #if defined(__APPLE__)
@@ -126,51 +126,51 @@ ServiceLaunchThread::~ServiceLaunchThread(void)
 void
 ServiceLaunchThread::killChildProcess(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     if (_serviceProcess)
     {
         _serviceProcess->kill();
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ServiceLaunchThread::killChildProcess
 
 void
 ServiceLaunchThread::run(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     _serviceProcess = new ChildProcess;
     if (_serviceProcess)
     {
-        OD_LOG("(_serviceProcess)"); //####
+        ODL_LOG("(_serviceProcess)"); //####
         StringArray nameAndArgs(_servicePath);
         
         if (0 < _servicePort.length())
         {
-            OD_LOG("(0 < _servicePort.length())"); //####
+            ODL_LOG("(0 < _servicePort.length())"); //####
             nameAndArgs.add("--port");
             nameAndArgs.add(_servicePort);
         }
         if (0 < _serviceTag.length())
         {
-            OD_LOG("(0 < _serviceTag())"); //####
+            ODL_LOG("(0 < _serviceTag())"); //####
             nameAndArgs.add("--tag");
             nameAndArgs.add(_serviceTag);
         }
         if (0 < _serviceEndpoint.length())
         {
-            OD_LOG("(0 < _serviceEndpoint())"); //####
+            ODL_LOG("(0 < _serviceEndpoint())"); //####
             nameAndArgs.add("--endpoint");
             nameAndArgs.add(_serviceEndpoint);
         }
         if (0 < _tagModifierCount)
         {
-            OD_LOG("(0 < tagModifierCount)"); //####
+            ODL_LOG("(0 < tagModifierCount)"); //####
             nameAndArgs.add("--mod");
             nameAndArgs.add(String(_tagModifierCount));
         }
         if (_needsGo)
         {
-            OD_LOG("(_needsGo)"); //####
+            ODL_LOG("(_needsGo)"); //####
             nameAndArgs.add("--go");
         }
         if (0 < _arguments.size())
@@ -179,18 +179,18 @@ ServiceLaunchThread::run(void)
         }
         if (_serviceProcess->start(nameAndArgs, 0))
         {
-            OD_LOG("(_serviceProcess->start(nameAndArgs, 0))"); //####
+            ODL_LOG("(_serviceProcess->start(nameAndArgs, 0))"); //####
             const String childOutput(_serviceProcess->readAllProcessOutput());
             
             LazyLaunchProcess(*_serviceProcess, -1);
-            OD_LOG_S1s("childOutput = ", childOutput.toStdString()); //####
+            ODL_S1s("childOutput = ", childOutput.toStdString()); //####
         }
         else
         {
-            OD_LOG("! (_serviceProcess->start(nameAndArgs, 0))"); //####
+            ODL_LOG("! (_serviceProcess->start(nameAndArgs, 0))"); //####
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ServiceLaunchThread::run
 
 #if defined(__APPLE__)

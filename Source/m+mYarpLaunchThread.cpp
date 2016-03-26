@@ -92,18 +92,18 @@ YarpLaunchThread::YarpLaunchThread(const String & pathToExecutable,
     inherited("YARP launcher"), _yarpProcess(NULL), _yarpAddress(ipAddress),
     _yarpPath(pathToExecutable), _yarpPort(portNumber)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_S2s("pathToExecutable = ", pathToExecutable, "ipAddress = ", ipAddress); //####
-    OD_LOG_LL1("portNumber = ", portNumber); //####
-    OD_LOG_EXIT_P(this); //####
+    ODL_ENTER(); //####
+    ODL_S2s("pathToExecutable = ", pathToExecutable, "ipAddress = ", ipAddress); //####
+    ODL_LL1("portNumber = ", portNumber); //####
+    ODL_EXIT_P(this); //####
 } // YarpLaunchThread::YarpLaunchThread
 
 YarpLaunchThread::~YarpLaunchThread(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     killChildProcess();
     _yarpProcess = NULL;
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // YarpLaunchThread::~YarpLaunchThread
 
 #if defined(__APPLE__)
@@ -113,22 +113,22 @@ YarpLaunchThread::~YarpLaunchThread(void)
 void
 YarpLaunchThread::killChildProcess(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     if (_yarpProcess)
     {
         _yarpProcess->kill();
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // YarpLaunchThread::killChildProcess
 
 void
 YarpLaunchThread::run(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     _yarpProcess = new ChildProcess;
     if (_yarpProcess)
     {
-        OD_LOG("_yarpProcess"); //####
+        ODL_LOG("_yarpProcess"); //####
         StringArray nameAndArgs(_yarpPath);
         
         nameAndArgs.add("server");
@@ -139,18 +139,18 @@ YarpLaunchThread::run(void)
         nameAndArgs.add("--write");
         if (_yarpProcess->start(nameAndArgs, 0))
         {
-            OD_LOG("(_yarpProcess->start(nameAndArgs, 0))"); //####
+            ODL_LOG("(_yarpProcess->start(nameAndArgs, 0))"); //####
             const String childOutput(_yarpProcess->readAllProcessOutput());
             
             LazyLaunchProcess(*_yarpProcess, -1);
-            OD_LOG_S1s("childOutput = ", childOutput.toStdString()); //####
+            ODL_S1s("childOutput = ", childOutput.toStdString()); //####
         }
         else
         {
-            OD_LOG("! (_yarpProcess->start(nameAndArgs, 0))"); //####
+            ODL_LOG("! (_yarpProcess->start(nameAndArgs, 0))"); //####
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // YarpLaunchThread::run
 
 #if defined(__APPLE__)

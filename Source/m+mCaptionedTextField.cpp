@@ -121,14 +121,14 @@ CaptionedTextField::CaptionedTextField(FormFieldErrorResponder & responder,
     _validator(validator), _caption(new Label("", captionTitle)), _button(NULL),
     _errorFont(errorLabelFont), _responder(responder)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_P4("responder = ", &responder, "regularLabelFont = ", &regularLabelFont, //####
+    ODL_ENTER(); //####
+    ODL_P4("responder = ", &responder, "regularLabelFont = ", &regularLabelFont, //####
               "errorLabelFont = ", &errorLabelFont, "buttonHandler = ", buttonHandler); //####
-    OD_LOG_P1("validator = ", validator); //####
-    OD_LOG_S2s("captionTitle = ", captionTitle, "componentName = ", //####
+    ODL_P1("validator = ", validator); //####
+    ODL_S2s("captionTitle = ", captionTitle, "componentName = ", //####
                componentName.toStdString()); //####
-    OD_LOG_LL3("index = ", index, "top = ", top, "passwordCharacter = ", passwordCharacter); //####
-    OD_LOG_B2("boundsSetLater = ", boundsSetLater, "forFilePath = ", forFilePath); //####
+    ODL_LL3("index = ", index, "top = ", top, "passwordCharacter = ", passwordCharacter); //####
+    ODL_B2("boundsSetLater = ", boundsSetLater, "forFilePath = ", forFilePath); //####
     Point<int> dimensions;
     int        adjustedEditorHeight = static_cast<int>(_regularFont.getHeight() +
                                                        kEditorHeightAdjustment);
@@ -158,16 +158,16 @@ CaptionedTextField::CaptionedTextField(FormFieldErrorResponder & responder,
                                kLabelToFieldGap, _caption->getX() + _caption->getWidth() -
                                kFieldInset, adjustedEditorHeight);
     }
-    OD_LOG_EXIT_P(this); //####
+    ODL_EXIT_P(this); //####
 } // CaptionedTextField::CaptionedTextField
 
 CaptionedTextField::~CaptionedTextField(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     _button = NULL;
     _caption = NULL;
     _textEditor = NULL;
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // CaptionedTextField::~CaptionedTextField
 
 #if defined(__APPLE__)
@@ -177,8 +177,8 @@ CaptionedTextField::~CaptionedTextField(void)
 void
 CaptionedTextField::addToComponent(Component * whereToAdd)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("whereToAdd = ", whereToAdd); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("whereToAdd = ", whereToAdd); //####
     if (whereToAdd)
     {
         whereToAdd->addAndMakeVisible(_caption);
@@ -188,13 +188,13 @@ CaptionedTextField::addToComponent(Component * whereToAdd)
             whereToAdd->addAndMakeVisible(_button);
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // CaptionedTextField::addToComponent
 
 int
 CaptionedTextField::getFileButtonWidth(void)
 {
-    OD_LOG_ENTER(); //####
+    ODL_ENTER(); //####
     if (lFileButtonWidth < 0)
     {
         ScopedPointer<TextButton> fileButton(new TextButton(kFileButtonText));
@@ -202,7 +202,7 @@ CaptionedTextField::getFileButtonWidth(void)
         fileButton->changeWidthToFitText(ManagerApplication::getButtonHeight());
         lFileButtonWidth = fileButton->getWidth();
     }
-    OD_LOG_EXIT_LL(lFileButtonWidth); //####
+    ODL_EXIT_LL(lFileButtonWidth); //####
     return lFileButtonWidth;
 } // CaptionedTextField::getFileButtonWidth
 
@@ -210,10 +210,10 @@ int
 CaptionedTextField::getHeight(void)
 const
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     int result = _textEditor->getHeight() + _caption->getHeight() + kLabelToFieldGap;
     
-    OD_LOG_OBJEXIT_LL(result); //####
+    ODL_OBJEXIT_LL(result); //####
     return result;
 } // CaptionedTextField::getHeight
 
@@ -221,10 +221,10 @@ int
 CaptionedTextField::getMinimumWidth(void)
 const
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     int result = jmax(_textEditor->getX(), _caption->getWidth() + _caption->getX());
     
-    OD_LOG_OBJEXIT_LL(result); //####
+    ODL_OBJEXIT_LL(result); //####
     return result;
 } // CaptionedTextField::::getMinimumWidth
 
@@ -232,10 +232,10 @@ const String &
 CaptionedTextField::getName(void)
 const
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     const String & theName = _textEditor->getName();
     
-    OD_LOG_OBJEXIT_s(theName.toStdString()); //####
+    ODL_OBJEXIT_s(theName.toStdString()); //####
     return theName;
 } // CaptionedTextField::getName
 
@@ -243,10 +243,10 @@ String
 CaptionedTextField::getText(void)
 const
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     String result(_textEditor->getText());
     
-    OD_LOG_OBJEXIT_s(result.toStdString()); //####
+    ODL_OBJEXIT_s(result.toStdString()); //####
     return result;
 } // CaptionedTextField::getText
 
@@ -254,12 +254,12 @@ int
 CaptionedTextField::getWidth(void)
 const
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     int firstVal = _textEditor->getWidth() + _textEditor->getX();
     int secondVal = _caption->getWidth() + _caption->getX();
     int result = jmax(firstVal, secondVal) - getX();
     
-    OD_LOG_OBJEXIT_LL(result); //####
+    ODL_OBJEXIT_LL(result); //####
     return result;
 } // CaptionedTextField::getWidth
 
@@ -267,10 +267,10 @@ int
 CaptionedTextField::getX(void)
 const
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     int result = jmin(_textEditor->getX(), _caption->getX());
     
-    OD_LOG_OBJEXIT_LL(result); //####
+    ODL_OBJEXIT_LL(result); //####
     return result;
 } // CaptionedTextField::getX
 
@@ -278,41 +278,41 @@ int
 CaptionedTextField::getY(void)
 const
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     int result = _caption->getY();
     
-    OD_LOG_OBJEXIT_LL(result); //####
+    ODL_OBJEXIT_LL(result); //####
     return result;
 } // CaptionedTextField::getY
 
 void
 CaptionedTextField::ignoreNextFocusLoss(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     _textEditor->ignoreNextFocusLoss();
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // CaptionedTextField::ignoreNextFocusLoss
 
 void
 CaptionedTextField::markAsInvalid(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     _caption->setFont(_errorFont);
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // CaptionedTextField::markAsInvalid
 
 void
 CaptionedTextField::markAsValid(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     _caption->setFont(_regularFont);
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // CaptionedTextField::markAsValid
 
 void
 CaptionedTextField::performButtonAction(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     if (_validator)
     {
         bool forOutput;
@@ -356,14 +356,14 @@ CaptionedTextField::performButtonAction(void)
             }
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // CaptionedTextField::performButtonAction
 
 void
 CaptionedTextField::removeFromComponent(Component * whereToRemove)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("whereToRemove = ", whereToRemove); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("whereToRemove = ", whereToRemove); //####
     if (whereToRemove)
     {
         whereToRemove->removeChildComponent(_caption);
@@ -373,40 +373,40 @@ CaptionedTextField::removeFromComponent(Component * whereToRemove)
             whereToRemove->removeChildComponent(_button);
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // CaptionedTextField::removeFromComponent
 
 void
 CaptionedTextField::reportErrorInField(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     _responder.reportErrorInField(*this);
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // CaptionedTextField::reportErrorInField
 
 void
 CaptionedTextField::setButton(TextButton * newButton)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("newButton = ", newButton); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("newButton = ", newButton); //####
     _button = newButton;
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // CaptionedTextField::setButton
 
 void
 CaptionedTextField::setText(const String & newText)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_S1s("newText = ", newText.toStdString()); //####
+    ODL_OBJENTER(); //####
+    ODL_S1s("newText = ", newText.toStdString()); //####
     _textEditor->setText(newText, false);
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // CaptionedTextField::setText
 
 void
 CaptionedTextField::setWidth(const int ww)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_LL1("ww = ", ww); //####
+    ODL_OBJENTER(); //####
+    ODL_LL1("ww = ", ww); //####
     _textEditor->setSize(ww, _textEditor->getHeight());
     if (_button)
     {
@@ -416,14 +416,14 @@ CaptionedTextField::setWidth(const int ww)
         _button->setTopLeftPosition(_textEditor->getX() + ww + kButtonGap,
                                     _caption->getY() + (offset / 2));
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // CaptionedTextField::setWidth
 
 void
 CaptionedTextField::setY(const int yy)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_LL1("yy = ", yy); //####
+    ODL_OBJENTER(); //####
+    ODL_LL1("yy = ", yy); //####
     _caption->setTopLeftPosition(kLabelInset, yy);
     _textEditor->setTopLeftPosition(kFieldInset,
                                     _caption->getY() + _caption->getHeight() + kLabelToFieldGap);
@@ -435,13 +435,13 @@ CaptionedTextField::setY(const int yy)
         _button->setTopLeftPosition(_textEditor->getX() + _textEditor->getWidth() + kButtonGap,
                                     _caption->getY() + (offset / 2));
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // CaptionedTextField::setY
 
 bool
 CaptionedTextField::validateField(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     bool result = _textEditor->validateField();
     
     if (result)
@@ -452,15 +452,15 @@ CaptionedTextField::validateField(void)
     {
         markAsInvalid();
     }
-    OD_LOG_OBJEXIT_B(result); //####
+    ODL_OBJEXIT_B(result); //####
     return result;
 } // CaptionedTextField::validateField
 
 bool
 CaptionedTextField::validateField(StringArray & argsToUse)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("argsToUse = ", &argsToUse); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("argsToUse = ", &argsToUse); //####
     bool result = _textEditor->validateField(argsToUse);
     
     if (result)
@@ -471,7 +471,7 @@ CaptionedTextField::validateField(StringArray & argsToUse)
     {
         markAsInvalid();
     }
-    OD_LOG_OBJEXIT_B(result); //####
+    ODL_OBJEXIT_B(result); //####
     return result;
 } // CaptionedTextField::validateField
 

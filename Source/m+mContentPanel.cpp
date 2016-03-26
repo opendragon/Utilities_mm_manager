@@ -159,7 +159,7 @@ ContentPanel::ContentPanel(ManagerWindow * containingWindow) :
 #endif // defined(USE_OGDF_POSITIONING_) && defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY_)
     _invertBackground(false), _skipNextScan(false), _whiteBackground(false)
 {
-    OD_LOG_ENTER(); //####
+    ODL_ENTER(); //####
     addAndMakeVisible(_menuBar);
     _entitiesPanel->setSize(_entitiesPanel->getWidth(),
                             _entitiesPanel->getHeight() - _containingWindow->getTitleBarHeight());
@@ -169,14 +169,14 @@ ContentPanel::ContentPanel(ManagerWindow * containingWindow) :
     setSingleStepSizes(kDefaultSingleStepSize, kDefaultSingleStepSize);
     _entitiesPanel->setVisible(true);
     setViewedComponent(_entitiesPanel);
-    OD_LOG_EXIT_P(this); //####
+    ODL_EXIT_P(this); //####
 } // ContentPanel::ContentPanel
 
 ContentPanel::~ContentPanel(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     PopupMenu::dismissAllActiveMenus();
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ContentPanel::~ContentPanel
 
 #if defined(__APPLE__)
@@ -186,7 +186,7 @@ ContentPanel::~ContentPanel(void)
 void
 ContentPanel::getAllCommands(Array<CommandID> & commands)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     static const CommandID ids[] =
     {
         ManagerWindow::kCommandDoRepaint,
@@ -199,14 +199,14 @@ ContentPanel::getAllCommands(Array<CommandID> & commands)
     };
     
     commands.addArray(ids, numElementsInArray(ids));
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ContentPanel::getAllCommands
 
 void
 ContentPanel::getCommandInfo(CommandID                commandID,
                              ApplicationCommandInfo & result)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     ManagerApplication * ourApp = ManagerApplication::getApp();
     
     switch (commandID)
@@ -257,13 +257,13 @@ ContentPanel::getCommandInfo(CommandID                commandID,
             break;
             
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ContentPanel::getCommandInfo
 
 StringArray
 ContentPanel::getMenuBarNames(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     const char * const names[] = { "m+m manager", "View", "Operation", NULL };
     
     return StringArray(names);
@@ -282,9 +282,9 @@ ContentPanel::getMenuForIndex(int            menuIndex,
 #  pragma unused(menuName)
 # endif // MAC_OR_LINUX_
 #endif // ! defined(OD_ENABLE_LOGGING_)
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_LL1("menuIndex = ", menuIndex); //####
-    OD_LOG_S1s("menuName = ", menuName.toStdString()); //####
+    ODL_OBJENTER(); //####
+    ODL_LL1("menuIndex = ", menuIndex); //####
+    ODL_S1s("menuName = ", menuName.toStdString()); //####
     ApplicationCommandManager * commandManager = &ManagerWindow::getApplicationCommandManager();
     PopupMenu                   menu;
     
@@ -330,10 +330,10 @@ ContentPanel::getMenuForIndex(int            menuIndex,
 ApplicationCommandTarget *
 ContentPanel::getNextCommandTarget(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     ApplicationCommandTarget * nextOne = findFirstTargetParentComponent();
     
-    OD_LOG_OBJEXIT_P(nextOne); //####
+    ODL_OBJEXIT_P(nextOne); //####
     return nextOne;
 } // ContentPanel::getNextCommandTarget
 
@@ -350,8 +350,8 @@ ContentPanel::menuItemSelected(int menuItemID,
 #  pragma unused(topLevelMenuIndex)
 # endif // MAC_OR_LINUX_
 #endif // ! defined(OD_ENABLE_LOGGING_)
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_LL2("menuItemID = ", menuItemID, "topLevelMenuIndex = ", topLevelMenuIndex); //####
+    ODL_OBJENTER(); //####
+    ODL_LL2("menuItemID = ", menuItemID, "topLevelMenuIndex = ", topLevelMenuIndex); //####
     bool                 isChannel = false;
     ManagerApplication * ourApp = ManagerApplication::getApp();
     
@@ -421,7 +421,7 @@ ContentPanel::menuItemSelected(int menuItemID,
             break;
             
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ContentPanel::menuItemSelected
 #if (! MAC_OR_LINUX_)
 # pragma warning(pop)
@@ -430,8 +430,8 @@ ContentPanel::menuItemSelected(int menuItemID,
 void
 ContentPanel::paint(Graphics & gg)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("gg = ", &gg); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("gg = ", &gg); //####
     ChannelContainer * ofInterest;
     
     if (_whiteBackground)
@@ -470,7 +470,7 @@ ContentPanel::paint(Graphics & gg)
     }
     gg.fillAll();
     _channelClicked = _containerClicked = false;
-    OD_LOG_B2("_channelClicked <- ", _channelClicked, "_containerClicked <- ", //####
+    ODL_B2("_channelClicked <- ", _channelClicked, "_containerClicked <- ", //####
               _containerClicked); //####
     if (_selectedChannel)
     {
@@ -543,7 +543,7 @@ ContentPanel::paint(Graphics & gg)
         
         if (scanDataReady)
         {
-            OD_LOG("(scanDataReady)"); //####
+            ODL_LOG("(scanDataReady)"); //####
             // At this point the background scanning thread is, basically, idle, and we can use its
             // data.
             if (_skipNextScan)
@@ -560,13 +560,13 @@ ContentPanel::paint(Graphics & gg)
             scanner->scanCanProceed();
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ContentPanel::paint
 
 bool
 ContentPanel::perform(const InvocationInfo & info)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     bool                 wasProcessed = false;
     ManagerApplication * ourApp = ManagerApplication::getApp();
     
@@ -625,20 +625,20 @@ ContentPanel::perform(const InvocationInfo & info)
             break;
             
     }
-    OD_LOG_OBJEXIT_B(wasProcessed); //####
+    ODL_OBJEXIT_B(wasProcessed); //####
     return wasProcessed;
 } // ContentPanel::perform
 
 void
 ContentPanel::recallEntityPositions(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     String filePath = getPathToSettingsFile();
     File   settingsFile(filePath);
     
     if (settingsFile.existsAsFile())
     {
-        OD_LOG("(settingsFile.existsAsFile())"); //####
+        ODL_LOG("(settingsFile.existsAsFile())"); //####
         StringArray stuffFromFile;
         
         settingsFile.readLines(stuffFromFile);
@@ -663,50 +663,50 @@ ContentPanel::recallEntityPositions(void)
             }
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ContentPanel::recallEntityPositions
 
 void
 ContentPanel::rememberPositionOfEntity(ChannelContainer * anEntity)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("anEntity = ", anEntity); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("anEntity = ", anEntity); //####
     YarpString entityName(anEntity->getName().toStdString());
     
     _rememberedPositions[entityName] = anEntity->getPositionInPanel();
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ContentPanel::rememberPositionOfEntity
 
 void
 ContentPanel::requestWindowRepaint(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     _containingWindow->repaint();
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ContentPanel::requestWindowRepaint
 
 void
 ContentPanel::resized(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     juce::Rectangle<int> area(getLocalBounds());
     int                  offset = LookAndFeel::getDefaultLookAndFeel().getDefaultMenuBarHeight();
     
     _menuBar->setBounds(area.removeFromTop(offset));
     _entitiesPanel->setBounds(area);
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ContentPanel::resized
 
 void
 ContentPanel::saveEntityPositions(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     String filePath = getPathToSettingsFile();
     File   settingsFile(filePath);
     
     if (settingsFile.create().wasOk())
     {
-        OD_LOG("(settingsFile.create().wasOk())"); //####
+        ODL_LOG("(settingsFile.create().wasOk())"); //####
         // Make sure that the file is empty before adding lines to it!
         settingsFile.replaceWithText("");
         for (PositionMap::const_iterator walker(_rememberedPositions.begin());
@@ -721,47 +721,47 @@ ContentPanel::saveEntityPositions(void)
             settingsFile.appendText(buff.str());
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ContentPanel::saveEntityPositions
 
 void
 ContentPanel::setChannelOfInterest(ChannelEntry * aChannel)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("aChannel = ", aChannel); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("aChannel = ", aChannel); //####
     _channelClicked = (NULL != aChannel);
     _containerClicked = false;
-    OD_LOG_B2("_channelClicked <- ", _channelClicked, "_containerClicked <- ", //####
+    ODL_B2("_channelClicked <- ", _channelClicked, "_containerClicked <- ", //####
               _containerClicked); //####
     _selectedChannel = aChannel;
     _selectedContainer = NULL;
-    OD_LOG_P2("_selectedChannel <- ", _selectedChannel, "_selectedContainer <- ", //####
+    ODL_P2("_selectedChannel <- ", _selectedChannel, "_selectedContainer <- ", //####
               _selectedContainer); //####
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ContentPanel::setChannelOfInterest
 
 void
 ContentPanel::setContainerOfInterest(ChannelContainer * aContainer)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("aContainer = ", aContainer); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("aContainer = ", aContainer); //####
     if (! _channelClicked)
     {
         _containerClicked = (NULL != aContainer);
-        OD_LOG_B1("_containerClicked <- ", _containerClicked); //####
+        ODL_B1("_containerClicked <- ", _containerClicked); //####
         _selectedChannel = NULL;
         _selectedContainer = aContainer;
-        OD_LOG_P2("_selectedChannel <- ", _selectedChannel, "_selectedContainer <- ", //####
+        ODL_P2("_selectedChannel <- ", _selectedChannel, "_selectedContainer <- ", //####
                   _selectedContainer); //####
     }
     requestWindowRepaint();
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ContentPanel::setContainerOfInterest
 
 void
 ContentPanel::setEntityPositions(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     float         offsetX = static_cast<float>(getX());
     float         offsetY = static_cast<float>(getY());
     float         maxX = static_cast<float>(getWidth());
@@ -821,7 +821,7 @@ ContentPanel::setEntityPositions(void)
                     aContainer->setNode(aNode);
                     if (aContainer->isNew() || aContainer->wasHidden())
                     {
-                        OD_LOG("(aContainer->isNew() || aContainer->wasHidden())"); //####
+                        ODL_LOG("(aContainer->isNew() || aContainer->wasHidden())"); //####
                         // Check if the position was already known.
                         YarpString                  entityName(aContainer->getName().toStdString());
                         PositionMap::const_iterator match(_rememberedPositions.find(entityName));
@@ -851,7 +851,7 @@ ContentPanel::setEntityPositions(void)
             }
             if (positionsNeedUpdate)
             {
-                OD_LOG("(positionsNeedUpdate)"); //####
+                ODL_LOG("(positionsNeedUpdate)"); //####
                 // Set up the edges (connections).
                 for (size_t ii = 0, mm = _entitiesPanel->getNumberOfEntities(); mm > ii; ++ii)
                 {
@@ -964,7 +964,7 @@ ContentPanel::setEntityPositions(void)
             
             if (aContainer && (aContainer->isNew() || aContainer->wasHidden()))
             {
-                OD_LOG("(aContainer && (aContainer->isNew() || aContainer->wasHidden()))"); //####
+                ODL_LOG("(aContainer && (aContainer->isNew() || aContainer->wasHidden()))"); //####
                 float                       newX;
                 float                       newY;
                 juce::Rectangle<float>      entityShape(aContainer->getLocalBounds().toFloat());
@@ -999,7 +999,7 @@ ContentPanel::setEntityPositions(void)
         
         if (aContainer && (aContainer->isNew() || aContainer->wasHidden()))
         {
-            OD_LOG("(aContainer && (aContainer->isNew() || aContainer->wasHidden()))"); //####
+            ODL_LOG("(aContainer && (aContainer->isNew() || aContainer->wasHidden()))"); //####
             float                       newX;
             float                       newY;
             juce::Rectangle<float>      entityShape(aContainer->getLocalBounds().toFloat());
@@ -1027,15 +1027,15 @@ ContentPanel::setEntityPositions(void)
         }
     }
 #endif // ! defined(USE_OGDF_POSITIONING_)
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ContentPanel::setEntityPositions
 
 void
 ContentPanel::setUpChannelMenu(PopupMenu &    aMenu,
                                ChannelEntry & aChannel)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P2("aMenu = ", &aMenu, "aChannel = ", &aChannel); //####
+    ODL_OBJENTER(); //####
+    ODL_P2("aMenu = ", &aMenu, "aChannel = ", &aChannel); //####
     bool               isChannel = aChannel.isChannel();
     bool               showMetrics = false;
     ChannelContainer * theParent = aChannel.getParent();
@@ -1060,15 +1060,15 @@ ContentPanel::setUpChannelMenu(PopupMenu &    aMenu,
         aMenu.addItem(kPopupAddSimpleMonitor, "Enable activity indicator", false);
         aMenu.addItem(kPopupAddScrollingMonitor, "Add scrolling monitor", false);
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ContentPanel::setUpChannelMenu
 
 void
 ContentPanel::setUpContainerMenu(PopupMenu &        aMenu,
                                  ChannelContainer & aContainer)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P2("aMenu = ", &aMenu, "aContainer = ", &aContainer); //####
+    ODL_OBJENTER(); //####
+    ODL_P2("aMenu = ", &aMenu, "aContainer = ", &aContainer); //####
     bool   configurable = false;
     bool   restartable = false;
     bool   serviceLike;
@@ -1131,25 +1131,25 @@ ContentPanel::setUpContainerMenu(PopupMenu &        aMenu,
         aMenu.addItem(kPopupRestartService, String("Restart the ") + kindOfContainer, restartable);
         aMenu.addItem(kPopupStopService, String("Stop the ") + kindOfContainer);
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ContentPanel::setUpContainerMenu
 
 void
 ContentPanel::setUpMainMenu(PopupMenu & aMenu)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("aMenu = ", &aMenu); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("aMenu = ", &aMenu); //####
     ApplicationCommandManager * commandManager = &ManagerWindow::getApplicationCommandManager();
     
     aMenu.addCommandItem(commandManager, StandardApplicationCommandIDs::quit);
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ContentPanel::setUpMainMenu
 
 void
 ContentPanel::setUpViewMenu(PopupMenu & aMenu)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("aMenu = ", &aMenu); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("aMenu = ", &aMenu); //####
     ApplicationCommandManager * commandManager = &ManagerWindow::getApplicationCommandManager();
     
     aMenu.addCommandItem(commandManager, ManagerWindow::kCommandDoRepaint);
@@ -1158,22 +1158,22 @@ ContentPanel::setUpViewMenu(PopupMenu & aMenu)
     aMenu.addSeparator();
     aMenu.addCommandItem(commandManager, ManagerWindow::kCommandClearSelection);
     aMenu.addCommandItem(commandManager, ManagerWindow::kCommandUnhideEntities);
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ContentPanel::setUpViewMenu
 
 void
 ContentPanel::skipScan(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     _skipNextScan = true;
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ContentPanel::skipScan
 
 void
 ContentPanel::updatePanels(ScannerThread & scanner)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("scanner = ", &scanner); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("scanner = ", &scanner); //####
     bool                 changeSeen = false;
     const EntitiesData & workingData(scanner.getEntitiesData());
     
@@ -1186,15 +1186,15 @@ ContentPanel::updatePanels(ScannerThread & scanner)
     {
         EntityData * anEntity = workingData.getEntity(ii);
         
-        OD_LOG_P1("anEntity <- ", anEntity); //####
+        ODL_P1("anEntity <- ", anEntity); //####
         if (anEntity)
         {
-            OD_LOG_S1s("anEntity->getName() = ", anEntity->getName()); //####
+            ODL_S1s("anEntity->getName() = ", anEntity->getName()); //####
             ChannelContainer * oldContainer = _entitiesPanel->findKnownEntity(anEntity->getName());
             
             if (oldContainer)
             {
-                OD_LOG("(oldContainer)"); //####
+                ODL_LOG("(oldContainer)"); //####
                 oldContainer->setVisited();
             }
             else
@@ -1251,10 +1251,10 @@ ContentPanel::updatePanels(ScannerThread & scanner)
         ChannelEntry * thisPort = _entitiesPanel->findKnownPort(walker->_outPortName);
         ChannelEntry * otherPort = _entitiesPanel->findKnownPort(walker->_inPortName);
         
-        OD_LOG_P2("thisPort <- ", thisPort, "otherPort <- ", otherPort); //####
+        ODL_P2("thisPort <- ", thisPort, "otherPort <- ", otherPort); //####
         if (thisPort && otherPort)
         {
-            OD_LOG_S2s("thisPort.name = ", thisPort->getPortName(), //####
+            ODL_S2s("thisPort.name = ", thisPort->getPortName(), //####
                        "otherPort.name = ", otherPort->getPortName()); //####
             thisPort->addOutputConnection(otherPort, walker->_mode, false);
             otherPort->addInputConnection(thisPort, walker->_mode, false);
@@ -1265,13 +1265,13 @@ ContentPanel::updatePanels(ScannerThread & scanner)
         changeSeen = true;
     }
     _entitiesPanel->removeInvalidConnections();
-    OD_LOG("about to call adjustSize()"); //####
+    ODL_LOG("about to call adjustSize()"); //####
     _entitiesPanel->adjustSize(false);
     if (changeSeen)
     {
         scanner.doScanSoon();
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ContentPanel::updatePanels
 
 #if (! MAC_OR_LINUX_)
@@ -1286,11 +1286,11 @@ ContentPanel::visibleAreaChanged(const juce::Rectangle<int> & newVisibleArea)
 #  pragma unused(newVisibleArea)
 # endif // MAC_OR_LINUX_
 #endif // ! defined(OD_ENABLE_LOGGING_)
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_LL4("nVA.x = ", newVisibleArea.getX(), "nVA.y = ", newVisibleArea.getY(), //####
+    ODL_OBJENTER(); //####
+    ODL_LL4("nVA.x = ", newVisibleArea.getX(), "nVA.y = ", newVisibleArea.getY(), //####
                "nVA.w = ", newVisibleArea.getWidth(), "nVA.h = ", //####
                newVisibleArea.getHeight()); //####
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ContentPanel::visibleAreaChanged
 #if (! MAC_OR_LINUX_)
 # pragma warning(pop)
@@ -1305,9 +1305,9 @@ MPlusM_Manager::DisplayInformationPanel(Component *    above,
                                         const String & bodyText,
                                         const String & title)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_P1("above = ", above); //####
-    OD_LOG_S2s("bodyText = ", bodyText.toStdString(), "title = ", title.toStdString()); //####
+    ODL_ENTER(); //####
+    ODL_P1("above = ", above); //####
+    ODL_S2s("bodyText = ", bodyText.toStdString(), "title = ", title.toStdString()); //####
     DialogWindow::LaunchOptions options;
     Font                        monoFont(Font::getDefaultMonospacedFontName(), 16, Font::plain);
     Label *                     aLabel = new Label("", bodyText);
@@ -1331,5 +1331,5 @@ MPlusM_Manager::DisplayInformationPanel(Component *    above,
     int             calcH = dimensions.getY() + bt.getTopAndBottom() + cb.getTopAndBottom();
     
     aWindow->centreAroundComponent(above, calcW, calcH);
-    OD_LOG_EXIT(); //####
+    ODL_EXIT(); //####
 } // DisplayInformationPanel

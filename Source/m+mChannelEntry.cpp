@@ -137,8 +137,8 @@ calculateMinDistance(float &          distanceSoFar,
                      const Position & testPoint,
                      Position &       bestSoFar)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_P4("distanceSoFar = ", &distanceSoFar, "refPoint = ", &refPoint, "testPoint = ", //####
+    ODL_ENTER(); //####
+    ODL_P4("distanceSoFar = ", &distanceSoFar, "refPoint = ", &refPoint, "testPoint = ", //####
               &testPoint, "bestSoFar = ", &bestSoFar); //####
     bool  result;
     float newDistance = refPoint.getDistanceFrom(testPoint);
@@ -153,7 +153,7 @@ calculateMinDistance(float &          distanceSoFar,
     {
         result = false;
     }
-    OD_LOG_EXIT_B(result); //####
+    ODL_EXIT_B(result); //####
     return result;
 } // calculateMinDistance
 
@@ -186,8 +186,8 @@ calculateAnchorForPoint(Position &       newCentre,
                         const Position & targetPoint,
                         const Position & refCentre)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_P3("newCentre = ", &newCentre, "targetPoint = ", &targetPoint, //####
+    ODL_ENTER(); //####
+    ODL_P3("newCentre = ", &newCentre, "targetPoint = ", &targetPoint, //####
               "refCentre = ", &refCentre); //####
     AnchorSide             anchor = kAnchorUnknown;
     float                  boxSize = (refCentre.getDistanceFrom(targetPoint) * kTargetBoxScale);
@@ -218,7 +218,7 @@ calculateAnchorForPoint(Position &       newCentre,
         anchor = kAnchorTopCentre;
         newCentre = targetPoint + Position(0, boxSize);
     }
-    OD_LOG_EXIT_L(static_cast<int>(anchor)); //####
+    ODL_EXIT_L(static_cast<int>(anchor)); //####
     return anchor;
 } // calculateAnchorForPoint
 
@@ -233,10 +233,10 @@ drawSourceAnchor(Graphics &       gg,
                  const Position & anchorPos,
                  const float      thickness)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_P2("gg = ", &gg, "anchorPos = ", &anchorPos); //####
-    OD_LOG_LL1("anchor = ", static_cast<int>(anchor)); //####
-    OD_LOG_D1("thickness = ", thickness); //####
+    ODL_ENTER(); //####
+    ODL_P2("gg = ", &gg, "anchorPos = ", &anchorPos); //####
+    ODL_LL1("anchor = ", static_cast<int>(anchor)); //####
+    ODL_D1("thickness = ", thickness); //####
     Position first;
     Position second;
     
@@ -268,13 +268,13 @@ drawSourceAnchor(Graphics &       gg,
     }
     if (kAnchorUnknown != anchor)
     {
-        OD_LOG_D4("anchor.x = ", anchorPos.getX(), "anchor.y = ", anchorPos.getY(), //####
+        ODL_D4("anchor.x = ", anchorPos.getX(), "anchor.y = ", anchorPos.getY(), //####
                   "first.x = ", first.getX(), "first.y = ", first.getY()); //####
-        OD_LOG_D2("second.x = ", second.getX(), "second.y = ", second.getY()); //####
+        ODL_D2("second.x = ", second.getX(), "second.y = ", second.getY()); //####
         gg.drawLine(anchorPos.getX(), anchorPos.getY(), first.getX(), first.getY(), thickness);
         gg.drawLine(anchorPos.getX(), anchorPos.getY(), second.getX(), second.getY(), thickness);
     }
-    OD_LOG_EXIT(); //####
+    ODL_EXIT(); //####
 } // drawSourceAnchor
 
 /*! @brief Displays an anchor arriving at the given location.
@@ -288,10 +288,10 @@ drawTargetAnchor(Graphics &       gg,
                  const Position & anchorPos,
                  const float      thickness)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_P2("gg = ", &gg, "anchorPos = ", &anchorPos); //####
-    OD_LOG_LL1("anchor = ", static_cast<int>(anchor)); //####
-    OD_LOG_D1("thickness = ", thickness); //####
+    ODL_ENTER(); //####
+    ODL_P2("gg = ", &gg, "anchorPos = ", &anchorPos); //####
+    ODL_LL1("anchor = ", static_cast<int>(anchor)); //####
+    ODL_D1("thickness = ", thickness); //####
     Position first;
     Position second;
     
@@ -323,13 +323,13 @@ drawTargetAnchor(Graphics &       gg,
     }
     if (kAnchorUnknown != anchor)
     {
-        OD_LOG_D4("anchor.x = ", anchorPos.getX(), "anchor.y = ", anchorPos.getY(), //####
+        ODL_D4("anchor.x = ", anchorPos.getX(), "anchor.y = ", anchorPos.getY(), //####
                   "first.x = ", first.getX(), "first.y = ", first.getY()); //####
-        OD_LOG_D2("second.x = ", second.getX(), "second.y = ", second.getY()); //####
+        ODL_D2("second.x = ", second.getX(), "second.y = ", second.getY()); //####
         gg.drawLine(anchorPos.getX(), anchorPos.getY(), first.getX(), first.getY(), thickness);
         gg.drawLine(anchorPos.getX(), anchorPos.getY(), second.getX(), second.getY(), thickness);
     }
-    OD_LOG_EXIT(); //####
+    ODL_EXIT(); //####
 } // drawTargetAnchor
 
 /*! @brief Draw a bezier curve between two points.
@@ -351,11 +351,11 @@ drawBezier(Graphics &       gg,
            const float      thickness,
            const bool       isDashed)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_P4("gg = ", &gg, "startPoint = ", &startPoint, "endPoint = ", &endPoint, //####
+    ODL_ENTER(); //####
+    ODL_P4("gg = ", &gg, "startPoint = ", &startPoint, "endPoint = ", &endPoint, //####
               "startCentre = ", &startCentre); //####
-    OD_LOG_P1("endCentre = ", &endCentre); //####
-    OD_LOG_D1("thickness = ", thickness); //####
+    ODL_P1("endCentre = ", &endCentre); //####
+    ODL_D1("thickness = ", thickness); //####
     Path     bezPath;
     float    controlLength = (startPoint.getDistanceFrom(endPoint) * kControlLengthScale);
     float    startAngle = atan2(startPoint.getY() - startCentre.getY(),
@@ -382,7 +382,7 @@ drawBezier(Graphics &       gg,
     {
         gg.strokePath(bezPath, PathStrokeType(thickness));
     }
-    OD_LOG_EXIT();//####
+    ODL_EXIT();//####
 } // drawBezier
 
 /*! @brief Draw a connection between entries.
@@ -398,10 +398,10 @@ drawConnection(Graphics &                gg,
                const Common::ChannelMode mode,
                const bool                forced)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_P3("gg = ", &gg, "source = ", source, "destination = ", destination); //####
-    OD_LOG_LL1("mode = ", static_cast<int>(mode)); //####
-    OD_LOG_B1("forced = ", forced); //####
+    ODL_ENTER(); //####
+    ODL_P3("gg = ", &gg, "source = ", source, "destination = ", destination); //####
+    ODL_LL1("mode = ", static_cast<int>(mode)); //####
+    ODL_B1("forced = ", forced); //####
     if (source && destination)
     {
         AnchorSide sourceAnchor;
@@ -415,11 +415,11 @@ drawConnection(Graphics &                gg,
         Position   endPoint;
         float      thickness;
         
-        OD_LOG_D4("sourcePosition.x = ", sourcePosition.getX(), "sourcePosition.y = ", //####
+        ODL_D4("sourcePosition.x = ", sourcePosition.getX(), "sourcePosition.y = ", //####
                   sourcePosition.getY(), "destinationPosition.x = ", //####
                   destinationPosition.getX(), "destinationPosition.y = ", //####
                   destinationPosition.getY()); //####
-        OD_LOG_D4("sourceCentre.x = ", sourceCentre.getX(), "sourceCentre.y = ", //####
+        ODL_D4("sourceCentre.x = ", sourceCentre.getX(), "sourceCentre.y = ", //####
                   sourceCentre.getY(), "destinationCentre.x = ", destinationCentre.getX(), //####
                   "destinationCentre.y = ", destinationCentre.getY()); //####
         if (destination->isService())
@@ -435,8 +435,8 @@ drawConnection(Graphics &                gg,
         {
             thickness = kNormalConnectionWidth;
         }
-        OD_LOG_B1("isBidirectional <- ", isBidirectional); //####
-        OD_LOG_D1("thickness <- ", thickness); //####
+        ODL_B1("isBidirectional <- ", isBidirectional); //####
+        ODL_D1("thickness <- ", thickness); //####
         // Check if the destination is above the source, in which case we determine the anchors in
         // the reverse order.
         if (sourceCentre.getY() < destinationCentre.getY())
@@ -455,7 +455,7 @@ drawConnection(Graphics &                gg,
                                                           kAnchorBottomCentre == destinationAnchor,
                                                           destinationCentre);
         }
-        OD_LOG_D4("startPoint.x <- ", startPoint.getX(), "startPoint.y <- ", //####
+        ODL_D4("startPoint.x <- ", startPoint.getX(), "startPoint.y <- ", //####
                   startPoint.getY(), "endPoint.x <- ", endPoint.getX(), "endPoint.y <- ", //####
                   endPoint.getY()); //####
         switch (mode)
@@ -484,7 +484,7 @@ drawConnection(Graphics &                gg,
         }
         drawTargetAnchor(gg, destinationAnchor, endPoint, 1);
     }
-    OD_LOG_EXIT(); //####
+    ODL_EXIT(); //####
 } // drawConnection
 
 /*! @brief Determine whether a connection can be made, based on the port protocols.
@@ -498,10 +498,10 @@ protocolsMatch(const YarpString & sourceProtocol,
                const YarpString & destinationProtocol,
                const bool         ignoreConstraints)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_S2s("sourceProtocol = ", sourceProtocol, "destinationProtocol = ", //####
+    ODL_ENTER(); //####
+    ODL_S2s("sourceProtocol = ", sourceProtocol, "destinationProtocol = ", //####
                destinationProtocol); //####
-    OD_LOG_B1("ignoreConstraints = ", ignoreConstraints); //####
+    ODL_B1("ignoreConstraints = ", ignoreConstraints); //####
     bool result = false;
     
     if (0 == destinationProtocol.length())
@@ -516,7 +516,7 @@ protocolsMatch(const YarpString & sourceProtocol,
     {
         result = (ignoreConstraints || (sourceProtocol == destinationProtocol));
     }
-    OD_LOG_EXIT_B(result); //####
+    ODL_EXIT_B(result); //####
     return result;
 } // protocolsMatch
 
@@ -540,11 +540,11 @@ ChannelEntry::ChannelEntry(ChannelContainer *  parent,
     _usage(portKind), _beingMonitored(false), _drawActivityMarker(false), _drawConnectMarker(false),
     _drawDisconnectMarker(false), _isLastPort(true), _wasUdp(false)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_P1("parent = ", parent); //####
-    OD_LOG_S4s("portName = ", portName, "portNumber = ", portNumber, "portProtocol = ", //####
+    ODL_ENTER(); //####
+    ODL_P1("parent = ", parent); //####
+    ODL_S4s("portName = ", portName, "portNumber = ", portNumber, "portProtocol = ", //####
                portProtocol, "protocolDescription = ", protocolDescription); //####
-    OD_LOG_LL2("portKind = ", portKind, "direction = ", direction); //####
+    ODL_LL2("portKind = ", portKind, "direction = ", direction); //####
     Font &             textFont = getOwningPanel().getNormalFont();
     YarpString prefix;
     
@@ -574,15 +574,15 @@ ChannelEntry::ChannelEntry(ChannelContainer *  parent,
                              _parent->getTextInset()) + entryHeight, entryHeight);
     setOpaque(true);
     setVisible(true);
-    OD_LOG_EXIT_P(this); //####
+    ODL_EXIT_P(this); //####
 } // ChannelEntry::ChannelEntry
 
 ChannelEntry::~ChannelEntry(void)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_S1s("getPortName() = ", getPortName()); //####
+    ODL_OBJENTER(); //####
+    ODL_S1s("getPortName() = ", getPortName()); //####
     removeAllConnections();
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelEntry::~ChannelEntry
 
 #if defined(__APPLE__)
@@ -594,9 +594,9 @@ ChannelEntry::addInputConnection(ChannelEntry *            other,
                                  const Common::ChannelMode mode,
                                  const bool                wasOverridden)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("other = ", other); //####
-    OD_LOG_B1("wasOverridden = ", wasOverridden); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("other = ", other); //####
+    ODL_B1("wasOverridden = ", wasOverridden); //####
     if (other)
     {
         bool canAdd = true;
@@ -611,7 +611,7 @@ ChannelEntry::addInputConnection(ChannelEntry *            other,
                 if ((candidate->_otherChannel == other) ||
                     (candidate->_otherChannel->getPortName() == other->getPortName()))
                 {
-                    OD_LOG("already present"); //####
+                    ODL_LOG("already present"); //####
                     candidate->_valid = true;
                     canAdd = false;
                     break;
@@ -630,7 +630,7 @@ ChannelEntry::addInputConnection(ChannelEntry *            other,
             _inputConnections.push_back(newConnection);
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelEntry::addInputConnection
 
 void
@@ -638,9 +638,9 @@ ChannelEntry::addOutputConnection(ChannelEntry *            other,
                                   const Common::ChannelMode mode,
                                   const bool                wasOverridden)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("other = ", other); //####
-    OD_LOG_B1("wasOverridden = ", wasOverridden); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("other = ", other); //####
+    ODL_B1("wasOverridden = ", wasOverridden); //####
     if (other)
     {
         bool canAdd = true;
@@ -655,7 +655,7 @@ ChannelEntry::addOutputConnection(ChannelEntry *            other,
                 if ((candidate->_otherChannel == other) ||
                     (candidate->_otherChannel->getPortName() == other->getPortName()))
                 {
-                    OD_LOG("already present"); //####
+                    ODL_LOG("already present"); //####
                     candidate->_valid = true;
                     canAdd = false;
                     break;
@@ -674,7 +674,7 @@ ChannelEntry::addOutputConnection(ChannelEntry *            other,
             _outputConnections.push_back(newConnection);
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelEntry::addOutputConnection
 
 AnchorSide
@@ -684,9 +684,9 @@ ChannelEntry::calculateClosestAnchor(Position &       result,
                                      const Position & pp)
 const
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P2("result = ", &result, "pp = ", &pp); //####
-    OD_LOG_B1("isSource = ", isSource); //####
+    ODL_OBJENTER(); //####
+    ODL_P2("result = ", &result, "pp = ", &pp); //####
+    ODL_B1("isSource = ", isSource); //####
     // Check each anchor point - the two side centres and optionally the bottom - to find the
     // shortest distance.
     AnchorSide anchor = kAnchorUnknown;
@@ -726,8 +726,8 @@ const
             }
         }
     }
-    OD_LOG_D2("result.x = ", result.getX(), "result.y = ", result.getY()); //####
-    OD_LOG_OBJEXIT_L(static_cast<int>(anchor)); //####
+    ODL_D2("result.x = ", result.getX(), "result.y = ", result.getY()); //####
+    ODL_OBJEXIT_L(static_cast<int>(anchor)); //####
     return anchor;
 } // ChannelEntry::calculateClosestAnchor
 
@@ -735,9 +735,9 @@ bool
 ChannelEntry::checkConnection(ChannelInfo & otherEnd,
                               const bool    isOutgoing)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("otherEnd = ", &otherEnd); //####
-    OD_LOG_B1("isOutgoing = ", isOutgoing); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("otherEnd = ", &otherEnd); //####
+    ODL_B1("isOutgoing = ", isOutgoing); //####
     bool result = false;
     
     if (isOutgoing)
@@ -748,30 +748,30 @@ ChannelEntry::checkConnection(ChannelInfo & otherEnd,
     {
         result = Utilities::CheckConnection(otherEnd._otherChannel->getPortName(), getPortName());
     }
-    OD_LOG_OBJEXIT_B(result); //####
+    ODL_OBJEXIT_B(result); //####
     return result;
 } // ChannelEntry::checkConnection
 
 void
 ChannelEntry::clearConnectMarker(void)
 {
-    OD_LOG_ENTER(); //####
+    ODL_ENTER(); //####
     _drawConnectMarker = false;
-    OD_LOG_EXIT(); //####
+    ODL_EXIT(); //####
 } // ChannelEntry::clearConnectMarker
 
 void
 ChannelEntry::clearDisconnectMarker(void)
 {
-    OD_LOG_ENTER(); //####
+    ODL_ENTER(); //####
     _drawDisconnectMarker = false;
-    OD_LOG_EXIT(); //####
+    ODL_EXIT(); //####
 } // ChannelEntry::clearDisconnectMarker
 
 void
 ChannelEntry::displayAndProcessPopupMenu(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     PopupMenu mm;
     
     mm.setLookAndFeel(&getLookAndFeel());
@@ -802,13 +802,13 @@ ChannelEntry::displayAndProcessPopupMenu(void)
             break;
             
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelEntry::displayAndProcessPopupMenu
 
 void
 ChannelEntry::displayChannelMetrics(void)
 {
-    OD_LOG_ENTER(); //####
+    ODL_ENTER(); //####
     StringArray metricsArray;
     
     if (_parent)
@@ -836,15 +836,15 @@ ChannelEntry::displayChannelMetrics(void)
             }
         }
     }
-    OD_LOG_EXIT(); //####
+    ODL_EXIT(); //####
 } // ChannelEntry::displayChannelMetrics
 
 void
 ChannelEntry::displayInformation(const bool isChannel,
                                  const bool moreDetails)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_B2("isChannel = ", isChannel, "moreDetails = ", moreDetails); //####
+    ODL_ENTER(); //####
+    ODL_B2("isChannel = ", isChannel, "moreDetails = ", moreDetails); //####
     YarpString dirText;
     YarpString prefix;
     YarpString suffix;
@@ -910,7 +910,7 @@ ChannelEntry::displayInformation(const bool isChannel,
     bodyText += getPortNumber() + "\n";
     bodyText += prefix + dirText + (isChannel ? " channel" : " port") + suffix;
     DisplayInformationPanel(this, bodyText.c_str(), getPortName().c_str());
-    OD_LOG_EXIT(); //####
+    ODL_EXIT(); //####
 } // ChannelEntry::displayInformation
 
 void
@@ -919,8 +919,8 @@ ChannelEntry::drawDragLine(Graphics &       gg,
                            const bool       isUDP,
                            const bool       isForced)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_B2("isUDP = ", isUDP, "isForced = ", isForced); //####
+    ODL_ENTER(); //####
+    ODL_B2("isUDP = ", isUDP, "isForced = ", isForced); //####
     AnchorSide sourceAnchor;
     AnchorSide destinationAnchor;
     Position   sourceCentre(getCentre() + getPositionInPanel());
@@ -943,7 +943,7 @@ ChannelEntry::drawDragLine(Graphics &       gg,
         sourceAnchor = calculateClosestAnchor(startPoint, true,
                                               kAnchorBottomCentre == destinationAnchor, position);
     }
-    OD_LOG_D4("startPoint.x <- ", startPoint.getX(), "startPoint.y <- ", //####
+    ODL_D4("startPoint.x <- ", startPoint.getX(), "startPoint.y <- ", //####
               startPoint.getY(), "position.x <- ", position.getX(), "position.y <- ", //####
               position.getY()); //####
     if (isUDP)
@@ -958,14 +958,14 @@ ChannelEntry::drawDragLine(Graphics &       gg,
                isForced);
     drawSourceAnchor(gg, sourceAnchor, startPoint, 1);
     drawTargetAnchor(gg, destinationAnchor, position, 1);
-    OD_LOG_EXIT(); //####
+    ODL_EXIT(); //####
 } // ChannelEntry::drawDragLine
 
 void
 ChannelEntry::drawOutgoingConnections(Graphics & gg)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("gg = ", &gg); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("gg = ", &gg); //####
     bool selfIsVisible = _parent->isVisible();
     
     for (ChannelConnections::const_iterator walker(_outputConnections.begin());
@@ -985,17 +985,17 @@ ChannelEntry::drawOutgoingConnections(Graphics & gg)
             }
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelEntry::drawOutgoingConnections
 
 Position
 ChannelEntry::getCentre(void)
 const
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     juce::Rectangle<float> outer(getLocalBounds().toFloat());
     
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
     return outer.getCentre();
 } // ChannelEntry::getCentre
 
@@ -1003,10 +1003,10 @@ EntitiesPanel &
 ChannelEntry::getOwningPanel(void)
 const
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     EntitiesPanel & result(_parent->getOwner());
     
-    OD_LOG_OBJEXIT_P(&result); //####
+    ODL_OBJEXIT_P(&result); //####
     return result;
 } // ChannelEntry::getOwningPanel
 
@@ -1014,10 +1014,10 @@ Position
 ChannelEntry::getPositionInPanel(void)
 const
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     Position result(getPosition().toFloat() + _parent->getPositionInPanel());
     
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
     return result;
 } // ChannelEntry::getPositionInPanel
 
@@ -1025,8 +1025,8 @@ bool
 ChannelEntry::hasOutgoingConnectionTo(const YarpString & otherPort)
 const
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_S1s("otherPort = ", otherPort); //####
+    ODL_OBJENTER(); //####
+    ODL_S1s("otherPort = ", otherPort); //####
     bool result = false;
     
     for (ChannelConnections::const_iterator walker(_outputConnections.begin());
@@ -1042,14 +1042,14 @@ const
         }
         
     }
-    OD_LOG_OBJEXIT_B(result); //####
+    ODL_OBJEXIT_B(result); //####
     return result;
 } // ChannelEntry::hasOutgoingConnectionTo
 
 void
 ChannelEntry::invalidateConnections(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     for (ChannelConnections::iterator walker(_inputConnections.begin());
          _inputConnections.end() != walker; ++walker)
     {
@@ -1070,14 +1070,14 @@ ChannelEntry::invalidateConnections(void)
             candidate->_valid = false;
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelEntry::invalidateConnections
 
 bool
 ChannelEntry::isChannel(void)
 const
 {
-    OD_LOG_ENTER(); //####
+    ODL_ENTER(); //####
     bool result = false;
     
     if (_parent)
@@ -1089,14 +1089,14 @@ const
             result = true;
         }
     }
-    OD_LOG_EXIT_B(result); //####
+    ODL_EXIT_B(result); //####
     return result;
 } // ChannelEntry::isChannel
 
 void
 ChannelEntry::mouseDown(const MouseEvent & ee)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     bool            passOn = true;
     EntitiesPanel & owningPanel(getOwningPanel());
     ChannelEntry *  firstAddPort = owningPanel.getFirstAddPoint();
@@ -1170,9 +1170,9 @@ ChannelEntry::mouseDown(const MouseEvent & ee)
         // No active operation.
         if (ee.mods.isAltDown())
         {
-            OD_LOG_P2("originalComponent = ", ee.originalComponent, //####
+            ODL_P2("originalComponent = ", ee.originalComponent, //####
                       "eventComponent = ", ee.eventComponent); //####
-            OD_LOG_D2("x = ", ee.position.getX(), "y = ", ee.position.getY()); //####
+            ODL_D2("x = ", ee.position.getX(), "y = ", ee.position.getY()); //####
             // Check if Add is OK for this entry.
             if ((kPortDirectionInput != _direction) && (kPortUsageClient != _usage))
             {
@@ -1210,20 +1210,20 @@ ChannelEntry::mouseDown(const MouseEvent & ee)
     {
         _parent->mouseDown(ee);
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelEntry::mouseDown
 
 void
 ChannelEntry::mouseDrag(const MouseEvent & ee)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     bool passOn = true;
     
     if (ee.mods.isAltDown())
     {
-        OD_LOG_P2("originalComponent = ", ee.originalComponent, //####
+        ODL_P2("originalComponent = ", ee.originalComponent, //####
                   "eventComponent = ", ee.eventComponent); //####
-        OD_LOG_D2("x = ", ee.position.getX(), "y = ", ee.position.getY()); //####
+        ODL_D2("x = ", ee.position.getX(), "y = ", ee.position.getY()); //####
         EntitiesPanel & owningPanel(getOwningPanel());
         
         owningPanel.setDragInfo(getPositionInPanel() + ee.position, ee.mods.isCtrlDown());
@@ -1238,22 +1238,22 @@ ChannelEntry::mouseDrag(const MouseEvent & ee)
     {
         _parent->mouseDrag(ee);
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelEntry::mouseDrag
 
 void
 ChannelEntry::mouseUp(const MouseEvent & ee)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     bool            passOn = true;
     EntitiesPanel & owningPanel(getOwningPanel());
     
     if (ee.mods.isAltDown() || owningPanel.isDragActive())
     {
         // Check if we are processing an Add and this is OK.
-        OD_LOG_P2("originalComponent = ", ee.originalComponent, //####
+        ODL_P2("originalComponent = ", ee.originalComponent, //####
                   "eventComponent = ", ee.eventComponent); //####
-        OD_LOG_D2("x = ", ee.position.getX(), "y = ", ee.position.getY()); //####
+        ODL_D2("x = ", ee.position.getX(), "y = ", ee.position.getY()); //####
         if (owningPanel.isDragActive())
         {
             Position       newLocation(getPositionInPanel() + ee.position);
@@ -1299,21 +1299,21 @@ ChannelEntry::mouseUp(const MouseEvent & ee)
     {
         _parent->mouseUp(ee);
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelEntry::mouseUp
 
 void
 ChannelEntry::paint(Graphics & gg)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("gg = ", &gg); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("gg = ", &gg); //####
     AttributedString as;
     
     as.setJustification(Justification::left);
     as.append(_title.c_str(), getOwningPanel().getNormalFont(), kEntryTextColour);
     juce::Rectangle<float> area(getLocalBounds().toFloat());
     
-    OD_LOG_D4("x <- ", area.getX(), "y <- ", area.getY(), "w <- ",area.getWidth(), "h <- ", //####
+    ODL_D4("x <- ", area.getX(), "y <- ", area.getY(), "w <- ",area.getWidth(), "h <- ", //####
               area.getHeight()); //####
     gg.setColour(kEntryBackgroundColour);
     gg.fillRect(area);
@@ -1348,13 +1348,13 @@ ChannelEntry::paint(Graphics & gg)
         gg.setFillType(theMarkerFill);
         gg.fillEllipse(markerPos.getX(), markerPos.getY(), hh, hh);
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelEntry::paint
 
 void
 ChannelEntry::removeAllConnections(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     for (ChannelConnections::iterator walker(_inputConnections.begin());
          _inputConnections.end() != walker; ++walker)
     {
@@ -1377,14 +1377,14 @@ ChannelEntry::removeAllConnections(void)
         }
     }
     _outputConnections.clear();
-    OD_LOG_EXIT(); //####
+    ODL_EXIT(); //####
 } // ChannelEntry::removeAllConnections
 
 void
 ChannelEntry::removeInputConnection(ChannelEntry * other)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("other = ", other); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("other = ", other); //####
     if (other)
     {
         ChannelConnections::iterator walker(_inputConnections.begin());
@@ -1404,13 +1404,13 @@ ChannelEntry::removeInputConnection(ChannelEntry * other)
             _inputConnections.erase(walker);
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelEntry::removeInputConnection
 
 void
 ChannelEntry::removeInvalidConnections(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     bool keepGoing;
     
     do
@@ -1473,14 +1473,14 @@ ChannelEntry::removeInvalidConnections(void)
         }
     }
     while (keepGoing);
-    OD_LOG_EXIT(); //####
+    ODL_EXIT(); //####
 } // ChannelEntry::removeInvalidConnections
 
 void
 ChannelEntry::removeOutputConnection(ChannelEntry * other)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("other = ", other); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("other = ", other); //####
     if (other)
     {
         ChannelConnections::iterator walker(_outputConnections.begin());
@@ -1500,39 +1500,39 @@ ChannelEntry::removeOutputConnection(ChannelEntry * other)
             _outputConnections.erase(walker);
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelEntry::removeOutputConnection
 
 void
 ChannelEntry::setAsLastPort(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     _isLastPort = true;
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelEntry::setAsLastPort
 
 void
 ChannelEntry::setConnectMarker(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     _drawConnectMarker = true;
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelEntry::setConnectMarker
 
 void
 ChannelEntry::setDisconnectMarker(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     _drawDisconnectMarker = true;
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelEntry::setDisconnectMarker
 
 void
 ChannelEntry::unsetAsLastPort(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     _isLastPort = false;
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ChannelEntry::unsetAsLastPort
 
 #if defined(__APPLE__)

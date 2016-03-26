@@ -138,8 +138,8 @@ static bool
 caseInsensitiveMatch(const char * string1,
                      const char * string2)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_S2("string1 = ", string1, "string2 = ", string2); //####
+    ODL_ENTER(); //####
+    ODL_S2("string1 = ", string1, "string2 = ", string2); //####
     bool matched = true;
     
     if (! string1)
@@ -187,7 +187,7 @@ caseInsensitiveMatch(const char * string1,
             
         }
     }
-    OD_LOG_EXIT_B(matched); //####
+    ODL_EXIT_B(matched); //####
     return matched;
 } // caseInsensitiveMatch
 
@@ -205,21 +205,21 @@ ManagerApplication::ManagerApplication(void) :
     _peekHandler(NULL), _registryServiceCanBeLaunched(false)
 {
 #if defined(MpM_ServicesLogToStandardError)
-    OD_LOG_INIT(ProjectInfo::projectName, kODLoggingOptionIncludeProcessID | //####
+    ODL_INIT(ProjectInfo::projectName, kODLoggingOptionIncludeProcessID | //####
                 kODLoggingOptionIncludeThreadID | kODLoggingOptionWriteToStderr | //####
                 kODLoggingOptionEnableThreadSupport); //####
 #else // ! defined(MpM_ServicesLogToStandardError)
-    OD_LOG_INIT(ProjectInfo::projectName, kODLoggingOptionIncludeProcessID | //####
+    ODL_INIT(ProjectInfo::projectName, kODLoggingOptionIncludeProcessID | //####
                 kODLoggingOptionIncludeThreadID | kODLoggingOptionEnableThreadSupport); //####
 #endif // ! defined(MpM_ServicesLogToStandardError)
-    OD_LOG_ENTER(); //####
-    OD_LOG_EXIT_P(this); //####
+    ODL_ENTER(); //####
+    ODL_EXIT_P(this); //####
 } // ManagerApplication::ManagerApplication
 
 ManagerApplication::~ManagerApplication(void)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJENTER(); //####
+    ODL_OBJEXIT(); //####
 } // ManagerApplication::~ManagerApplication
 
 #if defined(__APPLE__)
@@ -238,12 +238,12 @@ ManagerApplication::anotherInstanceStarted(const String & commandLine)
 #  pragma unused(commandLine)
 # endif // MAC_OR_LINUX_
 #endif // ! defined(OD_ENABLE_LOGGING_)
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_S1s("commandLine = ", commandLine.toStdString()); //####
+    ODL_OBJENTER(); //####
+    ODL_S1s("commandLine = ", commandLine.toStdString()); //####
     // When another instance of the app is launched while this one is running, this method is
     // invoked, and the commandLine parameter tells you what the other instance's command-line
     // arguments were.
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ManagerApplication::anotherInstanceStarted
 #if (! MAC_OR_LINUX_)
 # pragma warning(pop)
@@ -252,7 +252,7 @@ ManagerApplication::anotherInstanceStarted(const String & commandLine)
 bool
 ManagerApplication::checkForRegistryServiceAndLaunchIfDesired(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     bool didLaunch = false;
     
     if (0 < _registryServicePath.length())
@@ -273,14 +273,14 @@ ManagerApplication::checkForRegistryServiceAndLaunchIfDesired(void)
                                     String::empty, _mainWindow);
         _mainWindow->toFront(true);
     }
-    OD_LOG_OBJEXIT_B(didLaunch); //####
+    ODL_OBJEXIT_B(didLaunch); //####
     return didLaunch;
 } // ManagerApplication::checkForRegistryServiceAndLaunchIfDesired
 
 yarp::os::Network *
 ManagerApplication::checkForYarpAndLaunchIfDesired(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     yarp::os::Network * result = NULL;
     
     // No running YARP server was detected - first check if YARP is actually available:
@@ -399,42 +399,42 @@ ManagerApplication::checkForYarpAndLaunchIfDesired(void)
                                        "Execution is not possible."), String::empty, _mainWindow);
         _mainWindow->toFront(true);
     }
-    OD_LOG_OBJEXIT_P(result); //####
+    ODL_OBJEXIT_P(result); //####
     return result;
 } // ManagerApplication::checkForYarpAndLaunchIfDesired
 
 void
 ManagerApplication::connectPeekChannel(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     if (_peeker)
     {
         if (! Utilities::NetworkConnectWithRetries(MpM_REGISTRY_STATUS_NAME_, _peeker->name(),
                                                    STANDARD_WAIT_TIME_))
         {
-            OD_LOG("(! Utilities::NetworkConnectWithRetries(MpM_REGISTRY_STATUS_NAME, " //####
+            ODL_LOG("(! Utilities::NetworkConnectWithRetries(MpM_REGISTRY_STATUS_NAME, " //####
                    "_peeker->name(), STANDARD_WAIT_TIME_))"); //####
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ManagerApplication::connectPeekChannel
 
 void
 ManagerApplication::doCleanupSoon(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     if (_scanner)
     {
         _scanner->doCleanupSoon();
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ManagerApplication::doCleanupSoon
 
 void
 ManagerApplication::doLaunchAService(const ApplicationInfo & appInfo)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("appInfo = ", &appInfo); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("appInfo = ", &appInfo); //####
     bool   okSoFar = false;
     String caption("Launching the ");
     String execType;
@@ -498,13 +498,13 @@ ManagerApplication::doLaunchAService(const ApplicationInfo & appInfo)
             }
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ManagerApplication::doLaunchAService
 
 void
 ManagerApplication::doLaunchOtherApplication(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     _applicationMenu.setLookAndFeel(&_mainWindow->getLookAndFeel());
     int res = _applicationMenu.show();
     
@@ -514,13 +514,13 @@ ManagerApplication::doLaunchOtherApplication(void)
         
         doLaunchAService(appInfo);
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ManagerApplication::doLaunchOtherApplication
 
 bool
 ManagerApplication::doLaunchRegistry(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     bool        result = false;
     int         portChoice = 0;
     int         res = 0;
@@ -571,26 +571,26 @@ ManagerApplication::doLaunchRegistry(void)
         }
     }
     _mainWindow->toFront(true);
-    OD_LOG_OBJEXIT_B(result); //####
+    ODL_OBJEXIT_B(result); //####
     return result;
 } // ManagerApplication::doLaunchRegistry
 
 void
 ManagerApplication::doScanSoon(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     if (_scanner)
     {
         _scanner->doScanSoon();
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ManagerApplication::doScanSoon
 
 String
 ManagerApplication::findPathToExecutable(const String & execName)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_S1s("execName = ", execName.toStdString()); //####
+    ODL_ENTER(); //####
+    ODL_S1s("execName = ", execName.toStdString()); //####
     String result;
     
     if (juce::File::isAbsolutePath(execName))
@@ -694,41 +694,41 @@ ManagerApplication::findPathToExecutable(const String & execName)
             }
         }
     }
-    OD_LOG_EXIT_s(result.toStdString()); //####
+    ODL_EXIT_s(result.toStdString()); //####
     return result;
 } // ManagerApplication::findPathToExecutable
 
 ManagerApplication *
 ManagerApplication::getApp(void)
 {
-    OD_LOG_ENTER(); //####
+    ODL_ENTER(); //####
     ManagerApplication * result = static_cast<ManagerApplication *>(JUCEApplication::getInstance());
     
-    OD_LOG_EXIT_P(result); //####
+    ODL_EXIT_P(result); //####
     return result;
 } // ManagerApplication::getApp
 
 const String
 ManagerApplication::getApplicationName(void)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_OBJEXIT_S(ProjectInfo::projectName); //####
+    ODL_OBJENTER(); //####
+    ODL_OBJEXIT_S(ProjectInfo::projectName); //####
     return ProjectInfo::projectName;
 } // ManagerApplication::getApplicationName
 
 const String
 ManagerApplication::getApplicationVersion(void)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_OBJEXIT_S(ProjectInfo::versionString); //####
+    ODL_OBJENTER(); //####
+    ODL_OBJEXIT_S(ProjectInfo::versionString); //####
     return ProjectInfo::versionString;
 } // ManagerApplication::getApplicationVersion
 
 bool
 ManagerApplication::getArgumentsForApplication(ApplicationInfo & theInfo)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P1("theInfo = ", &theInfo); //####
+    ODL_OBJENTER(); //####
+    ODL_P1("theInfo = ", &theInfo); //####
     bool         okSoFar = false;
     ChildProcess runApplication;
     StringArray  nameAndArgs(theInfo._applicationPath);
@@ -739,7 +739,7 @@ ManagerApplication::getArgumentsForApplication(ApplicationInfo & theInfo)
         const String childOutput(runApplication.readAllProcessOutput());
         
         LazyLaunchProcess(runApplication, kThreadKillTime);
-        OD_LOG_S1s("childOutput = ", childOutput.toStdString()); //####
+        ODL_S1s("childOutput = ", childOutput.toStdString()); //####
         if (0 < childOutput.length())
         {
             StringArray aRecord(StringArray::fromTokens(childOutput, ARGUMENT_SEPARATOR_, ""));
@@ -763,16 +763,16 @@ ManagerApplication::getArgumentsForApplication(ApplicationInfo & theInfo)
     }
     else
     {
-        OD_LOG("! (runApplication.start(nameAndArgs))"); //####
+        ODL_LOG("! (runApplication.start(nameAndArgs))"); //####
     }
-    OD_LOG_OBJEXIT_B(okSoFar); //####
+    ODL_OBJEXIT_B(okSoFar); //####
     return okSoFar;
 } // ManagerApplication::getArgumentsForApplication
 
 int
 ManagerApplication::getButtonHeight(void)
 {
-    OD_LOG_ENTER(); //####
+    ODL_ENTER(); //####
     ManagerApplication * ourApp = getApp();
     int                  result;
     
@@ -784,15 +784,15 @@ ManagerApplication::getButtonHeight(void)
     {
         result = 32; // Arbitrary, should never reach here!
     }
-    OD_LOG_EXIT_LL(result);
+    ODL_EXIT_LL(result);
     return result;
 } // ManagerApplication::getButtonHeight
 
 String
 ManagerApplication::getEnvironmentVar(const char * varName)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_S1("varName = ", varName); //####
+    ODL_ENTER(); //####
+    ODL_S1("varName = ", varName); //####
     String           result;
     YarpStringVector keys;
     YarpStringVector values;
@@ -810,7 +810,7 @@ ManagerApplication::getEnvironmentVar(const char * varName)
         }
         
     }
-    OD_LOG_EXIT_s(result.toStdString()); //####
+    ODL_EXIT_s(result.toStdString()); //####
     return result;
 } // ManagerApplication::getEnvironmentVar
 
@@ -818,8 +818,8 @@ void
 ManagerApplication::getEnvironmentVars(YarpStringVector & keys,
                                        YarpStringVector & values)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_P2("keys = ", &keys, "values = ", &values);
+    ODL_ENTER(); //####
+    ODL_P2("keys = ", &keys, "values = ", &values);
 #if (! defined(__APPLE__))
 # if YARP_SYSTEM_INFO_MOVED_
     yarp::os::Property vars(yarp::os::SystemInfo::getPlatformInfo().environmentVars);
@@ -850,7 +850,7 @@ ManagerApplication::getEnvironmentVars(YarpStringVector & keys,
         const String childOutput(runApplication.readAllProcessOutput());
         
         LazyLaunchProcess(runApplication, kThreadKillTime);
-        OD_LOG_S1s("childOutput = ", childOutput.toStdString()); //####
+        ODL_S1s("childOutput = ", childOutput.toStdString()); //####
         if (0 < childOutput.length())
         {
             StringArray aRecord(StringArray::fromTokens(childOutput, "\n", ""));
@@ -870,7 +870,7 @@ ManagerApplication::getEnvironmentVars(YarpStringVector & keys,
     }
     else
     {
-        OD_LOG("! (runApplication.start(nameAndArgs))"); //####
+        ODL_LOG("! (runApplication.start(nameAndArgs))"); //####
     }
 #else // ! defined(__APPLE__)
     for (int ii = 0, numVars = varsAsBottle.size(); numVars > ii; ++ii)
@@ -901,27 +901,27 @@ ManagerApplication::getEnvironmentVars(YarpStringVector & keys,
         }
     }
 #endif // ! defined(__APPLE__)
-    OD_LOG_EXIT(); //####
+    ODL_EXIT(); //####
 } // ManagerApplication::getEnvironmentVars
 
 String
 ManagerApplication::getHomeDir(void)
 {
-    OD_LOG_ENTER(); //####
+    ODL_ENTER(); //####
     juce::File homeDir(juce::File::getSpecialLocation(juce::File::userHomeDirectory));
     String     result(homeDir.getFullPathName());
     
-    OD_LOG_EXIT_s(result.toStdString()); //####
+    ODL_EXIT_s(result.toStdString()); //####
     return result;
 } // ManagerApplication::getHomeDir
 
 ManagerWindow *
 ManagerApplication::getMainWindow(void)
 {
-    OD_LOG_ENTER(); //####
+    ODL_ENTER(); //####
     ManagerWindow * result = getApp()->_mainWindow;
     
-    OD_LOG_EXIT_P(result);
+    ODL_EXIT_P(result);
     return result;
 } // ManagerApplication::getMainWindow
 
@@ -929,9 +929,9 @@ bool
 ManagerApplication::getParametersForApplication(const String &    execName,
                                                 ApplicationInfo & theInfo)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_S1s("execName = ", execName.toStdString()); //####
-    OD_LOG_P1("theInfo = ", &theInfo); //####
+    ODL_OBJENTER(); //####
+    ODL_S1s("execName = ", execName.toStdString()); //####
+    ODL_P1("theInfo = ", &theInfo); //####
     bool   okSoFar = false;
     String execPath(findPathToExecutable(execName));
     
@@ -946,7 +946,7 @@ ManagerApplication::getParametersForApplication(const String &    execName,
             const String childOutput(runApplication.readAllProcessOutput());
             
             LazyLaunchProcess(runApplication, kThreadKillTime);
-            OD_LOG_S1s("childOutput = ", childOutput.toStdString()); //####
+            ODL_S1s("childOutput = ", childOutput.toStdString()); //####
             if (0 < childOutput.length())
             {
                 StringArray aRecord(StringArray::fromTokens(childOutput, "\t", ""));
@@ -983,10 +983,10 @@ ManagerApplication::getParametersForApplication(const String &    execName,
         }
         else
         {
-            OD_LOG("! (runApplication.start(nameAndArgs))"); //####
+            ODL_LOG("! (runApplication.start(nameAndArgs))"); //####
         }
     }
-    OD_LOG_OBJEXIT_B(okSoFar); //####
+    ODL_OBJEXIT_B(okSoFar); //####
     return okSoFar;
 } // ManagerApplication::getParametersForApplication
 
@@ -999,12 +999,12 @@ ManagerApplication::getPrimaryChannelForService(const ApplicationInfo & appInfo,
                                                 const int               tagModifierCount,
                                                 String &                channelName)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_P3("appInfo = ", &appInfo, "arguments = ", &arguments, "channelName = ", //####
+    ODL_OBJENTER(); //####
+    ODL_P3("appInfo = ", &appInfo, "arguments = ", &arguments, "channelName = ", //####
               &channelName); //####
-    OD_LOG_S3s("endpointName = ", endpointName.toStdString(), "tag = ", tag.toStdString(), //####
+    ODL_S3s("endpointName = ", endpointName.toStdString(), "tag = ", tag.toStdString(), //####
                "portNumber = ", portNumber.toStdString()); //####
-    OD_LOG_LL1("tagModifierCount = ", tagModifierCount); //####
+    ODL_LL1("tagModifierCount = ", tagModifierCount); //####
     bool         okSoFar = false;
     ChildProcess runApplication;
     StringArray  nameAndArgs(appInfo._applicationPath);
@@ -1012,25 +1012,25 @@ ManagerApplication::getPrimaryChannelForService(const ApplicationInfo & appInfo,
     nameAndArgs.add("--channel");
     if (0 < portNumber.length())
     {
-        OD_LOG("(0 < portNumber())"); //####
+        ODL_LOG("(0 < portNumber())"); //####
         nameAndArgs.add("--port");
         nameAndArgs.add(portNumber);
     }
     if (0 < tag.length())
     {
-        OD_LOG("(0 < tag())"); //####
+        ODL_LOG("(0 < tag())"); //####
         nameAndArgs.add("--tag");
         nameAndArgs.add(tag);
     }
     if (0 < endpointName.length())
     {
-        OD_LOG("(0 < endpointName())"); //####
+        ODL_LOG("(0 < endpointName())"); //####
         nameAndArgs.add("--endpoint");
         nameAndArgs.add(endpointName);
     }
     if (0 < tagModifierCount)
     {
-        OD_LOG("(0 < tagModifierCount)"); //####
+        ODL_LOG("(0 < tagModifierCount)"); //####
         nameAndArgs.add("--mod");
         nameAndArgs.add(String(tagModifierCount));
     }
@@ -1043,7 +1043,7 @@ ManagerApplication::getPrimaryChannelForService(const ApplicationInfo & appInfo,
         const String childOutput(runApplication.readAllProcessOutput());
         
         LazyLaunchProcess(runApplication, kThreadKillTime);
-        OD_LOG_S1s("childOutput = ", childOutput.toStdString()); //####
+        ODL_S1s("childOutput = ", childOutput.toStdString()); //####
         if (0 < childOutput.length())
         {
             StringArray aRecord(StringArray::fromTokens(childOutput, "\t", ""));
@@ -1057,16 +1057,16 @@ ManagerApplication::getPrimaryChannelForService(const ApplicationInfo & appInfo,
     }
     else
     {
-        OD_LOG("! (runApplication.start(nameAndArgs))"); //####
+        ODL_LOG("! (runApplication.start(nameAndArgs))"); //####
     }
-    OD_LOG_OBJEXIT_B(okSoFar); //####
+    ODL_OBJEXIT_B(okSoFar); //####
     return okSoFar;
 } // ManagerApplication::getPrimaryChannelForService
 
 String
 ManagerApplication::getRealName(void)
 {
-    OD_LOG_ENTER(); //####
+    ODL_ENTER(); //####
     String          result;
 #if defined(__APPLE__)
     struct passwd   pwd;
@@ -1099,14 +1099,14 @@ ManagerApplication::getRealName(void)
     result = yarp::os::impl::SystemInfo::getUserInfo().realName.c_str();
 # endif // ! YARP_SYSTEM_INFO_MOVED_
 #endif // ! defined(__APPLE__)
-    OD_LOG_EXIT_s(result.toStdString()); //####
+    ODL_EXIT_s(result.toStdString()); //####
     return result;
 } // ManagerApplication::getRealName
 
 String
 ManagerApplication::getUserName(void)
 {
-    OD_LOG_ENTER(); //####
+    ODL_ENTER(); //####
     String          result;
 #if defined(__APPLE__)
     struct passwd   pwd;
@@ -1139,7 +1139,7 @@ ManagerApplication::getUserName(void)
     result = yarp::os::impl::SystemInfo::getUserInfo().userName.c_str();
 # endif // ! YARP_SYSTEM_INFO_MOVED_
 #endif // ! defined(__APPLE__)
-    OD_LOG_EXIT_s(result.toStdString()); //####
+    ODL_EXIT_s(result.toStdString()); //####
     return result;
 } // ManagerApplication::getUserName
 
@@ -1155,8 +1155,8 @@ ManagerApplication::initialise(const String & commandLine)
 #  pragma unused(commandLine)
 # endif // MAC_OR_LINUX_
 #endif // ! defined(OD_ENABLE_LOGGING_)
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_S1s("commandLine = ", commandLine.toStdString()); //####
+    ODL_OBJENTER(); //####
+    ODL_S1s("commandLine = ", commandLine.toStdString()); //####
     bool launchedRegistry = false;
     
 #if MAC_OR_LINUX_
@@ -1179,7 +1179,7 @@ ManagerApplication::initialise(const String & commandLine)
     }
     else
     {
-        OD_LOG("! (yarp::os::Network::checkNetwork())"); //####        
+        ODL_LOG("! (yarp::os::Network::checkNetwork())"); //####        
         MpM_WARNING_("YARP network not running.");
         _yarpPath = findPathToExecutable("yarp");
         _yarp = checkForYarpAndLaunchIfDesired();
@@ -1213,7 +1213,7 @@ ManagerApplication::initialise(const String & commandLine)
             }
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ManagerApplication::initialise
 #if (! MAC_OR_LINUX_)
 # pragma warning(pop)
@@ -1222,7 +1222,7 @@ ManagerApplication::initialise(const String & commandLine)
 void
 ManagerApplication::loadApplicationLists(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     juce::File  commonDir(juce::File::getSpecialLocation(juce::File::commonDocumentsDirectory));
     String      commonPath(juce::File::addTrailingSeparator(commonDir.getFullPathName()) + "m+m");
     String      pathToStdList(juce::File::addTrailingSeparator(commonPath) +
@@ -1271,21 +1271,21 @@ ManagerApplication::loadApplicationLists(void)
             }
         }
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ManagerApplication::loadApplicationLists
 
 bool
 ManagerApplication::moreThanOneInstanceAllowed(void)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_OBJEXIT_B(true); //####
+    ODL_OBJENTER(); //####
+    ODL_OBJEXIT_B(true); //####
     return true;
 } // ManagerApplication::moreThanOneInstanceAllowed
 
 void
 ManagerApplication::restoreYarpConfiguration(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     ChildProcess runYarp;
     String       appName(JUCEApplication::getInstance()->getApplicationName());
     StringArray  nameAndArgs(_yarpPath);
@@ -1298,19 +1298,19 @@ ManagerApplication::restoreYarpConfiguration(void)
         const String childOutput(runYarp.readAllProcessOutput());
         
         LazyLaunchProcess(runYarp, kThreadKillTime);
-        OD_LOG_S1s("childOutput = ", childOutput.toStdString()); //####
+        ODL_S1s("childOutput = ", childOutput.toStdString()); //####
     }
     else
     {
-        OD_LOG("! (runYarp.start(nameAndArgs))"); //####
+        ODL_LOG("! (runYarp.start(nameAndArgs))"); //####
     }
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ManagerApplication::restoreYarpConfiguration
 
 void
 ManagerApplication::shutdown(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     SetExitRequest();
     if (_scanner)
     {
@@ -1363,23 +1363,23 @@ ManagerApplication::shutdown(void)
     yarp::os::Network::fini();
     _yarp = NULL;
     Utilities::ShutDownGlobalStatusReporter();
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ManagerApplication::shutdown
 
 void
 ManagerApplication::systemRequestedQuit(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     // This is called when the app is being asked to quit: you can ignore this request and let the
     // app carry on running, or call quit() to allow the app to close.
     quit();
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ManagerApplication::systemRequestedQuit
 
 bool
 ManagerApplication::validateRegistryService(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     bool         doLaunch = false;
     ChildProcess runRegistryService;
     String       appName(JUCEApplication::getInstance()->getApplicationName());
@@ -1391,7 +1391,7 @@ ManagerApplication::validateRegistryService(void)
         const String childOutput(runRegistryService.readAllProcessOutput());
         
         LazyLaunchProcess(runRegistryService, kThreadKillTime);
-        OD_LOG_S1s("childOutput = ", childOutput.toStdString()); //####
+        ODL_S1s("childOutput = ", childOutput.toStdString()); //####
         if (0 < childOutput.length())
         {
             // We have a useable Registry Service executable - ask what the user wants to do.
@@ -1423,7 +1423,7 @@ ManagerApplication::validateRegistryService(void)
     }
     else
     {
-        OD_LOG("! (runRegistryService.start(nameAndArgs))"); //####
+        ODL_LOG("! (runRegistryService.start(nameAndArgs))"); //####
         AlertWindow::showMessageBox(AlertWindow::WarningIcon, appName,
                                     T_("The Registry Service executable found in the PATH system "
                                        "environment variable could not be started. "
@@ -1431,14 +1431,14 @@ ManagerApplication::validateRegistryService(void)
                                     String::empty, _mainWindow);
     }
     _mainWindow->toFront(true);
-    OD_LOG_OBJEXIT_B(doLaunch); //####
+    ODL_OBJEXIT_B(doLaunch); //####
     return doLaunch;
 } // ManagerApplication::validateRegistryService
 
 bool
 ManagerApplication::validateYarp(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     bool         doLaunch = false;
     ChildProcess runYarp;
     String       appName(JUCEApplication::getInstance()->getApplicationName());
@@ -1450,7 +1450,7 @@ ManagerApplication::validateYarp(void)
         const String childOutput(runYarp.readAllProcessOutput());
         
         LazyLaunchProcess(runYarp, kThreadKillTime);
-        OD_LOG_S1s("childOutput = ", childOutput.toStdString()); //####
+        ODL_S1s("childOutput = ", childOutput.toStdString()); //####
         if (0 < childOutput.length())
         {
             // We have a useable YARP executable - ask what the user wants to do.
@@ -1482,7 +1482,7 @@ ManagerApplication::validateYarp(void)
     }
     else
     {
-        OD_LOG("! (runYarp.start(nameAndArgs))"); //####
+        ODL_LOG("! (runYarp.start(nameAndArgs))"); //####
         AlertWindow::showMessageBox(AlertWindow::WarningIcon, appName,
                                     T_("No YARP network was detected and the YARP executable found "
                                        "in the PATH system environment variable could not be "
@@ -1490,7 +1490,7 @@ ManagerApplication::validateYarp(void)
                                        "Execution is not possible."), String::empty, _mainWindow);
     }
     _mainWindow->toFront(true);
-    OD_LOG_OBJEXIT_B(doLaunch); //####
+    ODL_OBJEXIT_B(doLaunch); //####
     return doLaunch;
 } // validateYarp
 
@@ -1502,9 +1502,9 @@ void MPlusM_Manager::CalculateTextArea(Point<int> &   dimensions,
                                        const Font &   aFont,
                                        const String & aString)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_P2("dimensions = ", &dimensions, "aFont = ", &aFont); //####
-    OD_LOG_S1s("aString = ", aString.toStdString()); //####
+    ODL_ENTER(); //####
+    ODL_P2("dimensions = ", &dimensions, "aFont = ", &aFont); //####
+    ODL_S1s("aString = ", aString.toStdString()); //####
     float       maxWidth = 0;
     StringArray asLines;
     
@@ -1523,7 +1523,7 @@ void MPlusM_Manager::CalculateTextArea(Point<int> &   dimensions,
     }
     dimensions = Point<int>(static_cast<int>(maxWidth + 0.5),
                             static_cast<int>((numRows * aFont.getHeight()) + 0.5));
-    OD_LOG_EXIT(); //####
+    ODL_EXIT(); //####
 } // MPlusM_Manager::CalculateTextArea
 
 #if (! MAC_OR_LINUX_)
@@ -1537,9 +1537,9 @@ bool CheckForExit(void * stuff)
 #  pragma unused(stuff)
 # endif // MAC_OR_LINUX_
 #endif // ! defined(OD_ENABLE_LOGGING_)
-    OD_LOG_ENTER(); //####
-    OD_LOG_P1("stuff = ", stuff); //####
-    OD_LOG_EXIT_B(lExitRequested); //####
+    ODL_ENTER(); //####
+    ODL_P1("stuff = ", stuff); //####
+    ODL_EXIT_B(lExitRequested); //####
     return lExitRequested;
 } // CheckForExit
 #if (! MAC_OR_LINUX_)
@@ -1549,9 +1549,9 @@ bool CheckForExit(void * stuff)
 bool LazyLaunchProcess(ChildProcess & aProcess,
                        const int      timeout)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_P1("aProcess = ", &aProcess); //####
-    OD_LOG_LL1("timeout = ", timeout); //####
+    ODL_ENTER(); //####
+    ODL_P1("aProcess = ", &aProcess); //####
+    ODL_LL1("timeout = ", timeout); //####
     bool result = false;
     
     if (0 < timeout)
@@ -1586,13 +1586,13 @@ bool LazyLaunchProcess(ChildProcess & aProcess,
             }
         }
     }
-    OD_LOG_EXIT_B(result); //####
+    ODL_EXIT_B(result); //####
     return result;
 } // LazyLaunchProcess
 
 void SetExitRequest(void)
 {
-    OD_LOG_ENTER(); //####
+    ODL_ENTER(); //####
     lExitRequested = true;
-    OD_LOG_EXIT(); //####
+    ODL_EXIT(); //####
 } // SetExitRequest

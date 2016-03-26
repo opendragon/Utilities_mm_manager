@@ -89,15 +89,15 @@ using namespace std;
 TextValidator::TextValidator(Utilities::BaseArgumentDescriptor & fieldDescriptor) :
     _fieldDescriptor(fieldDescriptor)
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_P1("fieldDescriptor = ", &fieldDescriptor); //####
-    OD_LOG_EXIT_P(this); //####
+    ODL_ENTER(); //####
+    ODL_P1("fieldDescriptor = ", &fieldDescriptor); //####
+    ODL_EXIT_P(this); //####
 } // TextValidator::TextValidator
 
 TextValidator::~TextValidator(void)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJENTER(); //####
+    ODL_OBJEXIT(); //####
 } // TextValidator::~TextValidator
 
 #if defined(__APPLE__)
@@ -108,8 +108,8 @@ bool
 TextValidator::checkValidity(const String & toBeChecked)
 const
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_S1s("toBeChecked = ", toBeChecked.toStdString()); //####
+    ODL_OBJENTER(); //####
+    ODL_S1s("toBeChecked = ", toBeChecked.toStdString()); //####
     bool result;
     
     if (0 == toBeChecked.length())
@@ -131,7 +131,7 @@ const
     {
         result = false;
     }
-    OD_LOG_OBJEXIT_B(result); //####
+    ODL_OBJEXIT_B(result); //####
     return result;
 } // TextValidator::checkValidity
 
@@ -140,9 +140,9 @@ TextValidator::checkValidity(const String & toBeChecked,
                              StringArray &  argsToUse)
 const
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_S1s("toBeChecked = ", toBeChecked.toStdString()); //####
-    OD_LOG_P1("argsToUse = ", &argsToUse); //####
+    ODL_OBJENTER(); //####
+    ODL_S1s("toBeChecked = ", toBeChecked.toStdString()); //####
+    ODL_P1("argsToUse = ", &argsToUse); //####
     bool result;
     
     if (0 == toBeChecked.length())
@@ -166,7 +166,7 @@ const
     {
         result = false;
     }
-    OD_LOG_OBJEXIT_B(result); //####
+    ODL_OBJEXIT_B(result); //####
     return result;
 } // TextValidator::checkValidity
 
@@ -174,10 +174,10 @@ bool
 TextValidator::isForFiles(bool & isForOutput)
 const
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     bool result = _fieldDescriptor.isForFiles(isForOutput);
     
-    OD_LOG_OBJEXIT_B(result); //####
+    ODL_OBJEXIT_B(result); //####
     return result;
 } // TextValidator::isForFiles
 

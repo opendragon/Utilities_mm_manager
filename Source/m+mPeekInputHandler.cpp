@@ -89,14 +89,14 @@ using namespace MPlusM_Manager;
 PeekInputHandler::PeekInputHandler(void) :
     inherited()
 {
-    OD_LOG_ENTER(); //####
-    OD_LOG_EXIT_P(this); //####
+    ODL_ENTER(); //####
+    ODL_EXIT_P(this); //####
 } // PeekInputHandler::PeekInputHandler
 
 PeekInputHandler::~PeekInputHandler(void)
 {
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJENTER(); //####
+    ODL_OBJEXIT(); //####
 } // PeekInputHandler::~PeekInputHandler
 
 #if defined(__APPLE__)
@@ -118,10 +118,10 @@ PeekInputHandler::handleInput(const yarp::os::Bottle &     input,
 #  pragma unused(senderChannel,replyMechanism)
 # endif // MAC_OR_LINUX_
 #endif // ! defined(OD_ENABLE_LOGGING_)
-    OD_LOG_OBJENTER(); //####
-    OD_LOG_S2s("senderChannel = ", senderChannel, "got ", input.toString()); //####
-    OD_LOG_P1("replyMechanism = ", replyMechanism); //####
-    OD_LOG_LL1("numBytes = ", numBytes); //####
+    ODL_OBJENTER(); //####
+    ODL_S2s("senderChannel = ", senderChannel, "got ", input.toString()); //####
+    ODL_P1("replyMechanism = ", replyMechanism); //####
+    ODL_LL1("numBytes = ", numBytes); //####
     bool result = true;
     
     try
@@ -153,10 +153,10 @@ PeekInputHandler::handleInput(const yarp::os::Bottle &     input,
     }
     catch (...)
     {
-        OD_LOG("Exception caught"); //####
+        ODL_LOG("Exception caught"); //####
         throw;
     }
-    OD_LOG_OBJEXIT_B(result); //####
+    ODL_OBJEXIT_B(result); //####
     return result;
 } // PeekInputHandler::handleInput
 #if (! MAC_OR_LINUX_)

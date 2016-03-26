@@ -103,7 +103,7 @@ ManagerWindow::ManagerWindow(const YarpString & title)  :
     inherited1(), inherited2(title.c_str(), kWindowBackgroundColour, inherited2::allButtons),
     _contentPanel(new ContentPanel(this)), _scannerThread(NULL)
 {
-    OD_LOG_ENTER(); //####
+    ODL_ENTER(); //####
     setUsingNativeTitleBar(true);
     setOpaque(true);
     setResizable(true, true);
@@ -116,14 +116,14 @@ ManagerWindow::ManagerWindow(const YarpString & title)  :
     setVisible(true);
     addKeyListener(getApplicationCommandManager().getKeyMappings());
     triggerAsyncUpdate();
-    OD_LOG_EXIT_P(this); //####
+    ODL_EXIT_P(this); //####
 } // ManagerWindow::ManagerWindow
 
 ManagerWindow::~ManagerWindow(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     lApplicationCommandManager = NULL;
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ManagerWindow::~ManagerWindow
 
 #if defined(__APPLE__)
@@ -133,22 +133,22 @@ ManagerWindow::~ManagerWindow(void)
 void
 ManagerWindow::closeButtonPressed(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     // This is called when the user tries to close this window. Here, we'll just ask the app to quit
     // when this happens, but you can change this to do whatever you need.
     JUCEApplication::getInstance()->systemRequestedQuit();
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ManagerWindow::closeButtonPressed
 
 ApplicationCommandManager &
 ManagerWindow::getApplicationCommandManager(void)
 {
-    OD_LOG_ENTER(); //####
+    ODL_ENTER(); //####
     if (! lApplicationCommandManager)
     {
         lApplicationCommandManager = new ApplicationCommandManager;
     }
-    OD_LOG_EXIT_P(lApplicationCommandManager); //####
+    ODL_EXIT_P(lApplicationCommandManager); //####
     return *lApplicationCommandManager;
 } // ManagerWindow::getApplicationCommandManager
 
@@ -156,30 +156,30 @@ EntitiesPanel &
 ManagerWindow::getEntitiesPanel(void)
 const
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     EntitiesPanel & thePanel(_contentPanel->getEntitiesPanel());
     
-    OD_LOG_OBJEXIT_P(&thePanel); //####
+    ODL_OBJEXIT_P(&thePanel); //####
     return thePanel;
 } // ManagerWindow::getEntitiesPanel
 
 void
 ManagerWindow::handleAsyncUpdate(void)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     ApplicationCommandManager & commandManager = getApplicationCommandManager();
     
     commandManager.registerAllCommandsForTarget(_contentPanel);
     commandManager.registerAllCommandsForTarget(JUCEApplication::getInstance());
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ManagerWindow::handleAsyncUpdate
 
 void
 ManagerWindow::setScannerThread(ScannerThread * theScanner)
 {
-    OD_LOG_OBJENTER(); //####
+    ODL_OBJENTER(); //####
     _scannerThread = theScanner;
-    OD_LOG_OBJEXIT(); //####
+    ODL_OBJEXIT(); //####
 } // ManagerWindow::setScannerThread
 
 #if defined(__APPLE__)
