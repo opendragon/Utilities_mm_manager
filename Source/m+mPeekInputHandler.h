@@ -48,7 +48,7 @@
 #  pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
 # endif // defined(__APPLE__)
 /*! @file
- 
+
  @brief The class declaration for the custom data channel input handler used to watch the Registry
  Service. */
 # if defined(__APPLE__)
@@ -58,33 +58,33 @@
 namespace MPlusM_Manager
 {
     /*! @brief A handler for partially-structured input data.
-     
+
      The data is expected to be in the form of an integer specifying the number of values to
      generate. */
     class PeekInputHandler : public MplusM::Common::BaseInputHandler
     {
     public :
-    
+
     protected :
-    
+
     private :
-    
+
         /*! @brief The class that this class is derived from. */
         typedef BaseInputHandler inherited;
-        
+
     public :
-        
+
         /*! @brief The constructor. */
         PeekInputHandler(void);
-        
+
         /*! @brief The destructor. */
         virtual
         ~PeekInputHandler(void);
-        
+
     protected :
-        
+
     private :
-        
+
         /*! @brief Process partially-structured input data.
          @param input The partially-structured input data.
          @param senderChannel The name of the channel used to send the input data.
@@ -96,17 +96,17 @@ namespace MPlusM_Manager
                     const YarpString &           senderChannel,
                     yarp::os::ConnectionWriter * replyMechanism,
                     const size_t                 numBytes);
-        
+
         COPY_AND_ASSIGNMENT_(PeekInputHandler);
-        
+
     public :
-    
+
     protected :
-    
+
     private :
-        
+
     }; // PeekInputHandler
-    
+
 } // MPlusM_Manager
 
 #endif // ! defined(mpmPeekInputHandler_H_)

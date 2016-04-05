@@ -68,7 +68,7 @@
 # pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
 #endif // defined(__APPLE__)
 /*! @file
- 
+
  @brief The class definition for the content area of the primary window of the m+m manager
  application. */
 #if defined(__APPLE__)
@@ -137,7 +137,7 @@ getPathToSettingsFile(void)
     File   baseDir = File::getSpecialLocation(File::userApplicationDataDirectory);
     String baseDirAsString = File::addTrailingSeparator(baseDir.getFullPathName());
     String settingsDir = File::addTrailingSeparator(baseDirAsString + "m+m manager");
-    
+
     return settingsDir + "settings.txt";
 } // getPathToSettingsFile
 
@@ -197,7 +197,7 @@ ContentPanel::getAllCommands(Array<CommandID> & commands)
         ManagerWindow::kCommandLaunchRegistryService,
         ManagerWindow::kCommandLaunchExecutables
     };
-    
+
     commands.addArray(ids, numElementsInArray(ids));
     ODL_OBJEXIT(); //####
 } // ContentPanel::getAllCommands
@@ -208,54 +208,54 @@ ContentPanel::getCommandInfo(CommandID                commandID,
 {
     ODL_OBJENTER(); //####
     ManagerApplication * ourApp = ManagerApplication::getApp();
-    
+
     switch (commandID)
     {
         case ManagerWindow::kCommandDoRepaint :
             result.setInfo("Repaint", "Trigger a repaint of the window", "View", 0);
             result.addDefaultKeypress('R', ModifierKeys::commandModifier);
             break;
-            
+
         case ManagerWindow::kCommandInvertBackground :
             result.setInfo("Invert", "Invert the background gradient", "View", 0);
             result.addDefaultKeypress('I', ModifierKeys::commandModifier);
             result.setTicked(backgroundIsInverted());
             break;
-            
+
         case ManagerWindow::kCommandWhiteBackground :
             result.setInfo("White", "Use a white background", "View", 0);
             result.addDefaultKeypress('B', ModifierKeys::commandModifier);
             result.setTicked(backgroundIsWhite());
             break;
-            
+
         case ManagerWindow::kCommandClearSelection :
             result.setInfo("Clear selection", "Deselect any selected entities", "View", 0);
             result.addDefaultKeypress('C', ModifierKeys::commandModifier);
             result.setActive((NULL != _selectedContainer) || (NULL != _selectedChannel));
             break;
-            
+
         case ManagerWindow::kCommandUnhideEntities :
             result.setInfo("Unhide entities", "Unhide all hidden entities", "View", 0);
             result.addDefaultKeypress('U', ModifierKeys::commandModifier);
             result.setActive(0 < _entitiesPanel->getNumberOfHiddenEntities());
             break;
-            
+
         case ManagerWindow::kCommandLaunchRegistryService :
             result.setInfo("Launch Registry", "Launch the Registry Service", "View", 0);
             result.addDefaultKeypress('L', ModifierKeys::commandModifier);
             result.setActive(! Utilities::CheckForRegistryService());
             break;
-            
+
         case ManagerWindow::kCommandLaunchExecutables :
             result.setInfo("Launch others ...", "Launch other executables", "View", 0);
             result.addDefaultKeypress('O', ModifierKeys::commandModifier);
             result.setActive(Utilities::CheckForRegistryService() && ourApp &&
                              (0 < ourApp->getCountOfApplications()));
             break;
-            
+
         default :
             break;
-            
+
     }
     ODL_OBJEXIT(); //####
 } // ContentPanel::getCommandInfo
@@ -265,7 +265,7 @@ ContentPanel::getMenuBarNames(void)
 {
     ODL_OBJENTER(); //####
     const char * const names[] = { "m+m manager", "View", "Operation", NULL };
-    
+
     return StringArray(names);
 } // ContentPanel::getMenuBarNames
 
@@ -287,7 +287,7 @@ ContentPanel::getMenuForIndex(int            menuIndex,
     ODL_S1s("menuName = ", menuName.toStdString()); //####
     ApplicationCommandManager * commandManager = &ManagerWindow::getApplicationCommandManager();
     PopupMenu                   menu;
-    
+
     menu.setLookAndFeel(&getLookAndFeel());
     switch (menuIndex)
     {
@@ -295,12 +295,12 @@ ContentPanel::getMenuForIndex(int            menuIndex,
             // Main
             setUpMainMenu(menu);
             break;
-            
+
         case 1 :
             // View
             setUpViewMenu(menu);
             break;
-            
+
         case 2 :
             // Operation
             if (_selectedChannel)
@@ -316,10 +316,10 @@ ContentPanel::getMenuForIndex(int            menuIndex,
             menu.addCommandItem(commandManager, ManagerWindow::kCommandLaunchRegistryService);
             menu.addCommandItem(commandManager, ManagerWindow::kCommandLaunchExecutables);
             break;
-            
+
         default :
             break;
-            
+
     }
     return menu;
 } // ContentPanel::getMenuForIndex
@@ -332,7 +332,7 @@ ContentPanel::getNextCommandTarget(void)
 {
     ODL_OBJENTER(); //####
     ApplicationCommandTarget * nextOne = findFirstTargetParentComponent();
-    
+
     ODL_OBJEXIT_P(nextOne); //####
     return nextOne;
 } // ContentPanel::getNextCommandTarget
@@ -354,7 +354,7 @@ ContentPanel::menuItemSelected(int menuItemID,
     ODL_LL2("menuItemID = ", menuItemID, "topLevelMenuIndex = ", topLevelMenuIndex); //####
     bool                 isChannel = false;
     ManagerApplication * ourApp = ManagerApplication::getApp();
-    
+
     if (_selectedChannel)
     {
         isChannel = _selectedChannel->isChannel();
@@ -365,31 +365,31 @@ ContentPanel::menuItemSelected(int menuItemID,
         case kPopupConfigureService :
             //TBD!!!
             break;
-            
+
         case kPopupDisplayChangeServiceMetrics :
             _selectedContainer->setMetricsState(! _selectedContainer->getMetricsState());
             break;
-            
+
         case kPopupDisplayEntityInfo :
             _selectedContainer->displayInformation(false);
             break;
-            
+
         case kPopupDetailedDisplayEntityInfo :
             _selectedContainer->displayInformation(true);
             break;
-            
+
         case kPopupDisplayServiceMetrics :
             _selectedContainer->displayMetrics();
             break;
-            
+
         case kPopupHideEntity :
             _selectedContainer->hide();
             break;
-            
+
         case kPopupRestartService :
             _selectedContainer->restartTheService();
             break;
-            
+
         case kPopupStopService :
             _selectedContainer->stopTheService();
             if (ourApp)
@@ -397,29 +397,29 @@ ContentPanel::menuItemSelected(int menuItemID,
                 ourApp->doCleanupSoon();
             }
             break;
-            
+
             // Channel menu items
         case kPopupAddScrollingMonitor :
             break;
-            
+
         case kPopupAddSimpleMonitor :
             break;
-            
+
         case kPopupDetailedDisplayPortInfo :
             _selectedChannel->displayInformation(isChannel, true);
             break;
-            
+
         case kPopupDisplayChannelMetrics :
             _selectedChannel->displayChannelMetrics();
             break;
-            
+
         case kPopupDisplayPortInfo :
             _selectedChannel->displayInformation(isChannel, false);
             break;
-            
+
         default :
             break;
-            
+
     }
     ODL_OBJEXIT(); //####
 } // ContentPanel::menuItemSelected
@@ -433,7 +433,7 @@ ContentPanel::paint(Graphics & gg)
     ODL_OBJENTER(); //####
     ODL_P1("gg = ", &gg); //####
     ChannelContainer * ofInterest;
-    
+
     if (_whiteBackground)
     {
         gg.setFillType(_invertBackground ? kFirstBackgroundColour : kSecondBackgroundColour);
@@ -446,7 +446,7 @@ ContentPanel::paint(Graphics & gg)
         int   ww = getWidth();
         float halfH = static_cast<float>(hh / 2.0);
         float halfW = static_cast<float>(ww / 2.0);
-        
+
         if (_invertBackground)
         {
             ColourGradient theGradient2(kFirstBackgroundColour, halfW, halfH,
@@ -454,7 +454,7 @@ ContentPanel::paint(Graphics & gg)
                                         static_cast<float>((hh > ww) ? 0 : ww),
                                         static_cast<float>((hh > ww) ? hh : 0), true);
             FillType       theBackgroundFill2(theGradient2);
-            
+
             gg.setFillType(theBackgroundFill2);
         }
         else
@@ -464,7 +464,7 @@ ContentPanel::paint(Graphics & gg)
                                         static_cast<float>((hh > ww) ? 0 : ww),
                                         static_cast<float>((hh > ww) ? hh : 0), true);
             FillType       theBackgroundFill1(theGradient1);
-            
+
             gg.setFillType(theBackgroundFill1);
         }
     }
@@ -483,7 +483,7 @@ ContentPanel::paint(Graphics & gg)
     for (size_t ii = 0, mm = _entitiesPanel->getNumberOfEntities(); mm > ii; ++ii)
     {
         ChannelContainer * aContainer = _entitiesPanel->getEntity(ii);
-        
+
         if (ofInterest == aContainer)
         {
             float                  viewOffsetX = static_cast<float>(getViewPositionX());
@@ -491,7 +491,7 @@ ContentPanel::paint(Graphics & gg)
             juce::Rectangle<float> selectionRectangle;
             const float            dashes[] = { 5, 5 };
             const int              numDashes = (sizeof(dashes) / sizeof(*dashes));
-            
+
             if (_selectedChannel)
             {
                 selectionRectangle =
@@ -513,7 +513,7 @@ ContentPanel::paint(Graphics & gg)
             Line<float>  line2(topRight, bottomRight);
             Line<float>  line3(bottomRight, bottomLeft);
             Line<float>  line4(bottomLeft, topLeft);
-            
+
             if (_whiteBackground)
             {
                 gg.setColour(_invertBackground ? kFirstSelectionColour : kSecondSelectionColour);
@@ -535,12 +535,12 @@ ContentPanel::paint(Graphics & gg)
         }
     }
     ScannerThread * scanner = _containingWindow->getScannerThread();
-    
+
     if (scanner)
     {
         // Check if there is some 'fresh' data.
         bool scanDataReady = scanner->checkAndClearIfScanIsComplete();
-        
+
         if (scanDataReady)
         {
             ODL_LOG("(scanDataReady)"); //####
@@ -569,7 +569,7 @@ ContentPanel::perform(const InvocationInfo & info)
     ODL_OBJENTER(); //####
     bool                 wasProcessed = false;
     ManagerApplication * ourApp = ManagerApplication::getApp();
-    
+
     switch (info.commandID)
     {
         case ManagerWindow::kCommandDoRepaint :
@@ -580,31 +580,31 @@ ContentPanel::perform(const InvocationInfo & info)
             requestWindowRepaint();
             wasProcessed = true;
             break;
-            
+
         case ManagerWindow::kCommandInvertBackground :
             flipBackground();
             requestWindowRepaint();
             wasProcessed = true;
             break;
-            
+
         case ManagerWindow::kCommandWhiteBackground :
             changeBackgroundColour();
             requestWindowRepaint();
             wasProcessed = true;
             break;
-            
+
         case ManagerWindow::kCommandClearSelection :
             setChannelOfInterest(NULL);
             setContainerOfInterest(NULL);
             wasProcessed = true;
             break;
-            
+
         case ManagerWindow::kCommandUnhideEntities :
             _entitiesPanel->unhideEntities();
             requestWindowRepaint();
             wasProcessed = true;
             break;
-            
+
         case ManagerWindow::kCommandLaunchRegistryService :
             if (ourApp)
             {
@@ -612,7 +612,7 @@ ContentPanel::perform(const InvocationInfo & info)
             }
             wasProcessed = true;
             break;
-            
+
         case ManagerWindow::kCommandLaunchExecutables :
             if (ourApp)
             {
@@ -620,10 +620,10 @@ ContentPanel::perform(const InvocationInfo & info)
             }
             wasProcessed = true;
             break;
-            
+
         default :
             break;
-            
+
     }
     ODL_OBJEXIT_B(wasProcessed); //####
     return wasProcessed;
@@ -635,28 +635,28 @@ ContentPanel::recallEntityPositions(void)
     ODL_OBJENTER(); //####
     String filePath = getPathToSettingsFile();
     File   settingsFile(filePath);
-    
+
     if (settingsFile.existsAsFile())
     {
         ODL_LOG("(settingsFile.existsAsFile())"); //####
         StringArray stuffFromFile;
-        
+
         settingsFile.readLines(stuffFromFile);
         for (int ii = 0, maxs = stuffFromFile.size(); maxs > ii; ++ii)
         {
             String aLine = stuffFromFile[ii];
-            
+
             if (0 < aLine.length())
             {
                 StringArray asPieces;
-                
+
                 asPieces.addTokens(aLine, "\t", "");
                 if (3 == asPieces.size())
                 {
                     String tag = asPieces[0];
                     String xPosString = asPieces[1];
                     String yPosString = asPieces[2];
-                    
+
                     _rememberedPositions[tag.toStdString()] = Position(xPosString.getFloatValue(),
                                                                        yPosString.getFloatValue());
                 }
@@ -672,7 +672,7 @@ ContentPanel::rememberPositionOfEntity(ChannelContainer * anEntity)
     ODL_OBJENTER(); //####
     ODL_P1("anEntity = ", anEntity); //####
     YarpString entityName(anEntity->getName().toStdString());
-    
+
     _rememberedPositions[entityName] = anEntity->getPositionInPanel();
     ODL_OBJEXIT(); //####
 } // ContentPanel::rememberPositionOfEntity
@@ -691,7 +691,7 @@ ContentPanel::resized(void)
     ODL_OBJENTER(); //####
     juce::Rectangle<int> area(getLocalBounds());
     int                  offset = LookAndFeel::getDefaultLookAndFeel().getDefaultMenuBarHeight();
-    
+
     _menuBar->setBounds(area.removeFromTop(offset));
     _entitiesPanel->setBounds(area);
     ODL_OBJEXIT(); //####
@@ -703,7 +703,7 @@ ContentPanel::saveEntityPositions(void)
     ODL_OBJENTER(); //####
     String filePath = getPathToSettingsFile();
     File   settingsFile(filePath);
-    
+
     if (settingsFile.create().wasOk())
     {
         ODL_LOG("(settingsFile.create().wasOk())"); //####
@@ -715,7 +715,7 @@ ContentPanel::saveEntityPositions(void)
             std::stringstream buff;
             YarpString        tag = walker->first;
             Position          where = walker->second;
-            
+
             buff << "\t" << where.x << "\t" << where.y << std::endl;
             settingsFile.appendText(tag.c_str());
             settingsFile.appendText(buff.str());
@@ -770,7 +770,7 @@ ContentPanel::setEntityPositions(void)
 #if defined(USE_OGDF_POSITIONING_)
     ogdf::Graph * gg;
 #endif // defined(USE_OGDF_POSITIONING_)
-    
+
 #if defined(USE_OGDF_POSITIONING_)
 # if defined(USE_OGDF_FOR_FIRST_POSITIONING_ONLY_)
     if (_initialPositioningDone)
@@ -788,12 +788,12 @@ ContentPanel::setEntityPositions(void)
     if (gg)
     {
         ScopedPointer<ogdf::GraphAttributes> ga(new ogdf::GraphAttributes(*gg));
-        
+
         if (ga)
         {
             bool       positionsNeedUpdate = false;
             ogdf::node phantomNode = gg->newNode();
-            
+
             ga->setDirected(true);
             // If nodes are not connected, OGDF will pile them all at the origin; by adding a
             // 'phantom' node that is connected to every other node, we force OGDF to spread the
@@ -806,7 +806,7 @@ ContentPanel::setEntityPositions(void)
             for (size_t ii = 0, mm = _entitiesPanel->getNumberOfEntities(); mm > ii; ++ii)
             {
                 ChannelContainer * aContainer = _entitiesPanel->getEntity(ii);
-                
+
                 if (aContainer)
                 {
                     float                  newX;
@@ -815,7 +815,7 @@ ContentPanel::setEntityPositions(void)
                     ogdf::node             aNode = gg->newNode();
                     float                  hh = entityShape.getHeight();
                     float                  ww = entityShape.getWidth();
-                    
+
                     ga->width(aNode) = ww;
                     ga->height(aNode) = hh;
                     aContainer->setNode(aNode);
@@ -825,7 +825,7 @@ ContentPanel::setEntityPositions(void)
                         // Check if the position was already known.
                         YarpString                  entityName(aContainer->getName().toStdString());
                         PositionMap::const_iterator match(_rememberedPositions.find(entityName));
-                        
+
                         if (_rememberedPositions.end() == match)
                         {
                             newX = offsetX + (randomizer.nextFloat() * (maxX - ww));
@@ -856,43 +856,43 @@ ContentPanel::setEntityPositions(void)
                 for (size_t ii = 0, mm = _entitiesPanel->getNumberOfEntities(); mm > ii; ++ii)
                 {
                     ChannelContainer * aContainer = _entitiesPanel->getEntity(ii);
-                    
+
                     if (aContainer)
                     {
                         ogdf::node thisNode = aContainer->getNode();
-                        
+
                         if (thisNode)
                         {
                             bool wasConnected = false;
-                            
+
                             // Add edges between entities that are connected via their entries.
                             for (int jj = 0, nn = aContainer->getNumPorts(); nn > jj; ++jj)
                             {
                                 ChannelEntry * aChannel = aContainer->getPort(jj);
-                                
+
                                 if (aChannel)
                                 {
                                     const ChannelConnections & outputs =
                                     aChannel->getOutputConnections();
-                                    
+
                                     for (size_t kk = 0, ll = outputs.size(); ll > kk; ++kk)
                                     {
                                         ChannelEntry * otherChannel = outputs[kk]._otherChannel;
-                                        
+
                                         if (otherChannel)
                                         {
                                             ChannelContainer * otherEntity =
                                                                         otherChannel->getParent();
-                                            
+
                                             if (otherEntity)
                                             {
                                                 ogdf::node otherNode = otherEntity->getNode();
-                                                
+
                                                 if (otherNode && (thisNode != otherNode))
                                                 {
                                                     /*ogdf::edge ee =*/ gg->newEdge(thisNode,
                                                                                     otherNode);
-                                                    
+
                                                     wasConnected = true;
                                                 }
                                             }
@@ -900,7 +900,7 @@ ContentPanel::setEntityPositions(void)
                                     }
                                     const ChannelConnections & inputs =
                                     aChannel->getInputConnections();
-                                    
+
                                     if (0 < inputs.size())
                                     {
                                         wasConnected = true;
@@ -911,14 +911,14 @@ ContentPanel::setEntityPositions(void)
                             {
                                 /*ogdf::edge phantomNodeToThis =*/ gg->newEdge(phantomNode,
                                                                                thisNode);
-                                
+
                             }
                         }
                     }
                 }
                 // Apply an energy-based layout.
                 ScopedPointer<ogdf::FMMMLayout> fmmm(new ogdf::FMMMLayout);
-                
+
                 if (fmmm)
                 {
                     fmmm->useHighLevelOptions(true);
@@ -932,16 +932,16 @@ ContentPanel::setEntityPositions(void)
                     for (size_t ii = 0, mm = _entitiesPanel->getNumberOfEntities(); mm > ii; ++ii)
                     {
                         ChannelContainer * aContainer = _entitiesPanel->getEntity(ii);
-                        
+
                         if (aContainer && (aContainer->isNew() || aContainer->wasHidden()))
                         {
                             ogdf::node aNode = aContainer->getNode();
-                            
+
                             if (aNode)
                             {
                                 // Check if the position was already known.
                                 YarpString entityName(aContainer->getName().toStdString());
-                                
+
                                 if (_rememberedPositions.end() ==
                                     _rememberedPositions.find(entityName))
                                 {
@@ -961,7 +961,7 @@ ContentPanel::setEntityPositions(void)
         for (size_t ii = 0, mm = _entitiesPanel->getNumberOfEntities(); mm > ii; ++ii)
         {
             ChannelContainer * aContainer = _entitiesPanel->getEntity(ii);
-            
+
             if (aContainer && (aContainer->isNew() || aContainer->wasHidden()))
             {
                 ODL_LOG("(aContainer && (aContainer->isNew() || aContainer->wasHidden()))"); //####
@@ -972,7 +972,7 @@ ContentPanel::setEntityPositions(void)
                 float                       ww = entityShape.getWidth();
                 YarpString                  entityName(aContainer->getName().toStdString());
                 PositionMap::const_iterator match(_rememberedPositions.find(entityName));
-                
+
                 if (_rememberedPositions.end() == match)
                 {
                     newX = offsetX + (randomizer.nextFloat() * (maxX - ww));
@@ -996,7 +996,7 @@ ContentPanel::setEntityPositions(void)
     for (size_t ii = 0, mm = _entitiesPanel->getNumberOfEntities(); mm > ii; ++ii)
     {
         ChannelContainer * aContainer = _entitiesPanel->getEntity(ii);
-        
+
         if (aContainer && (aContainer->isNew() || aContainer->wasHidden()))
         {
             ODL_LOG("(aContainer && (aContainer->isNew() || aContainer->wasHidden()))"); //####
@@ -1007,7 +1007,7 @@ ContentPanel::setEntityPositions(void)
             float                       ww = entityShape.getWidth();
             YarpString                  entityName(aContainer->getName().toStdString());
             PositionMap::const_iterator match(_rememberedPositions.find(entityName));
-            
+
             if (_rememberedPositions.end() == match)
             {
                 newX = offsetX + (randomizer.nextFloat() * (maxX - ww));
@@ -1039,7 +1039,7 @@ ContentPanel::setUpChannelMenu(PopupMenu &    aMenu,
     bool               isChannel = aChannel.isChannel();
     bool               showMetrics = false;
     ChannelContainer * theParent = aChannel.getParent();
-    
+
     if (isChannel)
     {
         showMetrics = theParent->getMetricsState();
@@ -1073,24 +1073,24 @@ ContentPanel::setUpContainerMenu(PopupMenu &        aMenu,
     bool   restartable = false;
     bool   serviceLike;
     String kindOfContainer;
-    
+
     switch (aContainer.getKind())
     {
         case kContainerKindAdapter :
             kindOfContainer = "adapter";
             serviceLike = true;
             break;
-            
+
         case kContainerKindService :
             kindOfContainer = "service";
             serviceLike = true;
             break;
-            
+
         default :
             kindOfContainer = "entity";
             serviceLike = false;
             break;
-            
+
     }
     aMenu.addItem(kPopupDisplayEntityInfo, String("Display ") + kindOfContainer + " information");
     aMenu.addItem(kPopupDetailedDisplayEntityInfo, String("Display detailed ") + kindOfContainer +
@@ -1098,7 +1098,7 @@ ContentPanel::setUpContainerMenu(PopupMenu &        aMenu,
     if (serviceLike)
     {
         bool metricsEnabled = aContainer.getMetricsState();
-        
+
         aMenu.addSeparator();
         aMenu.addItem(kPopupDisplayChangeServiceMetrics,
                       String(metricsEnabled ? "Disable " : "Enable ") + kindOfContainer +
@@ -1118,12 +1118,12 @@ ContentPanel::setUpContainerMenu(PopupMenu &        aMenu,
                 configurable = aContainer.canBeConfigured();
                 restartable = true;
                 break;
-                
+
             default :
                 configurable = false;
                 restartable = false;
                 break;
-                
+
         }
         aMenu.addSeparator();
         aMenu.addItem(kPopupConfigureService, String("Configure the ") + kindOfContainer,
@@ -1140,7 +1140,7 @@ ContentPanel::setUpMainMenu(PopupMenu & aMenu)
     ODL_OBJENTER(); //####
     ODL_P1("aMenu = ", &aMenu); //####
     ApplicationCommandManager * commandManager = &ManagerWindow::getApplicationCommandManager();
-    
+
     aMenu.addCommandItem(commandManager, StandardApplicationCommandIDs::quit);
     ODL_OBJEXIT(); //####
 } // ContentPanel::setUpMainMenu
@@ -1151,7 +1151,7 @@ ContentPanel::setUpViewMenu(PopupMenu & aMenu)
     ODL_OBJENTER(); //####
     ODL_P1("aMenu = ", &aMenu); //####
     ApplicationCommandManager * commandManager = &ManagerWindow::getApplicationCommandManager();
-    
+
     aMenu.addCommandItem(commandManager, ManagerWindow::kCommandDoRepaint);
     aMenu.addCommandItem(commandManager, ManagerWindow::kCommandInvertBackground);
     aMenu.addCommandItem(commandManager, ManagerWindow::kCommandWhiteBackground);
@@ -1176,7 +1176,7 @@ ContentPanel::updatePanels(ScannerThread & scanner)
     ODL_P1("scanner = ", &scanner); //####
     bool                 changeSeen = false;
     const EntitiesData & workingData(scanner.getEntitiesData());
-    
+
     // Retrieve each entity from our new list; if it is known already, ignore it but mark the
     // old entity as known.
     _entitiesPanel->clearAllVisitedFlags();
@@ -1185,13 +1185,13 @@ ContentPanel::updatePanels(ScannerThread & scanner)
     for (size_t ii = 0, mm = workingData.getNumberOfEntities(); mm > ii; ++ii)
     {
         EntityData * anEntity = workingData.getEntity(ii);
-        
+
         ODL_P1("anEntity <- ", anEntity); //####
         if (anEntity)
         {
             ODL_S1s("anEntity->getName() = ", anEntity->getName()); //####
             ChannelContainer * oldContainer = _entitiesPanel->findKnownEntity(anEntity->getName());
-            
+
             if (oldContainer)
             {
                 ODL_LOG("(oldContainer)"); //####
@@ -1208,13 +1208,13 @@ ContentPanel::updatePanels(ScannerThread & scanner)
                                                                    anEntity->getExtraInformation(),
                                                                        anEntity->getRequests(),
                                                                        *_entitiesPanel);
-                
+
                 newContainer->setVisited();
                 // Make copies of the ports of the entity, and add them to the new entity.
                 for (int jj = 0, nn = anEntity->getNumPorts(); nn > jj; ++jj)
                 {
                     PortData * aPort = anEntity->getPort(jj);
-                    
+
                     if (aPort)
                     {
                         ChannelEntry * newPort = newContainer->addPort(aPort->getPortName(),
@@ -1223,7 +1223,7 @@ ContentPanel::updatePanels(ScannerThread & scanner)
                                                                    aPort->getProtocolDescription(),
                                                                        aPort->getUsage(),
                                                                        aPort->getDirection());
-                        
+
                         _entitiesPanel->rememberPort(newPort);
                     }
                 }
@@ -1231,7 +1231,7 @@ ContentPanel::updatePanels(ScannerThread & scanner)
                 {
                     Utilities::BaseArgumentDescriptor * argDesc =
                                                                 anEntity->getArgumentDescriptor(jj);
-                    
+
                     if (argDesc)
                     {
                         newContainer->addArgumentDescription(argDesc);
@@ -1244,13 +1244,13 @@ ContentPanel::updatePanels(ScannerThread & scanner)
     }
     // Convert the detected connections into visible connections.
     const ConnectionList & connections(workingData.getConnections());
-    
+
     for (ConnectionList::const_iterator walker(connections.begin()); connections.end() != walker;
          ++walker)
     {
         ChannelEntry * thisPort = _entitiesPanel->findKnownPort(walker->_outPortName);
         ChannelEntry * otherPort = _entitiesPanel->findKnownPort(walker->_inPortName);
-        
+
         ODL_P2("thisPort <- ", thisPort, "otherPort <- ", otherPort); //####
         if (thisPort && otherPort)
         {
@@ -1312,7 +1312,7 @@ MPlusM_Manager::DisplayInformationPanel(Component *    above,
     Font                        monoFont(Font::getDefaultMonospacedFontName(), 16, Font::plain);
     Label *                     aLabel = new Label("", bodyText);
     Point<int>                  dimensions;
-    
+
     aLabel->setFont(monoFont);
     options.content.setOwned(aLabel);
     CalculateTextArea(dimensions, aLabel->getFont(), bodyText);
@@ -1329,7 +1329,7 @@ MPlusM_Manager::DisplayInformationPanel(Component *    above,
     int             minW = jmax(tw, dimensions.getX());
     int             calcW = minW + bt.getLeftAndRight() + cb.getLeftAndRight() + kExtraDisplayWidth;
     int             calcH = dimensions.getY() + bt.getTopAndBottom() + cb.getTopAndBottom();
-    
+
     aWindow->centreAroundComponent(above, calcW, calcH);
     ODL_EXIT(); //####
 } // DisplayInformationPanel

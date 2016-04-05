@@ -47,7 +47,7 @@
 #  pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
 # endif // defined(__APPLE__)
 /*! @file
- 
+
  @brief The class declaration for an error reporting abstraction. */
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
@@ -56,44 +56,44 @@
 namespace MPlusM_Manager
 {
     class FormField;
-    
+
     /*! @brief An error reporting abstraction. */
     class FormFieldErrorResponder
     {
     public :
-    
+
     protected :
-    
+
     private :
-        
+
     public :
-        
+
         /*! @brief The constructor. */
         FormFieldErrorResponder(void);
-        
+
         /*! @brief The destructor. */
         virtual
         ~FormFieldErrorResponder(void);
-        
+
         /*! @brief Report an error in a field.
          @param fieldOfInterest The field to be reported. */
         virtual void
         reportErrorInField(FormField & fieldOfInterest) = 0;
-        
+
     protected :
-        
+
     private :
-        
+
     public :
-    
+
     protected :
-    
+
     private :
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FormFieldErrorResponder)
-        
+
     }; // FormFieldErrorResponder
-    
+
 } // MPlusM_Manager
 
 #endif // ! defined(mpmFormFieldErrorResponder_H_)

@@ -52,7 +52,7 @@
 #endif //! MAC_OR_LINUX_
 
 /*! @file
- 
+
  @brief The class declaration for the background service launcher. */
 #if defined(__APPLE__)
 # pragma clang diagnostic pop
@@ -105,7 +105,7 @@ ServiceLaunchThread::ServiceLaunchThread(const String &      pathToExecutable,
     ODL_B1("needsGo = ", needsGo); //####
 #if defined(OD_ENABLE_LOGGING_)
     String allArgs(arguments.joinIntoString(", "));
-    
+
     ODL_S1s("allArgs <- ", allArgs.toStdString()); //####
 #endif // defined(OD_ENABLE_LOGGING_)
     ODL_EXIT_P(this); //####
@@ -143,7 +143,7 @@ ServiceLaunchThread::run(void)
     {
         ODL_LOG("(_serviceProcess)"); //####
         StringArray nameAndArgs(_servicePath);
-        
+
         if (0 < _servicePort.length())
         {
             ODL_LOG("(0 < _servicePort.length())"); //####
@@ -181,7 +181,7 @@ ServiceLaunchThread::run(void)
         {
             ODL_LOG("(_serviceProcess->start(nameAndArgs, 0))"); //####
             const String childOutput(_serviceProcess->readAllProcessOutput());
-            
+
             LazyLaunchProcess(*_serviceProcess, -1);
             ODL_S1s("childOutput = ", childOutput.toStdString()); //####
         }

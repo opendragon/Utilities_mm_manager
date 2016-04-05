@@ -57,7 +57,7 @@
 #endif //! MAC_OR_LINUX_
 
 /*! @file
- 
+
  @brief The class declaration for a field consisting of a text editor paired with a caption. */
 #if defined(__APPLE__)
 # pragma clang diagnostic pop
@@ -132,7 +132,7 @@ CaptionedTextField::CaptionedTextField(FormFieldErrorResponder & responder,
     Point<int> dimensions;
     int        adjustedEditorHeight = static_cast<int>(_regularFont.getHeight() +
                                                        kEditorHeightAdjustment);
-    
+
     _caption->setFont(_regularFont);
     _textEditor->setFont(_regularFont);
     _textEditor->setEscapeAndReturnKeysConsumed(false);
@@ -198,7 +198,7 @@ CaptionedTextField::getFileButtonWidth(void)
     if (lFileButtonWidth < 0)
     {
         ScopedPointer<TextButton> fileButton(new TextButton(kFileButtonText));
-        
+
         fileButton->changeWidthToFitText(ManagerApplication::getButtonHeight());
         lFileButtonWidth = fileButton->getWidth();
     }
@@ -212,7 +212,7 @@ const
 {
     ODL_OBJENTER(); //####
     int result = _textEditor->getHeight() + _caption->getHeight() + kLabelToFieldGap;
-    
+
     ODL_OBJEXIT_LL(result); //####
     return result;
 } // CaptionedTextField::getHeight
@@ -223,7 +223,7 @@ const
 {
     ODL_OBJENTER(); //####
     int result = jmax(_textEditor->getX(), _caption->getWidth() + _caption->getX());
-    
+
     ODL_OBJEXIT_LL(result); //####
     return result;
 } // CaptionedTextField::::getMinimumWidth
@@ -234,7 +234,7 @@ const
 {
     ODL_OBJENTER(); //####
     const String & theName = _textEditor->getName();
-    
+
     ODL_OBJEXIT_s(theName.toStdString()); //####
     return theName;
 } // CaptionedTextField::getName
@@ -245,7 +245,7 @@ const
 {
     ODL_OBJENTER(); //####
     String result(_textEditor->getText());
-    
+
     ODL_OBJEXIT_s(result.toStdString()); //####
     return result;
 } // CaptionedTextField::getText
@@ -258,7 +258,7 @@ const
     int firstVal = _textEditor->getWidth() + _textEditor->getX();
     int secondVal = _caption->getWidth() + _caption->getX();
     int result = jmax(firstVal, secondVal) - getX();
-    
+
     ODL_OBJEXIT_LL(result); //####
     return result;
 } // CaptionedTextField::getWidth
@@ -269,7 +269,7 @@ const
 {
     ODL_OBJENTER(); //####
     int result = jmin(_textEditor->getX(), _caption->getX());
-    
+
     ODL_OBJEXIT_LL(result); //####
     return result;
 } // CaptionedTextField::getX
@@ -280,7 +280,7 @@ const
 {
     ODL_OBJENTER(); //####
     int result = _caption->getY();
-    
+
     ODL_OBJEXIT_LL(result); //####
     return result;
 } // CaptionedTextField::getY
@@ -316,7 +316,7 @@ CaptionedTextField::performButtonAction(void)
     if (_validator)
     {
         bool forOutput;
-        
+
         if (_validator->isForFiles(forOutput))
         {
             ignoreNextFocusLoss();
@@ -324,12 +324,12 @@ CaptionedTextField::performButtonAction(void)
             {
                 FileChooser fc("Choose a file to write to...", File::getCurrentWorkingDirectory(),
                                "*", true);
-                
+
                 if (fc.browseForFileToSave(true))
                 {
                     File   chosenFile = fc.getResult();
                     String filePath = chosenFile.getFullPathName();
-                    
+
                     _textEditor->setText(chosenFile.getFullPathName());
                     if (! validateField())
                     {
@@ -341,12 +341,12 @@ CaptionedTextField::performButtonAction(void)
             {
                 FileChooser fc("Choose a file to open...", File::getCurrentWorkingDirectory(), "*",
                                true);
-                
+
                 if (fc.browseForFileToOpen())
                 {
                     File   chosenFile = fc.getResult();
                     String filePath = chosenFile.getFullPathName();
-                    
+
                     _textEditor->setText(chosenFile.getFullPathName());
                     if (! validateField())
                     {
@@ -412,7 +412,7 @@ CaptionedTextField::setWidth(const int ww)
     {
         int span = _textEditor->getY() + _textEditor->getHeight() - _caption->getY();
         int offset = span - _button->getHeight();
-        
+
         _button->setTopLeftPosition(_textEditor->getX() + ww + kButtonGap,
                                     _caption->getY() + (offset / 2));
     }
@@ -431,7 +431,7 @@ CaptionedTextField::setY(const int yy)
     {
         int span = _textEditor->getY() + _textEditor->getHeight() - _caption->getY();
         int offset = span - _button->getHeight();
-        
+
         _button->setTopLeftPosition(_textEditor->getX() + _textEditor->getWidth() + kButtonGap,
                                     _caption->getY() + (offset / 2));
     }
@@ -443,7 +443,7 @@ CaptionedTextField::validateField(void)
 {
     ODL_OBJENTER(); //####
     bool result = _textEditor->validateField();
-    
+
     if (result)
     {
         markAsValid();
@@ -462,7 +462,7 @@ CaptionedTextField::validateField(StringArray & argsToUse)
     ODL_OBJENTER(); //####
     ODL_P1("argsToUse = ", &argsToUse); //####
     bool result = _textEditor->validateField(argsToUse);
-    
+
     if (result)
     {
         markAsValid();

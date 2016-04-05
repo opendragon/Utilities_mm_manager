@@ -47,7 +47,7 @@
 #  pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
 # endif // defined(__APPLE__)
 /*! @file
- 
+
  @brief The class declaration for a field consisting of a checkbox paired with a caption. */
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
@@ -60,21 +60,21 @@ namespace MPlusM_Manager
 {
     class TextValidator;
     class ValidatingTextEditor;
-    
+
     /*! @brief A field consisting of a checkbox paired with a caption. */
     class CheckboxField : public FormField
     {
     public :
-    
+
     protected :
-    
+
     private :
-    
+
         /*! @brief The class that this class is derived from. */
         typedef FormField inherited;
-        
+
     public :
-        
+
         /*! @brief The constructor.
          @param regularLabelFont The font to use with the label when the text editor data is valid.
          @param index The order of the text editor.
@@ -86,11 +86,11 @@ namespace MPlusM_Manager
                       const String & captionTitle,
                       const int      top,
                       const String & componentName = String::empty);
-        
+
         /*! @brief The destructor. */
         virtual
         ~CheckboxField(void);
-        
+
         /*! @brief Add the components of this field to the specified component and make them
          visible.
          @param whereToAdd The component to be added to. */
@@ -102,19 +102,19 @@ namespace MPlusM_Manager
         virtual int
         getHeight(void)
         const;
-        
+
         /*! @brief Return the minimum width of the field in pixels.
          @return The minimum width of the field in pixels. */
         virtual int
         getMinimumWidth(void)
         const;
-        
+
         /*! @brief Returns the text value associated with the field.
          @returns The text value associated with the field. */
         virtual String
         getText(void)
         const;
-        
+
         /*! @brief Return the width of the field in pixels.
          @return The width of the field in pixels. */
         virtual int
@@ -126,7 +126,7 @@ namespace MPlusM_Manager
         virtual int
         getX(void)
         const;
-        
+
         /*! @brief Return the top coordinate of the field.
          @return The top coordinate of the field. */
         virtual int
@@ -159,33 +159,33 @@ namespace MPlusM_Manager
          @c false if the validator rejects the field. */
         virtual bool
         validateField(StringArray & argsToUse);
-        
+
     protected :
-        
+
     private :
-        
+
         /*! @brief Returns the name of the field.
          @returns The name of the field. */
         virtual const String &
         getName(void)
         const;
-        
+
     public :
-    
+
     protected :
-    
+
     private :
 
         /*! @brief The text editor within the field. */
         ScopedPointer<ToggleButton> _checkbox;
-        
+
         /*! @brief The caption for the field. */
         ScopedPointer<Label> _caption;
-        
+
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(CheckboxField)
-        
+
     }; // CheckboxField
-    
+
 } // MPlusM_Manager
 
 #endif // ! defined(mpmCheckboxField_H_)

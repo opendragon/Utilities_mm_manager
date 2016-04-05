@@ -55,7 +55,7 @@
 #endif //! MAC_OR_LINUX_
 
 /*! @file
- 
+
  @brief The class declaration for a text editor that performs validation. */
 #if defined(__APPLE__)
 # pragma clang diagnostic pop
@@ -123,7 +123,7 @@ ValidatingTextEditor::addPopupMenuItems(PopupMenu &        menuToAddTo,
     if (_validator)
     {
         bool forOutput;
-        
+
         if (_validator->isForFiles(forOutput))
         {
             menuToAddTo.addSeparator();
@@ -196,7 +196,7 @@ ValidatingTextEditor::keyPressed(const KeyPress & key)
     ODL_OBJENTER(); //####
     ODL_P1("key = ", &key); //####
     bool result;
-    
+
     if (key == KeyPress::tabKey)
     {
         if (validateField())
@@ -234,11 +234,11 @@ ValidatingTextEditor::performPopupMenuAction(int menuItemID)
         case kPopupSelectFileToSave :
             _owner.performButtonAction();
             break;
-            
+
         default :
             inherited::performPopupMenuAction(menuItemID);
             break;
-            
+
     }
     ODL_OBJEXIT(); //####
 } // ValidatingTextEditor::performPopupMenuAction
@@ -248,7 +248,7 @@ ValidatingTextEditor::validateField(void)
 {
     ODL_OBJENTER(); //####
     bool result;
-    
+
     if (_validator)
     {
         result = _validator->checkValidity(getText());
@@ -267,7 +267,7 @@ ValidatingTextEditor::validateField(StringArray & argsToUse)
     ODL_OBJENTER(); //####
     ODL_P1("argsToUse = ", &argsToUse); //####
     bool result;
-    
+
     if (_validator)
     {
         result = _validator->checkValidity(getText(), argsToUse);

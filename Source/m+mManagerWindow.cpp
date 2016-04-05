@@ -49,7 +49,7 @@
 # pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
 #endif // defined(__APPLE__)
 /*! @file
- 
+
  @brief The class definition for the primary window of the m+m manager application. */
 #if defined(__APPLE__)
 # pragma clang diagnostic pop
@@ -158,7 +158,7 @@ const
 {
     ODL_OBJENTER(); //####
     EntitiesPanel & thePanel(_contentPanel->getEntitiesPanel());
-    
+
     ODL_OBJEXIT_P(&thePanel); //####
     return thePanel;
 } // ManagerWindow::getEntitiesPanel
@@ -168,7 +168,7 @@ ManagerWindow::handleAsyncUpdate(void)
 {
     ODL_OBJENTER(); //####
     ApplicationCommandManager & commandManager = getApplicationCommandManager();
-    
+
     commandManager.registerAllCommandsForTarget(_contentPanel);
     commandManager.registerAllCommandsForTarget(JUCEApplication::getInstance());
     ODL_OBJEXIT(); //####

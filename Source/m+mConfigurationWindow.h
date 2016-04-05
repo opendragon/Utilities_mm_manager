@@ -48,7 +48,7 @@
 #  pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
 # endif // defined(__APPLE__)
 /*! @file
- 
+
  @brief The class declaration for the configuration window of the m+m manager application. */
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
@@ -63,25 +63,25 @@ namespace MPlusM_Manager
                                 public FormFieldErrorResponder
     {
     public :
-    
+
     protected :
-    
+
     private :
-    
+
         /*! @brief The first class that this class is derived from. */
         typedef AsyncUpdater inherited1;
-        
+
         /*! @brief The second class that this class is derived from. */
         typedef ButtonListener inherited2;
-        
+
         /*! @brief The third class that this class is derived from. */
         typedef DocumentWindow inherited3;
-        
+
         /*! @brief The fourth class that this class is derived from. */
         typedef FormFieldErrorResponder inherited4;
-        
+
     public :
-        
+
         /*! @brief The constructor.
          @param title The title for the window.
          @param execType The kind of application being configured.
@@ -97,19 +97,19 @@ namespace MPlusM_Manager
         /*! @brief The destructor. */
         virtual
         ~ConfigurationWindow(void);
-        
+
     protected :
-        
+
     private :
 
         /*! @brief Add an extra field. */
         void
         addAnExtraField(void);
-        
+
         /*! @brief Adjust the fields to their proper locations and dimensions. */
         void
         adjustFields(void);
-        
+
         /*! @brief Called when a button is clicked.
          @param aButton The button that was clicked. */
         virtual void
@@ -119,21 +119,21 @@ namespace MPlusM_Manager
          @returns @c true if all the fields are valid and @c false otherwise. */
         bool
         fieldsAreValid(void);
-        
+
         /*! @brief Called when this component has just acquired the keyboard focus.
          @param cause The type of event that caused the change in focus. */
         virtual void
         focusGained(FocusChangeType cause);
-        
+
         /*! @brief Called when this component has just lost the keyboard focus.
          @param cause The type of event that caused the change in focus. */
         virtual void
         focusLost(FocusChangeType cause);
-        
+
         /*! @brief Called back to perform operations. */
         virtual void
         handleAsyncUpdate(void);
-        
+
         /*! @brief Called when a key is pressed.
          @param key The key that was pressed.
          @returns @c true if the key was consumed and @c false otherwise. */
@@ -143,16 +143,16 @@ namespace MPlusM_Manager
         /*! @brief Recalculate the area occupied by the fields and adjust the button positions. */
         void
         recalculateArea(void);
-        
+
         /*! @brief Remove the most recently added extra field. */
         void
         removeMostRecentlyAddedExtraField(void);
-        
+
         /*! @brief Report an error in a field.
          @param fieldOfInterest The field to be reported. */
         virtual void
         reportErrorInField(FormField & fieldOfInterest);
-        
+
         /*! @brief Report an error in a field.
          @param fieldOfInterest The field to be reported. */
         virtual void
@@ -161,7 +161,7 @@ namespace MPlusM_Manager
         /*! @brief Called when the component size has been changed. */
         virtual void
         resized(void);
-        
+
         /*! @brief Set up the standard fields.
          @param widthSoFar The minimum width to show the fields.
          @param heightSoFar The minimum height to show the fields.
@@ -170,21 +170,21 @@ namespace MPlusM_Manager
         setUpStandardFields(int &                    widthSoFar,
                             int &                    heightSoFar,
                             const YarpStringVector & currentValues);
-        
+
         /*! @brief Tell all the text editor fields to ignore the next focus loss, so redundant
          validation is not done. */
         void
         tellAllFieldsToIgnoreNextFocusLoss(void);
-        
+
     public :
-    
+
     protected :
-    
+
     private :
-        
+
         /*! @brief The descriptive text at the top of the window. */
         Label _topText;
-        
+
         /*! @brief The 'Cancel' button. */
         TextButton _cancelButton;
 
@@ -193,50 +193,50 @@ namespace MPlusM_Manager
 
         /*! @brief The content area to hold everything. */
         Component _contentArea;
-        
+
         /*! @brief The monospaced font for error text. */
         Font _errorFont;
-        
+
         /*! @brief The regular monospaced font to use. */
         Font _regularFont;
-        
+
         /*! @brief The kind of application being configured. */
         String _execType;
-        
+
         /*! @brief The root name for extra arguments. */
         String _extraArgRootName;
-        
+
         /*! @brief The provided argument descriptions. */
         const MplusM::Utilities::DescriptorVector & _descriptors;
-                
+
         /*! @brief The set of extra fields. */
         OwnedArray<FormField> _extraFields;
-        
+
         /*! @brief The set of standard fields. */
         OwnedArray<FormField> _standardFields;
-        
+
         /*! @brief The 'extra arguments' area of the window. */
         ScopedPointer<GroupComponent> _extraArgumentsGroup;
-        
+
         /*! @brief The '+ arguments' button. */
         ScopedPointer<TextButton> _addArgumentsButton;
-        
+
         /*! @brief The '- arguments' button. */
         ScopedPointer<TextButton> _removeArgumentsButton;
-        
+
         /*! @brief Set to the values provided by the user. */
         yarp::os::Bottle & _valuesToUse;
-        
+
         /*! @brief @c true if extra arguments are present and @c false if they aren't used. */
         bool _hasExtraArguments;
-        
+
         /*! @brief @c true if one or more of the text fields are for file paths. */
         bool _hasFileField;
-        
+
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ConfigurationWindow)
-        
+
     }; // ConfigurationWindow
-    
+
 } // MPlusM_Manager
 
 #endif // ! defined(mpmConfigurationWindow_H_)

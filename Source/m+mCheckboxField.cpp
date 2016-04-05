@@ -57,7 +57,7 @@
 #endif //! MAC_OR_LINUX_
 
 /*! @file
- 
+
  @brief The class declaration for a field consisting of a checkbox paired with a caption. */
 #if defined(__APPLE__)
 # pragma clang diagnostic pop
@@ -113,7 +113,7 @@ CheckboxField::CheckboxField(Font &         regularLabelFont,
     Point<int> dimensions;
     int        adjustedEditorHeight = static_cast<int>(_regularFont.getHeight() +
                                                        kCheckboxHeightAdjustment);
-    
+
     _checkbox->setBounds(kFieldInset, top, adjustedEditorHeight, adjustedEditorHeight);
     MPlusM_Manager::CalculateTextArea(dimensions, _regularFont, captionTitle);
     _caption->setBounds(_checkbox->getX() + _checkbox->getWidth() + kCheckboxToLabelGap,
@@ -153,7 +153,7 @@ const
 {
     ODL_OBJENTER(); //####
     int result = _checkbox->getHeight();
-    
+
     ODL_OBJEXIT_LL(result); //####
     return result;
 } // CheckboxField::getHeight
@@ -165,7 +165,7 @@ const
     ODL_OBJENTER(); //####
     int result = (_checkbox->getX() + _checkbox->getWidth() + kCheckboxToLabelGap +
                   _caption->getWidth());
-    
+
     ODL_OBJEXIT_LL(result); //####
     return result;
 } // CheckboxField::::getMinimumWidth
@@ -176,7 +176,7 @@ const
 {
     ODL_OBJENTER(); //####
     const String & theName = _caption->getName();
-    
+
     ODL_OBJEXIT_s(theName.toStdString()); //####
     return theName;
 } // CheckboxField::getName
@@ -187,7 +187,7 @@ const
 {
     ODL_OBJENTER(); //####
     String result = (_checkbox->getToggleState() ? "1" : "0");
-    
+
     ODL_OBJEXIT_s(result.toStdString()); //####
     return result;
 } // CheckboxField::getText
@@ -199,7 +199,7 @@ const
     ODL_OBJENTER(); //####
     int result = (_checkbox->getX() + _checkbox->getWidth() + kCheckboxToLabelGap +
                   _caption->getWidth());
-    
+
     ODL_OBJEXIT_LL(result); //####
     return result;
 } // CheckboxField::getWidth
@@ -210,7 +210,7 @@ const
 {
     ODL_OBJENTER(); //####
     int result = _checkbox->getX();
-    
+
     ODL_OBJEXIT_LL(result); //####
     return result;
 } // CheckboxField::getX
@@ -221,7 +221,7 @@ const
 {
     ODL_OBJENTER(); //####
     int result = _checkbox->getY();
-    
+
     ODL_OBJEXIT_LL(result); //####
     return result;
 } // CheckboxField::getY
@@ -246,7 +246,7 @@ CheckboxField::setText(const String & newText)
     ODL_S1s("newText = ", newText.toStdString()); //####
     bool       boolValue;
     juce_wchar firstChar = tolower(newText[0]);
-    
+
     if (('1' == firstChar) || ('t' == firstChar) || ('y' == firstChar))
     {
         boolValue = true;
@@ -265,7 +265,7 @@ CheckboxField::setWidth(const int ww)
     ODL_OBJENTER(); //####
     ODL_LL1("ww = ", ww); //####
     int newWidth = ww - (_checkbox->getX() + _checkbox->getWidth() + kCheckboxToLabelGap);
-    
+
     _caption->setSize(newWidth, _caption->getHeight());
     ODL_OBJEXIT(); //####
 } // CheckboxField::setWidth

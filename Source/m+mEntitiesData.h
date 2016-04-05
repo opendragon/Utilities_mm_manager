@@ -47,7 +47,7 @@
 #  pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
 # endif // defined(__APPLE__)
 /*! @file
- 
+
  @brief The class declaration for the data collected by the background scanner. */
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
@@ -59,20 +59,20 @@ namespace MPlusM_Manager
     class EntitiesData
     {
     public :
-    
+
     protected :
-    
+
     private :
-        
+
     public :
-        
+
         /*! @brief The constructor. */
         EntitiesData(void);
-        
+
         /*! @brief The destructor. */
         virtual
         ~EntitiesData(void);
-        
+
         /*! @brief Record a connection between ports.
          @param inName The name of the destination port.
          @param outName The name of the source port.
@@ -81,20 +81,20 @@ namespace MPlusM_Manager
         addConnection(const YarpString &          inName,
                       const YarpString &          outName,
                       MplusM::Common::ChannelMode mode);
-         
+
         /*! @brief Add an entity to the list of known entities.
          @param anEntity The entity to be added. */
         void
         addEntity(EntityData * anEntity);
-        
+
         /*! @brief Clear out connection information. */
         void
         clearConnections(void);
-        
+
         /*! @brief Release all data held by the panel. */
         void
         clearOutData(void);
-        
+
         /*! @brief Return the list of detected connections.
          @returns The list of detected connections. */
         inline const ConnectionList &
@@ -103,40 +103,40 @@ namespace MPlusM_Manager
         {
             return _connections;
         } // getConnections
-        
+
         /*! @brief Return an entity by index.
          @param index The zero-origin index of the entity.
          @returns The entity if the index is within range and @c NULL otherwise. */
         EntityData *
         getEntity(const size_t index)
         const;
-        
+
         /*! @brief Return the number of entities.
          @returns The number of entities. */
         size_t
         getNumberOfEntities(void)
         const;
-        
+
     protected :
-        
+
     private :
-        
+
         COPY_AND_ASSIGNMENT_(EntitiesData);
-        
+
     public :
-    
+
     protected :
-    
+
     private :
-        
+
         /*! @brief A set of connections. */
         ConnectionList _connections;
-        
+
         /*! @brief A set of entities. */
         EntitiesList _entities;
-        
+
     }; // EntitiesData
-    
+
 } // MPlusM_Manager
 
 #endif // ! defined(mpmEntitiesData_H_)

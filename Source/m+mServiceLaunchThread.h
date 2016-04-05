@@ -47,7 +47,7 @@
 #  pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
 # endif // defined(__APPLE__)
 /*! @file
- 
+
  @brief The class declaration for the background service launcher. */
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
@@ -59,16 +59,16 @@ namespace MPlusM_Manager
     class ServiceLaunchThread : public Thread
     {
     public :
-    
+
     protected :
-    
+
     private :
-        
+
         /*! @brief The class that this class is derived from. */
         typedef Thread inherited;
-        
+
     public :
-        
+
         /*! @brief The constructor.
          @param pathToExecutable The file system path for the executable.
          @param endpointName The endpoint to use, if not the default.
@@ -88,23 +88,23 @@ namespace MPlusM_Manager
         /*! @brief The destructor. */
         virtual
         ~ServiceLaunchThread(void);
-        
+
         /*! @brief Force the child process to terminate. */
         void
         killChildProcess(void);
 
     protected :
-        
+
     private :
-        
+
         /*! @brief Perform the background scan. */
         virtual void
         run(void);
-        
+
     public :
-    
+
     protected :
-    
+
     private :
 
         /*! @brief The running background service process. */
@@ -126,14 +126,14 @@ namespace MPlusM_Manager
         StringArray _arguments;
 
         int _tagModifierCount;
-        
+
         /*! @brief @c true if the '--go' option should be used. */
         bool _needsGo;
-        
+
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ServiceLaunchThread)
-        
+
     }; // ServiceLaunchThread
-    
+
 } // MPlusM_Manager
 
 #endif // ! defined(mpmServiceLaunchThread_H_)

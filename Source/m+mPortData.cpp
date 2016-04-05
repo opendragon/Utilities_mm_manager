@@ -47,7 +47,7 @@
 # pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
 #endif // defined(__APPLE__)
 /*! @file
- 
+
  @brief The class definition for a port detected by the background scanner. */
 #if defined(__APPLE__)
 # pragma clang diagnostic pop
@@ -115,12 +115,12 @@ PortData::addInputConnection(PortData *          other,
     if (other)
     {
         bool canAdd = true;
-        
+
         for (PortConnections::iterator walker(_inputConnections.begin());
              _inputConnections.end() != walker; ++walker)
         {
             PortInfo * candidate(&*walker);
-            
+
             if (candidate)
             {
                 if ((candidate->_otherPort == other) ||
@@ -131,13 +131,13 @@ PortData::addInputConnection(PortData *          other,
                     canAdd = false;
                     break;
                 }
-                
+
             }
         }
         if (canAdd)
         {
             PortInfo newConnection;
-            
+
             newConnection._otherPort = other;
             newConnection._connectionMode = mode;
             newConnection._valid = true;
@@ -156,12 +156,12 @@ PortData::addOutputConnection(PortData *          other,
     if (other)
     {
         bool canAdd = true;
-        
+
         for (PortConnections::iterator walker(_outputConnections.begin());
              _outputConnections.end() != walker; ++walker)
         {
             PortInfo * candidate(&*walker);
-            
+
             if (candidate)
             {
                 if ((candidate->_otherPort == other) ||
@@ -172,13 +172,13 @@ PortData::addOutputConnection(PortData *          other,
                     canAdd = false;
                     break;
                 }
-                
+
             }
         }
         if (canAdd)
         {
             PortInfo newConnection;
-            
+
             newConnection._otherPort = other;
             newConnection._connectionMode = mode;
             newConnection._valid = true;
@@ -195,19 +195,19 @@ const
     ODL_OBJENTER(); //####
     ODL_S1s("otherPort = ", otherPort); //####
     bool result = false;
-    
+
     for (PortConnections::const_iterator walker(_outputConnections.begin());
          _outputConnections.end() != walker; ++walker)
     {
         const PortInfo * candidate(&*walker);
-        
+
         if (candidate && candidate->_otherPort &&
             (candidate->_otherPort->getPortName() == otherPort))
         {
             result = true;
             break;
         }
-        
+
     }
     ODL_OBJEXIT_B(result); //####
     return result;
@@ -221,7 +221,7 @@ PortData::invalidateConnections(void)
          _inputConnections.end() != walker; ++walker)
     {
         PortInfo * candidate(&*walker);
-        
+
         if (candidate)
         {
             candidate->_valid = false;
@@ -231,7 +231,7 @@ PortData::invalidateConnections(void)
          _outputConnections.end() != walker; ++walker)
     {
         PortInfo * candidate(&*walker);
-        
+
         if (candidate)
         {
             candidate->_valid = false;
@@ -248,16 +248,16 @@ PortData::removeInputConnection(PortData * other)
     if (other)
     {
         PortConnections::iterator walker(_inputConnections.begin());
-        
+
         for ( ; _inputConnections.end() != walker; ++walker)
         {
             PortInfo * candidate(&*walker);
-            
+
             if (candidate && (candidate->_otherPort == other))
             {
                 break;
             }
-            
+
         }
         if (_inputConnections.end() != walker)
         {
@@ -272,21 +272,21 @@ PortData::removeInvalidConnections(void)
 {
     ODL_OBJENTER(); //####
     bool keepGoing;
-    
+
     do
     {
         keepGoing = false;
         PortConnections::iterator walker(_inputConnections.begin());
-        
+
         for ( ; _inputConnections.end() != walker; ++walker)
         {
             PortInfo * candidate(&*walker);
-            
+
             if (candidate && (! candidate->_valid))
             {
                 break;
             }
-            
+
         }
         if (_inputConnections.end() != walker)
         {
@@ -299,16 +299,16 @@ PortData::removeInvalidConnections(void)
     {
         keepGoing = false;
         PortConnections::iterator walker(_outputConnections.begin());
-        
+
         for ( ; _outputConnections.end() != walker; ++walker)
         {
             PortInfo * candidate(&*walker);
-            
+
             if (candidate && (! candidate->_valid))
             {
                 break;
             }
-            
+
         }
         if (_outputConnections.end() != walker)
         {
@@ -328,16 +328,16 @@ PortData::removeOutputConnection(PortData * other)
     if (other)
     {
         PortConnections::iterator walker(_outputConnections.begin());
-        
+
         for ( ; _outputConnections.end() != walker; ++walker)
         {
             const PortInfo * candidate(&*walker);
-            
+
             if (candidate && (candidate->_otherPort == other))
             {
                 break;
             }
-            
+
         }
         if (_outputConnections.end() != walker)
         {

@@ -47,7 +47,7 @@
 #  pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
 # endif // defined(__APPLE__)
 /*! @file
- 
+
  @brief The class declaration for a port detected by the background scanner. */
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
@@ -55,18 +55,18 @@
 
 namespace MPlusM_Manager
 {
-    
+
     /*! @brief A port detected by the background scanner. */
     class PortData
     {
     public :
-    
+
     protected :
-    
+
     private :
-        
+
     public :
-        
+
         /*! @brief The constructor.
          @param portName The port name for the entry.
          @param portProtocol The protocol of the port.
@@ -78,25 +78,25 @@ namespace MPlusM_Manager
                  const YarpString &  protocolDescription,
                  const PortUsage     portKind,
                  const PortDirection direction = kPortDirectionInput);
-        
+
         /*! @brief The destructor. */
         virtual
         ~PortData(void);
-        
+
         /*! @brief Add an input connection to the port.
          @param other The port that is to be connected.
          @param mode The mode of the connection. */
         void
         addInputConnection(PortData *                  other,
                            MplusM::Common::ChannelMode mode);
-        
+
         /*! @brief Add an output connection to the port.
          @param other The port that is to be connected.
          @param mode The mode of the connection. */
         void
         addOutputConnection(PortData *                  other,
                             MplusM::Common::ChannelMode mode);
-        
+
         /*! @brief Return the direction of the port entry.
          @returns The direction of the port entry. */
         inline PortDirection
@@ -105,7 +105,7 @@ namespace MPlusM_Manager
         {
             return _direction;
         } // getDirection
-        
+
         /*! @brief Return the set of input connections to the port.
          @returns The set of input connections to the port. */
         inline const PortConnections &
@@ -114,7 +114,7 @@ namespace MPlusM_Manager
         {
             return _inputConnections;
         } // getInputConnections
-        
+
         /*! @brief Return the set of output connections to the port.
          @returns The set of output connections to the port. */
         inline const PortConnections &
@@ -123,7 +123,7 @@ namespace MPlusM_Manager
         {
             return _outputConnections;
         } // getOutputConnections
-        
+
         /*! @brief Return the name of the associated port.
          @returns The name of the associated port. */
         inline const YarpString &
@@ -132,7 +132,7 @@ namespace MPlusM_Manager
         {
             return _portName;
         } // getPortName
-        
+
         /*! @brief Return the port number of the associated port.
          @returns The port number of the associated port. */
         inline const YarpString &
@@ -141,7 +141,7 @@ namespace MPlusM_Manager
         {
             return _portPortNumber;
         } // getPortNumber
-        
+
         /*! @brief Return the protocol of the associated port.
          @returns The protocol of the associated port. */
         inline const YarpString &
@@ -150,7 +150,7 @@ namespace MPlusM_Manager
         {
             return _portProtocol;
         } // getProtocol
-        
+
         /*! @brief Return the description of the protocol for the associated port.
          @returns The description of the protocol for the associated port. */
         inline const YarpString &
@@ -159,7 +159,7 @@ namespace MPlusM_Manager
         {
             return _protocolDescription;
         } // getProtocolDescription
-        
+
         /*! @brief Return the usage of the port entry.
          @returns The usage of the port entry. */
         inline PortUsage
@@ -168,18 +168,18 @@ namespace MPlusM_Manager
         {
             return _usage;
         } // getUsage
-        
+
         /*! @brief Returns @c true if there is an outgoing connection to the named port.
          @param otherPort The name of the destination port.
          @returns @c true if there is an outgoing connection to the named port. */
         bool
         hasOutgoingConnectionTo(const YarpString & otherPort)
         const;
-        
+
         /*! @brief Mark all the connections as invalid. */
         void
         invalidateConnections(void);
-        
+
         /*! @brief Returns @c true if the port entry is a secondary port of a service and @c false
          otherwise.
          @returns @c true if the port is a secondary port of a service and @c false otherwise. */
@@ -189,7 +189,7 @@ namespace MPlusM_Manager
         {
             return (kPortUsageInputOutput == _usage);
         } // isInputOutput
-        
+
         /*! @brief Returns @c true if the port entry is part of a service and @c false
          otherwise.
          @returns @c true if the port is part of a service and @c false otherwise. */
@@ -204,16 +204,16 @@ namespace MPlusM_Manager
          @param other The port that is to be disconnected. */
         void
         removeInputConnection(PortData * other);
-        
+
         /*! @brief Remove connections that are invalid. */
         void
         removeInvalidConnections(void);
-        
+
         /*! @brief Remove an output connection from a port.
          @param other The port that is to be disconnected. */
         void
         removeOutputConnection(PortData * other);
-        
+
         /*! @brief Set the port number of the port.
          @param newPortNumber The port number of the port. */
         inline void
@@ -221,45 +221,45 @@ namespace MPlusM_Manager
         {
             _portPortNumber = newPortNumber;
         } // setPortNumber
-        
+
     protected :
-        
+
     private :
-        
+
         COPY_AND_ASSIGNMENT_(PortData);
-        
+
     public :
-    
+
     protected :
-    
+
     private :
-        
+
         /*! @brief The connections to the port. */
         PortConnections _inputConnections;
-        
+
         /*! @brief The connections to the port. */
         PortConnections _outputConnections;
-        
+
         /*! @brief The name of the associated port. */
         YarpString _portName;
-        
+
         /*! @brief The IP port number for the port. */
         YarpString _portPortNumber;
-        
+
         /*! @brief The protocol of the associated port. */
         YarpString _portProtocol;
-        
+
         /*! @brief The description of the protocol of the associated port. */
         YarpString _protocolDescription;
-        
+
         /*! @brief The primary direction for connections to the port. */
         PortDirection _direction;
-        
+
         /*! @brief The primary usage for the port. */
         PortUsage _usage;
-        
+
     }; // PortData
-    
+
 } // MPlusM_Manager
 
 #endif // ! defined(mpmPortData_H_)

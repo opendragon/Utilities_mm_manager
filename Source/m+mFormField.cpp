@@ -52,7 +52,7 @@
 #endif //! MAC_OR_LINUX_
 
 /*! @file
- 
+
  @brief The class declaration for a generalized input field. */
 #if defined(__APPLE__)
 # pragma clang diagnostic pop

@@ -58,7 +58,7 @@
 #  pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
 # endif // defined(__APPLE__)
 /*! @file
- 
+
  @brief The class declaration for a visible entity that has one or more channels or ports. */
 
 /*! @namespace MPlusM_Manager
@@ -70,21 +70,21 @@
 namespace MPlusM_Manager
 {
     class EntitiesPanel;
-    
+
     /*! @brief A container for one or more ports or channels. */
     class ChannelContainer : public Component
     {
     public :
-    
+
     protected :
-    
+
     private :
-        
+
         /*! @brief The class that this class is derived from. */
         typedef Component inherited;
-        
+
     public :
-        
+
         /*! @brief The constructor.
          @param kind The kind of entity.
          @param title The title of the entity.
@@ -102,11 +102,11 @@ namespace MPlusM_Manager
                          const YarpString &  extraInfo,
                          const YarpString &  requests,
                          EntitiesPanel &     owner);
-        
+
         /*! @brief The destructor. */
         virtual
         ~ChannelContainer(void);
-        
+
         /*! @brief Add an argument description to the container.
          @param argDesc The argument descriptor to be added to the container. */
         void
@@ -136,37 +136,37 @@ namespace MPlusM_Manager
         /*! @brief Clears the hidden flag for the entity. */
         void
         clearHidden(void);
-        
+
         /*! @brief Clear any connect / disconnect markers. */
         void
         clearMarkers(void);
-        
+
         /*! @brief Clears the visited flag for the entity. */
         void
         clearVisited(void);
-        
+
         /*! @brief Set the configuration of the corresponding service. */
         void
         configureTheService(void);
-        
+
         /*! @brief Deselect the entity. */
         void
         deselect(void);
-        
+
         /*! @brief Display information for a container.
          @param moreDetails @c true if more details are to be shown and @c false otherwise. */
         void
         displayInformation(const bool moreDetails);
-        
+
         /*! @brief Display metrics for a service. */
         void
         displayMetrics(void);
-        
+
         /*! @brief Display the connections between containers.
          @param gg The graphics context in which to draw. */
         void
         drawOutgoingConnections(Graphics & gg);
-        
+
         /*! @brief Convert a tab-delimited line of metric data into a more readable form.
          @param aRow A line of metric data.
          @returns The metric data reformatted. */
@@ -188,7 +188,7 @@ namespace MPlusM_Manager
         {
             return _behaviour;
         } // getBehaviour
-        
+
         /*! @brief Return the description of the entity.
          @returns The description of the entity. */
         inline const YarpString &
@@ -197,7 +197,7 @@ namespace MPlusM_Manager
         {
             return _description;
         } // getDescription
-        
+
         /*! @brief Return the extra information for the entity.
          @returns The extra information for the entity. */
         inline const YarpString &
@@ -215,7 +215,7 @@ namespace MPlusM_Manager
         {
             return _IPAddress;
         } // getIPAddress
-        
+
         /*! @brief Return the kind of container.
          @returns The kind of container. */
         inline ContainerKind
@@ -229,13 +229,13 @@ namespace MPlusM_Manager
          @returns The metrics for the container, if it is a service or an empty string. */
         StringArray
         getMetrics(void);
-        
+
         /*! @brief Return the state of measurment collection for the container, if it is a service.
          @returns @c true if the service is collecting measurements and @c false if it is not a
          service or if it is a service that is not collecting measurements. */
         bool
         getMetricsState(void);
-        
+
 # if defined(USE_OGDF_POSITIONING_)
         /*! @brief Return the node corresponding to the entity.
          @returns The node corresponding to the entity. */
@@ -243,7 +243,7 @@ namespace MPlusM_Manager
         getNode(void)
         const;
 # endif // defined(USE_OGDF_POSITIONING_)
-        
+
         /*! @brief Returns the number of argument descriptions in this container.
          @returns The number of argument descriptions in this container. */
         inline size_t
@@ -261,27 +261,27 @@ namespace MPlusM_Manager
         {
             return getNumChildComponents();
         } // getNumPorts
-        
+
         inline EntitiesPanel &
         getOwner(void)
         const
         {
             return _owner;
         } // getOwner
-        
+
         /*! @brief Returns a port by index.
          @param num The zero-origin index of the port.
          @returns A port or @c NULL if the index is out of range. */
         ChannelEntry *
         getPort(const int num)
         const;
-        
+
         /*! @brief Return the position of the entity within it's containing panel.
          @returns The position of the entity within it's containing panel. */
         Position
         getPositionInPanel(void)
         const;
-        
+
         /*! @brief Return the requests supported by the entity.
          @returns The requests supported by the entity. */
         inline const YarpString &
@@ -290,33 +290,33 @@ namespace MPlusM_Manager
         {
             return _requests;
         } // getRequests
-        
+
         /*! @brief Return the amount of space to the left of the text being displayed.
          @returns The amount of space to the left of the text being displayed. */
         float
         getTextInset(void)
         const;
-        
+
         /*! @brief Check if a port is part of the entity.
          @param aPort The port to be checked for.
          @returns @c true if the port is contained within the entity and @c false otherwise. */
         bool
         hasPort(const ChannelEntry * aPort);
-        
+
         /*! @brief Mark the entity as invisible. */
         void
         hide(void);
-        
+
         /*! @brief Mark all the connections as invalid. */
         void
         invalidateConnections(void);
-        
+
         /*! @brief Returns @c true if one of the port entries is marked and @c false otherwise.
          @returns @c true if one of the port entries is marked and @c false otherwise. */
         bool
         isMarked(void)
         const;
-        
+
         /*! @brief Return @c true is the entity is newly created.
          @returns @c true if the entity is newly created and @c false otherwise. */
         inline bool
@@ -325,7 +325,7 @@ namespace MPlusM_Manager
         {
             return _newlyCreated;
         } // isNew
-        
+
         /*! @brief Return @c true is the entity is selected.
          @returns @c true if the entity is selected and @c false otherwise. */
         inline bool
@@ -334,32 +334,32 @@ namespace MPlusM_Manager
         {
             return _selected;
         } // isSelected
-        
+
         /*! @brief Returns an entry at the given location, if it exists.
          @param location The coordinates to check.
          @returns A pointer to the entry at the given location, or @c NULL if there is none. */
         ChannelEntry *
         locateEntry(const Position & location)
         const;
-        
+
         /*! @brief Called when a mouse button is pressed.
          @param ee Details about the position and status of the mouse event. */
         virtual void
         mouseDown(const MouseEvent & ee);
-        
+
         /*! @brief Called when the mouse is moved while a button is held down.
          @param ee Details about the position and status of the mouse event. */
         virtual void
         mouseDrag(const MouseEvent & ee);
-        
+
         /*! @brief Remove connections that are invalid. */
         void
         removeInvalidConnections(void);
-        
+
         /*! @brief Called when the component size has been changed. */
         virtual void
         resized(void);
-        
+
         /*! @brief Tell the corresponding service to restart. */
         void
         restartTheService(void);
@@ -367,35 +367,35 @@ namespace MPlusM_Manager
         /*! @brief Select the entity. */
         void
         select(void);
-        
+
         /*! @brief Sets the hidden flag for the entity. */
         void
         setHidden(void);
-        
+
         /*! @brief Change the state of service metrics collection.
          @param newState The requested state of service metrics collection. */
         void
         setMetricsState(const bool newState);
-        
+
 # if defined(USE_OGDF_POSITIONING_)
         /*! @brief Sets the node corresponding to the entity.
          @param newNode The new value for the node corresponding to the entity. */
         void
         setNode(ogdf::node newNode);
 # endif // defined(USE_OGDF_POSITIONING_)
-        
+
         /*! @brief Marks the entity as not newly created. */
         void
         setOld(void);
-        
+
         /*! @brief Sets the visited flag for the entity. */
         void
         setVisited(void);
-        
+
         /*! @brief Tell the corresponding service to stop. */
         void
         stopTheService(void);
-        
+
         /*! @brief Returns the state of the hidden flag.
          @returns The state of the hidden flag. */
         inline bool
@@ -404,7 +404,7 @@ namespace MPlusM_Manager
         {
             return _hidden;
         } // wasHidden
-        
+
         /*! @brief Returns the state of the visited flag.
          @returns The state of the visited flag. */
         inline bool
@@ -413,76 +413,76 @@ namespace MPlusM_Manager
         {
             return _visited;
         } // wasVisited
-        
+
     protected :
-        
+
     private :
-        
+
         /*! @brief Respond to a request for a popup menu. */
         void
         displayAndProcessPopupMenu(void);
-        
+
         /*! @brief Draw the content of the component.
          @param gg The graphics context in which to draw. */
         virtual void
         paint(Graphics & gg);
-        
+
     public :
-    
+
     protected :
-    
+
     private :
-        
+
         /*! @brief The argument descriptions if it is a service or an adapter. */
         MplusM::Utilities::DescriptorVector _argumentList;
 
         /*! @brief Restrictions on the components size or position. */
         ComponentBoundsConstrainer _constrainer;
-        
+
         /*! @brief Used to take care of the logic for dragging the component. */
         ComponentDragger _dragger;
-        
+
         /*! @brief The behavioural model if a service or an adapter. */
         YarpString _behaviour;
-        
+
         /*! @brief The description of the container, if it is a service or an adapter. */
         YarpString _description;
-        
+
         /*! @brief The extra information for the container, if it is a service or an adapter. */
         YarpString _extraInfo;
 
         /*! @brief The IP address of the primary channel. */
         YarpString _IPAddress;
-                
+
         /*! @brief The requests for the entity, if it is a service or an adapter. */
         YarpString _requests;
-        
+
 # if defined(USE_OGDF_POSITIONING_)
         /*! @brief The node corresponding to the container. */
         ogdf::node _node;
 # endif // defined(USE_OGDF_POSITIONING_)
-        
+
         /*! @brief The owner of the container. */
         EntitiesPanel & _owner;
-        
+
         /*! @brief The height of the title of the container. */
         int _titleHeight;
-        
+
         /*! @brief The kind of container. */
         ContainerKind _kind;
-        
+
         /*! @brief @c true if the container was hidden and @c false otherwise. */
         bool _hidden;
-        
+
         /*! @brief @c true if the container has just been created and @c false otherwise. */
         bool _newlyCreated;
-        
+
         /*! @brief @c true if the container is selected and @c false otherwise. */
         bool _selected;
-        
+
         /*! @brief @c true if the container was visited and @c false otherwise. */
         bool _visited;
-        
+
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
 #  pragma clang diagnostic ignored "-Wunused-private-field"
@@ -492,11 +492,11 @@ namespace MPlusM_Manager
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
-        
+
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ChannelContainer)
-        
+
     }; // ChannelContainer
-    
+
 } // MPlusM_Manager
 
 #endif // ! defined(mpmChannelContainer_H_)

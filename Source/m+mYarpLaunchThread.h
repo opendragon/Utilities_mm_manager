@@ -47,7 +47,7 @@
 #  pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
 # endif // defined(__APPLE__)
 /*! @file
- 
+
  @brief The class declaration for the background YARP launcher. */
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
@@ -59,16 +59,16 @@ namespace MPlusM_Manager
     class YarpLaunchThread : public Thread
     {
     public :
-    
+
     protected :
-    
+
     private :
-        
+
         /*! @brief The class that this class is derived from. */
         typedef Thread inherited;
-        
+
     public :
-        
+
         /*! @brief The constructor.
          @param pathToExecutable The file system path for the executable.
          @param ipAddress The network address to use.
@@ -76,45 +76,45 @@ namespace MPlusM_Manager
         YarpLaunchThread(const String & pathToExecutable,
                          const String & ipAddress,
                          const int      portNumber);
-        
+
         /*! @brief The destructor. */
         virtual
         ~YarpLaunchThread(void);
-        
+
         /*! @brief Force the child process to terminate. */
         void
         killChildProcess(void);
 
     protected :
-        
+
     private :
-        
+
         /*! @brief Perform the background scan. */
         virtual void
         run(void);
-        
+
     public :
-    
+
     protected :
-    
+
     private :
 
         /*! @brief The running YARP process. */
         ScopedPointer<ChildProcess> _yarpProcess;
-        
+
         /*! @brief The network address to use. */
         String _yarpAddress;
-        
+
         /*! @brief The file system path to the executable. */
         String _yarpPath;
 
         /*! @brief The network port number to use. */
         int _yarpPort;
-        
+
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(YarpLaunchThread)
-        
+
     }; // YarpLaunchThread
-    
+
 } // MPlusM_Manager
 
 #endif // ! defined(mpmYarpLaunchThread_H_)

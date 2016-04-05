@@ -52,7 +52,7 @@
 #endif //! MAC_OR_LINUX_
 
 /*! @file
- 
+
  @brief The class declaration for the background YARP launcher. */
 #if defined(__APPLE__)
 # pragma clang diagnostic pop
@@ -130,7 +130,7 @@ YarpLaunchThread::run(void)
     {
         ODL_LOG("_yarpProcess"); //####
         StringArray nameAndArgs(_yarpPath);
-        
+
         nameAndArgs.add("server");
         nameAndArgs.add("--ip");
         nameAndArgs.add(_yarpAddress);
@@ -141,7 +141,7 @@ YarpLaunchThread::run(void)
         {
             ODL_LOG("(_yarpProcess->start(nameAndArgs, 0))"); //####
             const String childOutput(_yarpProcess->readAllProcessOutput());
-            
+
             LazyLaunchProcess(*_yarpProcess, -1);
             ODL_S1s("childOutput = ", childOutput.toStdString()); //####
         }

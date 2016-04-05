@@ -58,7 +58,7 @@
 #endif //! MAC_OR_LINUX_
 
 /*! @file
- 
+
  @brief The class declaration for the background port and service scanner. */
 #if defined(__APPLE__)
 # pragma clang diagnostic pop
@@ -112,14 +112,14 @@ findMatchingIpAddressAndPort(const Utilities::PortVector & detectedPorts,
          detectedPorts.end() != walker; ++walker)
     {
         YarpString walkerName(walker->_portName);
-        
+
         if (portName == walkerName)
         {
             ipAddress = walker->_portIpAddress;
             ipPort = walker->_portPortNumber;
             break;
         }
-        
+
     }
     ODL_EXIT(); //####
 } // findMatchingIpAddressAndPort
@@ -137,7 +137,7 @@ splitCombinedAddressAndPort(const YarpString & combined,
     ODL_S1s("combined = ", combined); //####
     ODL_P2("ipAddress = ", &ipAddress, "ipPort = ", &ipPort); //####
     size_t splitPos = combined.find(":");
-    
+
     if (YarpString::npos == splitPos)
     {
         ipAddress = ipPort = "";
@@ -235,7 +235,7 @@ ScannerThread::addEntities(const Utilities::PortVector & detectedPorts)
     ODL_OBJENTER(); //####
     ODL_P1("detectedPorts = ", &detectedPorts); //####
     PortDataMap portsSeen;
-    
+
     for (ServiceMap::const_iterator outer(_detectedServices.begin());
          (_detectedServices.end() != outer) && (! threadShouldExit()); ++outer)
     {
@@ -256,7 +256,7 @@ ScannerThread::addEntities(const Utilities::PortVector & detectedPorts)
         PortData *                   aPort = anEntity->addPort(descriptor._channelName, "", "",
                                                                kPortUsageService,
                                                                kPortDirectionInput);
-        
+
         findMatchingIpAddressAndPort(detectedPorts, descriptor._channelName, ipAddress, ipPort);
         anEntity->setIPAddress(ipAddress);
         aPort->setPortNumber(ipPort);
@@ -264,7 +264,7 @@ ScannerThread::addEntities(const Utilities::PortVector & detectedPorts)
              (inChannels.end() != inner) && (! threadShouldExit()); ++inner)
         {
             Common::ChannelDescription aChannel(*inner);
-            
+
             aPort = anEntity->addPort(aChannel._portName, aChannel._portProtocol,
                                       aChannel._protocolDescription, kPortUsageInputOutput,
                                       kPortDirectionInput);
@@ -275,7 +275,7 @@ ScannerThread::addEntities(const Utilities::PortVector & detectedPorts)
              (outChannels.end() != inner) && (! threadShouldExit()); ++inner)
         {
             Common::ChannelDescription aChannel(*inner);
-            
+
             aPort = anEntity->addPort(aChannel._portName, aChannel._portProtocol,
                                       aChannel._protocolDescription, kPortUsageInputOutput,
                                       kPortDirectionOutput);
@@ -286,7 +286,7 @@ ScannerThread::addEntities(const Utilities::PortVector & detectedPorts)
              (clientChannels.end() != inner) && (! threadShouldExit()); ++inner)
         {
             Common::ChannelDescription aChannel(*inner);
-            
+
             aPort = anEntity->addPort(aChannel._portName, aChannel._portProtocol,
                                       aChannel._protocolDescription, kPortUsageClient,
                                       kPortDirectionInputOutput);
@@ -296,7 +296,7 @@ ScannerThread::addEntities(const Utilities::PortVector & detectedPorts)
         for (size_t ii = 0, mm = descriptor._argumentList.size(); mm > ii; ++ii)
         {
             Utilities::BaseArgumentDescriptor * argDesc = descriptor._argumentList[ii];
-            
+
             if (argDesc)
             {
                 anEntity->addArgumentDescription(argDesc);
@@ -313,7 +313,7 @@ ScannerThread::addEntities(const Utilities::PortVector & detectedPorts)
         YarpString   ipPort;
         EntityData * anEntity = new EntityData(kContainerKindOther, walker->first, "", "", "", "");
         PortUsage    usage;
-        
+
         splitCombinedAddressAndPort(walker->first, ipAddress, ipPort);
         anEntity->setIPAddress(ipAddress);
         switch (Utilities::GetPortKind(walker->second._name))
@@ -321,20 +321,20 @@ ScannerThread::addEntities(const Utilities::PortVector & detectedPorts)
             case Utilities::kPortKindClient :
                 usage = kPortUsageClient;
                 break;
-                
+
             case Utilities::kPortKindRegistryService :
             case Utilities::kPortKindService :
                 usage = kPortUsageService;
                 break;
-                
+
             default :
                 usage = kPortUsageOther;
                 break;
-                
+
         }
         PortData * aPort = anEntity->addPort(walker->second._name, "", "", usage,
                                              walker->second._direction);
-        
+
         aPort->setPortNumber(ipPort);
         _workingData.addEntity(anEntity);
     }
@@ -353,12 +353,12 @@ ScannerThread::addPortConnections(const Utilities::PortVector & detectedPorts,
          (detectedPorts.end() != outer) && (! threadShouldExit()); ++outer)
     {
         YarpString outerName(outer->_portName);
-        
+
         if (_rememberedPorts.end() != _rememberedPorts.find(outerName))
         {
             Common::ChannelVector inputs;
             Common::ChannelVector outputs;
-            
+
             Utilities::GatherPortConnections(outer->_portName, inputs, outputs,
                                              Utilities::kInputAndOutputOutput, true, checker,
                                              checkStuff);
@@ -366,7 +366,7 @@ ScannerThread::addPortConnections(const Utilities::PortVector & detectedPorts,
                  (outputs.end() != inner) && (! threadShouldExit()); ++inner)
             {
                 YarpString innerName(inner->_portName);
-                
+
                 if (_rememberedPorts.end() != _rememberedPorts.find(innerName))
                 {
                     _workingData.addConnection(innerName, outerName, inner->_portMode);
@@ -391,14 +391,14 @@ ScannerThread::addRegularPortEntities(const Utilities::PortVector & detectedPort
          (detectedPorts.end() != walker) && (! threadShouldExit()); ++walker)
     {
         YarpString walkerName(walker->_portName);
-        
+
         if (_rememberedPorts.end() == _rememberedPorts.find(walkerName))
         {
             EntitiesPanel &  entitiesPanel(_window.getEntitiesPanel());
             YarpString       caption(walker->_portIpAddress + ":" + walker->_portPortNumber);
             NameAndDirection info;
             ChannelEntry *   oldEntry = entitiesPanel.findKnownPort(walkerName);
-            
+
             _rememberedPorts.insert(walkerName);
             info._name = walkerName;
             info._direction = determineDirection(oldEntry, walker->_portName, checker, checkStuff);
@@ -421,11 +421,11 @@ ScannerThread::addServices(const YarpStringVector & services,
          (services.end() != outer) && (! threadShouldExit()); ++outer)
     {
         YarpString outerName(*outer);
-        
+
         if (_detectedServices.end() == _detectedServices.find(outerName))
         {
             Utilities::ServiceDescriptor descriptor;
-            
+
             if (Utilities::GetNameAndDescriptionForService(*outer, descriptor, STANDARD_WAIT_TIME_,
                                                            checker, checkStuff))
             {
@@ -434,12 +434,12 @@ ScannerThread::addServices(const YarpStringVector & services,
                 Common::ChannelVector & clientChannels = descriptor._clientChannels;
                 Common::ChannelVector & inChannels = descriptor._inputChannels;
                 Common::ChannelVector & outChannels = descriptor._outputChannels;
-                
+
                 for (Common::ChannelVector::const_iterator inner = inChannels.begin();
                      (inChannels.end() != inner) && (! threadShouldExit()); ++inner)
                 {
                     Common::ChannelDescription aChannel(*inner);
-                    
+
                     _rememberedPorts.insert(aChannel._portName);
                     yield();
                 }
@@ -447,7 +447,7 @@ ScannerThread::addServices(const YarpStringVector & services,
                      (outChannels.end() != inner) && (! threadShouldExit()); ++inner)
                 {
                     Common::ChannelDescription aChannel(*inner);
-                    
+
                     _rememberedPorts.insert(aChannel._portName);
                     yield();
                 }
@@ -455,7 +455,7 @@ ScannerThread::addServices(const YarpStringVector & services,
                      (clientChannels.end() != inner) && (! threadShouldExit()); ++inner)
                 {
                     Common::ChannelDescription aChannel(*inner);
-                    
+
                     _rememberedPorts.insert(aChannel._portName);
                     yield();
                 }
@@ -476,7 +476,7 @@ ScannerThread::checkAndClearIfScanIsComplete(void)
         Utilities::GoToSleep(SHORT_SLEEP_);
     }
     bool result = _scanIsComplete;
-    
+
     _scanIsComplete = false;
     ODL_B1("_scanIsComplete <- ", _scanIsComplete); //####
     relinquishFromRead();
@@ -489,7 +489,7 @@ ScannerThread::conditionallyAcquireForRead(void)
 {
     ODL_OBJENTER(); //####
     bool result = _lock.tryEnterRead();
-    
+
     ODL_OBJEXIT_B(result); //####
     return result;
 } // ScannerThread::conditionallyAcquireForRead
@@ -499,7 +499,7 @@ ScannerThread::conditionallyAcquireForWrite(void)
 {
     ODL_OBJENTER(); //####
     bool result = _lock.tryEnterWrite();
-    
+
     ODL_OBJEXIT_B(result); //####
     return result;
 } // ScannerThread::conditionallyAcquireForWrite
@@ -514,7 +514,7 @@ ScannerThread::determineDirection(ChannelEntry *        oldEntry,
     ODL_S1s("portName = ", portName); //####
     ODL_P1("checkStuff = ", checkStuff); //####
     PortDirection result = kPortDirectionUnknown;
-    
+
     if (oldEntry)
     {
         result = oldEntry->getDirection();
@@ -523,7 +523,7 @@ ScannerThread::determineDirection(ChannelEntry *        oldEntry,
     {
         bool canDoInput = false;
         bool canDoOutput = false;
-        
+
         // First, check if we are looking at a client port - because of how they are
         // constructed, attempting to connect to them will result in a hang, so we just
         // treat them as I/O.
@@ -532,12 +532,12 @@ ScannerThread::determineDirection(ChannelEntry *        oldEntry,
             case Utilities::kPortKindClient :
                 canDoInput = canDoOutput = true;
                 break;
-                
+
             case Utilities::kPortKindRegistryService :
             case Utilities::kPortKindService :
                 canDoInput = true;
                 break;
-                
+
             default :
                 // Determine by doing a test connection.
                 if (Utilities::NetworkConnectWithRetries(_outputOnlyPortName, portName,
@@ -569,7 +569,7 @@ ScannerThread::determineDirection(ChannelEntry *        oldEntry,
                     }
                 }
                 break;
-                
+
         }
         if (canDoInput)
         {
@@ -598,7 +598,7 @@ ScannerThread::doCleanupSoon(void)
     ODL_OBJENTER(); //####
     bool locked = conditionallyAcquireForWrite();
     bool needToLeave = false;
-    
+
     for ( ; (! locked) && (! needToLeave); locked = conditionallyAcquireForWrite())
     {
         if (threadShouldExit())
@@ -625,7 +625,7 @@ ScannerThread::doScanSoon(void)
     ODL_OBJENTER(); //####
     bool locked = conditionallyAcquireForWrite();
     bool needToLeave = false;
-    
+
     for ( ; (! locked) && (! needToLeave); locked = conditionallyAcquireForWrite())
     {
         if (threadShouldExit())
@@ -657,7 +657,7 @@ ScannerThread::gatherEntities(Utilities::PortVector & detectedPorts,
 #if (defined(CHECK_FOR_STALE_PORTS_) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS_)))
     int64 now = Time::currentTimeMillis();
 #endif //defined(CHECK_FOR_STALE_PORTS_) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS_))
-    
+
     // Mark our utility ports as known.
 #if defined(CHECK_FOR_STALE_PORTS_)
 # if defined(DO_SINGLE_CHECK_FOR_STALE_PORTS_)
@@ -687,7 +687,7 @@ ScannerThread::gatherEntities(Utilities::PortVector & detectedPorts,
     {
         bool             servicesSeen;
         YarpStringVector services;
-        
+
         _detectedServices.clear();
         _rememberedPorts.clear();
         _rememberedPorts.insert(_inputOnlyPortName);
@@ -711,7 +711,7 @@ ScannerThread::gatherEntities(Utilities::PortVector & detectedPorts,
         // Record the port connections.
         addPortConnections(detectedPorts, checker, checkStuff);
         ManagerApplication * ourApp = ManagerApplication::getApp();
-        
+
         if (ourApp && servicesSeen)
         {
             ourApp->connectPeekChannel();
@@ -745,7 +745,7 @@ ScannerThread::run(void)
     {
         bool                  needToLeave = false;
         Utilities::PortVector detectedPorts;
-        
+
         if (_cleanupSoon)
         {
             unconditionallyAcquireForWrite();
@@ -759,12 +759,12 @@ ScannerThread::run(void)
             bool shouldCleanupSoon = false;
             bool shouldScanSoon = false;
             int  kk = (LONG_SLEEP_ / VERY_SHORT_SLEEP_);
-            
+
             _delayScan = false;
             do
             {
                 bool locked = conditionallyAcquireForRead();
-                
+
                 for ( ; (! locked) && (! needToLeave); locked = conditionallyAcquireForRead())
                 {
                     for (int ii = 0, mm = (MIDDLE_SLEEP_ / VERY_SHORT_SLEEP_);
@@ -801,14 +801,14 @@ ScannerThread::run(void)
                     ODL_LOG("(needToLeave || shouldCleanupSoon || shouldScanSoon)"); //####
                     break;
                 }
-                
+
             }
             while (0 <= kk);
         }
         else if (gatherEntities(detectedPorts, CheckForExit))
         {
             int64 loopStartTime = Time::currentTimeMillis();
-            
+
             addEntities(detectedPorts);
             // Indicate that the scan data is available.
             unconditionallyAcquireForWrite();
@@ -821,7 +821,7 @@ ScannerThread::run(void)
             // force a repaint of the displayed panel, which will retrieve our data.
             triggerRepaint();
             bool canProceed = false;
-            
+
             do
             {
                 for (int ii = 0, mm = (MIDDLE_SLEEP_ / VERY_SHORT_SLEEP_);
@@ -842,10 +842,10 @@ ScannerThread::run(void)
                     ODL_LOG("(needToLeave)"); //####
                     break;
                 }
-                
+
                 // Wait for the scan data to be processed, and then continue with the next scan.
                 bool locked = conditionallyAcquireForRead();
-                
+
                 for ( ; (! locked) && (! needToLeave); locked = conditionallyAcquireForRead())
                 {
                     for (int ii = 0, mm = (MIDDLE_SLEEP_ / VERY_SHORT_SLEEP_);
@@ -876,7 +876,7 @@ ScannerThread::run(void)
                 ODL_LOG("(needToLeave)"); //####
                 break;
             }
-            
+
             if (canProceed)
             {
                 ODL_LOG("(canProceed)"); //####
@@ -886,7 +886,7 @@ ScannerThread::run(void)
                     ODL_LOG("! threadShouldExit()"); //####
                     int64 loopEndTime = Time::currentTimeMillis();
                     int64 delayAmount = (loopStartTime + kMinScanInterval) - loopEndTime;
-                    
+
                     if (kMinScanInterval < delayAmount)
                     {
                         delayAmount = kMinScanInterval;
@@ -897,11 +897,11 @@ ScannerThread::run(void)
                         bool shouldCleanupSoon = false;
                         bool shouldScanSoon = false;
                         int  kk = static_cast<int>(delayAmount / VERY_SHORT_SLEEP_);
-                        
+
                         do
                         {
                             bool locked = conditionallyAcquireForRead();
-                            
+
                             for ( ; (! locked) && (! needToLeave);
                                  locked = conditionallyAcquireForRead())
                             {
@@ -945,14 +945,14 @@ ScannerThread::run(void)
                                        "shouldScanSoon)"); //####
                                 break;
                             }
-                            
+
                         }
                         while (0 <= kk);
                     }
                     else
                     {
                         std::stringstream buff;
-                        
+
                         buff << ((loopEndTime - loopStartTime) / 1000.0);
                         MpM_INFO_((YarpString("actual interval = ") + buff.str() +
                                    YarpString(" seconds")).c_str());
@@ -966,11 +966,11 @@ ScannerThread::run(void)
             bool shouldCleanupSoon = false;
             bool shouldScanSoon = false;
             int  kk = (LONG_SLEEP_ / VERY_SHORT_SLEEP_);
-            
+
             do
             {
                 bool locked = conditionallyAcquireForRead();
-                
+
                 for ( ; (! locked) && (! needToLeave); locked = conditionallyAcquireForRead())
                 {
                     for (int ii = 0, mm = (MIDDLE_SLEEP_ / VERY_SHORT_SLEEP_);
@@ -1007,7 +1007,7 @@ ScannerThread::run(void)
                     ODL_LOG("(needToLeave || shouldCleanupSoon || shouldScanSoon)"); //####
                     break;
                 }
-                
+
             }
             while (0 <= kk);
         }
@@ -1033,7 +1033,7 @@ ScannerThread::triggerRepaint(void)
     // Because this is a background thread, we mustn't do any UI work without first grabbing a
     // MessageManagerLock.
     const MessageManagerLock mml(Thread::getCurrentThread());
-    
+
     // If something is trying to kill this job, the lock will fail, in which case we'd better
     // return.
     if (mml.lockWasGained())

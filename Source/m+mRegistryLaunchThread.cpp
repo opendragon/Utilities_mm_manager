@@ -52,7 +52,7 @@
 #endif //! MAC_OR_LINUX_
 
 /*! @file
- 
+
  @brief The class declaration for the background Registry Service launcher. */
 #if defined(__APPLE__)
 # pragma clang diagnostic pop
@@ -129,7 +129,7 @@ RegistryLaunchThread::run(void)
     {
         ODL_LOG("(_registryServiceProcess)"); //####
         StringArray nameAndArgs(_registryServicePath);
-        
+
         if (0 < _registryServicePort)
         {
             ODL_LOG("(0 < _registryServicePort)"); //####
@@ -140,7 +140,7 @@ RegistryLaunchThread::run(void)
         {
             ODL_LOG("(_registryServiceProcess->start(nameAndArgs, 0))"); //####
             const String childOutput(_registryServiceProcess->readAllProcessOutput());
-            
+
             LazyLaunchProcess(*_registryServiceProcess, -1);
             ODL_S1s("childOutput = ", childOutput.toStdString()); //####
         }

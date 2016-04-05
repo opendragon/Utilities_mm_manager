@@ -51,7 +51,7 @@
 # pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
 #endif // defined(__APPLE__)
 /*! @file
- 
+
  @brief The class definition for a visible entity that represents a channel or a port. */
 #if defined(__APPLE__)
 # pragma clang diagnostic pop
@@ -142,7 +142,7 @@ calculateMinDistance(float &          distanceSoFar,
               &testPoint, "bestSoFar = ", &bestSoFar); //####
     bool  result;
     float newDistance = refPoint.getDistanceFrom(testPoint);
-    
+
     if (newDistance < distanceSoFar)
     {
         distanceSoFar = newDistance;
@@ -195,7 +195,7 @@ calculateAnchorForPoint(Position &       newCentre,
     Position               tempPoint;
     juce::Rectangle<float> box(targetPoint.getX() - (boxSize / 2),
                                targetPoint.getY() - (boxSize / 2), boxSize, boxSize);
-    
+
     if (calculateMinDistance(soFar, refCentre, box.getX(), box.getY() + (boxSize / 2), tempPoint))
     {
         anchor = kAnchorLeft;
@@ -239,32 +239,32 @@ drawSourceAnchor(Graphics &       gg,
     ODL_D1("thickness = ", thickness); //####
     Position first;
     Position second;
-    
+
     switch (anchor)
     {
         case kAnchorLeft :
             first = anchorPos + Position(kArrowSize, -kArrowSize);
             second = anchorPos + Position(kArrowSize, kArrowSize);
             break;
-            
+
         case kAnchorRight :
             first = anchorPos + Position(-kArrowSize, -kArrowSize);
             second = anchorPos + Position(-kArrowSize, kArrowSize);
             break;
-            
+
         case kAnchorBottomCentre :
             first = anchorPos + Position(-kArrowSize, -kArrowSize);
             second = anchorPos + Position(kArrowSize, -kArrowSize);
             break;
-            
+
         case kAnchorTopCentre :
             first = anchorPos + Position(-kArrowSize, kArrowSize);
             second = anchorPos + Position(kArrowSize, kArrowSize);
             break;
-            
+
         default :
             break;
-            
+
     }
     if (kAnchorUnknown != anchor)
     {
@@ -294,32 +294,32 @@ drawTargetAnchor(Graphics &       gg,
     ODL_D1("thickness = ", thickness); //####
     Position first;
     Position second;
-    
+
     switch (anchor)
     {
         case kAnchorLeft :
             first = anchorPos + Position(-kArrowSize, -kArrowSize);
             second = anchorPos + Position(-kArrowSize, kArrowSize);
             break;
-            
+
         case kAnchorRight :
             first = anchorPos + Position(kArrowSize, -kArrowSize);
             second = anchorPos + Position(kArrowSize, kArrowSize);
             break;
-            
+
         case kAnchorBottomCentre :
             first = anchorPos + Position(-kArrowSize, kArrowSize);
             second = anchorPos + Position(kArrowSize, kArrowSize);
             break;
-            
+
         case kAnchorTopCentre :
             first = anchorPos + Position(-kArrowSize, -kArrowSize);
             second = anchorPos + Position(kArrowSize, -kArrowSize);
             break;
-            
+
         default :
             break;
-            
+
     }
     if (kAnchorUnknown != anchor)
     {
@@ -364,7 +364,7 @@ drawBezier(Graphics &       gg,
                               endPoint.getX() - endCentre.getX());
     Position controlPoint1(controlLength * cos(startAngle), controlLength * sin(startAngle));
     Position controlPoint2(controlLength * cos(endAngle), controlLength * sin(endAngle));
-    
+
     bezPath.startNewSubPath(startPoint);
     bezPath.cubicTo(startPoint + controlPoint1, endPoint + controlPoint2, endPoint);
     if (isDashed)
@@ -374,7 +374,7 @@ drawBezier(Graphics &       gg,
         const float    dashes[] = { 5, 10 };
         const int      numDashes = (sizeof(dashes) / sizeof(*dashes));
         Path           strokedPath;
-        
+
         strokeType.createDashedStroke(strokedPath, bezPath, dashes, numDashes);
         gg.strokePath(strokedPath, PathStrokeType(newThickness));
     }
@@ -414,7 +414,7 @@ drawConnection(Graphics &                gg,
         Position   startPoint;
         Position   endPoint;
         float      thickness;
-        
+
         ODL_D4("sourcePosition.x = ", sourcePosition.getX(), "sourcePosition.y = ", //####
                   sourcePosition.getY(), "destinationPosition.x = ", //####
                   destinationPosition.getX(), "destinationPosition.y = ", //####
@@ -463,15 +463,15 @@ drawConnection(Graphics &                gg,
             case Common::kChannelModeTCP :
                 gg.setColour(kTcpConnectionColour);
                 break;
-                
+
             case Common::kChannelModeUDP :
                 gg.setColour(kUdpConnectionColour);
                 break;
-                
+
             default :
                 gg.setColour(kOtherConnectionColour);
                 break;
-                
+
         }
         drawBezier(gg, startPoint, endPoint, sourceCentre, destinationCentre, thickness, forced);
         if (isBidirectional)
@@ -503,7 +503,7 @@ protocolsMatch(const YarpString & sourceProtocol,
                destinationProtocol); //####
     ODL_B1("ignoreConstraints = ", ignoreConstraints); //####
     bool result = false;
-    
+
     if (0 == destinationProtocol.length())
     {
         result = true;
@@ -547,29 +547,29 @@ ChannelEntry::ChannelEntry(ChannelContainer *  parent,
     ODL_LL2("portKind = ", portKind, "direction = ", direction); //####
     Font &             textFont = getOwningPanel().getNormalFont();
     YarpString prefix;
-    
+
     switch (_direction)
     {
         case kPortDirectionInput :
             prefix = ((kPortUsageService == _usage) ? "S " : "In ");
             break;
-            
+
         case kPortDirectionInputOutput :
             prefix = ((kPortUsageClient == _usage) ? "C " : "I/O ");
             break;
-            
+
         case kPortDirectionOutput :
             prefix = "Out ";
             break;
-            
+
         default :
             prefix = "Unk ";
             break;
-            
+
     }
     _title = prefix + _portName;
     int entryHeight = static_cast<int>(textFont.getHeight());
-    
+
     setSize(static_cast<int>(textFont.getStringWidthFloat((_title + " ").c_str()) +
                              _parent->getTextInset()) + entryHeight, entryHeight);
     setOpaque(true);
@@ -600,12 +600,12 @@ ChannelEntry::addInputConnection(ChannelEntry *            other,
     if (other)
     {
         bool canAdd = true;
-        
+
         for (ChannelConnections::iterator walker(_inputConnections.begin());
              _inputConnections.end() != walker; ++walker)
         {
             ChannelInfo * candidate(&*walker);
-            
+
             if (candidate)
             {
                 if ((candidate->_otherChannel == other) ||
@@ -616,13 +616,13 @@ ChannelEntry::addInputConnection(ChannelEntry *            other,
                     canAdd = false;
                     break;
                 }
-                
+
             }
         }
         if (canAdd)
         {
             ChannelInfo newConnection;
-            
+
             newConnection._otherChannel = other;
             newConnection._connectionMode = mode;
             newConnection._forced = wasOverridden;
@@ -644,12 +644,12 @@ ChannelEntry::addOutputConnection(ChannelEntry *            other,
     if (other)
     {
         bool canAdd = true;
-        
+
         for (ChannelConnections::iterator walker(_outputConnections.begin());
              _outputConnections.end() != walker; ++walker)
         {
             ChannelInfo * candidate(&*walker);
-            
+
             if (candidate)
             {
                 if ((candidate->_otherChannel == other) ||
@@ -660,13 +660,13 @@ ChannelEntry::addOutputConnection(ChannelEntry *            other,
                     canAdd = false;
                     break;
                 }
-                
+
             }
         }
         if (canAdd)
         {
             ChannelInfo newConnection;
-            
+
             newConnection._otherChannel = other;
             newConnection._connectionMode = mode;
             newConnection._forced = wasOverridden;
@@ -692,7 +692,7 @@ const
     AnchorSide anchor = kAnchorUnknown;
     float      soFar = static_cast<float>(1e23); // Ridiculously big, just in case.
     Position   location(getPositionInPanel());
-    
+
     if (calculateMinDistance(soFar, pp, location.getX(), location.getY() + (getHeight() / 2),
                              result))
     {
@@ -739,7 +739,7 @@ ChannelEntry::checkConnection(ChannelInfo & otherEnd,
     ODL_P1("otherEnd = ", &otherEnd); //####
     ODL_B1("isOutgoing = ", isOutgoing); //####
     bool result = false;
-    
+
     if (isOutgoing)
     {
         result = Utilities::CheckConnection(getPortName(), otherEnd._otherChannel->getPortName());
@@ -773,34 +773,34 @@ ChannelEntry::displayAndProcessPopupMenu(void)
 {
     ODL_OBJENTER(); //####
     PopupMenu mm;
-    
+
     mm.setLookAndFeel(&getLookAndFeel());
     _parent->getOwner().getContent()->setUpChannelMenu(mm, *this);
     int result = mm.show();
-    
+
     switch (result)
     {
         case kPopupAddScrollingMonitor :
             break;
-            
+
         case kPopupAddSimpleMonitor :
             break;
-            
+
         case kPopupDetailedDisplayPortInfo :
             displayInformation(isChannel(), true);
             break;
-            
+
         case kPopupDisplayChannelMetrics :
             displayChannelMetrics();
             break;
-            
+
         case kPopupDisplayPortInfo :
             displayInformation(isChannel(), false);
             break;
-            
+
         default :
             break;
-            
+
     }
     ODL_OBJEXIT(); //####
 } // ChannelEntry::displayAndProcessPopupMenu
@@ -810,29 +810,29 @@ ChannelEntry::displayChannelMetrics(void)
 {
     ODL_ENTER(); //####
     StringArray metricsArray;
-    
+
     if (_parent)
     {
         metricsArray = _parent->getMetrics();
         // Find our line and prepare it.
         int numRows = metricsArray.size();
-        
+
         for (int ii = 0; ii < numRows; ++ii)
         {
             const String & aRow = metricsArray[ii];
             int            firstTab = aRow.indexOfChar('\t');
-            
+
             if (0 < firstTab)
             {
                 String channelName(aRow.substring(0, firstTab));
-                
+
                 if (channelName == getPortName().c_str())
                 {
                     DisplayInformationPanel(this, _parent->formatMetricRow(aRow) + "\n",
                                             String("Metrics for ") + getPortName().c_str());
                     break;
                 }
-                
+
             }
         }
     }
@@ -848,50 +848,50 @@ ChannelEntry::displayInformation(const bool isChannel,
     YarpString dirText;
     YarpString prefix;
     YarpString suffix;
-    
+
     switch (_direction)
     {
         case kPortDirectionInput :
             dirText = " input";
             break;
-            
+
         case kPortDirectionOutput :
             dirText = " output";
             break;
-            
+
         case kPortDirectionInputOutput :
             dirText = " input/ouput";
             break;
-            
+
         default :
             break;
-            
+
     }
     switch (Utilities::GetPortKind(getPortName()))
     {
         case Utilities::kPortKindAdapter :
             prefix = "Adapter";
             break;
-            
+
         case Utilities::kPortKindClient :
             prefix = "Client";
             break;
-            
+
         case Utilities::kPortKindRegistryService :
             prefix = "Registry Service";
             break;
-            
+
         case Utilities::kPortKindService :
             prefix = "Service";
             break;
-            
+
         case Utilities::kPortKindStandard :
             prefix = "Standard";
             break;
-            
+
         default :
             break;
-            
+
     }
     if (0 < getProtocol().length())
     {
@@ -906,7 +906,7 @@ ChannelEntry::displayInformation(const bool isChannel,
         }
     }
     YarpString bodyText("Port: ");
-    
+
     bodyText += getPortNumber() + "\n";
     bodyText += prefix + dirText + (isChannel ? " channel" : " port") + suffix;
     DisplayInformationPanel(this, bodyText.c_str(), getPortName().c_str());
@@ -926,7 +926,7 @@ ChannelEntry::drawDragLine(Graphics &       gg,
     Position   sourceCentre(getCentre() + getPositionInPanel());
     Position   startPoint;
     Position   destinationCentre;
-    
+
     // Check if the destination is above the source, in which case we determine the anchors in
     // the reverse order.
     if (sourceCentre.getY() < position.getY())
@@ -967,17 +967,17 @@ ChannelEntry::drawOutgoingConnections(Graphics & gg)
     ODL_OBJENTER(); //####
     ODL_P1("gg = ", &gg); //####
     bool selfIsVisible = _parent->isVisible();
-    
+
     for (ChannelConnections::const_iterator walker(_outputConnections.begin());
          _outputConnections.end() != walker; ++walker)
     {
         const ChannelInfo * candidate(&*walker);
-        
+
         if (candidate)
         {
             ChannelEntry * otherChannelEntry = candidate->_otherChannel;
             bool           otherIsVisible = otherChannelEntry->_parent->isVisible();
-            
+
             if (selfIsVisible && otherIsVisible)
             {
                 drawConnection(gg, this, candidate->_otherChannel, candidate->_connectionMode,
@@ -994,7 +994,7 @@ const
 {
     ODL_OBJENTER(); //####
     juce::Rectangle<float> outer(getLocalBounds().toFloat());
-    
+
     ODL_OBJEXIT(); //####
     return outer.getCentre();
 } // ChannelEntry::getCentre
@@ -1005,7 +1005,7 @@ const
 {
     ODL_OBJENTER(); //####
     EntitiesPanel & result(_parent->getOwner());
-    
+
     ODL_OBJEXIT_P(&result); //####
     return result;
 } // ChannelEntry::getOwningPanel
@@ -1016,7 +1016,7 @@ const
 {
     ODL_OBJENTER(); //####
     Position result(getPosition().toFloat() + _parent->getPositionInPanel());
-    
+
     ODL_OBJEXIT(); //####
     return result;
 } // ChannelEntry::getPositionInPanel
@@ -1028,19 +1028,19 @@ const
     ODL_OBJENTER(); //####
     ODL_S1s("otherPort = ", otherPort); //####
     bool result = false;
-    
+
     for (ChannelConnections::const_iterator walker(_outputConnections.begin());
          _outputConnections.end() != walker; ++walker)
     {
         const ChannelInfo * candidate(&*walker);
-        
+
         if (candidate && candidate->_otherChannel &&
             (candidate->_otherChannel->getPortName() == otherPort))
         {
             result = true;
             break;
         }
-        
+
     }
     ODL_OBJEXIT_B(result); //####
     return result;
@@ -1054,7 +1054,7 @@ ChannelEntry::invalidateConnections(void)
          _inputConnections.end() != walker; ++walker)
     {
         ChannelInfo * candidate(&*walker);
-        
+
         if (candidate)
         {
             candidate->_valid = false;
@@ -1064,7 +1064,7 @@ ChannelEntry::invalidateConnections(void)
          _outputConnections.end() != walker; ++walker)
     {
         ChannelInfo * candidate(&*walker);
-        
+
         if (candidate)
         {
             candidate->_valid = false;
@@ -1079,11 +1079,11 @@ const
 {
     ODL_ENTER(); //####
     bool result = false;
-    
+
     if (_parent)
     {
         ContainerKind parentKind = _parent->getKind();
-        
+
         if ((kContainerKindAdapter == parentKind) || (kContainerKindService == parentKind))
         {
             result = true;
@@ -1101,7 +1101,7 @@ ChannelEntry::mouseDown(const MouseEvent & ee)
     EntitiesPanel & owningPanel(getOwningPanel());
     ChannelEntry *  firstAddPort = owningPanel.getFirstAddPoint();
     ChannelEntry *  firstRemovePort = owningPanel.getFirstRemovePoint();
-    
+
     if (firstRemovePort)
     {
         // We started a 'remove' operation.
@@ -1113,7 +1113,7 @@ ChannelEntry::mouseDown(const MouseEvent & ee)
         {
             // Check if we can end here.
             YarpString firstName(firstRemovePort->getPortName());
-            
+
             // Check if we can end here.
             firstRemovePort->clearDisconnectMarker();
             firstRemovePort->repaint();
@@ -1143,7 +1143,7 @@ ChannelEntry::mouseDown(const MouseEvent & ee)
             bool       protocolsOverridden = ee.mods.isCtrlDown();
             YarpString firstName(firstAddPort->getPortName());
             YarpString firstProtocol(firstAddPort->getProtocol());
-            
+
             // Check if we can end here.
             firstAddPort->clearConnectMarker();
             firstAddPort->repaint();
@@ -1156,7 +1156,7 @@ ChannelEntry::mouseDown(const MouseEvent & ee)
                 {
                     Common::ChannelMode mode = (firstAddPort->_wasUdp ? Common::kChannelModeUDP :
                                                 Common::kChannelModeTCP);
-                    
+
                     firstAddPort->addOutputConnection(this, mode, protocolsOverridden);
                     addInputConnection(firstAddPort, mode, protocolsOverridden);
                     owningPanel.skipScan();
@@ -1218,14 +1218,14 @@ ChannelEntry::mouseDrag(const MouseEvent & ee)
 {
     ODL_OBJENTER(); //####
     bool passOn = true;
-    
+
     if (ee.mods.isAltDown())
     {
         ODL_P2("originalComponent = ", ee.originalComponent, //####
                   "eventComponent = ", ee.eventComponent); //####
         ODL_D2("x = ", ee.position.getX(), "y = ", ee.position.getY()); //####
         EntitiesPanel & owningPanel(getOwningPanel());
-        
+
         owningPanel.setDragInfo(getPositionInPanel() + ee.position, ee.mods.isCtrlDown());
         owningPanel.repaint();
         passOn = false;
@@ -1247,7 +1247,7 @@ ChannelEntry::mouseUp(const MouseEvent & ee)
     ODL_OBJENTER(); //####
     bool            passOn = true;
     EntitiesPanel & owningPanel(getOwningPanel());
-    
+
     if (ee.mods.isAltDown() || owningPanel.isDragActive())
     {
         // Check if we are processing an Add and this is OK.
@@ -1258,7 +1258,7 @@ ChannelEntry::mouseUp(const MouseEvent & ee)
         {
             Position       newLocation(getPositionInPanel() + ee.position);
             ChannelEntry * endEntry = owningPanel.locateEntry(newLocation);
-            
+
             clearConnectMarker();
             repaint();
             if (endEntry && (endEntry != this))
@@ -1267,7 +1267,7 @@ ChannelEntry::mouseUp(const MouseEvent & ee)
                 bool       protocolsOverridden = ee.mods.isCtrlDown();
                 YarpString secondName(endEntry->getPortName());
                 YarpString secondProtocol(endEntry->getProtocol());
-                
+
                 if ((kPortDirectionOutput != endEntry->getDirection()) &&
                     (kPortUsageService != endEntry->getUsage()) &&
                     protocolsMatch(getProtocol(), secondProtocol, protocolsOverridden) &&
@@ -1278,7 +1278,7 @@ ChannelEntry::mouseUp(const MouseEvent & ee)
                     {
                         Common::ChannelMode mode = (_wasUdp ? Common::kChannelModeUDP :
                                                     Common::kChannelModeTCP);
-                        
+
                         addOutputConnection(endEntry, mode, protocolsOverridden);
                         endEntry->addInputConnection(this, mode, protocolsOverridden);
                         owningPanel.skipScan();
@@ -1308,11 +1308,11 @@ ChannelEntry::paint(Graphics & gg)
     ODL_OBJENTER(); //####
     ODL_P1("gg = ", &gg); //####
     AttributedString as;
-    
+
     as.setJustification(Justification::left);
     as.append(_title.c_str(), getOwningPanel().getNormalFont(), kEntryTextColour);
     juce::Rectangle<float> area(getLocalBounds().toFloat());
-    
+
     ODL_D4("x <- ", area.getX(), "y <- ", area.getY(), "w <- ",area.getWidth(), "h <- ", //####
               area.getHeight()); //####
     gg.setColour(kEntryBackgroundColour);
@@ -1322,14 +1322,14 @@ ChannelEntry::paint(Graphics & gg)
     if (_drawConnectMarker)
     {
         Position markerPos(getCentre() - Position(kMarkerSide / 2, kMarkerSide / 2));
-        
+
         gg.setColour(kMarkerColour);
         gg.fillEllipse(markerPos.getX(), markerPos.getY(), kMarkerSide, kMarkerSide);
     }
     else if (_drawDisconnectMarker)
     {
         Position markerPos(getCentre() - Position(kMarkerSide / 2, kMarkerSide / 2));
-        
+
         gg.setColour(kMarkerColour);
         gg.drawEllipse(markerPos.getX(), markerPos.getY(), kMarkerSide, kMarkerSide, 2);
     }
@@ -1344,7 +1344,7 @@ ChannelEntry::paint(Graphics & gg)
                                    markerCentre.getY(), kSecondActivityMarkerColour,
                                    markerCentre.getX() + halfSize, markerCentre.getY(), true);
         FillType       theMarkerFill(theGradient);
-        
+
         gg.setFillType(theMarkerFill);
         gg.fillEllipse(markerPos.getX(), markerPos.getY(), hh, hh);
     }
@@ -1359,7 +1359,7 @@ ChannelEntry::removeAllConnections(void)
          _inputConnections.end() != walker; ++walker)
     {
         ChannelInfo * candidate(&*walker);
-        
+
         if (candidate && candidate->_otherChannel)
         {
             candidate->_otherChannel->removeOutputConnection(this);
@@ -1370,7 +1370,7 @@ ChannelEntry::removeAllConnections(void)
          _outputConnections.end() != walker; ++walker)
     {
         ChannelInfo * candidate(&*walker);
-        
+
         if (candidate && candidate->_otherChannel)
         {
             candidate->_otherChannel->removeInputConnection(this);
@@ -1388,16 +1388,16 @@ ChannelEntry::removeInputConnection(ChannelEntry * other)
     if (other)
     {
         ChannelConnections::iterator walker(_inputConnections.begin());
-        
+
         for ( ; _inputConnections.end() != walker; ++walker)
         {
             ChannelInfo * candidate(&*walker);
-            
+
             if (candidate && (candidate->_otherChannel == other))
             {
                 break;
             }
-            
+
         }
         if (_inputConnections.end() != walker)
         {
@@ -1412,21 +1412,21 @@ ChannelEntry::removeInvalidConnections(void)
 {
     ODL_OBJENTER(); //####
     bool keepGoing;
-    
+
     do
     {
         ChannelConnections::iterator walker(_inputConnections.begin());
-        
+
         keepGoing = false;
         for ( ; _inputConnections.end() != walker; ++walker)
         {
             ChannelInfo * candidate(&*walker);
-            
+
             if (candidate && (! candidate->_valid))
             {
                 break;
             }
-            
+
         }
         if (_inputConnections.end() != walker)
         {
@@ -1446,17 +1446,17 @@ ChannelEntry::removeInvalidConnections(void)
     do
     {
         ChannelConnections::iterator walker(_outputConnections.begin());
-        
+
         keepGoing = false;
         for ( ; _outputConnections.end() != walker; ++walker)
         {
             ChannelInfo * candidate(&*walker);
-            
+
             if (candidate && (! candidate->_valid))
             {
                 break;
             }
-            
+
         }
         if (_outputConnections.end() != walker)
         {
@@ -1484,16 +1484,16 @@ ChannelEntry::removeOutputConnection(ChannelEntry * other)
     if (other)
     {
         ChannelConnections::iterator walker(_outputConnections.begin());
-        
+
         for ( ; _outputConnections.end() != walker; ++walker)
         {
             const ChannelInfo * candidate(&*walker);
-            
+
             if (candidate && (candidate->_otherChannel == other))
             {
                 break;
             }
-            
+
         }
         if (_outputConnections.end() != walker)
         {

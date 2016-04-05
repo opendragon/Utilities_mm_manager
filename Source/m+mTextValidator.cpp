@@ -52,7 +52,7 @@
 #endif //! MAC_OR_LINUX_
 
 /*! @file
- 
+
  @brief The class declaration for a text validating object. */
 #if defined(__APPLE__)
 # pragma clang diagnostic pop
@@ -111,7 +111,7 @@ const
     ODL_OBJENTER(); //####
     ODL_S1s("toBeChecked = ", toBeChecked.toStdString()); //####
     bool result;
-    
+
     if (0 == toBeChecked.length())
     {
         if (_fieldDescriptor.isOptional())
@@ -144,7 +144,7 @@ const
     ODL_S1s("toBeChecked = ", toBeChecked.toStdString()); //####
     ODL_P1("argsToUse = ", &argsToUse); //####
     bool result;
-    
+
     if (0 == toBeChecked.length())
     {
         if (_fieldDescriptor.isOptional())
@@ -176,7 +176,7 @@ const
 {
     ODL_OBJENTER(); //####
     bool result = _fieldDescriptor.isForFiles(isForOutput);
-    
+
     ODL_OBJEXIT_B(result); //####
     return result;
 } // TextValidator::isForFiles

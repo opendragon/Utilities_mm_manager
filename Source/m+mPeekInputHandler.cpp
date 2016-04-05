@@ -52,7 +52,7 @@
 # pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
 #endif // defined(__APPLE__)
 /*! @file
- 
+
  @brief The class definition for the custom data channel input handler used to watch the Service
  Registry. */
 #if defined(__APPLE__)
@@ -123,7 +123,7 @@ PeekInputHandler::handleInput(const yarp::os::Bottle &     input,
     ODL_P1("replyMechanism = ", replyMechanism); //####
     ODL_LL1("numBytes = ", numBytes); //####
     bool result = true;
-    
+
     try
     {
         // The status output of the Registry Service is in the form:
@@ -131,12 +131,12 @@ PeekInputHandler::handleInput(const yarp::os::Bottle &     input,
         if (MpM_EXPECTED_REGISTRY_STATUS_SIZE_ <= input.size())
         {
             yarp::os::Value argValue(input.get(3));
-            
+
             if (argValue.isString())
             {
                 ManagerApplication * ourApp = ManagerApplication::getApp();
                 YarpString           argAsString(argValue.toString());
-                
+
                 if (ourApp)
                 {
                     if (argAsString == MpM_REGISTRY_STATUS_ADDING_)

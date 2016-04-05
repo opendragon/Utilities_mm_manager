@@ -49,7 +49,7 @@
 # pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
 #endif // defined(__APPLE__)
 /*! @file
- 
+
  @brief The class definition for the data collected by the background scanner. */
 #if defined(__APPLE__)
 # pragma clang diagnostic pop
@@ -107,7 +107,7 @@ EntitiesData::addConnection(const YarpString &  inName,
     ODL_OBJENTER(); //####
     ODL_S2s("inName = ", inName, "outName = ", outName); //####
     ConnectionDetails details;
-    
+
     details._inPortName = inName;
     details._outPortName = outName;
     details._mode = mode;
@@ -140,7 +140,7 @@ EntitiesData::clearOutData(void)
     for (EntitiesList::const_iterator it(_entities.begin()); _entities.end() != it; ++it)
     {
         EntityData * anEntity = *it;
-        
+
         if (anEntity)
         {
             delete anEntity;
@@ -157,7 +157,7 @@ const
     ODL_OBJENTER(); //####
     ODL_LL1("index = ", index); //####
     EntityData * result;
-    
+
     if (_entities.size() > index)
     {
         result = _entities.at(index);
@@ -176,7 +176,7 @@ const
 {
     ODL_OBJENTER(); //####
     size_t result = _entities.size();
-    
+
     ODL_OBJEXIT_LL(result); //####
     return result;
 } // EntitiesData::getNumberOfEntities

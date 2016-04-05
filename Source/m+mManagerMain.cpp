@@ -47,7 +47,7 @@
 # pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
 #endif // defined(__APPLE__)
 /*! @file
- 
+
  @brief A utility application to YARP ports and m+m channels. */
 #if defined(__APPLE__)
 # pragma clang diagnostic pop

@@ -57,7 +57,7 @@
 # pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
 #endif // defined(__APPLE__)
 /*! @file
- 
+
  @brief The class definition for the application settings window of the m+m manager application. */
 #if defined(__APPLE__)
 # pragma clang diagnostic pop
@@ -150,7 +150,7 @@ SettingsWindow::SettingsWindow(const String &          title,
     BorderSize<int> cb = getContentComponentBorder();
     int             heightSoFar = 0;
     int             widthSoFar = 0;
-    
+
     _argsToUse.clear();
     _canSetEndpoint = appInfo._options.contains("e");
     _canSetPort = appInfo._options.contains("p");
@@ -161,7 +161,7 @@ SettingsWindow::SettingsWindow(const String &          title,
                     (3 * FormField::kButtonGap));
     int calcW = minW + bt.getLeftAndRight() + cb.getLeftAndRight();
     int calcH = heightSoFar + bt.getTopAndBottom() + cb.getTopAndBottom();
-    
+
     centreWithSize(calcW + kExtraSpaceInWindow, calcH + kExtraSpaceInWindow);
     adjustFields();
     setOpaque(true);
@@ -193,7 +193,7 @@ SettingsWindow::addAnExtraField(void)
                                                            compCountAsString, 0, true, false, NULL,
                                                            NULL, _extraArgRootName + "_" +
                                                            compCountAsString);
-    
+
     _extraFields.add(newField);
     newField->addToComponent(_extraArgumentsGroup);
     recalculateArea();
@@ -213,7 +213,7 @@ SettingsWindow::adjustFields(void)
     int         newButtonTop = content->getHeight() - (_cancelButton.getHeight() +
                                                        FormField::kButtonGap);
     int         newFieldWidth = content->getWidth() - (2 * FormField::kFieldInset);
-    
+
     if (_hasFileField)
     {
         newFieldWidth -= (FormField::kButtonGap + CaptionedTextField::getFileButtonWidth());
@@ -238,7 +238,7 @@ SettingsWindow::adjustFields(void)
     {
         int groupWidth = (_cancelButton.getX() + _cancelButton.getWidth() -
                           (_tagModifierGroup->getX() + FormField::kButtonGap));
-        
+
         _tagModifierGroup->setSize(groupWidth, _tagModifierGroup->getHeight());
     }
     if (_addArgumentsButton)
@@ -256,7 +256,7 @@ SettingsWindow::adjustFields(void)
     for (size_t ii = 0, maxf = _standardFields.size(); maxf > ii; ++ii)
     {
         FormField * aField = _standardFields[static_cast<int>(ii)];
-        
+
         if (aField)
         {
             aField->setWidth(newFieldWidth);
@@ -267,11 +267,11 @@ SettingsWindow::adjustFields(void)
         int groupWidth = (_cancelButton.getX() + _cancelButton.getWidth() -
                           (_extraArgumentsGroup->getX() + FormField::kButtonGap));
         int innerWidth = groupWidth - (FormField::kFieldInset + (2 * FormField::kButtonGap));
-        
+
         for (size_t ii = 0, maxf = _extraFields.size(); maxf > ii; ++ii)
         {
             FormField * aField = _extraFields[static_cast<int>(ii)];
-            
+
             aField->setWidth(innerWidth);
         }
         _extraArgumentsGroup->setSize(groupWidth, _extraArgumentsGroup->getHeight());
@@ -285,43 +285,43 @@ SettingsWindow::buttonClicked(Button * aButton)
     ODL_OBJENTER(); //####
     ODL_P1("aButton = ", aButton); //####
     int commandId = aButton->getCommandID();
-    
+
     tellAllFieldsToIgnoreNextFocusLoss();
     switch (commandId)
     {
         case kConfigurationAddField :
             addAnExtraField();
             break;
-            
+
         case kConfigurationRemoveField :
             removeMostRecentlyAddedExtraField();
             break;
-            
+
         case kConfigurationOK :
             if (fieldsAreValid())
             {
                 exitModalState(commandId);
             }
             break;
-            
+
         case kConfigurationFileRequest :
             for (size_t ii = 0, maxf = _standardFields.size(); maxf > ii; ++ii)
             {
                 FormField * aField = _standardFields[static_cast<int>(ii)];
-                
+
                 if (aField && (aField->getButton() == aButton))
                 {
                     aField->performButtonAction();
                     break;
                 }
-                
+
             }
             break;
-            
+
         default :
             exitModalState(commandId);
             break;
-            
+
     }
     ODL_OBJEXIT(); //####
 } // SettingsWindow::buttonClicked
@@ -333,14 +333,14 @@ SettingsWindow::fieldsAreValid(void)
     int    badCount = 0;
     String badArgs;
     String primaryChannel;
-    
+
     // Counterintuitively, we check the values from the descriptors first, before checking the
     // endpoint, port or tag values.
     _argsToUse.clear();
     for (size_t ii = 0, maxf = _standardFields.size(); maxf > ii; ++ii)
     {
         FormField * aField = _standardFields[static_cast<int>(ii)];
-        
+
         if (aField && (! aField->validateField(_argsToUse)))
         {
             if (0 < badArgs.length())
@@ -357,7 +357,7 @@ SettingsWindow::fieldsAreValid(void)
         for (size_t ii = 0, maxf = _extraFields.size(); maxf > ii; ++ii)
         {
             FormField * aField = _extraFields[static_cast<int>(ii)];
-            
+
             _argsToUse.add(aField->getText());
         }
     }
@@ -404,14 +404,14 @@ SettingsWindow::fieldsAreValid(void)
         {
             ToggleButton * tb =
                         reinterpret_cast<ToggleButton *>(_tagModifierGroup->getChildComponent(ii));
-            
+
             if (tb && tb->getToggleState())
             {
                 string       id(tb->getComponentID().toStdString());
                 const char * startPtr = id.c_str();
                 char *       endPtr;
                 int          intValue = static_cast<int>(strtol(startPtr, &endPtr, 10));
-                
+
                 if ((startPtr != endPtr) && (! *endPtr))
                 {
                     _tagModifierCount = intValue;
@@ -427,7 +427,7 @@ SettingsWindow::fieldsAreValid(void)
     {
         String message1((1 < badCount) ? "arguments are" : "argument is");
         String message2((1 < badCount) ? "arguments" : "argument");
-        
+
         AlertWindow::showMessageBox(AlertWindow::WarningIcon, getName(),
                                     String("The following ") + message1 + " invalid:\n" + badArgs +
                                     "\n" + String("Please correct the ") + message2 + " to the " +
@@ -436,7 +436,7 @@ SettingsWindow::fieldsAreValid(void)
     else
     {
         ManagerApplication * ourApp = ManagerApplication::getApp();
-        
+
         if (ourApp->getPrimaryChannelForService(_appInfo, _endpointToUse, _tagToUse, _portToUse,
                                                 _argsToUse, _tagModifierCount, primaryChannel))
         {
@@ -502,7 +502,7 @@ SettingsWindow::handleAsyncUpdate(void)
 {
     ODL_OBJENTER(); //####
     ApplicationCommandManager & commandManager = ManagerWindow::getApplicationCommandManager();
-    
+
     commandManager.registerAllCommandsForTarget(JUCEApplication::getInstance());
     ODL_OBJEXIT(); //####
 } // SettingsWindow::handleAsyncUpdate
@@ -513,7 +513,7 @@ SettingsWindow::keyPressed(const KeyPress & key)
     ODL_OBJENTER(); //####
     ODL_P1("key = ", &key); //####
     bool result;
-    
+
     if (key == KeyPress::escapeKey)
     {
         tellAllFieldsToIgnoreNextFocusLoss();
@@ -544,7 +544,7 @@ SettingsWindow::recalculateArea(void)
     int    heightSoFar = _topText.getY() + _topText.getHeight() + FormField::kButtonGap;
     int    widthSoFar = _topText.getX() + _topText.getWidth();
     size_t numExtra = _extraFields.size();
-    
+
     if (_canSetEndpoint)
     {
         widthSoFar = jmax(widthSoFar, _endpointField->getMinimumWidth());
@@ -565,7 +565,7 @@ SettingsWindow::recalculateArea(void)
     {
         //int innerHeight = static_cast<int>(_regularFont.getHeight()) + (FormField::kButtonGap / 2);
         //int innerWidth = (2 * jmax(FormField::kFieldInset, FormField::kLabelInset));
-        
+
         _tagModifierGroup->setTopLeftPosition(FormField::kFieldInset, heightSoFar);
         heightSoFar = _tagModifierGroup->getY() + _tagModifierGroup->getHeight();
         widthSoFar = jmax(widthSoFar, _tagModifierGroup->getX() + _tagModifierGroup->getWidth());
@@ -573,16 +573,16 @@ SettingsWindow::recalculateArea(void)
     for (size_t ii = 0, numDescriptors = _descriptors.size(), jj = 0; numDescriptors > ii; ++ii)
     {
         Utilities::BaseArgumentDescriptor * aDescriptor = _descriptors[ii];
-        
+
         if (aDescriptor)
         {
             String argName(aDescriptor->argumentName().c_str());
             String argDescription(aDescriptor->argumentDescription().c_str());
-            
+
             if (! aDescriptor->isExtra())
             {
                 FormField * aField = _standardFields[static_cast<int>(jj)];
-                
+
                 if (aField)
                 {
                     widthSoFar = jmax(widthSoFar, aField->getMinimumWidth());
@@ -597,12 +597,12 @@ SettingsWindow::recalculateArea(void)
     {
         int innerHeight = static_cast<int>(_regularFont.getHeight()) + (FormField::kButtonGap / 2);
         int innerWidth = (2 * jmax(FormField::kFieldInset, FormField::kLabelInset));
-        
+
         _extraArgumentsGroup->setTopLeftPosition(FormField::kFieldInset, heightSoFar);
         for (size_t ii = 0; numExtra > ii; ++ii)
         {
             FormField * aField = _extraFields[static_cast<int>(ii)];
-            
+
             aField->setY(innerHeight);
             innerHeight = aField->getY() + aField->getHeight() + (FormField::kButtonGap / 2);
         }
@@ -622,7 +622,7 @@ SettingsWindow::recalculateArea(void)
     BorderSize<int> cb = getContentComponentBorder();
     int             minW = jmax(widthSoFar, _cancelButton.getWidth() + _okButton.getWidth() +
                                 (3 * FormField::kButtonGap));
-    
+
     setContentComponentSize(minW + kExtraSpaceInWindow + cb.getLeftAndRight(),
                             heightSoFar + kExtraSpaceInWindow + cb.getTopAndBottom());
     ODL_EXIT(); //####
@@ -633,7 +633,7 @@ SettingsWindow::removeMostRecentlyAddedExtraField(void)
 {
     ODL_ENTER(); //####
     FormField * lastField = _extraFields.getLast();
-    
+
     _extraFields.removeLast();
     lastField->removeFromComponent(_extraArgumentsGroup);
     recalculateArea();
@@ -651,7 +651,7 @@ SettingsWindow::reportErrorInField(FormField & fieldOfInterest)
     ODL_OBJENTER(); //####
     ODL_P1("fieldOfInterest = ", &fieldOfInterest); //####
     String nameToDisplay;
-    
+
     if (&fieldOfInterest == _endpointField)
     {
         nameToDisplay = "Endpoint";
@@ -687,12 +687,12 @@ SettingsWindow::resized(void)
 {
     ODL_OBJENTER(); //####
     Button * close = getCloseButton();
-    
+
     inherited3::resized();
     if (close)
     {
         const KeyPress esc(KeyPress::escapeKey, 0, 0);
-        
+
         if (! close->isRegisteredForShortcut(esc))
         {
             close->addShortcut(esc);
@@ -737,7 +737,7 @@ SettingsWindow::setUpStandardFields(int & widthSoFar,
                                                 false, NULL,
                                                 new TextValidator(*_endpointDescriptor),
                                                 kEndpointFieldName);
-        
+
         _endpointField->addToComponent(content);
         widthSoFar = jmax(widthSoFar, _endpointField->getMinimumWidth());
         heightSoFar = (_endpointField->getY() + _endpointField->getHeight() +
@@ -749,7 +749,7 @@ SettingsWindow::setUpStandardFields(int & widthSoFar,
                                             "(Optional) Network port to use", heightSoFar, false,
                                             false, NULL, new TextValidator(*_portDescriptor),
                                             kPortFieldName);
-        
+
         _portField->addToComponent(content);
         widthSoFar = jmax(widthSoFar, _portField->getMinimumWidth());
         heightSoFar = _portField->getY() + _portField->getHeight() + (FormField::kButtonGap / 2);
@@ -759,7 +759,7 @@ SettingsWindow::setUpStandardFields(int & widthSoFar,
         _tagField = new CaptionedTextField(*this, _regularFont, _errorFont, 0,
                                            String("(Optional) Tag for the ") + _execType,
                                            heightSoFar, false, false, NULL, NULL, kTagFieldName);
-        
+
         _tagField->addToComponent(content);
         widthSoFar = jmax(widthSoFar, _tagField->getMinimumWidth());
         heightSoFar = _tagField->getY() + _tagField->getHeight() + (FormField::kButtonGap / 2);
@@ -775,7 +775,7 @@ SettingsWindow::setUpStandardFields(int & widthSoFar,
         for (int ii = 0; 4 >= ii; ++ii)
         {
             ToggleButton * tb = new ToggleButton(String(ii) + ((1 == ii) ? " byte" : " bytes"));
-            
+
             _tagModifierGroup->addAndMakeVisible(tb);
             _tagModifierButtons.add(tb);
             tb->setComponentID(String(ii));
@@ -802,23 +802,23 @@ SettingsWindow::setUpStandardFields(int & widthSoFar,
     {
         bool                                forOutput;
         Utilities::BaseArgumentDescriptor * aDescriptor = _descriptors[ii];
-        
+
         if (aDescriptor && aDescriptor->isForFiles(forOutput))
         {
             _hasFileField = true;
             break;
         }
-        
+
     }
     for (size_t ii = 0; numDescriptors > ii; ++ii)
     {
         Utilities::BaseArgumentDescriptor * aDescriptor = _descriptors[ii];
-        
+
         if (aDescriptor)
         {
             String argName(aDescriptor->argumentName().c_str());
             String argDescription(aDescriptor->argumentDescription().c_str());
-            
+
             if (aDescriptor->isExtra())
             {
                 if (! _hasExtraArguments)
@@ -860,7 +860,7 @@ SettingsWindow::setUpStandardFields(int & widthSoFar,
                 CheckboxField * newField = new CheckboxField(_regularFont, ii,
                                                              descriptionPrefix +
                                                              argDescription, heightSoFar, argName);
-                
+
                 newField->setText(aDescriptor->getDefaultValue().c_str());
                 _standardFields.add(newField);
                 newField->addToComponent(content);
@@ -872,7 +872,7 @@ SettingsWindow::setUpStandardFields(int & widthSoFar,
             {
                 bool forFilePath;
                 bool forOutput;
-                
+
                 if (aDescriptor->isForFiles(forOutput))
                 {
                     forFilePath = true;
@@ -893,7 +893,7 @@ SettingsWindow::setUpStandardFields(int & widthSoFar,
                                                                        aDescriptor->isPassword() ?
                                                                        CHAR_TO_USE_FOR_PASSWORD_ :
                                                                        0);
-                
+
                 newField->setText(aDescriptor->getDefaultValue().c_str());
                 _standardFields.add(newField);
                 newField->addToComponent(content);
@@ -940,7 +940,7 @@ SettingsWindow::tellAllFieldsToIgnoreNextFocusLoss(void)
     for (size_t ii = 0, maxf = _standardFields.size(); maxf > ii; ++ii)
     {
         FormField * aField = _standardFields[static_cast<int>(ii)];
-        
+
         if (aField)
         {
             aField->ignoreNextFocusLoss();
@@ -949,7 +949,7 @@ SettingsWindow::tellAllFieldsToIgnoreNextFocusLoss(void)
     for (size_t ii = 0, maxf = _extraFields.size(); maxf > ii; ++ii)
     {
         FormField * aField = _extraFields[static_cast<int>(ii)];
-        
+
         if (aField)
         {
             aField->ignoreNextFocusLoss();

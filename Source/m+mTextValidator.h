@@ -47,7 +47,7 @@
 #  pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
 # endif // defined(__APPLE__)
 /*! @file
- 
+
  @brief The class declaration for a text validating object. */
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
@@ -59,22 +59,22 @@ namespace MPlusM_Manager
     class TextValidator
     {
     public :
-    
+
     protected :
-    
+
     private :
-        
+
     public :
-        
+
         /*! @brief The constructor.
          @param fieldDescriptor A description of the attributes of the field being validated. */
         explicit
         TextValidator(MplusM::Utilities::BaseArgumentDescriptor & fieldDescriptor);
-        
+
         /*! @brief The destructor. */
         virtual
         ~TextValidator(void);
-        
+
         /*! @brief Check if the provided value is valid according to the field description.
          @param toBeChecked The value to be checked.
          @returns @c true if the value is accepted by the field description and @c false
@@ -82,7 +82,7 @@ namespace MPlusM_Manager
         bool
         checkValidity(const String & toBeChecked)
         const;
-        
+
         /*! @brief Check if the provided value is valid according to the field description.
          @param toBeChecked The value to be checked.
          @param argsToUse A set of valid arguments.
@@ -92,7 +92,7 @@ namespace MPlusM_Manager
         checkValidity(const String & toBeChecked,
                       StringArray &  argsToUse)
         const;
-        
+
         /*! @brief Return @c true if the validator is for file paths and @c false otherwise.
          @param isForOutput Set to @c true if the validator is for output files and @c false
          otherwise.
@@ -100,24 +100,24 @@ namespace MPlusM_Manager
         bool
         isForFiles(bool & isForOutput)
         const;
-        
+
     protected :
-        
+
     private :
-        
+
     public :
-    
+
     protected :
-    
+
     private :
 
         /*! @brief A description of the attributes of the field being validated. */
         MplusM::Utilities::BaseArgumentDescriptor & _fieldDescriptor;
-         
+
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(TextValidator)
-        
+
     }; // TextValidator
-    
+
 } // MPlusM_Manager
 
 #endif // ! defined(mpmTextValidator_H_)

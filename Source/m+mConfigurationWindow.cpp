@@ -56,7 +56,7 @@
 # pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
 #endif // defined(__APPLE__)
 /*! @file
- 
+
  @brief The class definition for the configuration window of the m+m manager application. */
 #if defined(__APPLE__)
 # pragma clang diagnostic pop
@@ -123,7 +123,7 @@ ConfigurationWindow::ConfigurationWindow(const String &                         
     ODL_S2s("title = ", title.toStdString(), "execType = ", execType.toStdString()); //####
     ODL_P2("descriptors = ", &descriptors, "argsToUse = ", &valuesToUse); //####
     ManagerApplication * ourApp = ManagerApplication::getApp();
-    
+
     if (ourApp)
     {
         ourApp->doScanSoon();
@@ -134,14 +134,14 @@ ConfigurationWindow::ConfigurationWindow(const String &                         
     BorderSize<int> cb = getContentComponentBorder();
     int             heightSoFar = 0;
     int             widthSoFar = 0;
-    
+
     _valuesToUse.clear();
     setUpStandardFields(widthSoFar, heightSoFar, currentValues);
     int minW = jmax(widthSoFar,
                     _cancelButton.getWidth() + _okButton.getWidth() + (3 * FormField::kButtonGap));
     int calcW = minW + bt.getLeftAndRight() + cb.getLeftAndRight();
     int calcH = heightSoFar + bt.getTopAndBottom() + cb.getTopAndBottom();
-    
+
     centreWithSize(calcW + kExtraSpaceInWindow, calcH + kExtraSpaceInWindow);
     adjustFields();
     setOpaque(true);
@@ -173,7 +173,7 @@ ConfigurationWindow::addAnExtraField(void)
                                                            compCountAsString, 0, true, false, NULL,
                                                            NULL, _extraArgRootName + "_" +
                                                            compCountAsString);
-    
+
     _extraFields.add(newField);
     newField->addToComponent(_extraArgumentsGroup);
     recalculateArea();
@@ -193,7 +193,7 @@ ConfigurationWindow::adjustFields(void)
     int         newButtonTop = content->getHeight() - (_cancelButton.getHeight() +
                                                        FormField::kButtonGap);
     int         newFieldWidth = content->getWidth() - (2 * FormField::kFieldInset);
-    
+
     if (_hasFileField)
     {
         newFieldWidth -= (FormField::kButtonGap + CaptionedTextField::getFileButtonWidth());
@@ -217,7 +217,7 @@ ConfigurationWindow::adjustFields(void)
     for (size_t ii = 0, maxf = _standardFields.size(); maxf > ii; ++ii)
     {
         FormField * aField = _standardFields[static_cast<int>(ii)];
-        
+
         if (aField)
         {
             aField->setWidth(newFieldWidth);
@@ -228,11 +228,11 @@ ConfigurationWindow::adjustFields(void)
         int groupWidth = (_cancelButton.getX() + _cancelButton.getWidth() -
                           (_extraArgumentsGroup->getX() + FormField::kButtonGap));
         int innerWidth = groupWidth - (FormField::kFieldInset + (2 * FormField::kButtonGap));
-        
+
         for (size_t ii = 0, maxf = _extraFields.size(); maxf > ii; ++ii)
         {
             FormField * aField = _extraFields[static_cast<int>(ii)];
-            
+
             aField->setWidth(innerWidth);
         }
         _extraArgumentsGroup->setSize(groupWidth, _extraArgumentsGroup->getHeight());
@@ -246,43 +246,43 @@ ConfigurationWindow::buttonClicked(Button * aButton)
     ODL_OBJENTER(); //####
     ODL_P1("aButton = ", aButton); //####
     int commandId = aButton->getCommandID();
-    
+
     tellAllFieldsToIgnoreNextFocusLoss();
     switch (commandId)
     {
         case kConfigurationAddField :
             addAnExtraField();
             break;
-            
+
         case kConfigurationRemoveField :
             removeMostRecentlyAddedExtraField();
             break;
-            
+
         case kConfigurationOK :
             if (fieldsAreValid())
             {
                 exitModalState(commandId);
             }
             break;
-            
+
         case kConfigurationFileRequest :
             for (size_t ii = 0, maxf = _standardFields.size(); maxf > ii; ++ii)
             {
                 FormField * aField = _standardFields[static_cast<int>(ii)];
-                
+
                 if (aField && (aField->getButton() == aButton))
                 {
                     aField->performButtonAction();
                     break;
                 }
-                
+
             }
             break;
-            
+
         default :
             exitModalState(commandId);
             break;
-            
+
     }
     ODL_OBJEXIT(); //####
 } // ConfigurationWindow::buttonClicked
@@ -293,11 +293,11 @@ ConfigurationWindow::fieldsAreValid(void)
     ODL_ENTER(); //####
     int    badCount = 0;
     String badArgs;
-    
+
     for (size_t ii = 0, maxf = _standardFields.size(); maxf > ii; ++ii)
     {
         FormField * aField = _standardFields[static_cast<int>(ii)];
-        
+
         if (aField)
         {
             if (aField->validateField())
@@ -307,7 +307,7 @@ ConfigurationWindow::fieldsAreValid(void)
                 if (_descriptors.size() > jj)
                 {
                     Utilities::BaseArgumentDescriptor * aDescriptor = _descriptors[jj];
-                    
+
                     if (aDescriptor && aDescriptor->validate(aField->getText().toStdString()))
                     {
                         aDescriptor->addValueToBottle(_valuesToUse);
@@ -340,7 +340,7 @@ ConfigurationWindow::fieldsAreValid(void)
         for (size_t ii = 0, maxf = _extraFields.size(); maxf > ii; ++ii)
         {
             FormField * anEditor = _extraFields[static_cast<int>(ii)];
-            
+
             _valuesToUse.addString(anEditor->getText().toStdString());
         }
     }
@@ -348,7 +348,7 @@ ConfigurationWindow::fieldsAreValid(void)
     {
         String message1((1 < badCount) ? "arguments are" : "argument is");
         String message2((1 < badCount) ? "arguments" : "argument");
-        
+
         AlertWindow::showMessageBox(AlertWindow::WarningIcon, getName(),
                                     String("The following ") + message1 + " invalid:\n" + badArgs +
                                     "\n" + String("Please correct the ") + message2 + " to the " +
@@ -397,7 +397,7 @@ ConfigurationWindow::handleAsyncUpdate(void)
 {
     ODL_OBJENTER(); //####
     ApplicationCommandManager & commandManager = ManagerWindow::getApplicationCommandManager();
-    
+
     commandManager.registerAllCommandsForTarget(JUCEApplication::getInstance());
     ODL_OBJEXIT(); //####
 } // ConfigurationWindow::handleAsyncUpdate
@@ -408,7 +408,7 @@ ConfigurationWindow::keyPressed(const KeyPress & key)
     ODL_OBJENTER(); //####
     ODL_P1("key = ", &key); //####
     bool result;
-    
+
     if (key == KeyPress::escapeKey)
     {
         tellAllFieldsToIgnoreNextFocusLoss();
@@ -439,22 +439,22 @@ ConfigurationWindow::recalculateArea(void)
     int    heightSoFar = 0;
     int    widthSoFar = 0;
     size_t numExtra = _extraFields.size();
-    
+
     heightSoFar = _topText.getY() + _topText.getHeight() + FormField::kButtonGap;
     widthSoFar = jmax(widthSoFar, _topText.getX() + _topText.getWidth());
     for (size_t ii = 0, numDescriptors = _descriptors.size(), jj = 0; numDescriptors > ii; ++ii)
     {
         Utilities::BaseArgumentDescriptor * aDescriptor = _descriptors[ii];
-        
+
         if (aDescriptor)
         {
             String argName(aDescriptor->argumentName().c_str());
             String argDescription(aDescriptor->argumentDescription().c_str());
-            
+
             if (! aDescriptor->isExtra())
             {
                 FormField * aField = _standardFields[static_cast<int>(jj)];
-                
+
                 if (aField)
                 {
                     widthSoFar = jmax(widthSoFar, aField->getMinimumWidth());
@@ -469,12 +469,12 @@ ConfigurationWindow::recalculateArea(void)
     {
         int innerHeight = static_cast<int>(_regularFont.getHeight()) + (FormField::kButtonGap / 2);
         int innerWidth = (2 * jmax(FormField::kFieldInset, FormField::kLabelInset));
-        
+
         _extraArgumentsGroup->setTopLeftPosition(FormField::kFieldInset, heightSoFar);
         for (size_t ii = 0; numExtra > ii; ++ii)
         {
             FormField * aField = _extraFields[static_cast<int>(ii)];
-            
+
             aField->setY(innerHeight);
             innerHeight = aField->getY() + aField->getHeight() + (FormField::kButtonGap / 2);
         }
@@ -494,7 +494,7 @@ ConfigurationWindow::recalculateArea(void)
     BorderSize<int> cb = getContentComponentBorder();
     int             minW = jmax(widthSoFar, _cancelButton.getWidth() + _okButton.getWidth() +
                                 (3 * FormField::kButtonGap));
-    
+
     setContentComponentSize(minW + kExtraSpaceInWindow + cb.getLeftAndRight(),
                             heightSoFar + kExtraSpaceInWindow + cb.getTopAndBottom());
     ODL_EXIT(); //####
@@ -505,7 +505,7 @@ ConfigurationWindow::removeMostRecentlyAddedExtraField(void)
 {
     ODL_ENTER(); //####
     FormField * lastField = _extraFields.getLast();
-    
+
     _extraFields.removeLast();
     lastField->removeFromComponent(_extraArgumentsGroup);
     recalculateArea();
@@ -544,12 +544,12 @@ ConfigurationWindow::resized(void)
 {
     ODL_OBJENTER(); //####
     Button * close = getCloseButton();
-    
+
     inherited3::resized();
     if (close)
     {
         const KeyPress esc(KeyPress::escapeKey, 0, 0);
-        
+
         if (! close->isRegisteredForShortcut(esc))
         {
             close->addShortcut(esc);
@@ -570,7 +570,7 @@ ConfigurationWindow::setUpStandardFields(int &                    widthSoFar,
     int         buttonHeight = ManagerApplication::getButtonHeight();
     Point<int>  dimensions;
     size_t      numDescriptors = _descriptors.size();
-    
+
     widthSoFar = heightSoFar = 0;
     _topText.setFont(_regularFont);
     if (0 < numDescriptors)
@@ -594,23 +594,23 @@ ConfigurationWindow::setUpStandardFields(int &                    widthSoFar,
     {
         bool                                forOutput;
         Utilities::BaseArgumentDescriptor * aDescriptor = _descriptors[ii];
-        
+
         if (aDescriptor && (! aDescriptor->isRequired()) && aDescriptor->isForFiles(forOutput))
         {
             _hasFileField = true;
             break;
         }
-        
+
     }
     for (size_t ii = 0, jj = 0; numDescriptors > ii; ++ii)
     {
         Utilities::BaseArgumentDescriptor * aDescriptor = _descriptors[ii];
-        
+
         if (aDescriptor && (! aDescriptor->isRequired()))
         {
             String argName(aDescriptor->argumentName().c_str());
             String argDescription(aDescriptor->argumentDescription().c_str());
-            
+
             if (aDescriptor->isExtra())
             {
                 if (! _hasExtraArguments)
@@ -656,7 +656,7 @@ ConfigurationWindow::setUpStandardFields(int &                    widthSoFar,
                                                                  descriptionPrefix +
                                                                  argDescription, heightSoFar,
                                                                  argName);
-                    
+
                     if (jj < currentValues.size())
                     {
                         valueToUse = currentValues[jj].c_str();
@@ -676,7 +676,7 @@ ConfigurationWindow::setUpStandardFields(int &                    widthSoFar,
                 {
                     bool forFilePath;
                     bool forOutput;
-                    
+
                     if (aDescriptor->isForFiles(forOutput))
                     {
                         forFilePath = true;
@@ -699,7 +699,7 @@ ConfigurationWindow::setUpStandardFields(int &                    widthSoFar,
                                                                        aDescriptor->isPassword() ?
                                                                        CHAR_TO_USE_FOR_PASSWORD_ :
                                                                            0);
-                    
+
                     if (jj < currentValues.size())
                     {
                         valueToUse = currentValues[jj].c_str();
@@ -744,7 +744,7 @@ ConfigurationWindow::tellAllFieldsToIgnoreNextFocusLoss(void)
     for (size_t ii = 0, maxf = _standardFields.size(); maxf > ii; ++ii)
     {
         FormField * aField = _standardFields[static_cast<int>(ii)];
-        
+
         if (aField)
         {
             aField->ignoreNextFocusLoss();
@@ -753,7 +753,7 @@ ConfigurationWindow::tellAllFieldsToIgnoreNextFocusLoss(void)
     for (size_t ii = 0, maxf = _extraFields.size(); maxf > ii; ++ii)
     {
         FormField * aField = _extraFields[static_cast<int>(ii)];
-        
+
         if (aField)
         {
             aField->ignoreNextFocusLoss();

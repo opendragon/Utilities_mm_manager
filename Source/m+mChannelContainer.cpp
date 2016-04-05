@@ -53,7 +53,7 @@
 # pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
 #endif // defined(__APPLE__)
 /*! @file
- 
+
  @brief The class definition for a visible entity that has one or more channels or ports. */
 #if defined(__APPLE__)
 # pragma clang diagnostic pop
@@ -123,7 +123,7 @@ ChannelContainer::ChannelContainer(const ContainerKind kind,
                "extraInfo = ", extraInfo); //####
     ODL_S2s("requests = ", requests, "ipAddress = ", ipAddress); //####
     Font & headerFont = _owner.getNormalFont();
-    
+
     _titleHeight = static_cast<int>(headerFont.getHeight());
     setSize(static_cast<int>(headerFont.getStringWidthFloat(getName() + " ") + getTextInset()),
             _titleHeight);
@@ -140,7 +140,7 @@ ChannelContainer::~ChannelContainer(void)
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
     {
         ChannelEntry * aPort = getPort(ii);
-        
+
         if (aPort)
         {
             _owner.forgetPort(aPort);
@@ -150,7 +150,7 @@ ChannelContainer::~ChannelContainer(void)
     for (size_t ii = 0, mm = _argumentList.size(); mm > ii; ++ii)
     {
         Utilities::BaseArgumentDescriptor * argDesc = _argumentList[ii];
-        
+
         delete argDesc;
     }
     _argumentList.clear();
@@ -186,7 +186,7 @@ ChannelContainer::addPort(const YarpString &  portName,
                                             protocolDescription, portKind, direction);
     float          newWidth = static_cast<float>(jmax(aPort->getWidth(), getWidth()));
     float          newHeight = aPort->getHeight() + getHeight() + kEntryGap;
-    
+
     ODL_LL2("newWidth = ", newWidth, "newHeight = ", newHeight); //####
     aPort->setTopLeftPosition(0, static_cast<int>(getHeight() + kEntryGap));
     setSize(static_cast<int>(newWidth), static_cast<int>(newHeight));
@@ -194,7 +194,7 @@ ChannelContainer::addPort(const YarpString &  portName,
     for (int ii = 0; countBefore >= ii; ++ii)
     {
         ChannelEntry * bPort = getPort(ii);
-        
+
         if (bPort)
         {
             bPort->setSize(static_cast<int>(newWidth), bPort->getHeight());
@@ -203,7 +203,7 @@ ChannelContainer::addPort(const YarpString &  portName,
     if (0 < countBefore)
     {
         ChannelEntry * bPort = getPort(countBefore - 1);
-        
+
         if (bPort)
         {
             bPort->unsetAsLastPort();
@@ -220,14 +220,14 @@ ChannelContainer::canBeConfigured(void)
     bool   gotOne = false;
     bool   result;
     size_t mm = _argumentList.size();
-    
+
     if (mm)
     {
         result = true;
         for (size_t ii = 0; result && (mm > ii); ++ii)
         {
             MplusM::Utilities::BaseArgumentDescriptor * argDesc = _argumentList[ii];
-            
+
             if (argDesc)
             {
                 // Skip over the required fields, since they won't be displayed. Also, ignore any
@@ -270,7 +270,7 @@ ChannelContainer::clearMarkers(void)
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
     {
         ChannelEntry * aPort = getPort(ii);
-        
+
         if (aPort)
         {
             aPort->clearConnectMarker();
@@ -295,11 +295,11 @@ ChannelContainer::configureTheService(void)
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
     {
         ChannelEntry * aPort = getPort(ii);
-        
+
         if (aPort && aPort->isService())
         {
             bool configurable;
-            
+
             switch (Utilities::MapStringToServiceKind(_behaviour))
             {
                 case Common::kServiceKindAdapter :
@@ -308,18 +308,18 @@ ChannelContainer::configureTheService(void)
                 case Common::kServiceKindOutput :
                     configurable = canBeConfigured();
                     break;
-                    
+
                 default :
                     configurable = false;
                     break;
-                    
+
             }
             if (configurable)
             {
                 String           caption("Setting the configuration for the ");
                 String           execType;
                 YarpStringVector currentValues;
-                
+
                 caption += _description.c_str();
                 if (kContainerKindAdapter == _kind)
                 {
@@ -340,14 +340,14 @@ ChannelContainer::configureTheService(void)
                                                                                       currentValues,
                                                                                       _argumentList,
                                                                                       valuesToUse));
-                    
+
                     if (kConfigurationOK == configuration->runModalLoop())
                     {
                         if (Utilities::SetConfigurationForService(aPort->getPortName(), valuesToUse,
                                                                   STANDARD_WAIT_TIME_))
                         {
                             YarpString holder;
-                            
+
                             if (Utilities::GetExtraInformationForService(aPort->getPortName(),
                                                                          holder,
                                                                          STANDARD_WAIT_TIME_))
@@ -359,7 +359,7 @@ ChannelContainer::configureTheService(void)
                 }
             }
             break;
-            
+
         }
     }
     ODL_OBJEXIT(); //####
@@ -378,48 +378,48 @@ ChannelContainer::displayAndProcessPopupMenu(void)
 {
     ODL_OBJENTER(); //####
     PopupMenu mm;
-    
+
     mm.setLookAndFeel(&getLookAndFeel());
     getOwner().getContent()->setUpContainerMenu(mm, *this);
     int result = mm.show();
-    
+
     switch (result)
     {
         case kPopupConfigureService :
             configureTheService();
             break;
-            
+
         case kPopupDisplayChangeServiceMetrics :
             setMetricsState(! getMetricsState());
             break;
-            
+
         case kPopupDisplayEntityInfo :
             displayInformation(false);
             break;
-            
+
         case kPopupDetailedDisplayEntityInfo :
             displayInformation(true);
             break;
-            
+
         case kPopupDisplayServiceMetrics :
             displayMetrics();
             break;
-            
+
         case kPopupHideEntity :
             hide();
             break;
-            
+
         case kPopupRestartService :
             restartTheService();
             break;
-            
+
         case kPopupStopService :
             stopTheService();
             break;
-            
+
         default :
             break;
-            
+
     }
     ODL_OBJEXIT(); //####
 } // ChannelContainer::displayAndProcessPopupMenu
@@ -430,24 +430,24 @@ ChannelContainer::displayInformation(const bool moreDetails)
     ODL_OBJENTER(); //####
     ODL_B1("moreDetails = ", moreDetails); //####
     YarpString thePanelDescription;
-    
+
     switch (_kind)
     {
         case kContainerKindAdapter :
         case kContainerKindService :
             thePanelDescription = YarpString("The ") + getDescription();
             break;
-            
+
         case kContainerKindOther :
             thePanelDescription = "A standard entity";
             break;
-            
+
         default :
             break;
-            
+
     }
     String bodyText("Address: ");
-    
+
     bodyText += (_IPAddress + "\n").c_str();
     bodyText += thePanelDescription.c_str();
     if (moreDetails)
@@ -455,11 +455,11 @@ ChannelContainer::displayInformation(const bool moreDetails)
         for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
         {
             ChannelEntry * aPort = getPort(ii);
-            
+
             if (aPort && aPort->isService())
             {
                 bool configurable;
-                
+
                 switch (Utilities::MapStringToServiceKind(_behaviour))
                 {
                     case Common::kServiceKindAdapter :
@@ -468,16 +468,16 @@ ChannelContainer::displayInformation(const bool moreDetails)
                     case Common::kServiceKindOutput :
                         configurable = canBeConfigured();
                         break;
-                        
+
                     default :
                         configurable = false;
                         break;
-                        
+
                 }
                 if (configurable)
                 {
                     YarpString holder;
-                    
+
                     if (Utilities::GetExtraInformationForService(aPort->getPortName(), holder,
                                                                  STANDARD_WAIT_TIME_))
                     {
@@ -485,7 +485,7 @@ ChannelContainer::displayInformation(const bool moreDetails)
                     }
                 }
                 break;
-                
+
             }
         }
         if (0 < _extraInfo.length())
@@ -504,10 +504,10 @@ ChannelContainer::displayInformation(const bool moreDetails)
                     bodyText += "\n";
                 }
                 break;
-                
+
             default :
                 break;
-                
+
         }
     }
     DisplayInformationPanel(this, bodyText, getName());
@@ -522,11 +522,11 @@ ChannelContainer::displayMetrics(void)
     String      result;
     StringArray metricsArray = getMetrics();
     int         numRows = metricsArray.size();
-    
+
     for (int ii = 0; ii < numRows; ++ii)
     {
         const String & aRow = metricsArray[ii];
-        
+
         if (0 < ii)
         {
             result += "\n";
@@ -545,7 +545,7 @@ ChannelContainer::drawOutgoingConnections(Graphics & gg)
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
     {
         ChannelEntry * aPort = getPort(ii);
-        
+
         if (aPort)
         {
             aPort->drawOutgoingConnections(gg);
@@ -561,7 +561,7 @@ ChannelContainer::formatMetricRow(const String & aRow)
     ODL_S1s("aRow = ", aRow.toStdString()); //####
     String      result;
     StringArray asPieces;
-    
+
     asPieces.addTokens(aRow, "\t", "");
     if (7 == asPieces.size())
     {
@@ -571,7 +571,7 @@ ChannelContainer::formatMetricRow(const String & aRow)
         String outBytes = asPieces[4];
         String inMessages = asPieces[5];
         String outMessages = asPieces[6];
-        
+
         result = "Channel:      " + channelName + "\n";
         result += "In bytes:     " + inBytes + "\n";
         result += "Out bytes:    " + outBytes + "\n";
@@ -589,7 +589,7 @@ const
     ODL_ENTER(); //####
     ODL_LL1(idx, idx); //####
     MplusM::Utilities::BaseArgumentDescriptor * result;
-    
+
     if (_argumentList.size() > idx)
     {
         result = _argumentList[idx];
@@ -607,24 +607,24 @@ ChannelContainer::getMetrics(void)
 {
     ODL_OBJENTER(); //####
     StringArray result;
-    
+
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
     {
         ChannelEntry * aPort = getPort(ii);
-        
+
         if (aPort && aPort->isService())
         {
             yarp::os::Bottle metrics;
-            
+
             if (Utilities::GetMetricsForService(aPort->getPortName(), metrics, STANDARD_WAIT_TIME_))
             {
                 String metricsString = Utilities::ConvertMetricsToString(metrics,
                                                              Common::kOutputFlavourTabs).c_str();
-                
+
                 result.addLines(metricsString);
                 break;
             }
-            
+
         }
     }
     ODL_OBJEXIT(); //####
@@ -636,11 +636,11 @@ ChannelContainer::getMetricsState(void)
 {
     ODL_OBJENTER(); //####
     bool result = false;
-    
+
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
     {
         ChannelEntry * aPort = getPort(ii);
-        
+
         if (aPort && aPort->isService())
         {
             if (Utilities::GetMetricsStateForService(aPort->getPortName(), result,
@@ -648,7 +648,7 @@ ChannelContainer::getMetricsState(void)
             {
                 break;
             }
-            
+
         }
     }
     ODL_OBJEXIT_B(result); //####
@@ -673,7 +673,7 @@ const
     ODL_OBJENTER(); //####
     ODL_LL1("num = ", num); //####
     ChannelEntry * result;
-    
+
     if ((0 <= num) && (getNumPorts() > num))
     {
         result = reinterpret_cast<ChannelEntry *>(getChildComponent(num));
@@ -692,7 +692,7 @@ const
 {
     ODL_OBJENTER(); //####
     Position result(getPosition().toFloat());
-    
+
     ODL_OBJEXIT(); //####
     return result;
 } // ChannelContainer::getPositionInPanel
@@ -711,17 +711,17 @@ ChannelContainer::hasPort(const ChannelEntry * aPort)
 {
     ODL_OBJENTER(); //####
     bool result = false;
-    
+
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
     {
         ChannelEntry * anEntry = getPort(ii);
-        
+
         if (aPort == anEntry)
         {
             result = true;
             break;
         }
-        
+
     }
     ODL_OBJEXIT_B(result); //####
     return result;
@@ -732,7 +732,7 @@ ChannelContainer::hide(void)
 {
     ODL_OBJENTER(); //####
     ContentPanel * thePanel = _owner.getContent();
-    
+
     setVisible(false);
     if (thePanel)
     {
@@ -750,7 +750,7 @@ ChannelContainer::invalidateConnections(void)
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
     {
         ChannelEntry * aPort = getPort(ii);
-        
+
         if (aPort)
         {
             aPort->invalidateConnections();
@@ -765,17 +765,17 @@ const
 {
     ODL_OBJENTER(); //####
     bool marked = false;
-    
+
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
     {
         ChannelEntry * aPort = getPort(ii);
-        
+
         if (aPort && aPort->isMarked())
         {
             marked = true;
             break;
         }
-        
+
     }
     ODL_OBJEXIT_B(marked); //####
     return marked;
@@ -787,21 +787,21 @@ const
 {
     ODL_OBJENTER(); //####
     ChannelEntry * result = NULL;
-    
+
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
     {
         ChannelEntry * aPort = getPort(ii);
-        
+
         if (aPort)
         {
             Position where = aPort->getPositionInPanel();
-            
+
             if (aPort->reallyContains((location - where).toInt(), true))
             {
                 result = aPort;
                 break;
             }
-            
+
         }
     }
     ODL_OBJEXIT_P(result); //####
@@ -813,7 +813,7 @@ ChannelContainer::mouseDown(const MouseEvent & ee)
 {
     ODL_OBJENTER(); //####
     bool doDrag = true;
-    
+
     // Prepares our dragger to drag this Component
     if (ee.mods.isAltDown() || ee.mods.isCommandDown())
     {
@@ -841,7 +841,7 @@ ChannelContainer::mouseDrag(const MouseEvent & ee)
 {
     ODL_OBJENTER(); //####
     bool doDrag = true;
-    
+
     // Moves this Component according to the mouse drag event and applies our constraints to it
     if (ee.mods.isAltDown() || ee.mods.isCommandDown() || ee.mods.isPopupMenu())
     {
@@ -863,7 +863,7 @@ ChannelContainer::paint(Graphics & gg)
     ODL_OBJENTER(); //####
     ODL_P1("gg = ", &gg); //####
     AttributedString as;
-    
+
     as.setJustification(Justification::left);
     as.append(getName(), _owner.getNormalFont(), kHeadingTextColour);
     juce::Rectangle<int> localBounds(getLocalBounds());
@@ -871,7 +871,7 @@ ChannelContainer::paint(Graphics & gg)
                                _titleHeight);
     juce::Rectangle<int> area2(localBounds.getX(), localBounds.getY() + _titleHeight,
                                localBounds.getWidth(), localBounds.getHeight() - _titleHeight);
-    
+
     gg.setColour(kHeadingBackgroundColour);
     gg.fillRect(area1);
     area1.setLeft(static_cast<int>(area1.getX() + getTextInset()));
@@ -888,7 +888,7 @@ ChannelContainer::removeInvalidConnections(void)
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
     {
         ChannelEntry * aPort = getPort(ii);
-        
+
         if (aPort)
         {
             aPort->removeInvalidConnections();
@@ -915,11 +915,11 @@ ChannelContainer::restartTheService(void)
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
     {
         ChannelEntry * aPort = getPort(ii);
-        
+
         if (aPort && aPort->isService())
         {
             bool restartable;
-            
+
             switch (Utilities::MapStringToServiceKind(_behaviour))
             {
                 case Common::kServiceKindAdapter :
@@ -928,18 +928,18 @@ ChannelContainer::restartTheService(void)
                 case Common::kServiceKindOutput :
                     restartable = true;
                     break;
-                    
+
                 default :
                     restartable = false;
                     break;
-                    
+
             }
             if (restartable)
             {
                 Utilities::RestartAService(aPort->getPortName(), STANDARD_WAIT_TIME_);
             }
             break;
-            
+
         }
     }
     ODL_OBJEXIT(); //####
@@ -969,7 +969,7 @@ ChannelContainer::setMetricsState(const bool newState)
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
     {
         ChannelEntry * aPort = getPort(ii);
-        
+
         if (aPort && aPort->isService())
         {
             if (Utilities::SetMetricsStateForService(aPort->getPortName(), newState,
@@ -977,7 +977,7 @@ ChannelContainer::setMetricsState(const bool newState)
             {
                 break;
             }
-            
+
         }
     }
     ODL_OBJEXIT(); //####
@@ -1016,11 +1016,11 @@ ChannelContainer::stopTheService(void)
     for (int ii = 0, mm = getNumPorts(); mm > ii; ++ii)
     {
         ChannelEntry * aPort = getPort(ii);
-        
+
         if (aPort && aPort->isService())
         {
             bool doStop;
-            
+
             if (Utilities::PortIsRegistryService(aPort->getPortName()))
             {
                 doStop = (1 == AlertWindow::showOkCancelBox(AlertWindow::QuestionIcon,
@@ -1049,7 +1049,7 @@ ChannelContainer::stopTheService(void)
                                    "display, depending on network traffic. "
                                    "Also, the ");
                 String titleText("Are you sure that you want to stop this ");
-                
+
                 if (kContainerKindAdapter == _kind)
                 {
                     containerType = "adapter";
@@ -1072,7 +1072,7 @@ ChannelContainer::stopTheService(void)
             if (doStop)
             {
                 ContentPanel * thePanel = _owner.getContent();
-                
+
                 if (thePanel)
                 {
                     thePanel->setChannelOfInterest(NULL);
@@ -1085,7 +1085,7 @@ ChannelContainer::stopTheService(void)
                 else
                 {
                     ManagerApplication * ourApp = ManagerApplication::getApp();
-                    
+
                     if (ourApp)
                     {
                         ourApp->doScanSoon();
@@ -1093,7 +1093,7 @@ ChannelContainer::stopTheService(void)
                 }
             }
             break;
-            
+
         }
     }
     ODL_OBJEXIT(); //####

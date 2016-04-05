@@ -47,7 +47,7 @@
 #  pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
 # endif // defined(__APPLE__)
 /*! @file
- 
+
  @brief The class declaration for the background Registry Service launcher. */
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
@@ -59,16 +59,16 @@ namespace MPlusM_Manager
     class RegistryLaunchThread : public Thread
     {
     public :
-    
+
     protected :
-    
+
     private :
-        
+
         /*! @brief The class that this class is derived from. */
         typedef Thread inherited;
-        
+
     public :
-        
+
         /*! @brief The constructor.
          @param pathToExecutable The file system path for the executable.
          @param portNumber The network port number to use. */
@@ -79,37 +79,37 @@ namespace MPlusM_Manager
         /*! @brief The destructor. */
         virtual
         ~RegistryLaunchThread(void);
-        
+
         /*! @brief Force the child process to terminate. */
         void killChildProcess(void);
 
     protected :
-        
+
     private :
-        
+
         /*! @brief Perform the background scan. */
         virtual void
         run(void);
-        
+
     public :
-    
+
     protected :
-    
+
     private :
 
         /*! @brief The running Registry Service process. */
         ScopedPointer<ChildProcess> _registryServiceProcess;
-        
+
         /*! @brief The file system path to the executable. */
         String _registryServicePath;
 
         /*! @brief The network port number to use. */
         int _registryServicePort;
-        
+
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RegistryLaunchThread)
-        
+
     }; // RegistryLaunchThread
-    
+
 } // MPlusM_Manager
 
 #endif // ! defined(mpmRegistryLaunchThread_H_)

@@ -79,7 +79,7 @@
 # pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
 #endif // defined(__APPLE__)
 /*! @file
- 
+
  @brief The class definition for the entities layer of the primary window of the m+m manager
  application. */
 #if defined(__APPLE__)
@@ -162,7 +162,7 @@ EntitiesPanel::addEntity(ChannelContainer * anEntity)
     ODL_P1("anEntity = ", anEntity); //####
     char buffer1[DATE_TIME_BUFFER_SIZE_];
     char buffer2[DATE_TIME_BUFFER_SIZE_];
-    
+
     Utilities::GetDateAndTime(buffer1, sizeof(buffer1), buffer2, sizeof(buffer2));
     std::cerr << buffer1 << " " << buffer2 << " Adding entity " << anEntity->getName() << std::endl;
     _knownEntities.push_back(anEntity);
@@ -176,7 +176,7 @@ EntitiesPanel::adjustSize(const bool andRepaint)
     ODL_OBJENTER(); //####
     ODL_B1("andRepaint = ", andRepaint); //####
     ContentPanel * within = getContent();
-    
+
     ODL_P1("within <- ", within); //####
     if (within)
     {
@@ -190,14 +190,14 @@ EntitiesPanel::adjustSize(const bool andRepaint)
         int  minY = -1;
         int  maxY = -1;
         bool haveValues = false;
-        
+
         ODL_LL4("outerL = ", outerL, "outerT = ", outerT, "outerW = ", outerW, //####
                    "outerH = ", outerH); //####
         for (ContainerList::const_iterator it(_knownEntities.begin());
              _knownEntities.end() != it; ++it)
         {
             ChannelContainer * anEntity = *it;
-            
+
             if (anEntity)
             {
                 juce::Rectangle<int> entityBounds(anEntity->getBounds());
@@ -205,7 +205,7 @@ EntitiesPanel::adjustSize(const bool andRepaint)
                 int                  entityTop = entityBounds.getY();
                 int                  entityRight = entityLeft + entityBounds.getWidth();
                 int                  entityBottom = entityTop + entityBounds.getHeight();
-                
+
                 ODL_LL4("eB.x = ", entityBounds.getX(), "eB.y = ", entityBounds.getY(), //####
                            "eB.w = ", entityBounds.getWidth(), "eB.h = ", //####
                            entityBounds.getHeight()); //####
@@ -236,7 +236,7 @@ EntitiesPanel::adjustSize(const bool andRepaint)
             int                  minTop = jmin(0, minY);
             int                  maxBottom = jmax(jmax(0, maxY + kGutter), minTop + outerH);
             juce::Rectangle<int> newBounds(minLeft, minTop, maxRight - minLeft, maxBottom - minTop);
-            
+
             ODL_LL4("minLeft = ", minLeft, "minTop = ", minTop, "maxRight = ", maxRight, //####
                        "maxBottom = ", maxBottom); //####
             if (oldBounds != newBounds)
@@ -251,7 +251,7 @@ EntitiesPanel::adjustSize(const bool andRepaint)
             int                  currY = currBounds.getY();
             int                  currW = currBounds.getWidth();
             int                  currH = currBounds.getHeight();
-            
+
             ODL_LL4("currX = ", currX, "currY = ", currY, "currW = ", currW, "currH = ", //####
                        currH); //####
             if (vertBar)
@@ -261,7 +261,7 @@ EntitiesPanel::adjustSize(const bool andRepaint)
                 Range<double> currRange(vertBar->getCurrentRange());
                 Range<double> newLimits(currY, currY + currH);
                 Range<double> newRange(outerT, outerH);
-                
+
                 if (currLimits != newLimits)
                 {
                     vertBar->setRangeLimits(newLimits);
@@ -278,7 +278,7 @@ EntitiesPanel::adjustSize(const bool andRepaint)
                 Range<double> currRange(horizBar->getCurrentRange());
                 Range<double> newLimits(currX, currX + currW);
                 Range<double> newRange(outerL, outerW);
-                
+
                 if (currLimits != newLimits)
                 {
                     horizBar->setRangeLimits(newLimits);
@@ -305,7 +305,7 @@ EntitiesPanel::clearAllNewlyCreatedFlags(void)
     for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
     {
         ChannelContainer * anEntity = *it;
-        
+
         if (anEntity)
         {
             anEntity->setOld();
@@ -321,7 +321,7 @@ EntitiesPanel::clearAllVisitedFlags(void)
     for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
     {
         ChannelContainer * anEntity = *it;
-        
+
         if (anEntity)
         {
             anEntity->clearVisited();
@@ -345,7 +345,7 @@ EntitiesPanel::clearMarkers(void)
     for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
     {
         ChannelContainer * anEntity = *it;
-        
+
         if (anEntity)
         {
             if (anEntity->isMarked())
@@ -366,13 +366,13 @@ EntitiesPanel::clearNodeValues(void)
     for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
     {
         ChannelContainer * anEntity = *it;
-        
+
         if (anEntity)
         {
             anEntity->setNode(NULL);
         }
     }
-    
+
     ODL_OBJEXIT(); //####
 } // EntitiesPanel::clearNodeValues
 #endif // defined(USE_OGDF_POSITIONING_)
@@ -384,7 +384,7 @@ EntitiesPanel::clearOutData(void)
     for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
     {
         ChannelContainer * anEntity = *it;
-        
+
         if (anEntity)
         {
             delete anEntity;
@@ -404,7 +404,7 @@ EntitiesPanel::displayAndProcessPopupMenu(void)
     {
         ApplicationCommandManager * commandManager = &ManagerWindow::getApplicationCommandManager();
         PopupMenu                   mm;
-        
+
         mm.setLookAndFeel(&getLookAndFeel());
         _container->setUpViewMenu(mm);
         mm.addSeparator();
@@ -424,7 +424,7 @@ EntitiesPanel::drawConnections(Graphics & gg)
     for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
     {
         ChannelContainer * anEntity = *it;
-        
+
         if (anEntity)
         {
             anEntity->drawOutgoingConnections(gg);
@@ -444,21 +444,21 @@ EntitiesPanel::findKnownEntity(const YarpString & name)
     ODL_OBJENTER(); //####
     ODL_S1s("name = ", name); //####
     ChannelContainer * result = NULL;
-    
+
     for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
     {
         ChannelContainer * anEntity = *it;
-        
+
         if (anEntity)
         {
             YarpString entityName(anEntity->getName().toStdString().c_str());
-            
+
             if (name == entityName)
             {
                 result = anEntity;
                 break;
             }
-            
+
         }
     }
     ODL_OBJEXIT_P(result); //####
@@ -472,7 +472,7 @@ EntitiesPanel::findKnownPort(const YarpString & name)
     ODL_S1s("name = ", name); //####
     ChannelEntry *                  result = NULL;
     ChannelEntryMap::const_iterator match(_knownPorts.find(name));
-    
+
     if (_knownPorts.end() == match)
     {
         result = NULL;
@@ -494,7 +494,7 @@ EntitiesPanel::forgetPort(ChannelEntry * aPort)
     {
         YarpString                aPortName(aPort->getName().toStdString().c_str());
         ChannelEntryMap::iterator match(_knownPorts.find(aPortName));
-        
+
         if (_knownPorts.end() == match)
         {
             // We couldn't find a match by the key, so instead search by value
@@ -505,7 +505,7 @@ EntitiesPanel::forgetPort(ChannelEntry * aPort)
                     _knownPorts.erase(match);
                     break;
                 }
-                
+
             }
         }
         else
@@ -523,7 +523,7 @@ const
     ODL_OBJENTER(); //####
     ODL_LL1("index = ", index); //####
     ChannelContainer * result;
-    
+
     if (_knownEntities.size() > index)
     {
         result = _knownEntities.at(index);
@@ -542,7 +542,7 @@ const
 {
     ODL_OBJENTER(); //####
     size_t result = _knownEntities.size();
-    
+
     ODL_OBJEXIT_LL(result); //####
     return result;
 } // EntitiesPanel::getNumberOfEntities
@@ -553,11 +553,11 @@ const
 {
     ODL_OBJENTER(); //####
     size_t count = 0;
-    
+
     for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
     {
         ChannelContainer * anEntity = *it;
-        
+
         if (anEntity && (! anEntity->isVisible()))
         {
             ++count;
@@ -574,7 +574,7 @@ EntitiesPanel::invalidateAllConnections(void)
     for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
     {
         ChannelContainer * anEntity = *it;
-        
+
         if (anEntity)
         {
             anEntity->invalidateConnections();
@@ -589,12 +589,12 @@ const
 {
     ODL_OBJENTER(); //####
     ChannelEntry * result = NULL;
-    
+
     for (ContainerList::const_iterator it(_knownEntities.begin());
          (! result) && (_knownEntities.end() != it); ++it)
     {
         ChannelContainer * anEntity = *it;
-        
+
         if (anEntity)
         {
             result = anEntity->locateEntry(location);
@@ -711,7 +711,7 @@ EntitiesPanel::rememberPositions(void)
     for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
     {
         ChannelContainer * anEntity = *it;
-        
+
         if (anEntity)
         {
             _container->rememberPositionOfEntity(anEntity);
@@ -728,7 +728,7 @@ EntitiesPanel::removeInvalidConnections(void)
     for (ContainerList::iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
     {
         ChannelContainer * anEntity = *it;
-        
+
         if (anEntity)
         {
             anEntity->removeInvalidConnections();
@@ -743,13 +743,13 @@ EntitiesPanel::removeUnvisitedEntities(void)
     ODL_OBJENTER(); //####
     bool didRemove = false;
     bool keepGoing;
-    
+
     do
     {
         keepGoing = false;
         ContainerList::iterator walker(_knownEntities.begin());
         ChannelContainer *      anEntity = NULL;
-        
+
         for ( ; _knownEntities.end() != walker; ++walker)
         {
             anEntity = *walker;
@@ -757,13 +757,13 @@ EntitiesPanel::removeUnvisitedEntities(void)
             {
                 char buffer1[DATE_TIME_BUFFER_SIZE_];
                 char buffer2[DATE_TIME_BUFFER_SIZE_];
-                
+
                 Utilities::GetDateAndTime(buffer1, sizeof(buffer1), buffer2, sizeof(buffer2));
                 std::cerr << buffer1 << " " << buffer2 << " Removing unvisited entity " <<
                             anEntity->getName() << std::endl;
                 break;
             }
-            
+
         }
         if ((_knownEntities.end() != walker) && anEntity)
         {
@@ -822,7 +822,7 @@ EntitiesPanel::unhideEntities(void)
     for (ContainerList::const_iterator it(_knownEntities.begin()); _knownEntities.end() != it; ++it)
     {
         ChannelContainer * anEntity = *it;
-        
+
         if (anEntity && (! anEntity->isVisible()))
         {
             anEntity->setHidden();

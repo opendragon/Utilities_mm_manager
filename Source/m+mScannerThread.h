@@ -47,7 +47,7 @@
 #  pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
 # endif // defined(__APPLE__)
 /*! @file
- 
+
  @brief The class declaration for the background port and service scanner. */
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
@@ -57,47 +57,47 @@ namespace MPlusM_Manager
 {
     class EntitiesData;
     class ManagerWindow;
-    
+
     /*! @brief A background scanner thread. */
     class ScannerThread : public Thread
     {
     public :
-    
+
     protected :
-    
+
     private :
-        
+
         /*! @brief The class that this class is derived from. */
         typedef Thread inherited;
-        
+
     public :
-        
+
         /*! @brief The constructor.
          @param window The window to be updated.
          @param delayFirstScan @c true if a short delay should occur before the first scan. */
         ScannerThread(ManagerWindow & window,
                       const bool      delayFirstScan);
-        
+
         /*! @brief The destructor. */
         virtual
         ~ScannerThread(void);
-        
+
         /*! @brief Returns @c true if the scan data is available and @c false otherwise.
-         
+
          Note that what is returned is the value prior to the call; the flag is cleared so that the
          next call will return @c false.
          @returns @c true if the scan data is available and @c false otherwise. */
         bool
         checkAndClearIfScanIsComplete(void);
-        
+
         /*! @brief Indicate that a port cleanup should be performed as soon as possible. */
         void
         doCleanupSoon(void);
-        
+
         /*! @brief Indicate that a scan should be performed as soon as possible. */
         void
         doScanSoon(void);
-        
+
         /*! @brief Return the collected entities data.
          @returns The collected entities data. */
         inline EntitiesData &
@@ -105,20 +105,20 @@ namespace MPlusM_Manager
         {
             return _workingData;
         } // getEntitiesData
-        
+
         /*! @brief Indicate that the scan data has been processed and the scan can proceed. */
         void
         scanCanProceed(void);
-        
+
     protected :
-        
+
     private :
-        
+
         /*! @brief Add the detected entities and connections.
          @param detectedPorts The ports found by YARP. */
         void
         addEntities(const MplusM::Utilities::PortVector & detectedPorts);
-        
+
         /*! @brief Add connections between detected ports in the to-be-displayed list.
          @param detectedPorts The set of detected YARP ports.
          @param checker A function that provides for early exit from loops.
@@ -127,7 +127,7 @@ namespace MPlusM_Manager
         addPortConnections(const MplusM::Utilities::PortVector & detectedPorts,
                            MplusM::Common::CheckFunction         checker = NULL,
                            void *                                checkStuff = NULL);
-        
+
         /*! @brief Add regular YARP ports as distinct entities to the to-be-displayed list.
          @param detectedPorts The set of detected YARP ports.
          @param checker A function that provides for early exit from loops.
@@ -136,7 +136,7 @@ namespace MPlusM_Manager
         addRegularPortEntities(const MplusM::Utilities::PortVector & detectedPorts,
                                MplusM::Common::CheckFunction         checker = NULL,
                                void *                                checkStuff = NULL);
-        
+
         /*! @brief Add services as distinct entities to the list of entities.
          @param services The set of detected services.
          @param checker A function that provides for early exit from loops.
@@ -145,17 +145,17 @@ namespace MPlusM_Manager
         addServices(const YarpStringVector &      services,
                     MplusM::Common::CheckFunction checker = NULL,
                     void *                        checkStuff = NULL);
-        
+
         /*! @brief Request access for reading from shared resources.
          @returns @c true if the read lock has been acquired and @c false otherwise. */
         bool
         conditionallyAcquireForRead(void);
-        
+
         /*! @brief Request access for writing to shared resources.
          @returns @c true if the write lock has been acquired and @c false otherwise. */
         bool
         conditionallyAcquireForWrite(void);
-        
+
         /*! @brief Determine whether a port can be used for input and/or output.
          @param oldEntry The previous record for the port, if it exists.
          @param portName The name of the port to check.
@@ -167,7 +167,7 @@ namespace MPlusM_Manager
                            const YarpString &            portName,
                            MplusM::Common::CheckFunction checker = NULL,
                            void *                        checkStuff = NULL);
-        
+
         /*! @brief Identify the YARP network entities.
          @param detectedPorts The ports found by YARP.
          @param checker A function that provides for early exit from loops.
@@ -177,63 +177,63 @@ namespace MPlusM_Manager
         gatherEntities(MplusM::Utilities::PortVector & detectedPorts,
                        MplusM::Common::CheckFunction   checker = NULL,
                        void *                          checkStuff = NULL);
-        
+
         /*! @brief Release access from reading from the shared resources. */
         void
         relinquishFromRead(void);
-        
+
         /*! @brief Release access from writing to the shared resources. */
         void
         relinquishFromWrite(void);
-        
+
         /*! @brief Perform the background scan. */
         virtual void
         run(void);
-        
+
         /*! @brief Tell the displayed panel to do a repaint. */
         void
         triggerRepaint(void);
-        
+
         /*! @brief Request access for reading from shared resources. */
         void
         unconditionallyAcquireForRead(void);
-        
+
         /*! @brief Request access for writing to shared resources. */
         void
         unconditionallyAcquireForWrite(void);
-        
+
     public :
-    
+
     protected :
-    
+
     private :
 
         /*! @brief The window to be updated. */
         ManagerWindow & _window;
-        
+
         /*! @brief A set of known ports. */
         PortSet _rememberedPorts;
-        
+
         /*! @brief A set of known services. */
         ServiceMap _detectedServices;
-        
+
         /*! @brief A set of standalone ports. */
         SingularPortMap _standalonePorts;
-        
+
         /*! @brief The working set of entities. */
         EntitiesData _workingData;
-        
+
         /*! @brief A lock to manage access to shared resources. */
         ReadWriteLock _lock;
-        
+
         /*! @brief The name of the port used to determine if a port being checked can be used as an
          output. */
         YarpString _inputOnlyPortName;
-        
+
         /*! @brief The name of the port used to determine if a port being checked can be used as an
          input. */
         YarpString _outputOnlyPortName;
-        
+
 # if (defined(CHECK_FOR_STALE_PORTS_) && (! defined(DO_SINGLE_CHECK_FOR_STALE_PORTS_)))
         /*! @brief The time when the last stale removal occurred. */
         int64 _lastStaleTime;
@@ -241,39 +241,39 @@ namespace MPlusM_Manager
 
         /*! @brief The port used to determine if a port being checked can be used as an output. */
         MplusM::Common::GeneralChannel * _inputOnlyPort;
-        
+
         /*! @brief The port used to determine if a port being checked can be used as an input. */
         MplusM::Common::GeneralChannel * _outputOnlyPort;
-        
+
         /*! @brief @c true if a port cleanup should be done as soon as possible and @c false
          otherwise. */
         bool _cleanupSoon;
 
         /*! @brief @c true if the next scan is to be delayed. */
         bool _delayScan;
-        
+
 # if (defined(CHECK_FOR_STALE_PORTS_) && defined(DO_SINGLE_CHECK_FOR_STALE_PORTS_))
         /*! @brief @c true if the initial stale removal occurred and @c false otherwise. */
         bool _initialStaleCheckDone;
 # endif // defined(CHECK_FOR_STALE_PORTS_) && defined(DO_SINGLE_CHECK_FOR_STALE_PORTS_)
-        
+
         /*! @brief @c true if the port direction resources are available. */
         bool _portsValid;
-        
+
         /*! @brief @c true if the scan can proceed and @c false otherwise. */
         bool _scanCanProceed;
-        
+
         /*! @brief @c true if the scan has been finished and the data is available, @c false
          otherwise. */
         bool _scanIsComplete;
-        
+
         /*! @brief @c true if the scan should be done as soon as possible and @c false otherwise. */
         bool _scanSoon;
-        
+
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ScannerThread)
-        
+
     }; // ScannerThread
-    
+
 } // MPlusM_Manager
 
 #endif // ! defined(mpmScannerThread_H_)

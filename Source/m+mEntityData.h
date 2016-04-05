@@ -47,7 +47,7 @@
 #  pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
 # endif // defined(__APPLE__)
 /*! @file
- 
+
  @brief The class declaration for an entity detected by the background scanner. */
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
@@ -59,13 +59,13 @@ namespace MPlusM_Manager
     class EntityData
     {
     public :
-    
+
     protected :
-    
+
     private :
-        
+
     public :
-        
+
         /*! @brief The constructor.
          @param kind The kind of entity.
          @param name The name of the entity.
@@ -79,7 +79,7 @@ namespace MPlusM_Manager
                    const YarpString &  description,
                    const YarpString &  extraInfo,
                    const YarpString &  requests);
-        
+
         /*! @brief The destructor. */
         virtual
         ~EntityData(void);
@@ -118,7 +118,7 @@ namespace MPlusM_Manager
         {
             return _behaviour;
         } // getBehaviour
-        
+
         /*! @brief Return the description of the entity.
          @returns The description of the entity. */
         inline const YarpString &
@@ -127,7 +127,7 @@ namespace MPlusM_Manager
         {
             return _description;
         } // getDescription
-        
+
         /*! @brief Return the extra information for the entity.
          @returns The extra information for the entity. */
         inline const YarpString &
@@ -145,7 +145,7 @@ namespace MPlusM_Manager
         {
             return _kind;
         } // getKind
-        
+
         /*! @brief Return the IP address of the entity.
          @returns The IP address of the entity. */
         inline const YarpString &
@@ -154,7 +154,7 @@ namespace MPlusM_Manager
         {
             return _IPAddress;
         } // getIPAddress
-        
+
         /*! @brief Return the description of the entity.
          @returns The description of the entity. */
         inline const YarpString &
@@ -163,7 +163,7 @@ namespace MPlusM_Manager
         {
             return _name;
         } // getName
-        
+
         /*! @brief Returns the number of argument descriptions in this container.
          @returns The number of argument descriptions in this container. */
         inline size_t
@@ -178,14 +178,14 @@ namespace MPlusM_Manager
         int
         getNumPorts(void)
         const;
-        
+
         /*! @brief Returns a port by index.
          @param num The zero-origin index of the port.
          @returns A port or @c NULL if the index is out of range. */
         PortData *
         getPort(const int num)
         const;
-        
+
         /*! @brief Return the requests supported by the entity.
          @returns The requests supported by the entity. */
         inline const YarpString &
@@ -194,7 +194,7 @@ namespace MPlusM_Manager
         {
             return _requests;
         } // getRequests
-        
+
         /*! @brief Set the IP address of the entity.
          @param newAddress The IP address of the entity. */
         inline void
@@ -202,19 +202,19 @@ namespace MPlusM_Manager
         {
             _IPAddress = newAddress;
         } // setIPAddress
-        
+
     protected :
-        
+
     private :
-        
+
         COPY_AND_ASSIGNMENT_(EntityData);
-        
+
     public :
-    
+
     protected :
-    
+
     private :
-        
+
         /*! @brief The collection of ports for the entity. */
         Ports _ports;
 
@@ -223,27 +223,27 @@ namespace MPlusM_Manager
 
         /*! @brief The behavioural model if a service or an adapter. */
         YarpString _behaviour;
-        
+
         /*! @brief The description of the entity, if it is a service or an adapter. */
         YarpString _description;
-        
+
         /*! @brief The extra information for the entity, if it is a service or an adapter. */
         YarpString _extraInfo;
 
         /*! @brief The IP address of the primary channel. */
         YarpString _IPAddress;
-        
+
         /*! @brief The name of the entity. */
         YarpString _name;
-        
+
         /*! @brief The requests for the entity, if it is a service or an adapter. */
         YarpString _requests;
-        
+
         /*! @brief The kind of entity. */
         ContainerKind _kind;
-        
+
     }; // EntityData
-    
+
 } // MPlusM_Manager
 
 #endif // ! defined(mpmEntityData_H_)

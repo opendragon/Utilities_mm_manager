@@ -47,7 +47,7 @@
 #  pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
 # endif // defined(__APPLE__)
 /*! @file
- 
+
  @brief The class declaration for a field consisting of a text editor paired with a caption. */
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
@@ -60,21 +60,21 @@ namespace MPlusM_Manager
 {
     class TextValidator;
     class ValidatingTextEditor;
-    
+
     /*! @brief A field consisting of a text editor paired with a caption. */
     class CaptionedTextField : public FormField
     {
     public :
-    
+
     protected :
-    
+
     private :
-    
+
         /*! @brief The class that this class is derived from. */
         typedef FormField inherited;
-        
+
     public :
-        
+
         /*! @brief The constructor.
          @param responder The entity that will report errors in this field.
          @param regularLabelFont The font to use with the label when the text editor data is valid.
@@ -101,11 +101,11 @@ namespace MPlusM_Manager
                            TextValidator *           validator = NULL,
                            const String &            componentName = String::empty,
                            juce_wchar                passwordCharacter = 0);
-        
+
         /*! @brief The destructor. */
         virtual
         ~CaptionedTextField(void);
-        
+
         /*! @brief Add the components of this field to the specified component and make them
          visible.
          @param whereToAdd The component to be added to. */
@@ -120,30 +120,30 @@ namespace MPlusM_Manager
         {
             return _button;
         } // getButton
-        
+
         /*! @brief Return the width of a 'file' button.
          @returns The width of a 'file' button. */
         static int
         getFileButtonWidth(void);
-        
+
         /*! @brief Return the height of the field in pixels.
          @return The height of the field in pixels. */
         virtual int
         getHeight(void)
         const;
-        
+
         /*! @brief Return the minimum width of the field in pixels.
          @return The minimum width of the field in pixels. */
         virtual int
         getMinimumWidth(void)
         const;
-        
+
         /*! @brief Returns the text value associated with the field.
          @returns The text value associated with the field. */
         virtual String
         getText(void)
         const;
-        
+
         /*! @brief Return the width of the field in pixels.
          @return The width of the field in pixels. */
         virtual int
@@ -155,7 +155,7 @@ namespace MPlusM_Manager
         virtual int
         getX(void)
         const;
-        
+
         /*! @brief Return the top coordinate of the field.
          @return The top coordinate of the field. */
         virtual int
@@ -165,11 +165,11 @@ namespace MPlusM_Manager
         /*! @brief Do not perform validation on next loss of focus. */
         virtual void
         ignoreNextFocusLoss(void);
-        
+
         /*! @brief Perform the action triggered by the button. */
         virtual void
         performButtonAction(void);
-        
+
         /*! @brief Remove the components of this field from the specified component.
          @param whereToRemove The component to be removed from. */
         virtual void
@@ -178,12 +178,12 @@ namespace MPlusM_Manager
         /*! @brief Report an error in the field. */
         void
         reportErrorInField(void);
-        
+
         /*! @brief Sets the associated button.
          @param newButton The associated button. */
         virtual void
         setButton(TextButton * newButton = NULL);
-        
+
         /*! @brief Set the text value associated with the field.
          @param newText The text to be used. */
         virtual void
@@ -204,60 +204,60 @@ namespace MPlusM_Manager
          @c false if the validator rejects the field. */
         virtual bool
         validateField(void);
-        
+
         /*! @brief Check the field for validity.
          @param argsToUse A set of valid arguments.
          @returns @c true if the validator accepts the field or there's no validation required or
          @c false if the validator rejects the field. */
         virtual bool
         validateField(StringArray & argsToUse);
-        
+
     protected :
-        
+
     private :
-        
+
         /*! @brief Returns the name of the field.
          @returns The name of the field. */
         virtual const String &
         getName(void)
         const;
-        
+
         /*! @brief Mark the text editor data as invalid. */
         void
         markAsInvalid(void);
-        
+
         /*! @brief Mark the text editor data as valid. */
         void
         markAsValid(void);
-        
+
     public :
-    
+
     protected :
-    
+
     private :
 
         /*! @brief The text editor within the field. */
         ScopedPointer<ValidatingTextEditor> _textEditor;
-        
+
         /*! @brief The validator to use with the text editor data. */
         ScopedPointer<TextValidator> _validator;
-        
+
         /*! @brief The caption for the field. */
         ScopedPointer<Label> _caption;
-        
+
         /*! @brief An associated button for the field. */
         ScopedPointer<TextButton> _button;
-        
+
         /*! @brief The font to use with the label when the text editor data is invalid. */
         Font & _errorFont;
-        
+
         /*! @brief The entity that can report an error in this field. */
         FormFieldErrorResponder & _responder;
-        
+
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(CaptionedTextField)
-        
+
     }; // CaptionedTextField
-    
+
 } // MPlusM_Manager
 
 #endif // ! defined(mpmCaptionedTextField_H_)

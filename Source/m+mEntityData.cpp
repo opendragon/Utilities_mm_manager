@@ -49,7 +49,7 @@
 # pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
 #endif // defined(__APPLE__)
 /*! @file
- 
+
  @brief The class definition for an entity detected by the background scanner. */
 #if defined(__APPLE__)
 # pragma clang diagnostic pop
@@ -105,7 +105,7 @@ EntityData::~EntityData(void)
     for (Ports::iterator walker(_ports.begin()); _ports.end() != walker; ++walker)
     {
         PortData * aPort = *walker;
-        
+
         if (aPort)
         {
             delete aPort;
@@ -115,7 +115,7 @@ EntityData::~EntityData(void)
     for (size_t ii = 0, mm = _argumentList.size(); mm > ii; ++ii)
     {
         Utilities::BaseArgumentDescriptor * argDesc = _argumentList[ii];
-        
+
         delete argDesc;
     }
     _argumentList.clear();
@@ -147,7 +147,7 @@ EntityData::addPort(const YarpString &  portName,
                "protocolDescription = ", protocolDescription); //####
     PortData * aPort = new PortData(portName, portProtocol, protocolDescription, portKind,
                                     direction);
-    
+
     _ports.push_back(aPort);
     ODL_OBJEXIT_P(aPort); //####
     return aPort;
@@ -160,7 +160,7 @@ const
     ODL_ENTER(); //####
     ODL_LL1(idx, idx); //####
     MplusM::Utilities::BaseArgumentDescriptor * result;
-    
+
     if (_argumentList.size() > idx)
     {
         result = _argumentList[idx];
@@ -179,7 +179,7 @@ const
 {
     ODL_OBJENTER(); //####
     int result = static_cast<int>(_ports.size());
-    
+
     ODL_OBJEXIT_L(result); //####
     return result;
 } // EntityData::getNumPorts
@@ -190,7 +190,7 @@ const
 {
     ODL_OBJENTER(); //####
     PortData * result;
-    
+
     if ((0 <= num) && (static_cast<int>(_ports.size()) > num))
     {
         result = _ports.at(static_cast<size_t>(num));
