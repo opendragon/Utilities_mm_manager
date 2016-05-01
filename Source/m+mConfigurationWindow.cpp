@@ -565,7 +565,7 @@ ConfigurationWindow::setUpStandardFields(int &                    widthSoFar,
 {
     ODL_OBJENTER(); //####
     ODL_P3("widthSoFar = ", &widthSoFar, "heightSoFar = ", &heightSoFar, //####
-              "currentValues = ", &currentValues); //####
+           "currentValues = ", &currentValues); //####
     Component * content = getContentComponent();
     int         buttonHeight = ManagerApplication::getButtonHeight();
     Point<int>  dimensions;

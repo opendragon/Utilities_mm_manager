@@ -99,8 +99,8 @@ ServiceLaunchThread::ServiceLaunchThread(const String &      pathToExecutable,
 {
     ODL_ENTER(); //####
     ODL_S4s("pathToExecutable = ", pathToExecutable.toStdString(), "endpointName = ", //####
-               endpointName.toStdString(), "tag = ", tag.toStdString(), "portNumber = ", //####
-               portNumber.toStdString()); //####
+            endpointName.toStdString(), "tag = ", tag.toStdString(), "portNumber = ", //####
+            portNumber.toStdString()); //####
     ODL_P1("arguments = ", &arguments); //####
     ODL_B1("needsGo = ", needsGo); //####
 #if defined(OD_ENABLE_LOGGING_)

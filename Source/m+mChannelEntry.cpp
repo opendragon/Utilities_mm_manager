@@ -139,7 +139,7 @@ calculateMinDistance(float &          distanceSoFar,
 {
     ODL_ENTER(); //####
     ODL_P4("distanceSoFar = ", &distanceSoFar, "refPoint = ", &refPoint, "testPoint = ", //####
-              &testPoint, "bestSoFar = ", &bestSoFar); //####
+           &testPoint, "bestSoFar = ", &bestSoFar); //####
     bool  result;
     float newDistance = refPoint.getDistanceFrom(testPoint);
 
@@ -187,8 +187,8 @@ calculateAnchorForPoint(Position &       newCentre,
                         const Position & refCentre)
 {
     ODL_ENTER(); //####
-    ODL_P3("newCentre = ", &newCentre, "targetPoint = ", &targetPoint, //####
-              "refCentre = ", &refCentre); //####
+    ODL_P3("newCentre = ", &newCentre, "targetPoint = ", &targetPoint, "refCentre = ", //####
+           &refCentre); //####
     AnchorSide             anchor = kAnchorUnknown;
     float                  boxSize = (refCentre.getDistanceFrom(targetPoint) * kTargetBoxScale);
     float                  soFar = static_cast<float>(1e23); // Ridiculously big, just in case.
@@ -269,7 +269,7 @@ drawSourceAnchor(Graphics &       gg,
     if (kAnchorUnknown != anchor)
     {
         ODL_D4("anchor.x = ", anchorPos.getX(), "anchor.y = ", anchorPos.getY(), //####
-                  "first.x = ", first.getX(), "first.y = ", first.getY()); //####
+               "first.x = ", first.getX(), "first.y = ", first.getY()); //####
         ODL_D2("second.x = ", second.getX(), "second.y = ", second.getY()); //####
         gg.drawLine(anchorPos.getX(), anchorPos.getY(), first.getX(), first.getY(), thickness);
         gg.drawLine(anchorPos.getX(), anchorPos.getY(), second.getX(), second.getY(), thickness);
@@ -324,7 +324,7 @@ drawTargetAnchor(Graphics &       gg,
     if (kAnchorUnknown != anchor)
     {
         ODL_D4("anchor.x = ", anchorPos.getX(), "anchor.y = ", anchorPos.getY(), //####
-                  "first.x = ", first.getX(), "first.y = ", first.getY()); //####
+               "first.x = ", first.getX(), "first.y = ", first.getY()); //####
         ODL_D2("second.x = ", second.getX(), "second.y = ", second.getY()); //####
         gg.drawLine(anchorPos.getX(), anchorPos.getY(), first.getX(), first.getY(), thickness);
         gg.drawLine(anchorPos.getX(), anchorPos.getY(), second.getX(), second.getY(), thickness);
@@ -353,7 +353,7 @@ drawBezier(Graphics &       gg,
 {
     ODL_ENTER(); //####
     ODL_P4("gg = ", &gg, "startPoint = ", &startPoint, "endPoint = ", &endPoint, //####
-              "startCentre = ", &startCentre); //####
+           "startCentre = ", &startCentre); //####
     ODL_P1("endCentre = ", &endCentre); //####
     ODL_D1("thickness = ", thickness); //####
     Path     bezPath;
@@ -382,7 +382,7 @@ drawBezier(Graphics &       gg,
     {
         gg.strokePath(bezPath, PathStrokeType(thickness));
     }
-    ODL_EXIT();//####
+    ODL_EXIT(); //####
 } // drawBezier
 
 /*! @brief Draw a connection between entries.
@@ -416,12 +416,12 @@ drawConnection(Graphics &                gg,
         float      thickness;
 
         ODL_D4("sourcePosition.x = ", sourcePosition.getX(), "sourcePosition.y = ", //####
-                  sourcePosition.getY(), "destinationPosition.x = ", //####
-                  destinationPosition.getX(), "destinationPosition.y = ", //####
-                  destinationPosition.getY()); //####
+               sourcePosition.getY(), "destinationPosition.x = ", //####
+               destinationPosition.getX(), "destinationPosition.y = ", //####
+               destinationPosition.getY()); //####
         ODL_D4("sourceCentre.x = ", sourceCentre.getX(), "sourceCentre.y = ", //####
-                  sourceCentre.getY(), "destinationCentre.x = ", destinationCentre.getX(), //####
-                  "destinationCentre.y = ", destinationCentre.getY()); //####
+               sourceCentre.getY(), "destinationCentre.x = ", destinationCentre.getX(), //####
+               "destinationCentre.y = ", destinationCentre.getY()); //####
         if (destination->isService())
         {
             isBidirectional = true;
@@ -456,8 +456,8 @@ drawConnection(Graphics &                gg,
                                                           destinationCentre);
         }
         ODL_D4("startPoint.x <- ", startPoint.getX(), "startPoint.y <- ", //####
-                  startPoint.getY(), "endPoint.x <- ", endPoint.getX(), "endPoint.y <- ", //####
-                  endPoint.getY()); //####
+               startPoint.getY(), "endPoint.x <- ", endPoint.getX(), "endPoint.y <- ", //####
+               endPoint.getY()); //####
         switch (mode)
         {
             case Common::kChannelModeTCP :
@@ -500,7 +500,7 @@ protocolsMatch(const YarpString & sourceProtocol,
 {
     ODL_ENTER(); //####
     ODL_S2s("sourceProtocol = ", sourceProtocol, "destinationProtocol = ", //####
-               destinationProtocol); //####
+            destinationProtocol); //####
     ODL_B1("ignoreConstraints = ", ignoreConstraints); //####
     bool result = false;
 
@@ -543,7 +543,7 @@ ChannelEntry::ChannelEntry(ChannelContainer *  parent,
     ODL_ENTER(); //####
     ODL_P1("parent = ", parent); //####
     ODL_S4s("portName = ", portName, "portNumber = ", portNumber, "portProtocol = ", //####
-               portProtocol, "protocolDescription = ", protocolDescription); //####
+            portProtocol, "protocolDescription = ", protocolDescription); //####
     ODL_LL2("portKind = ", portKind, "direction = ", direction); //####
     Font &             textFont = getOwningPanel().getNormalFont();
     YarpString prefix;
@@ -944,8 +944,8 @@ ChannelEntry::drawDragLine(Graphics &       gg,
                                               kAnchorBottomCentre == destinationAnchor, position);
     }
     ODL_D4("startPoint.x <- ", startPoint.getX(), "startPoint.y <- ", //####
-              startPoint.getY(), "position.x <- ", position.getX(), "position.y <- ", //####
-              position.getY()); //####
+           startPoint.getY(), "position.x <- ", position.getX(), "position.y <- ", //####
+           position.getY()); //####
     if (isUDP)
     {
         gg.setColour(kUdpConnectionColour);
@@ -1171,7 +1171,7 @@ ChannelEntry::mouseDown(const MouseEvent & ee)
         if (ee.mods.isAltDown())
         {
             ODL_P2("originalComponent = ", ee.originalComponent, //####
-                      "eventComponent = ", ee.eventComponent); //####
+                   "eventComponent = ", ee.eventComponent); //####
             ODL_D2("x = ", ee.position.getX(), "y = ", ee.position.getY()); //####
             // Check if Add is OK for this entry.
             if ((kPortDirectionInput != _direction) && (kPortUsageClient != _usage))
@@ -1222,7 +1222,7 @@ ChannelEntry::mouseDrag(const MouseEvent & ee)
     if (ee.mods.isAltDown())
     {
         ODL_P2("originalComponent = ", ee.originalComponent, //####
-                  "eventComponent = ", ee.eventComponent); //####
+               "eventComponent = ", ee.eventComponent); //####
         ODL_D2("x = ", ee.position.getX(), "y = ", ee.position.getY()); //####
         EntitiesPanel & owningPanel(getOwningPanel());
 
@@ -1252,7 +1252,7 @@ ChannelEntry::mouseUp(const MouseEvent & ee)
     {
         // Check if we are processing an Add and this is OK.
         ODL_P2("originalComponent = ", ee.originalComponent, //####
-                  "eventComponent = ", ee.eventComponent); //####
+               "eventComponent = ", ee.eventComponent); //####
         ODL_D2("x = ", ee.position.getX(), "y = ", ee.position.getY()); //####
         if (owningPanel.isDragActive())
         {
@@ -1314,7 +1314,7 @@ ChannelEntry::paint(Graphics & gg)
     juce::Rectangle<float> area(getLocalBounds().toFloat());
 
     ODL_D4("x <- ", area.getX(), "y <- ", area.getY(), "w <- ",area.getWidth(), "h <- ", //####
-              area.getHeight()); //####
+           area.getHeight()); //####
     gg.setColour(kEntryBackgroundColour);
     gg.fillRect(area);
     area.setLeft(area.getX() + _parent->getTextInset());

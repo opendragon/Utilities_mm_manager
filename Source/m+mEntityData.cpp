@@ -93,7 +93,7 @@ EntityData::EntityData(const ContainerKind kind,
 {
     ODL_ENTER(); //####
     ODL_S4s("name = ", name, "behaviour = ", behaviour, "description = ", description, //####
-               "extraInfo = ", extraInfo); //####
+            "extraInfo = ", extraInfo); //####
     ODL_S1s("requests = ", requests); //####
     ODL_EXIT_P(this); //####
 } // EntityData::EntityData
@@ -144,7 +144,7 @@ EntityData::addPort(const YarpString &  portName,
 {
     ODL_OBJENTER(); //####
     ODL_S3s("portName = ", portName, "portProtocol = ", portProtocol, //####
-               "protocolDescription = ", protocolDescription); //####
+            "protocolDescription = ", protocolDescription); //####
     PortData * aPort = new PortData(portName, portProtocol, protocolDescription, portKind,
                                     direction);
 

@@ -413,7 +413,7 @@ ManagerApplication::connectPeekChannel(void)
                                                    STANDARD_WAIT_TIME_))
         {
             ODL_LOG("(! Utilities::NetworkConnectWithRetries(MpM_REGISTRY_STATUS_NAME, " //####
-                   "_peeker->name(), STANDARD_WAIT_TIME_))"); //####
+                    "_peeker->name(), STANDARD_WAIT_TIME_))"); //####
         }
     }
     ODL_OBJEXIT(); //####
@@ -1001,9 +1001,9 @@ ManagerApplication::getPrimaryChannelForService(const ApplicationInfo & appInfo,
 {
     ODL_OBJENTER(); //####
     ODL_P3("appInfo = ", &appInfo, "arguments = ", &arguments, "channelName = ", //####
-              &channelName); //####
+           &channelName); //####
     ODL_S3s("endpointName = ", endpointName.toStdString(), "tag = ", tag.toStdString(), //####
-               "portNumber = ", portNumber.toStdString()); //####
+            "portNumber = ", portNumber.toStdString()); //####
     ODL_LL1("tagModifierCount = ", tagModifierCount); //####
     bool         okSoFar = false;
     ChildProcess runApplication;

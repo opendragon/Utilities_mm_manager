@@ -192,7 +192,7 @@ EntitiesPanel::adjustSize(const bool andRepaint)
         bool haveValues = false;
 
         ODL_LL4("outerL = ", outerL, "outerT = ", outerT, "outerW = ", outerW, //####
-                   "outerH = ", outerH); //####
+                "outerH = ", outerH); //####
         for (ContainerList::const_iterator it(_knownEntities.begin());
              _knownEntities.end() != it; ++it)
         {
@@ -207,8 +207,8 @@ EntitiesPanel::adjustSize(const bool andRepaint)
                 int                  entityBottom = entityTop + entityBounds.getHeight();
 
                 ODL_LL4("eB.x = ", entityBounds.getX(), "eB.y = ", entityBounds.getY(), //####
-                           "eB.w = ", entityBounds.getWidth(), "eB.h = ", //####
-                           entityBounds.getHeight()); //####
+                        "eB.w = ", entityBounds.getWidth(), "eB.h = ", //####
+                        entityBounds.getHeight()); //####
                 if (haveValues)
                 {
                     minX = jmin(minX, entityLeft);
@@ -238,7 +238,7 @@ EntitiesPanel::adjustSize(const bool andRepaint)
             juce::Rectangle<int> newBounds(minLeft, minTop, maxRight - minLeft, maxBottom - minTop);
 
             ODL_LL4("minLeft = ", minLeft, "minTop = ", minTop, "maxRight = ", maxRight, //####
-                       "maxBottom = ", maxBottom); //####
+                    "maxBottom = ", maxBottom); //####
             if (oldBounds != newBounds)
             {
                 ODL_LOG("about to call setBounds()"); //####
@@ -253,7 +253,7 @@ EntitiesPanel::adjustSize(const bool andRepaint)
             int                  currH = currBounds.getHeight();
 
             ODL_LL4("currX = ", currX, "currY = ", currY, "currW = ", currW, "currH = ", //####
-                       currH); //####
+                    currH); //####
             if (vertBar)
             {
                 ODL_LL2("CR.y = ", outerT, "CR.h = ", outerH); //####

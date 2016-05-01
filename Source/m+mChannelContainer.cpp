@@ -120,7 +120,7 @@ ChannelContainer::ChannelContainer(const ContainerKind kind,
 {
     ODL_ENTER(); //####
     ODL_S4s("title = ", title, "behaviour = ", behaviour, "description = ", description, //####
-               "extraInfo = ", extraInfo); //####
+            "extraInfo = ", extraInfo); //####
     ODL_S2s("requests = ", requests, "ipAddress = ", ipAddress); //####
     Font & headerFont = _owner.getNormalFont();
 
@@ -180,7 +180,7 @@ ChannelContainer::addPort(const YarpString &  portName,
 {
     ODL_OBJENTER(); //####
     ODL_S4s("portName = ", portName, "portNumber = ", portNumber, "portProtocol = ", //####
-               portProtocol, "protocolDescription = ", protocolDescription); //####
+            portProtocol, "protocolDescription = ", protocolDescription); //####
     int            countBefore = getNumPorts();
     ChannelEntry * aPort = new ChannelEntry(this, portName, portNumber, portProtocol,
                                             protocolDescription, portKind, direction);

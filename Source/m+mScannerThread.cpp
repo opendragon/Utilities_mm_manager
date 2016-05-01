@@ -105,7 +105,7 @@ findMatchingIpAddressAndPort(const Utilities::PortVector & detectedPorts,
 {
     ODL_ENTER(); //####
     ODL_P3("detectedPorts = ", &detectedPorts, "ipAddress = ", &ipAddress, "ipPort = ", //####
-              &ipPort); //####
+           &ipPort); //####
     ODL_S1s("portName = ", portName); //####
     ipAddress = ipPort = "";
     for (Utilities::PortVector::const_iterator walker(detectedPorts.begin());
@@ -550,8 +550,8 @@ ScannerThread::determineDirection(ChannelEntry *        oldEntry,
                                                                   checkStuff))
                     {
                         ODL_LOG("(! Utilities::NetworkDisconnectWithRetries(" //####
-                               "lOutputOnlyPortName, portName, STANDARD_WAIT_TIME_, " //####
-                               "checker, checkStuff))"); //####
+                                "lOutputOnlyPortName, portName, STANDARD_WAIT_TIME_, " //####
+                                "checker, checkStuff))"); //####
                     }
                 }
                 if (Utilities::NetworkConnectWithRetries(portName, _inputOnlyPortName,
@@ -564,8 +564,8 @@ ScannerThread::determineDirection(ChannelEntry *        oldEntry,
                                                                   checkStuff))
                     {
                         ODL_LOG("(! Utilities::NetworkDisconnectWithRetries(portName, " //####
-                               "lInputOnlyPortName, STANDARD_WAIT_TIME_, checker, " //####
-                               "checkStuff))"); //####
+                                "lInputOnlyPortName, STANDARD_WAIT_TIME_, checker, " //####
+                                "checkStuff))"); //####
                     }
                 }
                 break;
@@ -787,7 +787,7 @@ ScannerThread::run(void)
                     shouldCleanupSoon = _cleanupSoon;
                     shouldScanSoon = _scanSoon;
                     ODL_B2("shouldCleanupSoon <- ", shouldCleanupSoon, //####
-                              "shouldScanSoon <- ", shouldScanSoon); //####
+                           "shouldScanSoon <- ", shouldScanSoon); //####
                     relinquishFromRead();
                     // Sleep at least once!
                     if (0 <= kk)
@@ -815,7 +815,7 @@ ScannerThread::run(void)
             _scanIsComplete = true;
             _scanSoon = _scanCanProceed = false;
             ODL_B3("_scanIsComplete <- ", _scanIsComplete, "_scanCanProceed <- ", //####
-                      _scanCanProceed, "_scanSoon <- ", _scanSoon); //####
+                   _scanCanProceed, "_scanSoon <- ", _scanSoon); //####
             relinquishFromWrite();
             // The data has been gathered, so it's safe for the foreground thread to process it -
             // force a repaint of the displayed panel, which will retrieve our data.
@@ -925,7 +925,7 @@ ScannerThread::run(void)
                                 shouldCleanupSoon = _cleanupSoon;
                                 shouldScanSoon = _scanSoon;
                                 ODL_B2("shouldCleanupSoon <- ", shouldCleanupSoon, //####
-                                          "shouldScanSoon <- ", shouldScanSoon); //####
+                                       "shouldScanSoon <- ", shouldScanSoon); //####
                                 relinquishFromRead();
                                 // Sleep at least once!
                                 if (0 <= kk)
@@ -942,7 +942,7 @@ ScannerThread::run(void)
                             if (needToLeave || shouldCleanupSoon || shouldScanSoon)
                             {
                                 ODL_LOG("(needToLeave || shouldCleanupSoon || " //####
-                                       "shouldScanSoon)"); //####
+                                        "shouldScanSoon)"); //####
                                 break;
                             }
 
@@ -993,7 +993,7 @@ ScannerThread::run(void)
                     shouldCleanupSoon = _cleanupSoon;
                     shouldScanSoon = _scanSoon;
                     ODL_B2("shouldCleanupSoon <- ", shouldCleanupSoon, //####
-                              "shouldScanSoon <- ", shouldScanSoon); //####
+                           "shouldScanSoon <- ", shouldScanSoon); //####
                     relinquishFromRead();
                     // Sleep at least once!
                     if (0 <= kk)

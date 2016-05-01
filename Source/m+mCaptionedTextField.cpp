@@ -123,10 +123,10 @@ CaptionedTextField::CaptionedTextField(FormFieldErrorResponder & responder,
 {
     ODL_ENTER(); //####
     ODL_P4("responder = ", &responder, "regularLabelFont = ", &regularLabelFont, //####
-              "errorLabelFont = ", &errorLabelFont, "buttonHandler = ", buttonHandler); //####
+           "errorLabelFont = ", &errorLabelFont, "buttonHandler = ", buttonHandler); //####
     ODL_P1("validator = ", validator); //####
     ODL_S2s("captionTitle = ", captionTitle, "componentName = ", //####
-               componentName.toStdString()); //####
+            componentName.toStdString()); //####
     ODL_LL3("index = ", index, "top = ", top, "passwordCharacter = ", passwordCharacter); //####
     ODL_B2("boundsSetLater = ", boundsSetLater, "forFilePath = ", forFilePath); //####
     Point<int> dimensions;

@@ -471,7 +471,7 @@ ContentPanel::paint(Graphics & gg)
     gg.fillAll();
     _channelClicked = _containerClicked = false;
     ODL_B2("_channelClicked <- ", _channelClicked, "_containerClicked <- ", //####
-              _containerClicked); //####
+           _containerClicked); //####
     if (_selectedChannel)
     {
         ofInterest = _selectedChannel->getParent();
@@ -732,11 +732,11 @@ ContentPanel::setChannelOfInterest(ChannelEntry * aChannel)
     _channelClicked = (NULL != aChannel);
     _containerClicked = false;
     ODL_B2("_channelClicked <- ", _channelClicked, "_containerClicked <- ", //####
-              _containerClicked); //####
+           _containerClicked); //####
     _selectedChannel = aChannel;
     _selectedContainer = NULL;
     ODL_P2("_selectedChannel <- ", _selectedChannel, "_selectedContainer <- ", //####
-              _selectedContainer); //####
+           _selectedContainer); //####
     ODL_OBJEXIT(); //####
 } // ContentPanel::setChannelOfInterest
 
@@ -752,7 +752,7 @@ ContentPanel::setContainerOfInterest(ChannelContainer * aContainer)
         _selectedChannel = NULL;
         _selectedContainer = aContainer;
         ODL_P2("_selectedChannel <- ", _selectedChannel, "_selectedContainer <- ", //####
-                  _selectedContainer); //####
+               _selectedContainer); //####
     }
     requestWindowRepaint();
     ODL_OBJEXIT(); //####
@@ -1255,7 +1255,7 @@ ContentPanel::updatePanels(ScannerThread & scanner)
         if (thisPort && otherPort)
         {
             ODL_S2s("thisPort.name = ", thisPort->getPortName(), //####
-                       "otherPort.name = ", otherPort->getPortName()); //####
+                    "otherPort.name = ", otherPort->getPortName()); //####
             thisPort->addOutputConnection(otherPort, walker->_mode, false);
             otherPort->addInputConnection(thisPort, walker->_mode, false);
         }
@@ -1288,8 +1288,8 @@ ContentPanel::visibleAreaChanged(const juce::Rectangle<int> & newVisibleArea)
 #endif // ! defined(OD_ENABLE_LOGGING_)
     ODL_OBJENTER(); //####
     ODL_LL4("nVA.x = ", newVisibleArea.getX(), "nVA.y = ", newVisibleArea.getY(), //####
-               "nVA.w = ", newVisibleArea.getWidth(), "nVA.h = ", //####
-               newVisibleArea.getHeight()); //####
+            "nVA.w = ", newVisibleArea.getWidth(), "nVA.h = ", //####
+            newVisibleArea.getHeight()); //####
     ODL_OBJEXIT(); //####
 } // ContentPanel::visibleAreaChanged
 #if (! MAC_OR_LINUX_)

@@ -108,7 +108,7 @@ CheckboxField::CheckboxField(Font &         regularLabelFont,
     ODL_ENTER(); //####
     ODL_P1("regularLabelFont = ", &regularLabelFont); //####
     ODL_S2s("captionTitle = ", captionTitle.toStdString(), "componentName = ", //####
-               componentName.toStdString()); //####
+            componentName.toStdString()); //####
     ODL_LL2("index = ", index, "top = ", top); //####
     Point<int> dimensions;
     int        adjustedEditorHeight = static_cast<int>(_regularFont.getHeight() +

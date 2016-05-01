@@ -142,7 +142,7 @@ SettingsWindow::SettingsWindow(const String &          title,
     ODL_ENTER(); //####
     ODL_S2s("title = ", title.toStdString(), "execType = ", execType.toStdString()); //####
     ODL_P4("appInfo = ", &appInfo, "endpointToUse = ", &endpointToUse, "tagToUse = ", //####
-              &tagToUse, "portToUse = ", &portToUse); //####
+           &tagToUse, "portToUse = ", &portToUse); //####
     ODL_P1("argsToUse = ", &argsToUse); //####
     _contentArea.setSize(100, 100);
     setContentNonOwned(&_contentArea, true);
