@@ -227,6 +227,10 @@ namespace MPlusM_Manager
 
     private :
 
+        /*! @brief The copy constructor.
+         @param other The object to be copied. */
+        ManagerApplication(const ManagerApplication & other);
+        
         /*! @brief Called when an attempt was made to launch another instance of the application.
          @param commandLine The arguments passed to the new instance. */
         virtual void
@@ -291,6 +295,12 @@ namespace MPlusM_Manager
         virtual bool
         moreThanOneInstanceAllowed(void);
 
+        /*! @brief The assignment operator.
+         @param other The object to be copied.
+         @returns The updated object. */
+        ManagerApplication &
+        operator =(const ManagerApplication & other);
+        
         /*! @brief Put back the YARP configuration settings that were in effect prior to launching a
          private YARP network. */
         void
@@ -316,8 +326,6 @@ namespace MPlusM_Manager
          if the YARP executable is invalid or the user does not want a private YARP network. */
         bool
         validateYarp(void);
-
-        COPY_AND_ASSIGNMENT_(ManagerApplication);
 
     public :
 

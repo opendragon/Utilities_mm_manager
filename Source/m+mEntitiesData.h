@@ -121,7 +121,15 @@ namespace MPlusM_Manager
 
     private :
 
-        COPY_AND_ASSIGNMENT_(EntitiesData);
+        /*! @brief The copy constructor.
+         @param other The object to be copied. */
+        EntitiesData(const EntitiesData & other);
+        
+        /*! @brief The assignment operator.
+         @param other The object to be copied.
+         @returns The updated object. */
+        EntitiesData &
+        operator =(const EntitiesData & other);
 
     public :
 

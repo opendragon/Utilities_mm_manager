@@ -85,6 +85,10 @@ namespace MPlusM_Manager
 
     private :
 
+        /*! @brief The copy constructor.
+         @param other The object to be copied. */
+        PeekInputHandler(const PeekInputHandler & other);
+        
         /*! @brief Process partially-structured input data.
          @param input The partially-structured input data.
          @param senderChannel The name of the channel used to send the input data.
@@ -97,7 +101,11 @@ namespace MPlusM_Manager
                     yarp::os::ConnectionWriter * replyMechanism,
                     const size_t                 numBytes);
 
-        COPY_AND_ASSIGNMENT_(PeekInputHandler);
+        /*! @brief The assignment operator.
+         @param other The object to be copied.
+         @returns The updated object. */
+        PeekInputHandler &
+        operator =(const PeekInputHandler & other);
 
     public :
 
