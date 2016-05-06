@@ -230,7 +230,7 @@ namespace MPlusM_Manager
         /*! @brief The copy constructor.
          @param other The object to be copied. */
         ManagerApplication(const ManagerApplication & other);
-        
+
         /*! @brief Called when an attempt was made to launch another instance of the application.
          @param commandLine The arguments passed to the new instance. */
         virtual void
@@ -300,7 +300,7 @@ namespace MPlusM_Manager
          @returns The updated object. */
         ManagerApplication &
         operator =(const ManagerApplication & other);
-        
+
         /*! @brief Put back the YARP configuration settings that were in effect prior to launching a
          private YARP network. */
         void

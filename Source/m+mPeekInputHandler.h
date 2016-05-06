@@ -88,7 +88,7 @@ namespace MPlusM_Manager
         /*! @brief The copy constructor.
          @param other The object to be copied. */
         PeekInputHandler(const PeekInputHandler & other);
-        
+
         /*! @brief Process partially-structured input data.
          @param input The partially-structured input data.
          @param senderChannel The name of the channel used to send the input data.
