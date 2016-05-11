@@ -1,15 +1,14 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       m+mPeekInputHandler.h
+//  File:       m+mYarpLaunchThread.hpp
 //
 //  Project:    m+m
 //
-//  Contains:   The class declaration for the custom data channel input handler used to watch the
-//              Registry Service.
+//  Contains:   The class declaration for the background YARP launcher.
 //
 //  Written by: Norman Jaffe
 //
-//  Copyright:  (c) 2014 by H Plus Technologies Ltd. and Simon Fraser University.
+//  Copyright:  (c) 2015 by H Plus Technologies Ltd. and Simon Fraser University.
 //
 //              All rights reserved. Redistribution and use in source and binary forms, with or
 //              without modification, are permitted provided that the following conditions are met:
@@ -33,14 +32,14 @@
 //              ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 //              DAMAGE.
 //
-//  Created:    2014-09-16
+//  Created:    2015-05-05
 //
 //--------------------------------------------------------------------------------------------------
 
-#if (! defined(mpmPeekInputHandler_H_))
-# define mpmPeekInputHandler_H_ /* Header guard */
+#if (! defined(mpmYarpLaunchThread_HPP_))
+# define mpmYarpLaunchThread_HPP_ /* Header guard */
 
-# include <m+m/m+mBaseInputHandler.h>
+# include "m+mManagerDataTypes.hpp"
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -49,19 +48,15 @@
 # endif // defined(__APPLE__)
 /*! @file
 
- @brief The class declaration for the custom data channel input handler used to watch the Registry
- Service. */
+ @brief The class declaration for the background YARP launcher. */
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
 
 namespace MPlusM_Manager
 {
-    /*! @brief A handler for partially-structured input data.
-
-     The data is expected to be in the form of an integer specifying the number of values to
-     generate. */
-    class PeekInputHandler : public MplusM::Common::BaseInputHandler
+    /*! @brief A background YARP launcher. */
+    class YarpLaunchThread : public Thread
     {
     public :
 
@@ -70,42 +65,33 @@ namespace MPlusM_Manager
     private :
 
         /*! @brief The class that this class is derived from. */
-        typedef BaseInputHandler inherited;
+        typedef Thread inherited;
 
     public :
 
-        /*! @brief The constructor. */
-        PeekInputHandler(void);
+        /*! @brief The constructor.
+         @param pathToExecutable The file system path for the executable.
+         @param ipAddress The network address to use.
+         @param portNumber The network port number to use. */
+        YarpLaunchThread(const String & pathToExecutable,
+                         const String & ipAddress,
+                         const int      portNumber);
 
         /*! @brief The destructor. */
         virtual
-        ~PeekInputHandler(void);
+        ~YarpLaunchThread(void);
+
+        /*! @brief Force the child process to terminate. */
+        void
+        killChildProcess(void);
 
     protected :
 
     private :
 
-        /*! @brief The copy constructor.
-         @param other The object to be copied. */
-        PeekInputHandler(const PeekInputHandler & other);
-
-        /*! @brief Process partially-structured input data.
-         @param input The partially-structured input data.
-         @param senderChannel The name of the channel used to send the input data.
-         @param replyMechanism @c NULL if no reply is expected and non-@c NULL otherwise.
-         @param numBytes The number of bytes available on the connection.
-         @returns @c true if the input was correctly structured and successfully processed. */
-        virtual bool
-        handleInput(const yarp::os::Bottle &     input,
-                    const YarpString &           senderChannel,
-                    yarp::os::ConnectionWriter * replyMechanism,
-                    const size_t                 numBytes);
-
-        /*! @brief The assignment operator.
-         @param other The object to be copied.
-         @returns The updated object. */
-        PeekInputHandler &
-        operator =(const PeekInputHandler & other);
+        /*! @brief Perform the background scan. */
+        virtual void
+        run(void);
 
     public :
 
@@ -113,8 +99,22 @@ namespace MPlusM_Manager
 
     private :
 
-    }; // PeekInputHandler
+        /*! @brief The running YARP process. */
+        ScopedPointer<ChildProcess> _yarpProcess;
+
+        /*! @brief The network address to use. */
+        String _yarpAddress;
+
+        /*! @brief The file system path to the executable. */
+        String _yarpPath;
+
+        /*! @brief The network port number to use. */
+        int _yarpPort;
+
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(YarpLaunchThread)
+
+    }; // YarpLaunchThread
 
 } // MPlusM_Manager
 
-#endif // ! defined(mpmPeekInputHandler_H_)
+#endif // ! defined(mpmYarpLaunchThread_HPP_)

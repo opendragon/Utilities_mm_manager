@@ -37,13 +37,13 @@
 //
 //--------------------------------------------------------------------------------------------------
 
-#include "m+mEntitiesPanel.h"
+#include "m+mEntitiesPanel.hpp"
 
-#include "m+mChannelContainer.h"
-#include "m+mChannelEntry.h"
-#include "m+mContentPanel.h"
-#include "m+mFormField.h"
-#include "m+mManagerWindow.h"
+#include "m+mChannelContainer.hpp"
+#include "m+mChannelEntry.hpp"
+#include "m+mContentPanel.hpp"
+#include "m+mFormField.hpp"
+#include "m+mManagerWindow.hpp"
 
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>

@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       m+mContentPanel.h
+//  File:       m+mContentPanel.hpp
 //
 //  Project:    m+m
 //
@@ -37,10 +37,10 @@
 //
 //--------------------------------------------------------------------------------------------------
 
-#if (! defined(mpmContentPanel_H_))
-# define mpmContentPanel_H_ /* Header guard */
+#if (! defined(mpmContentPanel_HPP_))
+# define mpmContentPanel_HPP_ /* Header guard */
 
-# include "m+mManagerDataTypes.h"
+# include "m+mManagerDataTypes.hpp"
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -316,4 +316,4 @@ namespace MPlusM_Manager
 
 } // MPlusM_Manager
 
-#endif // ! defined(mpmContentPanel_H_)
+#endif // ! defined(mpmContentPanel_HPP_)

@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       m+mChannelEntry.h
+//  File:       m+mChannelEntry.hpp
 //
 //  Project:    m+m
 //
@@ -36,10 +36,10 @@
 //
 //--------------------------------------------------------------------------------------------------
 
-#if (! defined(mpmChannelEntry_H_))
-# define mpmChannelEntry_H_ /* Header guard */
+#if (! defined(mpmChannelEntry_HPP_))
+# define mpmChannelEntry_HPP_ /* Header guard */
 
-# include "m+mManagerDataTypes.h"
+# include "m+mManagerDataTypes.hpp"
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -494,4 +494,4 @@ namespace MPlusM_Manager
 
 } // MPlusM_Manager
 
-#endif // ! defined(mpmChannelEntry_H_)
+#endif // ! defined(mpmChannelEntry_HPP_)

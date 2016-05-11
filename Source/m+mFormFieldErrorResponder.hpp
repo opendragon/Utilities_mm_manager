@@ -1,10 +1,10 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       m+mServiceLaunchThread.h
+//  File:       m+mFormFieldErrorResponder.hpp
 //
 //  Project:    m+m
 //
-//  Contains:   The class declaration for the background service launcher.
+//  Contains:   The class declaration for an error reporting abstraction.
 //
 //  Written by: Norman Jaffe
 //
@@ -32,14 +32,14 @@
 //              ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 //              DAMAGE.
 //
-//  Created:    2015-05-12
+//  Created:    2015-08-31
 //
 //--------------------------------------------------------------------------------------------------
 
-#if (! defined(mpmServiceLaunchThread_H_))
-# define mpmServiceLaunchThread_H_ /* Header guard */
+#if (! defined(mpmFormFieldErrorResponder_HPP_))
+# define mpmFormFieldErrorResponder_HPP_ /* Header guard */
 
-# include "m+mManagerDataTypes.h"
+# include "m+mManagerDataTypes.hpp"
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -48,15 +48,17 @@
 # endif // defined(__APPLE__)
 /*! @file
 
- @brief The class declaration for the background service launcher. */
+ @brief The class declaration for an error reporting abstraction. */
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
 
 namespace MPlusM_Manager
 {
-    /*! @brief A background service launcher. */
-    class ServiceLaunchThread : public Thread
+    class FormField;
+
+    /*! @brief An error reporting abstraction. */
+    class FormFieldErrorResponder
     {
     public :
 
@@ -64,42 +66,23 @@ namespace MPlusM_Manager
 
     private :
 
-        /*! @brief The class that this class is derived from. */
-        typedef Thread inherited;
-
     public :
 
-        /*! @brief The constructor.
-         @param pathToExecutable The file system path for the executable.
-         @param endpointName The endpoint to use, if not the default.
-         @param tag The tag to use, if any.
-         @param portNumber The network port number to use.
-         @param tagModifierCount The number of bytes of the IP address to use as a tag modifier.
-         @param arguments The arguments to the service.
-         @param needsGo @c true if a '--go' option should be used with the executable. */
-        ServiceLaunchThread(const String &      pathToExecutable,
-                            const String &      endpointName,
-                            const String &      tag,
-                            const String &      portNumber,
-                            const int           tagModifierCount,
-                            const StringArray & arguments,
-                            const bool          needsGo);
+        /*! @brief The constructor. */
+        FormFieldErrorResponder(void);
 
         /*! @brief The destructor. */
         virtual
-        ~ServiceLaunchThread(void);
+        ~FormFieldErrorResponder(void);
 
-        /*! @brief Force the child process to terminate. */
-        void
-        killChildProcess(void);
+        /*! @brief Report an error in a field.
+         @param fieldOfInterest The field to be reported. */
+        virtual void
+        reportErrorInField(FormField & fieldOfInterest) = 0;
 
     protected :
 
     private :
-
-        /*! @brief Perform the background scan. */
-        virtual void
-        run(void);
 
     public :
 
@@ -107,33 +90,10 @@ namespace MPlusM_Manager
 
     private :
 
-        /*! @brief The running background service process. */
-        ScopedPointer<ChildProcess> _serviceProcess;
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FormFieldErrorResponder)
 
-        /*! @brief The endpoint for the service. */
-        String _serviceEndpoint;
-
-        /*! @brief The file system path to the executable. */
-        String _servicePath;
-
-        /*! @brief The network port number to use. */
-        String _servicePort;
-
-        /*! @brief The tag for the service. */
-        String _serviceTag;
-
-        /*! @brief The arguments to the executable. */
-        StringArray _arguments;
-
-        int _tagModifierCount;
-
-        /*! @brief @c true if the '--go' option should be used. */
-        bool _needsGo;
-
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ServiceLaunchThread)
-
-    }; // ServiceLaunchThread
+    }; // FormFieldErrorResponder
 
 } // MPlusM_Manager
 
-#endif // ! defined(mpmServiceLaunchThread_H_)
+#endif // ! defined(mpmFormFieldErrorResponder_HPP_)

@@ -1,10 +1,11 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       m+mEntitiesData.h
+//  File:       m+mPeekInputHandler.hpp
 //
 //  Project:    m+m
 //
-//  Contains:   The class declaration for the data collected by the background scanner.
+//  Contains:   The class declaration for the custom data channel input handler used to watch the
+//              Registry Service.
 //
 //  Written by: Norman Jaffe
 //
@@ -32,14 +33,14 @@
 //              ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 //              DAMAGE.
 //
-//  Created:    2014-08-06
+//  Created:    2014-09-16
 //
 //--------------------------------------------------------------------------------------------------
 
-#if (! defined(mpmEntitiesData_H_))
-# define mpmEntitiesData_H_ /* Header guard */
+#if (! defined(mpmPeekInputHandler_HPP_))
+# define mpmPeekInputHandler_HPP_ /* Header guard */
 
-# include "m+mManagerDataTypes.h"
+# include <m+m/m+mBaseInputHandler.hpp>
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -48,15 +49,19 @@
 # endif // defined(__APPLE__)
 /*! @file
 
- @brief The class declaration for the data collected by the background scanner. */
+ @brief The class declaration for the custom data channel input handler used to watch the Registry
+ Service. */
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
 
 namespace MPlusM_Manager
 {
-    /*! @brief The data collected by the background scanner. */
-    class EntitiesData
+    /*! @brief A handler for partially-structured input data.
+
+     The data is expected to be in the form of an integer specifying the number of values to
+     generate. */
+    class PeekInputHandler : public MplusM::Common::BaseInputHandler
     {
     public :
 
@@ -64,58 +69,17 @@ namespace MPlusM_Manager
 
     private :
 
+        /*! @brief The class that this class is derived from. */
+        typedef BaseInputHandler inherited;
+
     public :
 
         /*! @brief The constructor. */
-        EntitiesData(void);
+        PeekInputHandler(void);
 
         /*! @brief The destructor. */
         virtual
-        ~EntitiesData(void);
-
-        /*! @brief Record a connection between ports.
-         @param inName The name of the destination port.
-         @param outName The name of the source port.
-         @param mode The mode of the connection. */
-        void
-        addConnection(const YarpString &          inName,
-                      const YarpString &          outName,
-                      MplusM::Common::ChannelMode mode);
-
-        /*! @brief Add an entity to the list of known entities.
-         @param anEntity The entity to be added. */
-        void
-        addEntity(EntityData * anEntity);
-
-        /*! @brief Clear out connection information. */
-        void
-        clearConnections(void);
-
-        /*! @brief Release all data held by the panel. */
-        void
-        clearOutData(void);
-
-        /*! @brief Return the list of detected connections.
-         @returns The list of detected connections. */
-        inline const ConnectionList &
-        getConnections(void)
-        const
-        {
-            return _connections;
-        } // getConnections
-
-        /*! @brief Return an entity by index.
-         @param index The zero-origin index of the entity.
-         @returns The entity if the index is within range and @c NULL otherwise. */
-        EntityData *
-        getEntity(const size_t index)
-        const;
-
-        /*! @brief Return the number of entities.
-         @returns The number of entities. */
-        size_t
-        getNumberOfEntities(void)
-        const;
+        ~PeekInputHandler(void);
 
     protected :
 
@@ -123,13 +87,25 @@ namespace MPlusM_Manager
 
         /*! @brief The copy constructor.
          @param other The object to be copied. */
-        EntitiesData(const EntitiesData & other);
+        PeekInputHandler(const PeekInputHandler & other);
+
+        /*! @brief Process partially-structured input data.
+         @param input The partially-structured input data.
+         @param senderChannel The name of the channel used to send the input data.
+         @param replyMechanism @c NULL if no reply is expected and non-@c NULL otherwise.
+         @param numBytes The number of bytes available on the connection.
+         @returns @c true if the input was correctly structured and successfully processed. */
+        virtual bool
+        handleInput(const yarp::os::Bottle &     input,
+                    const YarpString &           senderChannel,
+                    yarp::os::ConnectionWriter * replyMechanism,
+                    const size_t                 numBytes);
 
         /*! @brief The assignment operator.
          @param other The object to be copied.
          @returns The updated object. */
-        EntitiesData &
-        operator =(const EntitiesData & other);
+        PeekInputHandler &
+        operator =(const PeekInputHandler & other);
 
     public :
 
@@ -137,14 +113,8 @@ namespace MPlusM_Manager
 
     private :
 
-        /*! @brief A set of connections. */
-        ConnectionList _connections;
-
-        /*! @brief A set of entities. */
-        EntitiesList _entities;
-
-    }; // EntitiesData
+    }; // PeekInputHandler
 
 } // MPlusM_Manager
 
-#endif // ! defined(mpmEntitiesData_H_)
+#endif // ! defined(mpmPeekInputHandler_HPP_)

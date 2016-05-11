@@ -36,18 +36,18 @@
 //
 //--------------------------------------------------------------------------------------------------
 
-#include "m+mManagerApplication.h"
+#include "m+mManagerApplication.hpp"
 
-#include "m+mEntitiesPanel.h"
-#include "m+mPeekInputHandler.h"
-#include "m+mRegistryLaunchThread.h"
-#include "m+mScannerThread.h"
-#include "m+mServiceLaunchThread.h"
-#include "m+mSettingsWindow.h"
-#include "m+mYarpLaunchThread.h"
+#include "m+mEntitiesPanel.hpp"
+#include "m+mPeekInputHandler.hpp"
+#include "m+mRegistryLaunchThread.hpp"
+#include "m+mScannerThread.hpp"
+#include "m+mServiceLaunchThread.hpp"
+#include "m+mSettingsWindow.hpp"
+#include "m+mYarpLaunchThread.hpp"
 
-#include <m+m/m+mEndpoint.h>
-#include <m+m/m+mRequests.h>
+#include <m+m/m+mEndpoint.hpp>
+#include <m+m/m+mRequests.hpp>
 
 #if (! MAC_OR_LINUX_)
 # include <io.h>
@@ -1498,9 +1498,10 @@ ManagerApplication::validateYarp(void)
 # pragma mark Global functions
 #endif // defined(__APPLE__)
 
-void MPlusM_Manager::CalculateTextArea(Point<int> &   dimensions,
-                                       const Font &   aFont,
-                                       const String & aString)
+void
+MPlusM_Manager::CalculateTextArea(Point<int> &   dimensions,
+                                  const Font &   aFont,
+                                  const String & aString)
 {
     ODL_ENTER(); //####
     ODL_P2("dimensions = ", &dimensions, "aFont = ", &aFont); //####
@@ -1530,7 +1531,8 @@ void MPlusM_Manager::CalculateTextArea(Point<int> &   dimensions,
 # pragma warning(push)
 # pragma warning(disable: 4100)
 #endif // ! MAC_OR_LINUX_
-bool CheckForExit(void * stuff)
+bool
+CheckForExit(void * stuff)
 {
 #if (! defined(OD_ENABLE_LOGGING_))
 # if MAC_OR_LINUX_
@@ -1546,8 +1548,9 @@ bool CheckForExit(void * stuff)
 # pragma warning(pop)
 #endif // ! MAC_OR_LINUX_
 
-bool LazyLaunchProcess(ChildProcess & aProcess,
-                       const int      timeout)
+bool
+LazyLaunchProcess(ChildProcess & aProcess,
+                  const int      timeout)
 {
     ODL_ENTER(); //####
     ODL_P1("aProcess = ", &aProcess); //####
@@ -1590,7 +1593,8 @@ bool LazyLaunchProcess(ChildProcess & aProcess,
     return result;
 } // LazyLaunchProcess
 
-void SetExitRequest(void)
+void
+SetExitRequest(void)
 {
     ODL_ENTER(); //####
     lExitRequested = true;

@@ -36,10 +36,10 @@
 //
 //--------------------------------------------------------------------------------------------------
 
-#include "m+mValidatingTextEditor.h"
+#include "m+mValidatingTextEditor.hpp"
 
-#include "m+mCaptionedTextField.h"
-#include "m+mTextValidator.h"
+#include "m+mCaptionedTextField.hpp"
+#include "m+mTextValidator.hpp"
 
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>

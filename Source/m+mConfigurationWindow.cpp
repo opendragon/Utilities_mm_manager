@@ -36,16 +36,16 @@
 //
 //--------------------------------------------------------------------------------------------------
 
-#include "m+mConfigurationWindow.h"
+#include "m+mConfigurationWindow.hpp"
 
-#include "m+mCaptionedTextField.h"
-#include "m+mCheckboxField.h"
-#include "m+mManagerApplication.h"
-#include "m+mTextValidator.h"
+#include "m+mCaptionedTextField.hpp"
+#include "m+mCheckboxField.hpp"
+#include "m+mManagerApplication.hpp"
+#include "m+mTextValidator.hpp"
 
-#include <m+m/m+mChannelArgumentDescriptor.h>
-#include <m+m/m+mEndpoint.h>
-#include <m+m/m+mPortArgumentDescriptor.h>
+#include <m+m/m+mChannelArgumentDescriptor.hpp>
+#include <m+m/m+mEndpoint.hpp>
+#include <m+m/m+mPortArgumentDescriptor.hpp>
 
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>

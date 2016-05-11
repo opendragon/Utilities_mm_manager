@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       m+mValidatingTextEditor.h
+//  File:       m+mValidatingTextEditor.hpp
 //
 //  Project:    m+m
 //
@@ -36,10 +36,10 @@
 //
 //--------------------------------------------------------------------------------------------------
 
-#if (! defined(mpmValidatingTextEditor_H_))
-# define mpmValidatingTextEditor_H_ /* Header guard */
+#if (! defined(mpmValidatingTextEditor_HPP_))
+# define mpmValidatingTextEditor_HPP_ /* Header guard */
 
-# include "m+mManagerDataTypes.h"
+# include "m+mManagerDataTypes.hpp"
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -173,4 +173,4 @@ namespace MPlusM_Manager
 
 } // MPlusM_Manager
 
-#endif // ! defined(mpmValidatingTextEditor_H_)
+#endif // ! defined(mpmValidatingTextEditor_HPP_)

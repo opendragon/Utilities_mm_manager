@@ -1,10 +1,10 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       m+mYarpLaunchThread.h
+//  File:       m+mServiceLaunchThread.hpp
 //
 //  Project:    m+m
 //
-//  Contains:   The class declaration for the background YARP launcher.
+//  Contains:   The class declaration for the background service launcher.
 //
 //  Written by: Norman Jaffe
 //
@@ -32,14 +32,14 @@
 //              ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 //              DAMAGE.
 //
-//  Created:    2015-05-05
+//  Created:    2015-05-12
 //
 //--------------------------------------------------------------------------------------------------
 
-#if (! defined(mpmYarpLaunchThread_H_))
-# define mpmYarpLaunchThread_H_ /* Header guard */
+#if (! defined(mpmServiceLaunchThread_HPP_))
+# define mpmServiceLaunchThread_HPP_ /* Header guard */
 
-# include "m+mManagerDataTypes.h"
+# include "m+mManagerDataTypes.hpp"
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -48,15 +48,15 @@
 # endif // defined(__APPLE__)
 /*! @file
 
- @brief The class declaration for the background YARP launcher. */
+ @brief The class declaration for the background service launcher. */
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
 
 namespace MPlusM_Manager
 {
-    /*! @brief A background YARP launcher. */
-    class YarpLaunchThread : public Thread
+    /*! @brief A background service launcher. */
+    class ServiceLaunchThread : public Thread
     {
     public :
 
@@ -71,15 +71,23 @@ namespace MPlusM_Manager
 
         /*! @brief The constructor.
          @param pathToExecutable The file system path for the executable.
-         @param ipAddress The network address to use.
-         @param portNumber The network port number to use. */
-        YarpLaunchThread(const String & pathToExecutable,
-                         const String & ipAddress,
-                         const int      portNumber);
+         @param endpointName The endpoint to use, if not the default.
+         @param tag The tag to use, if any.
+         @param portNumber The network port number to use.
+         @param tagModifierCount The number of bytes of the IP address to use as a tag modifier.
+         @param arguments The arguments to the service.
+         @param needsGo @c true if a '--go' option should be used with the executable. */
+        ServiceLaunchThread(const String &      pathToExecutable,
+                            const String &      endpointName,
+                            const String &      tag,
+                            const String &      portNumber,
+                            const int           tagModifierCount,
+                            const StringArray & arguments,
+                            const bool          needsGo);
 
         /*! @brief The destructor. */
         virtual
-        ~YarpLaunchThread(void);
+        ~ServiceLaunchThread(void);
 
         /*! @brief Force the child process to terminate. */
         void
@@ -99,22 +107,33 @@ namespace MPlusM_Manager
 
     private :
 
-        /*! @brief The running YARP process. */
-        ScopedPointer<ChildProcess> _yarpProcess;
+        /*! @brief The running background service process. */
+        ScopedPointer<ChildProcess> _serviceProcess;
 
-        /*! @brief The network address to use. */
-        String _yarpAddress;
+        /*! @brief The endpoint for the service. */
+        String _serviceEndpoint;
 
         /*! @brief The file system path to the executable. */
-        String _yarpPath;
+        String _servicePath;
 
         /*! @brief The network port number to use. */
-        int _yarpPort;
+        String _servicePort;
 
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(YarpLaunchThread)
+        /*! @brief The tag for the service. */
+        String _serviceTag;
 
-    }; // YarpLaunchThread
+        /*! @brief The arguments to the executable. */
+        StringArray _arguments;
+
+        int _tagModifierCount;
+
+        /*! @brief @c true if the '--go' option should be used. */
+        bool _needsGo;
+
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ServiceLaunchThread)
+
+    }; // ServiceLaunchThread
 
 } // MPlusM_Manager
 
-#endif // ! defined(mpmYarpLaunchThread_H_)
+#endif // ! defined(mpmServiceLaunchThread_HPP_)

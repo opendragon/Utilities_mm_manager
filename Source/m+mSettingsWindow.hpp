@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       m+mSettingsWindow.h
+//  File:       m+mSettingsWindow.hpp
 //
 //  Project:    m+m
 //
@@ -37,11 +37,11 @@
 //
 //--------------------------------------------------------------------------------------------------
 
-#if (! defined(mpmSettingsWindow_H_))
-# define mpmSettingsWindow_H_ /* Header guard */
+#if (! defined(mpmSettingsWindow_HPP_))
+# define mpmSettingsWindow_HPP_ /* Header guard */
 
-# include "m+mCaptionedTextField.h"
-# include "m+mFormFieldErrorResponder.h"
+# include "m+mCaptionedTextField.hpp"
+# include "m+mFormFieldErrorResponder.hpp"
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -294,4 +294,4 @@ namespace MPlusM_Manager
 
 } // MPlusM_Manager
 
-#endif // ! defined(mpmSettingsWindow_H_)
+#endif // ! defined(mpmSettingsWindow_HPP_)

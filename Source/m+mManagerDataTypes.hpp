@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       m+mManagerDataTypes.h
+//  File:       m+mManagerDataTypes.hpp
 //
 //  Project:    m+m
 //
@@ -36,12 +36,12 @@
 //
 //--------------------------------------------------------------------------------------------------
 
-#if (! defined(mpmManagerDataTypes_H_))
-# define mpmManagerDataTypes_H_ /* Header guard */
+#if (! defined(mpmManagerDataTypes_HPP_))
+# define mpmManagerDataTypes_HPP_ /* Header guard */
 
-# include <m+m/m+mBaseArgumentDescriptor.h>
-# include <m+m/m+mGeneralChannel.h>
-# include <m+m/m+mUtilities.h>
+# include <m+m/m+mBaseArgumentDescriptor.hpp>
+# include <m+m/m+mGeneralChannel.hpp>
+# include <m+m/m+mUtilities.hpp>
 
 # if (! defined(DOXYGEN))
 #  if (! MAC_OR_LINUX_)
@@ -392,16 +392,19 @@ namespace MPlusM_Manager
 /*! @brief Return @c true if exit is requested.
  @param stuff Dummy argument to satisfy caller.
  @returns @c true if exit has been requested. */
-bool CheckForExit(void * stuff);
+bool
+CheckForExit(void * stuff);
 
 /*! @brief Launch a process, checking periodically for completion.
  @param aProcess The process to execute.
  @param timeout The number of milliseconds allowed for the process to complete (<= 0 == forever).
  @returns @c true if the process completed in the time provided. */
-bool LazyLaunchProcess(ChildProcess & aProcess,
-                       const int      timeout);
+bool
+LazyLaunchProcess(ChildProcess & aProcess,
+                  const int      timeout);
 
 /*! @brief Indicate that an exit has been requested. */
-void SetExitRequest(void);
+void
+SetExitRequest(void);
 
-#endif // ! defined(mpmManagerDataTypes_H_)
+#endif // ! defined(mpmManagerDataTypes_HPP_)

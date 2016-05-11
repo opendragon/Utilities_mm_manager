@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       m+mEntityData.h
+//  File:       m+mEntityData.hpp
 //
 //  Project:    m+m
 //
@@ -36,10 +36,10 @@
 //
 //--------------------------------------------------------------------------------------------------
 
-#if (! defined(mpmEntityData_H_))
-# define mpmEntityData_H_ /* Header guard */
+#if (! defined(mpmEntityData_HPP_))
+# define mpmEntityData_HPP_ /* Header guard */
 
-# include "m+mManagerDataTypes.h"
+# include "m+mManagerDataTypes.hpp"
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -254,4 +254,4 @@ namespace MPlusM_Manager
 
 } // MPlusM_Manager
 
-#endif // ! defined(mpmEntityData_H_)
+#endif // ! defined(mpmEntityData_HPP_)

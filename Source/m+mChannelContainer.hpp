@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       m+mChannelContainer.h
+//  File:       m+mChannelContainer.hpp
 //
 //  Project:    m+m
 //
@@ -36,10 +36,10 @@
 //
 //--------------------------------------------------------------------------------------------------
 
-#if (! defined(mpmChannelContainer_H_))
-# define mpmChannelContainer_H_ /* Header guard */
+#if (! defined(mpmChannelContainer_HPP_))
+# define mpmChannelContainer_HPP_ /* Header guard */
 
-# include "m+mManagerDataTypes.h"
+# include "m+mManagerDataTypes.hpp"
 
 # if defined(USE_OGDF_POSITIONING_)
 #  if (! MAC_OR_LINUX_)
@@ -499,4 +499,4 @@ namespace MPlusM_Manager
 
 } // MPlusM_Manager
 
-#endif // ! defined(mpmChannelContainer_H_)
+#endif // ! defined(mpmChannelContainer_HPP_)

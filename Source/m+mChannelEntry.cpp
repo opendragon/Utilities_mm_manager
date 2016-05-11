@@ -36,11 +36,11 @@
 //
 //--------------------------------------------------------------------------------------------------
 
-#include "m+mChannelEntry.h"
+#include "m+mChannelEntry.hpp"
 
-#include "m+mChannelContainer.h"
-#include "m+mContentPanel.h"
-#include "m+mEntitiesPanel.h"
+#include "m+mChannelContainer.hpp"
+#include "m+mContentPanel.hpp"
+#include "m+mEntitiesPanel.hpp"
 
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>

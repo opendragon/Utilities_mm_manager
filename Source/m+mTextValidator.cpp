@@ -36,7 +36,7 @@
 //
 //--------------------------------------------------------------------------------------------------
 
-#include "m+mTextValidator.h"
+#include "m+mTextValidator.hpp"
 
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>

@@ -36,7 +36,7 @@
 //
 //--------------------------------------------------------------------------------------------------
 
-#include "m+mPortData.h"
+#include "m+mPortData.hpp"
 
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>

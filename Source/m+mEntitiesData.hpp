@@ -1,14 +1,14 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       m+mTextValidator.h
+//  File:       m+mEntitiesData.hpp
 //
 //  Project:    m+m
 //
-//  Contains:   The class declaration for a text validating object.
+//  Contains:   The class declaration for the data collected by the background scanner.
 //
 //  Written by: Norman Jaffe
 //
-//  Copyright:  (c) 2015 by H Plus Technologies Ltd. and Simon Fraser University.
+//  Copyright:  (c) 2014 by H Plus Technologies Ltd. and Simon Fraser University.
 //
 //              All rights reserved. Redistribution and use in source and binary forms, with or
 //              without modification, are permitted provided that the following conditions are met:
@@ -32,14 +32,14 @@
 //              ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 //              DAMAGE.
 //
-//  Created:    2015-06-11
+//  Created:    2014-08-06
 //
 //--------------------------------------------------------------------------------------------------
 
-#if (! defined(mpmTextValidator_H_))
-# define mpmTextValidator_H_ /* Header guard */
+#if (! defined(mpmEntitiesData_HPP_))
+# define mpmEntitiesData_HPP_ /* Header guard */
 
-# include "m+mManagerDataTypes.h"
+# include "m+mManagerDataTypes.hpp"
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -48,15 +48,15 @@
 # endif // defined(__APPLE__)
 /*! @file
 
- @brief The class declaration for a text validating object. */
+ @brief The class declaration for the data collected by the background scanner. */
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
 
 namespace MPlusM_Manager
 {
-    /*! @brief A text validating object. */
-    class TextValidator
+    /*! @brief The data collected by the background scanner. */
+    class EntitiesData
     {
     public :
 
@@ -66,44 +66,70 @@ namespace MPlusM_Manager
 
     public :
 
-        /*! @brief The constructor.
-         @param fieldDescriptor A description of the attributes of the field being validated. */
-        explicit
-        TextValidator(MplusM::Utilities::BaseArgumentDescriptor & fieldDescriptor);
+        /*! @brief The constructor. */
+        EntitiesData(void);
 
         /*! @brief The destructor. */
         virtual
-        ~TextValidator(void);
+        ~EntitiesData(void);
 
-        /*! @brief Check if the provided value is valid according to the field description.
-         @param toBeChecked The value to be checked.
-         @returns @c true if the value is accepted by the field description and @c false
-         otherwise. */
-        bool
-        checkValidity(const String & toBeChecked)
+        /*! @brief Record a connection between ports.
+         @param inName The name of the destination port.
+         @param outName The name of the source port.
+         @param mode The mode of the connection. */
+        void
+        addConnection(const YarpString &          inName,
+                      const YarpString &          outName,
+                      MplusM::Common::ChannelMode mode);
+
+        /*! @brief Add an entity to the list of known entities.
+         @param anEntity The entity to be added. */
+        void
+        addEntity(EntityData * anEntity);
+
+        /*! @brief Clear out connection information. */
+        void
+        clearConnections(void);
+
+        /*! @brief Release all data held by the panel. */
+        void
+        clearOutData(void);
+
+        /*! @brief Return the list of detected connections.
+         @returns The list of detected connections. */
+        inline const ConnectionList &
+        getConnections(void)
+        const
+        {
+            return _connections;
+        } // getConnections
+
+        /*! @brief Return an entity by index.
+         @param index The zero-origin index of the entity.
+         @returns The entity if the index is within range and @c NULL otherwise. */
+        EntityData *
+        getEntity(const size_t index)
         const;
 
-        /*! @brief Check if the provided value is valid according to the field description.
-         @param toBeChecked The value to be checked.
-         @param argsToUse A set of valid arguments.
-         @returns @c true if the value is accepted by the field description and @c false
-         otherwise. */
-        bool
-        checkValidity(const String & toBeChecked,
-                      StringArray &  argsToUse)
-        const;
-
-        /*! @brief Return @c true if the validator is for file paths and @c false otherwise.
-         @param isForOutput Set to @c true if the validator is for output files and @c false
-         otherwise.
-         @returns @c true if the validator is for file paths and @c false otherwise. */
-        bool
-        isForFiles(bool & isForOutput)
+        /*! @brief Return the number of entities.
+         @returns The number of entities. */
+        size_t
+        getNumberOfEntities(void)
         const;
 
     protected :
 
     private :
+
+        /*! @brief The copy constructor.
+         @param other The object to be copied. */
+        EntitiesData(const EntitiesData & other);
+
+        /*! @brief The assignment operator.
+         @param other The object to be copied.
+         @returns The updated object. */
+        EntitiesData &
+        operator =(const EntitiesData & other);
 
     public :
 
@@ -111,13 +137,14 @@ namespace MPlusM_Manager
 
     private :
 
-        /*! @brief A description of the attributes of the field being validated. */
-        MplusM::Utilities::BaseArgumentDescriptor & _fieldDescriptor;
+        /*! @brief A set of connections. */
+        ConnectionList _connections;
 
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(TextValidator)
+        /*! @brief A set of entities. */
+        EntitiesList _entities;
 
-    }; // TextValidator
+    }; // EntitiesData
 
 } // MPlusM_Manager
 
-#endif // ! defined(mpmTextValidator_H_)
+#endif // ! defined(mpmEntitiesData_HPP_)

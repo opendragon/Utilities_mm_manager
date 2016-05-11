@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       m+mManagerApplication.h
+//  File:       m+mManagerApplication.hpp
 //
 //  Project:    m+m
 //
@@ -36,10 +36,10 @@
 //
 //--------------------------------------------------------------------------------------------------
 
-#if (! defined(mpmManagerApplication_H_))
-# define mpmManagerApplication_H_ /* Header guard */
+#if (! defined(mpmManagerApplication_HPP_))
+# define mpmManagerApplication_HPP_ /* Header guard */
 
-# include "m+mManagerWindow.h"
+# include "m+mManagerWindow.hpp"
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -388,10 +388,11 @@ namespace MPlusM_Manager
      @param dimensions The calculated maximum width and height.
      @param aFont The font to use for the calculations.
      @param aString The string to be analyzed. */
-    void CalculateTextArea(Point<int> &   dimensions,
-                           const Font &   aFont,
-                           const String & aString);
+    void
+    CalculateTextArea(Point<int> &   dimensions,
+                      const Font &   aFont,
+                      const String & aString);
 
 } // MPlusM_Manager
 
-#endif // ! defined(mpmManagerApplication_H_)
+#endif // ! defined(mpmManagerApplication_HPP_)

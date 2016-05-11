@@ -36,13 +36,13 @@
 //
 //--------------------------------------------------------------------------------------------------
 
-#include "m+mScannerThread.h"
+#include "m+mScannerThread.hpp"
 
-#include "m+mChannelEntry.h"
-#include "m+mEntitiesPanel.h"
-#include "m+mEntityData.h"
-#include "m+mManagerApplication.h"
-#include "m+mPortData.h"
+#include "m+mChannelEntry.hpp"
+#include "m+mEntitiesPanel.hpp"
+#include "m+mEntityData.hpp"
+#include "m+mManagerApplication.hpp"
+#include "m+mPortData.hpp"
 
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>

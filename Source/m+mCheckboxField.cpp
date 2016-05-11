@@ -36,12 +36,12 @@
 //
 //--------------------------------------------------------------------------------------------------
 
-#include "m+mCheckboxField.h"
+#include "m+mCheckboxField.hpp"
 
-#include "m+mFormFieldErrorResponder.h"
-#include "m+mManagerApplication.h"
-#include "m+mTextValidator.h"
-#include "m+mValidatingTextEditor.h"
+#include "m+mFormFieldErrorResponder.hpp"
+#include "m+mManagerApplication.hpp"
+#include "m+mTextValidator.hpp"
+#include "m+mValidatingTextEditor.hpp"
 
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>

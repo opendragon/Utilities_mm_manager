@@ -1,10 +1,10 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       m+mFormField.h
+//  File:       m+mCaptionedTextField.hpp
 //
 //  Project:    m+m
 //
-//  Contains:   The class declaration for a generalized input field.
+//  Contains:   The class declaration for a text editor paired with a caption.
 //
 //  Written by: Norman Jaffe
 //
@@ -36,10 +36,10 @@
 //
 //--------------------------------------------------------------------------------------------------
 
-#if (! defined(mpmFormField_H_))
-# define mpmFormField_H_ /* Header guard */
+#if (! defined(mpmCaptionedTextField_HPP_))
+# define mpmCaptionedTextField_HPP_ /* Header guard */
 
-# include "m+mManagerDataTypes.h"
+# include "m+mFormField.hpp"
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -48,17 +48,21 @@
 # endif // defined(__APPLE__)
 /*! @file
 
- @brief The class declaration for a generalized input field. */
+ @brief The class declaration for a field consisting of a text editor paired with a caption. */
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
 
+/*! @brief The character to use when displaying a 'password' field. */
+# define CHAR_TO_USE_FOR_PASSWORD_ 0x02022
+
 namespace MPlusM_Manager
 {
-    class FormFieldErrorResponder;
+    class TextValidator;
+    class ValidatingTextEditor;
 
-    /*! @brief A generalized input field. */
-    class FormField
+    /*! @brief A field consisting of a text editor paired with a caption. */
+    class CaptionedTextField : public FormField
     {
     public :
 
@@ -66,80 +70,97 @@ namespace MPlusM_Manager
 
     private :
 
+        /*! @brief The class that this class is derived from. */
+        typedef FormField inherited;
+
     public :
 
         /*! @brief The constructor.
+         @param responder The entity that will report errors in this field.
          @param regularLabelFont The font to use with the label when the text editor data is valid.
-         @param index The order of the text editor. */
-        FormField(Font &       regularLabelFont,
-                  const size_t index);
+         @param errorLabelFont The font to use with the label when the text editor data is invalid.
+         @param index The order of the text editor.
+         @param captionTitle The text of the caption.
+         @param top The top coordinate of the field.
+         @param boundsSetLater @c true if the bounds will be properly set up later and @c false if
+         they are to be set now.
+         @param forFilePath @c true if the field is for entering a file path and @c false otherwise.
+         @param buttonHandler The object to handle the file button events.
+         @param validator The function to use when checking the field on completion of text entry.
+         @param componentName The name to pass to the component for it to use as its name.
+         @param passwordCharacter The visual replacement to use for password fields. */
+        CaptionedTextField(FormFieldErrorResponder & responder,
+                           Font &                    regularLabelFont,
+                           Font &                    errorLabelFont,
+                           const size_t              index,
+                           const String &            captionTitle,
+                           const int                 top,
+                           const bool                boundsSetLater,
+                           const bool                forFilePath = false,
+                           ButtonListener *          buttonHandler = NULL,
+                           TextValidator *           validator = NULL,
+                           const String &            componentName = String::empty,
+                           juce_wchar                passwordCharacter = 0);
 
         /*! @brief The destructor. */
         virtual
-        ~FormField(void);
+        ~CaptionedTextField(void);
 
         /*! @brief Add the components of this field to the specified component and make them
          visible.
          @param whereToAdd The component to be added to. */
         virtual void
-        addToComponent(Component * whereToAdd) = 0;
+        addToComponent(Component * whereToAdd);
 
         /*! @brief Return the associated button.
          @returns The associated button. */
         virtual TextButton *
         getButton(void)
-        const;
+        const
+        {
+            return _button;
+        } // getButton
+
+        /*! @brief Return the width of a 'file' button.
+         @returns The width of a 'file' button. */
+        static int
+        getFileButtonWidth(void);
 
         /*! @brief Return the height of the field in pixels.
          @return The height of the field in pixels. */
         virtual int
         getHeight(void)
-        const = 0;
-
-        /*! @brief Return the order of the text editor.
-         @returns The order of the text editor. */
-        inline size_t
-        getIndex(void)
-        const
-        {
-            return _index;
-        } // getIndex
+        const;
 
         /*! @brief Return the minimum width of the field in pixels.
          @return The minimum width of the field in pixels. */
         virtual int
         getMinimumWidth(void)
-        const = 0;
-
-        /*! @brief Returns the name of the field.
-         @returns The name of the field. */
-        virtual const String &
-        getName(void)
-        const = 0;
+        const;
 
         /*! @brief Returns the text value associated with the field.
          @returns The text value associated with the field. */
         virtual String
         getText(void)
-        const = 0;
+        const;
 
         /*! @brief Return the width of the field in pixels.
          @return The width of the field in pixels. */
         virtual int
         getWidth(void)
-        const = 0;
+        const;
 
         /*! @brief Return the left coordinate of the field.
          @return The left coordinate of the field. */
         virtual int
         getX(void)
-        const = 0;
+        const;
 
         /*! @brief Return the top coordinate of the field.
          @return The top coordinate of the field. */
         virtual int
         getY(void)
-        const = 0;
+        const;
 
         /*! @brief Do not perform validation on next loss of focus. */
         virtual void
@@ -152,7 +173,11 @@ namespace MPlusM_Manager
         /*! @brief Remove the components of this field from the specified component.
          @param whereToRemove The component to be removed from. */
         virtual void
-        removeFromComponent(Component * whereToRemove) = 0;
+        removeFromComponent(Component * whereToRemove);
+
+        /*! @brief Report an error in the field. */
+        void
+        reportErrorInField(void);
 
         /*! @brief Sets the associated button.
          @param newButton The associated button. */
@@ -162,17 +187,17 @@ namespace MPlusM_Manager
         /*! @brief Set the text value associated with the field.
          @param newText The text to be used. */
         virtual void
-        setText(const String & newText) = 0;
+        setText(const String & newText);
 
         /*! @brief Set the width of the field.
          @param ww The new width of the field. */
         virtual void
-        setWidth(const int ww) = 0;
+        setWidth(const int ww);
 
         /*! @brief Set the top coordinate of the field.
          @param yy The new top coordinate of the field. */
         virtual void
-        setY(const int yy) = 0;
+        setY(const int yy);
 
         /*! @brief Check the field for validity.
          @returns @c true if the validator accepts the field or there's no validation required or
@@ -185,40 +210,54 @@ namespace MPlusM_Manager
          @returns @c true if the validator accepts the field or there's no validation required or
          @c false if the validator rejects the field. */
         virtual bool
-        validateField(StringArray & argsToUse) = 0;
+        validateField(StringArray & argsToUse);
 
     protected :
 
     private :
+
+        /*! @brief Returns the name of the field.
+         @returns The name of the field. */
+        virtual const String &
+        getName(void)
+        const;
+
+        /*! @brief Mark the text editor data as invalid. */
+        void
+        markAsInvalid(void);
+
+        /*! @brief Mark the text editor data as valid. */
+        void
+        markAsValid(void);
 
     public :
 
-        /*! @brief The font size for text. */
-        static const float kFontSize;
-
-        /*! @brief The horizontal gap between buttons. */
-        static const int kButtonGap;
-
-        /*! @brief The amount to inset text entry fields. */
-        static const int kFieldInset;
-
-        /*! @brief The amount to inset labels. */
-        static const int kLabelInset;
-
     protected :
-
-        /*! @brief The font to use with the label when the text editor data is valid. */
-        Font & _regularFont;
-
-        /*! @brief The order of the field. */
-        size_t _index;
 
     private :
 
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FormField)
+        /*! @brief The text editor within the field. */
+        ScopedPointer<ValidatingTextEditor> _textEditor;
 
-    }; // FormField
+        /*! @brief The validator to use with the text editor data. */
+        ScopedPointer<TextValidator> _validator;
+
+        /*! @brief The caption for the field. */
+        ScopedPointer<Label> _caption;
+
+        /*! @brief An associated button for the field. */
+        ScopedPointer<TextButton> _button;
+
+        /*! @brief The font to use with the label when the text editor data is invalid. */
+        Font & _errorFont;
+
+        /*! @brief The entity that can report an error in this field. */
+        FormFieldErrorResponder & _responder;
+
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(CaptionedTextField)
+
+    }; // CaptionedTextField
 
 } // MPlusM_Manager
 
-#endif // ! defined(mpmFormField_H_)
+#endif // ! defined(mpmCaptionedTextField_HPP_)

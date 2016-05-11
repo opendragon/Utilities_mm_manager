@@ -1,10 +1,10 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       m+mCaptionedTextField.h
+//  File:       m+mCheckboxField.hpp
 //
 //  Project:    m+m
 //
-//  Contains:   The class declaration for a text editor paired with a caption.
+//  Contains:   The class declaration for a checkbox paired with a caption.
 //
 //  Written by: Norman Jaffe
 //
@@ -32,14 +32,14 @@
 //              ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 //              DAMAGE.
 //
-//  Created:    2015-08-31
+//  Created:    2015-09-02
 //
 //--------------------------------------------------------------------------------------------------
 
-#if (! defined(mpmCaptionedTextField_H_))
-# define mpmCaptionedTextField_H_ /* Header guard */
+#if (! defined(mpmCheckboxField_HPP_))
+# define mpmCheckboxField_HPP_ /* Header guard */
 
-# include "m+mFormField.h"
+# include "m+mFormField.hpp"
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -48,7 +48,7 @@
 # endif // defined(__APPLE__)
 /*! @file
 
- @brief The class declaration for a field consisting of a text editor paired with a caption. */
+ @brief The class declaration for a field consisting of a checkbox paired with a caption. */
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
@@ -61,8 +61,8 @@ namespace MPlusM_Manager
     class TextValidator;
     class ValidatingTextEditor;
 
-    /*! @brief A field consisting of a text editor paired with a caption. */
-    class CaptionedTextField : public FormField
+    /*! @brief A field consisting of a checkbox paired with a caption. */
+    class CheckboxField : public FormField
     {
     public :
 
@@ -76,55 +76,26 @@ namespace MPlusM_Manager
     public :
 
         /*! @brief The constructor.
-         @param responder The entity that will report errors in this field.
          @param regularLabelFont The font to use with the label when the text editor data is valid.
-         @param errorLabelFont The font to use with the label when the text editor data is invalid.
          @param index The order of the text editor.
          @param captionTitle The text of the caption.
          @param top The top coordinate of the field.
-         @param boundsSetLater @c true if the bounds will be properly set up later and @c false if
-         they are to be set now.
-         @param forFilePath @c true if the field is for entering a file path and @c false otherwise.
-         @param buttonHandler The object to handle the file button events.
-         @param validator The function to use when checking the field on completion of text entry.
-         @param componentName The name to pass to the component for it to use as its name.
-         @param passwordCharacter The visual replacement to use for password fields. */
-        CaptionedTextField(FormFieldErrorResponder & responder,
-                           Font &                    regularLabelFont,
-                           Font &                    errorLabelFont,
-                           const size_t              index,
-                           const String &            captionTitle,
-                           const int                 top,
-                           const bool                boundsSetLater,
-                           const bool                forFilePath = false,
-                           ButtonListener *          buttonHandler = NULL,
-                           TextValidator *           validator = NULL,
-                           const String &            componentName = String::empty,
-                           juce_wchar                passwordCharacter = 0);
+         @param componentName The name to pass to the component for it to use as its name. */
+        CheckboxField(Font &         regularLabelFont,
+                      const size_t   index,
+                      const String & captionTitle,
+                      const int      top,
+                      const String & componentName = String::empty);
 
         /*! @brief The destructor. */
         virtual
-        ~CaptionedTextField(void);
+        ~CheckboxField(void);
 
         /*! @brief Add the components of this field to the specified component and make them
          visible.
          @param whereToAdd The component to be added to. */
         virtual void
         addToComponent(Component * whereToAdd);
-
-        /*! @brief Return the associated button.
-         @returns The associated button. */
-        virtual TextButton *
-        getButton(void)
-        const
-        {
-            return _button;
-        } // getButton
-
-        /*! @brief Return the width of a 'file' button.
-         @returns The width of a 'file' button. */
-        static int
-        getFileButtonWidth(void);
 
         /*! @brief Return the height of the field in pixels.
          @return The height of the field in pixels. */
@@ -162,27 +133,10 @@ namespace MPlusM_Manager
         getY(void)
         const;
 
-        /*! @brief Do not perform validation on next loss of focus. */
-        virtual void
-        ignoreNextFocusLoss(void);
-
-        /*! @brief Perform the action triggered by the button. */
-        virtual void
-        performButtonAction(void);
-
         /*! @brief Remove the components of this field from the specified component.
          @param whereToRemove The component to be removed from. */
         virtual void
         removeFromComponent(Component * whereToRemove);
-
-        /*! @brief Report an error in the field. */
-        void
-        reportErrorInField(void);
-
-        /*! @brief Sets the associated button.
-         @param newButton The associated button. */
-        virtual void
-        setButton(TextButton * newButton = NULL);
 
         /*! @brief Set the text value associated with the field.
          @param newText The text to be used. */
@@ -198,12 +152,6 @@ namespace MPlusM_Manager
          @param yy The new top coordinate of the field. */
         virtual void
         setY(const int yy);
-
-        /*! @brief Check the field for validity.
-         @returns @c true if the validator accepts the field or there's no validation required or
-         @c false if the validator rejects the field. */
-        virtual bool
-        validateField(void);
 
         /*! @brief Check the field for validity.
          @param argsToUse A set of valid arguments.
@@ -222,14 +170,6 @@ namespace MPlusM_Manager
         getName(void)
         const;
 
-        /*! @brief Mark the text editor data as invalid. */
-        void
-        markAsInvalid(void);
-
-        /*! @brief Mark the text editor data as valid. */
-        void
-        markAsValid(void);
-
     public :
 
     protected :
@@ -237,27 +177,15 @@ namespace MPlusM_Manager
     private :
 
         /*! @brief The text editor within the field. */
-        ScopedPointer<ValidatingTextEditor> _textEditor;
-
-        /*! @brief The validator to use with the text editor data. */
-        ScopedPointer<TextValidator> _validator;
+        ScopedPointer<ToggleButton> _checkbox;
 
         /*! @brief The caption for the field. */
         ScopedPointer<Label> _caption;
 
-        /*! @brief An associated button for the field. */
-        ScopedPointer<TextButton> _button;
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(CheckboxField)
 
-        /*! @brief The font to use with the label when the text editor data is invalid. */
-        Font & _errorFont;
-
-        /*! @brief The entity that can report an error in this field. */
-        FormFieldErrorResponder & _responder;
-
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(CaptionedTextField)
-
-    }; // CaptionedTextField
+    }; // CheckboxField
 
 } // MPlusM_Manager
 
-#endif // ! defined(mpmCaptionedTextField_H_)
+#endif // ! defined(mpmCheckboxField_HPP_)

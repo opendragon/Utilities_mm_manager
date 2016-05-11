@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       m+mPortData.h
+//  File:       m+mPortData.hpp
 //
 //  Project:    m+m
 //
@@ -36,10 +36,10 @@
 //
 //--------------------------------------------------------------------------------------------------
 
-#if (! defined(mpmPortData_H_))
-# define mpmPortData_H_ /* Header guard */
+#if (! defined(mpmPortData_HPP_))
+# define mpmPortData_HPP_ /* Header guard */
 
-# include "m+mManagerDataTypes.h"
+# include "m+mManagerDataTypes.hpp"
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -270,4 +270,4 @@ namespace MPlusM_Manager
 
 } // MPlusM_Manager
 
-#endif // ! defined(mpmPortData_H_)
+#endif // ! defined(mpmPortData_HPP_)

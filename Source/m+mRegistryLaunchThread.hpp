@@ -1,10 +1,10 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       m+mFormFieldErrorResponder.h
+//  File:       m+mRegistryLaunchThread.hpp
 //
 //  Project:    m+m
 //
-//  Contains:   The class declaration for an error reporting abstraction.
+//  Contains:   The class declaration for the background Registry Service launcher.
 //
 //  Written by: Norman Jaffe
 //
@@ -32,14 +32,14 @@
 //              ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 //              DAMAGE.
 //
-//  Created:    2015-08-31
+//  Created:    2015-05-07
 //
 //--------------------------------------------------------------------------------------------------
 
-#if (! defined(mpmFormFieldErrorResponder_H_))
-# define mpmFormFieldErrorResponder_H_ /* Header guard */
+#if (! defined(mpmRegistryLaunchThread_HPP_))
+# define mpmRegistryLaunchThread_HPP_ /* Header guard */
 
-# include "m+mManagerDataTypes.h"
+# include "m+mManagerDataTypes.hpp"
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -48,17 +48,15 @@
 # endif // defined(__APPLE__)
 /*! @file
 
- @brief The class declaration for an error reporting abstraction. */
+ @brief The class declaration for the background Registry Service launcher. */
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
 
 namespace MPlusM_Manager
 {
-    class FormField;
-
-    /*! @brief An error reporting abstraction. */
-    class FormFieldErrorResponder
+    /*! @brief A background Registry Service launcher. */
+    class RegistryLaunchThread : public Thread
     {
     public :
 
@@ -66,23 +64,33 @@ namespace MPlusM_Manager
 
     private :
 
+        /*! @brief The class that this class is derived from. */
+        typedef Thread inherited;
+
     public :
 
-        /*! @brief The constructor. */
-        FormFieldErrorResponder(void);
+        /*! @brief The constructor.
+         @param pathToExecutable The file system path for the executable.
+         @param portNumber The network port number to use. */
+        explicit
+        RegistryLaunchThread(const String & pathToExecutable,
+                             const int      portNumber = 0);
 
         /*! @brief The destructor. */
         virtual
-        ~FormFieldErrorResponder(void);
+        ~RegistryLaunchThread(void);
 
-        /*! @brief Report an error in a field.
-         @param fieldOfInterest The field to be reported. */
-        virtual void
-        reportErrorInField(FormField & fieldOfInterest) = 0;
+        /*! @brief Force the child process to terminate. */
+        void
+        killChildProcess(void);
 
     protected :
 
     private :
+
+        /*! @brief Perform the background scan. */
+        virtual void
+        run(void);
 
     public :
 
@@ -90,10 +98,19 @@ namespace MPlusM_Manager
 
     private :
 
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FormFieldErrorResponder)
+        /*! @brief The running Registry Service process. */
+        ScopedPointer<ChildProcess> _registryServiceProcess;
 
-    }; // FormFieldErrorResponder
+        /*! @brief The file system path to the executable. */
+        String _registryServicePath;
+
+        /*! @brief The network port number to use. */
+        int _registryServicePort;
+
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RegistryLaunchThread)
+
+    }; // RegistryLaunchThread
 
 } // MPlusM_Manager
 
-#endif // ! defined(mpmFormFieldErrorResponder_H_)
+#endif // ! defined(mpmRegistryLaunchThread_HPP_)

@@ -37,15 +37,15 @@
 //
 //--------------------------------------------------------------------------------------------------
 
-#include "m+mContentPanel.h"
+#include "m+mContentPanel.hpp"
 
-#include "m+mChannelContainer.h"
-#include "m+mChannelEntry.h"
-#include "m+mEntitiesPanel.h"
-#include "m+mEntityData.h"
-#include "m+mManagerApplication.h"
-#include "m+mPortData.h"
-#include "m+mScannerThread.h"
+#include "m+mChannelContainer.hpp"
+#include "m+mChannelEntry.hpp"
+#include "m+mEntitiesPanel.hpp"
+#include "m+mEntityData.hpp"
+#include "m+mManagerApplication.hpp"
+#include "m+mPortData.hpp"
+#include "m+mScannerThread.hpp"
 
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>

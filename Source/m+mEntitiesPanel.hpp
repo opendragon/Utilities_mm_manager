@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       m+mEntitiesPanel.h
+//  File:       m+mEntitiesPanel.hpp
 //
 //  Project:    m+m
 //
@@ -37,10 +37,10 @@
 //
 //--------------------------------------------------------------------------------------------------
 
-#if (! defined(mpmEntitiesPanel_H_))
-# define mpmEntitiesPanel_H_ /* Header guard */
+#if (! defined(mpmEntitiesPanel_HPP_))
+# define mpmEntitiesPanel_HPP_ /* Header guard */
 
-# include "m+mManagerDataTypes.h"
+# include "m+mManagerDataTypes.hpp"
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -353,4 +353,4 @@ namespace MPlusM_Manager
 
 } // MPlusM_Manager
 
-#endif // ! defined(mpmEntitiesPanel_H_)
+#endif // ! defined(mpmEntitiesPanel_HPP_)

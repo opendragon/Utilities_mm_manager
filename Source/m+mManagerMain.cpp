@@ -36,7 +36,7 @@
 //
 //--------------------------------------------------------------------------------------------------
 
-#include "m+mManagerApplication.h"
+#include "m+mManagerApplication.hpp"
 
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>

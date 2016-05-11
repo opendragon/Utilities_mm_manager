@@ -1,10 +1,10 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       m+mRegistryLaunchThread.h
+//  File:       m+mTextValidator.hpp
 //
 //  Project:    m+m
 //
-//  Contains:   The class declaration for the background Registry Service launcher.
+//  Contains:   The class declaration for a text validating object.
 //
 //  Written by: Norman Jaffe
 //
@@ -32,14 +32,14 @@
 //              ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 //              DAMAGE.
 //
-//  Created:    2015-05-07
+//  Created:    2015-06-11
 //
 //--------------------------------------------------------------------------------------------------
 
-#if (! defined(mpmRegistryLaunchThread_H_))
-# define mpmRegistryLaunchThread_H_ /* Header guard */
+#if (! defined(mpmTextValidator_HPP_))
+# define mpmTextValidator_HPP_ /* Header guard */
 
-# include "m+mManagerDataTypes.h"
+# include "m+mManagerDataTypes.hpp"
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -48,15 +48,15 @@
 # endif // defined(__APPLE__)
 /*! @file
 
- @brief The class declaration for the background Registry Service launcher. */
+ @brief The class declaration for a text validating object. */
 # if defined(__APPLE__)
 #  pragma clang diagnostic pop
 # endif // defined(__APPLE__)
 
 namespace MPlusM_Manager
 {
-    /*! @brief A background Registry Service launcher. */
-    class RegistryLaunchThread : public Thread
+    /*! @brief A text validating object. */
+    class TextValidator
     {
     public :
 
@@ -64,32 +64,46 @@ namespace MPlusM_Manager
 
     private :
 
-        /*! @brief The class that this class is derived from. */
-        typedef Thread inherited;
-
     public :
 
         /*! @brief The constructor.
-         @param pathToExecutable The file system path for the executable.
-         @param portNumber The network port number to use. */
+         @param fieldDescriptor A description of the attributes of the field being validated. */
         explicit
-        RegistryLaunchThread(const String & pathToExecutable,
-                             const int      portNumber = 0);
+        TextValidator(MplusM::Utilities::BaseArgumentDescriptor & fieldDescriptor);
 
         /*! @brief The destructor. */
         virtual
-        ~RegistryLaunchThread(void);
+        ~TextValidator(void);
 
-        /*! @brief Force the child process to terminate. */
-        void killChildProcess(void);
+        /*! @brief Check if the provided value is valid according to the field description.
+         @param toBeChecked The value to be checked.
+         @returns @c true if the value is accepted by the field description and @c false
+         otherwise. */
+        bool
+        checkValidity(const String & toBeChecked)
+        const;
+
+        /*! @brief Check if the provided value is valid according to the field description.
+         @param toBeChecked The value to be checked.
+         @param argsToUse A set of valid arguments.
+         @returns @c true if the value is accepted by the field description and @c false
+         otherwise. */
+        bool
+        checkValidity(const String & toBeChecked,
+                      StringArray &  argsToUse)
+        const;
+
+        /*! @brief Return @c true if the validator is for file paths and @c false otherwise.
+         @param isForOutput Set to @c true if the validator is for output files and @c false
+         otherwise.
+         @returns @c true if the validator is for file paths and @c false otherwise. */
+        bool
+        isForFiles(bool & isForOutput)
+        const;
 
     protected :
 
     private :
-
-        /*! @brief Perform the background scan. */
-        virtual void
-        run(void);
 
     public :
 
@@ -97,19 +111,13 @@ namespace MPlusM_Manager
 
     private :
 
-        /*! @brief The running Registry Service process. */
-        ScopedPointer<ChildProcess> _registryServiceProcess;
+        /*! @brief A description of the attributes of the field being validated. */
+        MplusM::Utilities::BaseArgumentDescriptor & _fieldDescriptor;
 
-        /*! @brief The file system path to the executable. */
-        String _registryServicePath;
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(TextValidator)
 
-        /*! @brief The network port number to use. */
-        int _registryServicePort;
-
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RegistryLaunchThread)
-
-    }; // RegistryLaunchThread
+    }; // TextValidator
 
 } // MPlusM_Manager
 
-#endif // ! defined(mpmRegistryLaunchThread_H_)
+#endif // ! defined(mpmTextValidator_HPP_)

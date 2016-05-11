@@ -37,11 +37,11 @@
 //
 //--------------------------------------------------------------------------------------------------
 
-#include "m+mPeekInputHandler.h"
+#include "m+mPeekInputHandler.hpp"
 
-#include "m+mManagerApplication.h"
+#include "m+mManagerApplication.hpp"
 
-#include <m+m/m+mRequests.h>
+#include <m+m/m+mRequests.hpp>
 
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>

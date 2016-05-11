@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       m+mManagerWindow.h
+//  File:       m+mManagerWindow.hpp
 //
 //  Project:    m+m
 //
@@ -36,10 +36,10 @@
 //
 //--------------------------------------------------------------------------------------------------
 
-#if (! defined(mpmManagerWindow_H_))
-# define mpmManagerWindow_H_ /* Header guard */
+#if (! defined(mpmManagerWindow_HPP_))
+# define mpmManagerWindow_HPP_ /* Header guard */
 
-# include "m+mManagerDataTypes.h"
+# include "m+mManagerDataTypes.hpp"
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -172,4 +172,4 @@ namespace MPlusM_Manager
 
 } // MPlusM_Manager
 
-#endif // ! defined(mpmManagerWindow_H_)
+#endif // ! defined(mpmManagerWindow_HPP_)

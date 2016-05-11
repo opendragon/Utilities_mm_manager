@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------------------------
 //
-//  File:       m+mScannerThread.h
+//  File:       m+mScannerThread.hpp
 //
 //  Project:    m+m
 //
@@ -36,10 +36,10 @@
 //
 //--------------------------------------------------------------------------------------------------
 
-#if (! defined(mpmScannerThread_H_))
-# define mpmScannerThread_H_ /* Header guard */
+#if (! defined(mpmScannerThread_HPP_))
+# define mpmScannerThread_HPP_ /* Header guard */
 
-# include "m+mEntitiesData.h"
+# include "m+mEntitiesData.hpp"
 
 # if defined(__APPLE__)
 #  pragma clang diagnostic push
@@ -276,4 +276,4 @@ namespace MPlusM_Manager
 
 } // MPlusM_Manager
 
-#endif // ! defined(mpmScannerThread_H_)
+#endif // ! defined(mpmScannerThread_HPP_)
