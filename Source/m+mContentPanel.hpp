@@ -66,7 +66,8 @@ namespace MPlusM_Manager
     class ScannerThread;
 
     /*! @brief The content area of the main window of the application. */
-    class ContentPanel : public ApplicationCommandTarget, public MenuBarModel,
+    class ContentPanel : public ApplicationCommandTarget,
+                         public MenuBarModel,
                          public Viewport
     {
     public :

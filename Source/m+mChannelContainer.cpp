@@ -812,6 +812,7 @@ void
 ChannelContainer::mouseDown(const MouseEvent & ee)
 {
     ODL_OBJENTER(); //####
+    ODL_P1("ee = ", &ee); //####
     bool doDrag = true;
 
     // Prepares our dragger to drag this Component
@@ -840,6 +841,7 @@ void
 ChannelContainer::mouseDrag(const MouseEvent & ee)
 {
     ODL_OBJENTER(); //####
+    ODL_P1("ee = ", &ee); //####
     bool doDrag = true;
 
     // Moves this Component according to the mouse drag event and applies our constraints to it

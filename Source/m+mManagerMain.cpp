@@ -4,7 +4,7 @@
 //
 //  Project:    m+m
 //
-//  Contains:   A utility application to YARP ports and m+m channels.
+//  Contains:   A utility application for YARP ports and m+m channels and services.
 //
 //  Written by: Norman Jaffe
 //
@@ -48,7 +48,7 @@
 #endif // defined(__APPLE__)
 /*! @file
 
- @brief A utility application to YARP ports and m+m channels. */
+ @brief A utility application for YARP ports and m+m channels and services. */
 #if defined(__APPLE__)
 # pragma clang diagnostic pop
 #endif // defined(__APPLE__)

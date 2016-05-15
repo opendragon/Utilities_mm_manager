@@ -79,7 +79,7 @@ namespace MPlusM_Manager
             /*! @brief Select an output file. */
             kPopupSelectFileToSave
 
-        }; // EntityPopupMenuSelection
+        }; // TextEditorPopupMenuSelection
 
         /*! @brief The class that this class is derived from. */
         typedef TextEditor inherited;
