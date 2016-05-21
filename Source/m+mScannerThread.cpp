@@ -93,10 +93,10 @@ static const int64 kMinStaleInterval = 60000;
 #endif // defined(__APPLE__)
 
 /*! @brief Locate the IP address and port corresponding to a port name.
- @param detectedPorts The set of detected YARP ports.
- @param portName The port name to search for.
- @param ipAddress The IP address of the port.
- @param ipPort The IP port of the port. */
+ @param[in] detectedPorts The set of detected YARP ports.
+ @param[in] portName The port name to search for.
+ @param[out] ipAddress The IP address of the port.
+ @param[out] ipPort The IP port of the port. */
 static void
 findMatchingIpAddressAndPort(const Utilities::PortVector & detectedPorts,
                              const YarpString &            portName,
@@ -125,9 +125,9 @@ findMatchingIpAddressAndPort(const Utilities::PortVector & detectedPorts,
 } // findMatchingIpAddressAndPort
 
 /*! @brief Extract the IP address and port number from a combined string.
- @param combined The combined IP address and port number.
- @param ipAddress The IP address of the port.
- @param ipPort The IP port of the port. */
+ @param[in] combined The combined IP address and port number.
+ @param[out] ipAddress The IP address of the port.
+ @param[out] ipPort The IP port of the port. */
 static void
 splitCombinedAddressAndPort(const YarpString & combined,
                             YarpString &       ipAddress,

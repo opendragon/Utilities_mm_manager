@@ -143,7 +143,7 @@ namespace MPlusM_Manager
         doScanSoon(void);
 
         /*! @brief Determine the path to an executable, using the system PATH environment variable.
-         @param execName The short name of the executable.
+         @param[in] execName The short name of the executable.
          @returns The full path to the first executable found in the system PATH environment
          variable. */
         static String
@@ -169,7 +169,7 @@ namespace MPlusM_Manager
         } // getCountOfApplications
 
         /*! @brief Return the value of a system environment variable.
-         @param varName The name of the system environment variable.
+         @param[in] varName The name of the system environment variable.
          @returns The value of the system environment variable, or an empty value. */
         static String
         getEnvironmentVar(const char * varName);
@@ -179,8 +179,8 @@ namespace MPlusM_Manager
          Note that the generated code for a std::map of String, String includes illegal instructions
          when end() is referenced, so we are using a pair of simple vectors - performance is not
          critical, since the environment variables are only used once.
-         @param keys The list of environment variable names.
-         @param values The list of environment variable values. */
+         @param[out] keys The list of environment variable names.
+         @param[out] values The list of environment variable values. */
         static void
         getEnvironmentVars(YarpStringVector & keys,
                            YarpStringVector & values);
@@ -196,13 +196,13 @@ namespace MPlusM_Manager
         getMainWindow(void);
 
         /*! @brief Get the primary channel for a service.
-         @param appInfo The description of the executable.
-         @param endpointName The endpoint to use, if not the default.
-         @param tag The tag to use, if any.
-         @param portNumber The network port number to use.
-         @param arguments The current set of arguments to be applied.
-         @param tagModifierCount The number of bytes of the IP address to use as a tag modifier.
-         @param channelName The channel that the service will be using.
+         @param[in] appInfo The description of the executable.
+         @param[in] endpointName The endpoint to use, if not the default.
+         @param[in] tag The tag to use, if any.
+         @param[in] portNumber The network port number to use.
+         @param[in] arguments The current set of arguments to be applied.
+         @param[in] tagModifierCount The number of bytes of the IP address to use as a tag modifier.
+         @param[out] channelName The channel that the service will be using.
          @returns @c true if the channel was retrieved and @c false otherwise. */
         bool
         getPrimaryChannelForService(const ApplicationInfo & appInfo,
@@ -228,11 +228,11 @@ namespace MPlusM_Manager
     private :
 
         /*! @brief The copy constructor.
-         @param other The object to be copied. */
+         @param[in] other The object to be copied. */
         ManagerApplication(const ManagerApplication & other);
 
         /*! @brief Called when an attempt was made to launch another instance of the application.
-         @param commandLine The arguments passed to the new instance. */
+         @param[in] commandLine The arguments passed to the new instance. */
         virtual void
         anotherInstanceStarted(const String & commandLine);
 
@@ -250,7 +250,7 @@ namespace MPlusM_Manager
 
         /*! @brief Ask the user for information required to launch a service and launch it if the
          user requests.
-         @param appInfo The description of the executable. */
+         @param[in] appInfo The description of the executable. */
         void
         doLaunchAService(const ApplicationInfo & appInfo);
 
@@ -265,21 +265,21 @@ namespace MPlusM_Manager
         getApplicationVersion(void);
 
         /*! @brief Get the operational arguments for an application.
-         @param theInfo The retrieved parameters.
+         @param[out] theInfo The retrieved parameters.
          @returns @c true if the operational arguments were retrieved and @c false otherwise. */
         bool
         getArgumentsForApplication(ApplicationInfo & theInfo);
 
         /*! @brief Get the operational parameters for an application.
-         @param execName The name of the executable to be analyzed.
-         @param theInfo The retrieved parameters.
+         @param[in] execName The name of the executable to be analyzed.
+         @param[out] theInfo The retrieved parameters.
          @returns @c true if the operational parameters were retrieved and @c false otherwise. */
         bool
         getParametersForApplication(const String &    execName,
                                     ApplicationInfo & theInfo);
 
         /*! @brief Called when the application starts.
-         @param commandLine The parameters passed to the application. */
+         @param[in] commandLine The parameters passed to the application. */
         virtual void
         initialise(const String & commandLine);
 
@@ -296,7 +296,7 @@ namespace MPlusM_Manager
         moreThanOneInstanceAllowed(void);
 
         /*! @brief The assignment operator.
-         @param other The object to be copied.
+         @param[in] other The object to be copied.
          @returns The updated object. */
         ManagerApplication &
         operator =(const ManagerApplication & other);
@@ -385,9 +385,9 @@ namespace MPlusM_Manager
     }; // ManagerApplication
 
     /*! @brief Determine the maximum dimensions of a text string.
-     @param dimensions The calculated maximum width and height.
-     @param aFont The font to use for the calculations.
-     @param aString The string to be analyzed. */
+     @param[out] dimensions The calculated maximum width and height.
+     @param[in] aFont The font to use for the calculations.
+     @param[in] aString The string to be analyzed. */
     void
     CalculateTextArea(Point<int> &   dimensions,
                       const Font &   aFont,

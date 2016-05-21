@@ -86,14 +86,14 @@ namespace MPlusM_Manager
     public :
 
         /*! @brief The constructor.
-         @param kind The kind of entity.
-         @param title The title of the entity.
-         @param ipAddress The IP address of the entity.
-         @param behaviour The behavioural model if a service or an adapter.
-         @param description The description, if this is a service or an adapter.
-         @param extraInfo The extra information, if this is a service or an adapter.
-         @param requests The requests supported, if this is a service or an adapter.
-         @param owner The owner of the entity. */
+         @param[in] kind The kind of entity.
+         @param[in] title The title of the entity.
+         @param[in] ipAddress The IP address of the entity.
+         @param[in] behaviour The behavioural model if a service or an adapter.
+         @param[in] description The description, if this is a service or an adapter.
+         @param[in] extraInfo The extra information, if this is a service or an adapter.
+         @param[in] requests The requests supported, if this is a service or an adapter.
+         @param[in] owner The owner of the entity. */
         ChannelContainer(const ContainerKind kind,
                          const YarpString &  title,
                          const YarpString &  ipAddress,
@@ -108,17 +108,17 @@ namespace MPlusM_Manager
         ~ChannelContainer(void);
 
         /*! @brief Add an argument description to the container.
-         @param argDesc The argument descriptor to be added to the container. */
+         @param[in] argDesc The argument descriptor to be added to the container. */
         void
         addArgumentDescription(MplusM::Utilities::BaseArgumentDescriptor * argDesc);
 
         /*! @brief Add a port to the panel.
-         @param portName The name of the port.
-         @param portNumber The port number of the port.
-         @param portProtocol The protocol of the port.
-         @param protocolDescription The description of the protocol.
-         @param portKind What the port will be used for.
-         @param direction The primary direction of the port.
+         @param[in] portName The name of the port.
+         @param[in] portNumber The port number of the port.
+         @param[in] portProtocol The protocol of the port.
+         @param[in] protocolDescription The description of the protocol.
+         @param[in] portKind What the port will be used for.
+         @param[in] direction The primary direction of the port.
          @returns The newly-created port. */
         ChannelEntry *
         addPort(const YarpString &  portName,
@@ -154,7 +154,7 @@ namespace MPlusM_Manager
         deselect(void);
 
         /*! @brief Display information for a container.
-         @param moreDetails @c true if more details are to be shown and @c false otherwise. */
+         @param[in] moreDetails @c true if more details are to be shown and @c false otherwise. */
         void
         displayInformation(const bool moreDetails);
 
@@ -163,18 +163,18 @@ namespace MPlusM_Manager
         displayMetrics(void);
 
         /*! @brief Display the connections between containers.
-         @param gg The graphics context in which to draw. */
+         @param[in,out] gg The graphics context in which to draw. */
         void
         drawOutgoingConnections(Graphics & gg);
 
         /*! @brief Convert a tab-delimited line of metric data into a more readable form.
-         @param aRow A line of metric data.
+         @param[in] aRow A line of metric data.
          @returns The metric data reformatted. */
         String
         formatMetricRow(const String & aRow);
 
         /*! @brief Return a particular argument descriptor.
-         @param idx The index of the argument of interest.
+         @param[in] idx The index of the argument of interest.
          @returns The argument descriptor at the specified index. */
         MplusM::Utilities::BaseArgumentDescriptor *
         getArgumentDescriptor(const size_t idx)
@@ -270,7 +270,7 @@ namespace MPlusM_Manager
         } // getOwner
 
         /*! @brief Returns a port by index.
-         @param num The zero-origin index of the port.
+         @param[in] num The zero-origin index of the port.
          @returns A port or @c NULL if the index is out of range. */
         ChannelEntry *
         getPort(const int num)
@@ -298,7 +298,7 @@ namespace MPlusM_Manager
         const;
 
         /*! @brief Check if a port is part of the entity.
-         @param aPort The port to be checked for.
+         @param[in] aPort The port to be checked for.
          @returns @c true if the port is contained within the entity and @c false otherwise. */
         bool
         hasPort(const ChannelEntry * aPort);
@@ -336,19 +336,19 @@ namespace MPlusM_Manager
         } // isSelected
 
         /*! @brief Returns an entry at the given location, if it exists.
-         @param location The coordinates to check.
+         @param[in] location The coordinates to check.
          @returns A pointer to the entry at the given location, or @c NULL if there is none. */
         ChannelEntry *
         locateEntry(const Position & location)
         const;
 
         /*! @brief Called when a mouse button is pressed.
-         @param ee Details about the position and status of the mouse event. */
+         @param[in] ee Details about the position and status of the mouse event. */
         virtual void
         mouseDown(const MouseEvent & ee);
 
         /*! @brief Called when the mouse is moved while a button is held down.
-         @param ee Details about the position and status of the mouse event. */
+         @param[in] ee Details about the position and status of the mouse event. */
         virtual void
         mouseDrag(const MouseEvent & ee);
 
@@ -373,13 +373,13 @@ namespace MPlusM_Manager
         setHidden(void);
 
         /*! @brief Change the state of service metrics collection.
-         @param newState The requested state of service metrics collection. */
+         @param[in] newState The requested state of service metrics collection. */
         void
         setMetricsState(const bool newState);
 
 # if defined(USE_OGDF_POSITIONING_)
         /*! @brief Sets the node corresponding to the entity.
-         @param newNode The new value for the node corresponding to the entity. */
+         @param[in] newNode The new value for the node corresponding to the entity. */
         void
         setNode(ogdf::node newNode);
 # endif // defined(USE_OGDF_POSITIONING_)
@@ -423,7 +423,7 @@ namespace MPlusM_Manager
         displayAndProcessPopupMenu(void);
 
         /*! @brief Draw the content of the component.
-         @param gg The graphics context in which to draw. */
+         @param[in,out] gg The graphics context in which to draw. */
         virtual void
         paint(Graphics & gg);
 

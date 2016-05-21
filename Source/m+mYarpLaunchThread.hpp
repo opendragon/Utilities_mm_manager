@@ -70,9 +70,9 @@ namespace MPlusM_Manager
     public :
 
         /*! @brief The constructor.
-         @param pathToExecutable The file system path for the executable.
-         @param ipAddress The network address to use.
-         @param portNumber The network port number to use. */
+         @param[in] pathToExecutable The file system path for the executable.
+         @param[in] ipAddress The network address to use.
+         @param[in] portNumber The network port number to use. */
         YarpLaunchThread(const String & pathToExecutable,
                          const String & ipAddress,
                          const int      portNumber);

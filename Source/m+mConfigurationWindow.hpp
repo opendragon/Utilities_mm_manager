@@ -83,11 +83,11 @@ namespace MPlusM_Manager
     public :
 
         /*! @brief The constructor.
-         @param title The title for the window.
-         @param execType The kind of application being configured.
-         @param currentValues The current set of values for the fields.
-         @param descriptors The provided argument descriptions.
-         @param valuesToUse The resulting arguments for the application. */
+         @param[in] title The title for the window.
+         @param[in] execType The kind of application being configured.
+         @param[in] currentValues The current set of values for the fields.
+         @param[in] descriptors The provided argument descriptions.
+         @param[in,out] valuesToUse The resulting arguments for the application. */
         ConfigurationWindow(const String &                              title,
                             const String &                              execType,
                             const YarpStringVector &                    currentValues,
@@ -111,7 +111,7 @@ namespace MPlusM_Manager
         adjustFields(void);
 
         /*! @brief Called when a button is clicked.
-         @param aButton The button that was clicked. */
+         @param[in] aButton The button that was clicked. */
         virtual void
         buttonClicked(Button * aButton);
 
@@ -121,12 +121,12 @@ namespace MPlusM_Manager
         fieldsAreValid(void);
 
         /*! @brief Called when this component has just acquired the keyboard focus.
-         @param cause The type of event that caused the change in focus. */
+         @param[in] cause The type of event that caused the change in focus. */
         virtual void
         focusGained(FocusChangeType cause);
 
         /*! @brief Called when this component has just lost the keyboard focus.
-         @param cause The type of event that caused the change in focus. */
+         @param[in] cause The type of event that caused the change in focus. */
         virtual void
         focusLost(FocusChangeType cause);
 
@@ -135,7 +135,7 @@ namespace MPlusM_Manager
         handleAsyncUpdate(void);
 
         /*! @brief Called when a key is pressed.
-         @param key The key that was pressed.
+         @param[in] key The key that was pressed.
          @returns @c true if the key was consumed and @c false otherwise. */
         virtual bool
         keyPressed(const KeyPress & key);
@@ -149,12 +149,12 @@ namespace MPlusM_Manager
         removeMostRecentlyAddedExtraField(void);
 
         /*! @brief Report an error in a field.
-         @param fieldOfInterest The field to be reported. */
+         @param[in] fieldOfInterest The field to be reported. */
         virtual void
         reportErrorInField(FormField & fieldOfInterest);
 
         /*! @brief Report an error in a field.
-         @param fieldOfInterest The field to be reported. */
+         @param[in] fieldOfInterest The field to be reported. */
         virtual void
         reportErrorInField(ValidatingTextEditor & fieldOfInterest);
 
@@ -163,9 +163,9 @@ namespace MPlusM_Manager
         resized(void);
 
         /*! @brief Set up the standard fields.
-         @param widthSoFar The minimum width to show the fields.
-         @param heightSoFar The minimum height to show the fields.
-         @param currentValues The current set of values for the fields. */
+         @param[in,out] widthSoFar The minimum width to show the fields.
+         @param[in,out] heightSoFar The minimum height to show the fields.
+         @param[in] currentValues The current set of values for the fields. */
         void
         setUpStandardFields(int &                    widthSoFar,
                             int &                    heightSoFar,

@@ -107,7 +107,7 @@ namespace MPlusM_Manager
     public :
 
         /*! @brief The constructor.
-         @param title The window title. */
+         @param[in] title The window title. */
         explicit
         ManagerWindow(const YarpString & title);
 

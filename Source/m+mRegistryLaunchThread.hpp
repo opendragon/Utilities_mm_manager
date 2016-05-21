@@ -70,8 +70,8 @@ namespace MPlusM_Manager
     public :
 
         /*! @brief The constructor.
-         @param pathToExecutable The file system path for the executable.
-         @param portNumber The network port number to use. */
+         @param[in] pathToExecutable The file system path for the executable.
+         @param[in] portNumber The network port number to use. */
         explicit
         RegistryLaunchThread(const String & pathToExecutable,
                              const int      portNumber = 0);

@@ -70,13 +70,13 @@ namespace MPlusM_Manager
     public :
 
         /*! @brief The constructor.
-         @param pathToExecutable The file system path for the executable.
-         @param endpointName The endpoint to use, if not the default.
-         @param tag The tag to use, if any.
-         @param portNumber The network port number to use.
-         @param tagModifierCount The number of bytes of the IP address to use as a tag modifier.
-         @param arguments The arguments to the service.
-         @param needsGo @c true if a '--go' option should be used with the executable. */
+         @param[in] pathToExecutable The file system path for the executable.
+         @param[in] endpointName The endpoint to use, if not the default.
+         @param[in] tag The tag to use, if any.
+         @param[in] portNumber The network port number to use.
+         @param[in] tagModifierCount The number of bytes of the IP address to use as a tag modifier.
+         @param[in] arguments The arguments to the service.
+         @param[in] needsGo @c true if a '--go' option should be used with the executable. */
         ServiceLaunchThread(const String &      pathToExecutable,
                             const String &      endpointName,
                             const String &      tag,

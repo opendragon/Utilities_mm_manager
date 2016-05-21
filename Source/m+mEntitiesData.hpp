@@ -74,16 +74,16 @@ namespace MPlusM_Manager
         ~EntitiesData(void);
 
         /*! @brief Record a connection between ports.
-         @param inName The name of the destination port.
-         @param outName The name of the source port.
-         @param mode The mode of the connection. */
+         @param[in] inName The name of the destination port.
+         @param[in] outName The name of the source port.
+         @param[in] mode The mode of the connection. */
         void
         addConnection(const YarpString &          inName,
                       const YarpString &          outName,
                       MplusM::Common::ChannelMode mode);
 
         /*! @brief Add an entity to the list of known entities.
-         @param anEntity The entity to be added. */
+         @param[in] anEntity The entity to be added. */
         void
         addEntity(EntityData * anEntity);
 
@@ -105,7 +105,7 @@ namespace MPlusM_Manager
         } // getConnections
 
         /*! @brief Return an entity by index.
-         @param index The zero-origin index of the entity.
+         @param[in] index The zero-origin index of the entity.
          @returns The entity if the index is within range and @c NULL otherwise. */
         EntityData *
         getEntity(const size_t index)
@@ -122,11 +122,11 @@ namespace MPlusM_Manager
     private :
 
         /*! @brief The copy constructor.
-         @param other The object to be copied. */
+         @param[in] other The object to be copied. */
         EntitiesData(const EntitiesData & other);
 
         /*! @brief The assignment operator.
-         @param other The object to be copied.
+         @param[in] other The object to be copied.
          @returns The updated object. */
         EntitiesData &
         operator =(const EntitiesData & other);

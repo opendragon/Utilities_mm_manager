@@ -67,12 +67,12 @@ namespace MPlusM_Manager
     public :
 
         /*! @brief The constructor.
-         @param kind The kind of entity.
-         @param name The name of the entity.
-         @param behaviour The behavioural model if a service or adapter.
-         @param description The description, if this is a service or adapter.
-         @param extraInfo The extra information for the entity.
-         @param requests The requests supported, if this is a service or adapter. */
+         @param[in] kind The kind of entity.
+         @param[in] name The name of the entity.
+         @param[in] behaviour The behavioural model if a service or adapter.
+         @param[in] description The description, if this is a service or adapter.
+         @param[in] extraInfo The extra information for the entity.
+         @param[in] requests The requests supported, if this is a service or adapter. */
         EntityData(const ContainerKind kind,
                    const YarpString &  name,
                    const YarpString &  behaviour,
@@ -85,16 +85,16 @@ namespace MPlusM_Manager
         ~EntityData(void);
 
         /*! @brief Add an argument description to the entity.
-         @param argDesc The argument descriptor to be added to the entity. */
+         @param[in] argDesc The argument descriptor to be added to the entity. */
         void
         addArgumentDescription(MplusM::Utilities::BaseArgumentDescriptor * argDesc);
 
         /*! @brief Add a port to the entity.
-         @param portName The name of the port.
-         @param portProtocol The protocol of the port.
-         @param protocolDescription The description of the protocol.
-         @param portKind What the port will be used for.
-         @param direction The primary direction of the port.
+         @param[in] portName The name of the port.
+         @param[in] portProtocol The protocol of the port.
+         @param[in] protocolDescription The description of the protocol.
+         @param[in] portKind What the port will be used for.
+         @param[in] direction The primary direction of the port.
          @returns The newly-created port. */
         PortData *
         addPort(const YarpString &  portName,
@@ -104,7 +104,7 @@ namespace MPlusM_Manager
                 const PortDirection direction = kPortDirectionInputOutput);
 
         /*! @brief Return a particular argument descriptor.
-         @param idx The index of the argument of interest.
+         @param[in] idx The index of the argument of interest.
          @returns The argument descriptor at the specified index. */
         MplusM::Utilities::BaseArgumentDescriptor *
         getArgumentDescriptor(const size_t idx)
@@ -180,7 +180,7 @@ namespace MPlusM_Manager
         const;
 
         /*! @brief Returns a port by index.
-         @param num The zero-origin index of the port.
+         @param[in] num The zero-origin index of the port.
          @returns A port or @c NULL if the index is out of range. */
         PortData *
         getPort(const int num)
@@ -196,7 +196,7 @@ namespace MPlusM_Manager
         } // getRequests
 
         /*! @brief Set the IP address of the entity.
-         @param newAddress The IP address of the entity. */
+         @param[in] newAddress The IP address of the entity. */
         inline void
         setIPAddress(const YarpString & newAddress)
         {
@@ -208,11 +208,11 @@ namespace MPlusM_Manager
     private :
 
         /*! @brief The copy constructor.
-         @param other The object to be copied. */
+         @param[in] other The object to be copied. */
         EntityData(const EntityData & other);
 
         /*! @brief The assignment operator.
-         @param other The object to be copied.
+         @param[in] other The object to be copied.
          @returns The updated object. */
         EntityData &
         operator =(const EntityData & other);

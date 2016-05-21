@@ -68,11 +68,11 @@ namespace MPlusM_Manager
     public :
 
         /*! @brief The constructor.
-         @param portName The port name for the entry.
-         @param portProtocol The protocol of the port.
-         @param protocolDescription The description of the protocol.
-         @param portKind What the port will be used for.
-         @param direction The primary direction of the port. */
+         @param[in] portName The port name for the entry.
+         @param[in] portProtocol The protocol of the port.
+         @param[in] protocolDescription The description of the protocol.
+         @param[in] portKind What the port will be used for.
+         @param[in] direction The primary direction of the port. */
         PortData(const YarpString &  portName,
                  const YarpString &  portProtocol,
                  const YarpString &  protocolDescription,
@@ -84,15 +84,15 @@ namespace MPlusM_Manager
         ~PortData(void);
 
         /*! @brief Add an input connection to the port.
-         @param other The port that is to be connected.
-         @param mode The mode of the connection. */
+         @param[in] other The port that is to be connected.
+         @param[in] mode The mode of the connection. */
         void
         addInputConnection(PortData *                  other,
                            MplusM::Common::ChannelMode mode);
 
         /*! @brief Add an output connection to the port.
-         @param other The port that is to be connected.
-         @param mode The mode of the connection. */
+         @param[in] other The port that is to be connected.
+         @param[in] mode The mode of the connection. */
         void
         addOutputConnection(PortData *                  other,
                             MplusM::Common::ChannelMode mode);
@@ -170,7 +170,7 @@ namespace MPlusM_Manager
         } // getUsage
 
         /*! @brief Returns @c true if there is an outgoing connection to the named port.
-         @param otherPort The name of the destination port.
+         @param[in] otherPort The name of the destination port.
          @returns @c true if there is an outgoing connection to the named port. */
         bool
         hasOutgoingConnectionTo(const YarpString & otherPort)
@@ -201,7 +201,7 @@ namespace MPlusM_Manager
         } // isService
 
         /*! @brief Remove an input connection from a port.
-         @param other The port that is to be disconnected. */
+         @param[in] other The port that is to be disconnected. */
         void
         removeInputConnection(PortData * other);
 
@@ -210,12 +210,12 @@ namespace MPlusM_Manager
         removeInvalidConnections(void);
 
         /*! @brief Remove an output connection from a port.
-         @param other The port that is to be disconnected. */
+         @param[in] other The port that is to be disconnected. */
         void
         removeOutputConnection(PortData * other);
 
         /*! @brief Set the port number of the port.
-         @param newPortNumber The port number of the port. */
+         @param[in] newPortNumber The port number of the port. */
         inline void
         setPortNumber(const YarpString & newPortNumber)
         {
@@ -227,11 +227,11 @@ namespace MPlusM_Manager
     private :
 
         /*! @brief The copy constructor.
-         @param other The object to be copied. */
+         @param[in] other The object to be copied. */
         PortData(const PortData & other);
 
         /*! @brief The assignment operator.
-         @param other The object to be copied.
+         @param[in] other The object to be copied.
          @returns The updated object. */
         PortData &
         operator =(const PortData & other);

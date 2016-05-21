@@ -76,9 +76,9 @@ namespace MPlusM_Manager
     public :
 
         /*! @brief The constructor.
-         @param container The container in which the panel is embedded.
-         @param startingWidth The initial width to use, or zero to use a default width.
-         @param startingHeight The initial height to use, or zero to uase a default height. */
+         @param[in] container The container in which the panel is embedded.
+         @param[in] startingWidth The initial width to use, or zero to use a default width.
+         @param[in] startingHeight The initial height to use, or zero to uase a default height. */
         explicit
         EntitiesPanel(ContentPanel * container,
                       const int      startingWidth = 0,
@@ -89,12 +89,13 @@ namespace MPlusM_Manager
         ~EntitiesPanel(void);
 
         /*! @brief Add an entity to the list of known entities.
-         @param anEntity The entity to be added. */
+         @param[in] anEntity The entity to be added. */
         void
         addEntity(ChannelContainer * anEntity);
 
         /*! @brief Recalculate size based on entities present.
-         @param andRepaint @c true if a repaint should be performed as well, and @c false if not. */
+         @param[in] andRepaint @c true if a repaint should be performed as well, and @c false if
+         not. */
         void
         adjustSize(const bool andRepaint);
 
@@ -125,19 +126,19 @@ namespace MPlusM_Manager
         clearOutData(void);
 
         /*! @brief Find an entity in the currently-displayed list by name.
-         @param name The name of the entity.
+         @param[in] name The name of the entity.
          @returns @c NULL if the entity cannot be found and non-@c NULL if it is found. */
         ChannelContainer *
         findKnownEntity(const YarpString & name);
 
         /*! @brief Find a port in the to-be-displayed list by name.
-         @param name The name of the port.
+         @param[in] name The name of the port.
          @returns @c NULL if the port cannot be found and non-@c NULL if it is found. */
         ChannelEntry *
         findKnownPort(const YarpString & name);
 
         /*! @brief Remove a port from the set of known ports.
-         @param aPort The port to be removed. */
+         @param[in] aPort The port to be removed. */
         void
         forgetPort(ChannelEntry * aPort);
 
@@ -159,7 +160,7 @@ namespace MPlusM_Manager
         } // getContent
 
         /*! @brief Return an entity by index.
-         @param index The zero-origin index of the entity.
+         @param[in] index The zero-origin index of the entity.
          @returns The entity if the index is within range and @c NULL otherwise. */
         ChannelContainer *
         getEntity(const size_t index)
@@ -217,7 +218,7 @@ namespace MPlusM_Manager
         } // isDragActive
 
         /*! @brief Returns an entry at the given location, if it exists.
-         @param location The coordinates to check.
+         @param[in] location The coordinates to check.
          @returns A pointer to the entry at the given location, or @c NULL if there is none. */
         ChannelEntry *
         locateEntry(const Position & location)
@@ -228,15 +229,15 @@ namespace MPlusM_Manager
         recallPositions(void);
 
         /*! @brief Record the initial entry when adding or removing a connection.
-         @param aPort The first entry selected.
-         @param beingAdded @c true if the connection is being added and @c false if it is being
+         @param[in] aPort The first entry selected.
+         @param[in] beingAdded @c true if the connection is being added and @c false if it is being
          removed. */
         void
         rememberConnectionStartPoint(ChannelEntry * aPort = NULL,
                                      const bool     beingAdded = false);
 
         /*! @brief Record a newly added port.
-         @param aPort The port to be recorded. */
+         @param[in] aPort The port to be recorded. */
         void
         rememberPort(ChannelEntry * aPort);
 
@@ -254,8 +255,8 @@ namespace MPlusM_Manager
         removeUnvisitedEntities(void);
 
         /*! @brief Update the dragging information.
-         @param position The location of the dragging connection.
-         @param isForced @c true if the drag line should show a forced connection and @c false
+         @param[in] position The location of the dragging connection.
+         @param[in] isForced @c true if the drag line should show a forced connection and @c false
          otherwise. */
         void
         setDragInfo(const Position position,
@@ -278,22 +279,22 @@ namespace MPlusM_Manager
         displayAndProcessPopupMenu(void);
 
         /*! @brief Display the connections between containers.
-         @param gg The graphics context in which to draw. */
+         @param[in,out] gg The graphics context in which to draw. */
         void
         drawConnections(Graphics & gg);
 
         /*! @brief Called when a mouse button is pressed.
-         @param ee Details about the position and status of the mouse event. */
+         @param[in] ee Details about the position and status of the mouse event. */
         virtual void
         mouseDown(const MouseEvent & ee);
 
         /*! @brief Called when a mouse button is released.
-         @param ee Details about the position and status of the mouse event. */
+         @param[in] ee Details about the position and status of the mouse event. */
         virtual void
         mouseUp(const MouseEvent& ee);
 
         /*! @brief Draw the content of the component.
-         @param gg The graphics context in which to draw. */
+         @param[in,out] gg The graphics context in which to draw. */
         virtual void
         paint(Graphics & gg);
 

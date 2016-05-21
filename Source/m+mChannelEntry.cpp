@@ -126,10 +126,11 @@ static const float kTargetBoxScale = 0.25;
 #endif // defined(__APPLE__)
 
 /*! @brief Determine if a new point is closer to a reference point than the previous point.
- @param distanceSoFar On input, the closest distance so far and on output, the new closest distance.
- @param refPoint The point to measure distance from.
- @param testPoint The point being checked.
- @param bestSoFar On input, the current closest point and output, the new closest point.
+ @param[in,out] distanceSoFar On input, the closest distance so far and on output, the new closest
+ distance.
+ @param[in] refPoint The point to measure distance from.
+ @param[in] testPoint The point being checked.
+ @param[in,out] bestSoFar On input, the current closest point and output, the new closest point.
  @returns @c true if the new point is closer than the previous closest point. */
 static bool
 calculateMinDistance(float &          distanceSoFar,
@@ -158,11 +159,12 @@ calculateMinDistance(float &          distanceSoFar,
 } // calculateMinDistance
 
 /*! @brief Determine if a new point is closer to a reference point than the previous point.
- @param distanceSoFar On input, the closest distance so far and on output, the new closest distance.
- @param refPoint The point to measure distance from.
- @param testX The horizontal coordinate for the point being checked.
- @param testY The vertical coordinate for the point being checked.
- @param bestSoFar On input, the current closest point and output, the new closest point.
+ @param[in,out] distanceSoFar On input, the closest distance so far and on output, the new closest
+ distance.
+ @param[in] refPoint The point to measure distance from.
+ @param[in] testX The horizontal coordinate for the point being checked.
+ @param[in] testY The vertical coordinate for the point being checked.
+ @param[in,out] bestSoFar On input, the current closest point and output, the new closest point.
  @returns @c true if the new point is closer than the previous closest point. */
 inline static bool
 calculateMinDistance(float &          distanceSoFar,
@@ -175,10 +177,10 @@ calculateMinDistance(float &          distanceSoFar,
 } // calculateMinDistance
 
 /*! @brief Determine the anchor point that is the minimum distance from a given point.
- @param newCentre The synthesized centre for the target point.
- @param disallowBottom @c true if the anchor cannot be bottom-centre.
- @param targetPoint The target point.
- @param refCentre The reference point.
+ @param[in,out] newCentre The synthesized centre for the target point.
+ @param[in] disallowBottom @c true if the anchor cannot be bottom-centre.
+ @param[in] targetPoint The target point.
+ @param[in] refCentre The reference point.
  @returns The side to which the anchor is attached. */
 static AnchorSide
 calculateAnchorForPoint(Position &       newCentre,
@@ -223,10 +225,10 @@ calculateAnchorForPoint(Position &       newCentre,
 } // calculateAnchorForPoint
 
 /*! @brief Displays an anchor leaving the given location.
- @param gg The graphics context in which to draw.
- @param anchor The side to which the anchor is attached.
- @param anchorPos The coordinates of the anchor point.
- @param thickness The line thickness to be used. */
+ @param[in,out] gg The graphics context in which to draw.
+ @param[in] anchor The side to which the anchor is attached.
+ @param[in] anchorPos The coordinates of the anchor point.
+ @param[in] thickness The line thickness to be used. */
 static void
 drawSourceAnchor(Graphics &       gg,
                  const AnchorSide anchor,
@@ -278,10 +280,10 @@ drawSourceAnchor(Graphics &       gg,
 } // drawSourceAnchor
 
 /*! @brief Displays an anchor arriving at the given location.
- @param gg The graphics context in which to draw.
- @param anchor The side to which the anchor is attached.
- @param anchorPos The coordinates of the anchor point.
- @param thickness The line thickness to be used. */
+ @param[in,out] gg The graphics context in which to draw.
+ @param[in] anchor The side to which the anchor is attached.
+ @param[in] anchorPos The coordinates of the anchor point.
+ @param[in] thickness The line thickness to be used. */
 static void
 drawTargetAnchor(Graphics &       gg,
                  const AnchorSide anchor,
@@ -333,15 +335,15 @@ drawTargetAnchor(Graphics &       gg,
 } // drawTargetAnchor
 
 /*! @brief Draw a bezier curve between two points.
- @param gg The graphics context in which to draw.
- @param startPoint The beginning of the curve.
- @param endPoint The end of the curve.
- @param startCentre A reference point for the beginning of the curve, used to calculate the
+ @param[in,out] gg The graphics context in which to draw.
+ @param[in] startPoint The beginning of the curve.
+ @param[in] endPoint The end of the curve.
+ @param[in] startCentre A reference point for the beginning of the curve, used to calculate the
  beginning tangent.
- @param endCentre A reference point for the end of the curve, used to calculate the ending
+ @param[in] endCentre A reference point for the end of the curve, used to calculate the ending
  tangent.
- @param thickness The line thickness to be used.
- @param isDashed @c true if the line should be dashed and @c false otherwise. */
+ @param[in] thickness The line thickness to be used.
+ @param[in] isDashed @c true if the line should be dashed and @c false otherwise. */
 static void
 drawBezier(Graphics &       gg,
            const Position & startPoint,
@@ -386,11 +388,11 @@ drawBezier(Graphics &       gg,
 } // drawBezier
 
 /*! @brief Draw a connection between entries.
- @param gg The graphics context in which to draw.
- @param source The originating entry.
- @param destination The terminating entry.
- @param mode The kind of connection.
- @param forced @c true if the protocols were overridden and @c false otherwise. */
+ @param[in,out] gg The graphics context in which to draw.
+ @param[in] source The originating entry.
+ @param[in] destination The terminating entry.
+ @param[in] mode The kind of connection.
+ @param[in] forced @c true if the protocols were overridden and @c false otherwise. */
 static void
 drawConnection(Graphics &                gg,
                ChannelEntry *            source,
@@ -488,9 +490,9 @@ drawConnection(Graphics &                gg,
 } // drawConnection
 
 /*! @brief Determine whether a connection can be made, based on the port protocols.
- @param sourceProtocol The protocol of the source port.
- @param destinationProtocol The protocol of the destination port.
- @param ignoreConstraints @c true if the protocols don't have to match.
+ @param[in] sourceProtocol The protocol of the source port.
+ @param[in] destinationProtocol The protocol of the destination port.
+ @param[in] ignoreConstraints @c true if the protocols don't have to match.
  @returns @c true if the protocols permit a connection to be made and @c false
  otherwise. */
 static bool

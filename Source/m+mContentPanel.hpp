@@ -88,7 +88,7 @@ namespace MPlusM_Manager
     public :
 
         /*! @brief The constructor.
-         @param containingWindow The window in which the panel is embedded. */
+         @param[in] containingWindow The window in which the panel is embedded. */
         explicit
         ContentPanel(ManagerWindow * containingWindow);
 
@@ -162,21 +162,21 @@ namespace MPlusM_Manager
         setContainerOfInterest(ChannelContainer * aContainer);
 
         /*! @brief Prepare the channel menu for use.
-         @param aMenu The popup menu to be configured.
-         @param aChannel The selected channel. */
+         @param[in,out] aMenu The popup menu to be configured.
+         @param[in] aChannel The selected channel. */
         void
         setUpChannelMenu(PopupMenu &    aMenu,
                          ChannelEntry & aChannel);
 
         /*! @brief Prepare the container menu for use.
-         @param aMenu The popup menu to be configured.
-         @param aContainer The selected container. */
+         @param[in,out] aMenu The popup menu to be configured.
+         @param[in] aContainer The selected container. */
         void
         setUpContainerMenu(PopupMenu &        aMenu,
                            ChannelContainer & aContainer);
 
         /*! @brief Prepare the view menu for use.
-         @param aMenu The popup menu to be configured. */
+         @param[in,out] aMenu The popup menu to be configured. */
         void
         setUpViewMenu(PopupMenu & aMenu);
 
@@ -189,13 +189,13 @@ namespace MPlusM_Manager
     private :
 
         /*! @brief Return a list of commands that this target can handle.
-         @param commands The list of commands to be added to. */
+         @param[in,out] commands The list of commands to be added to. */
         virtual void
         getAllCommands(Array<CommandID> & commands);
 
         /*! @brief Provide details about one of the commands that this target can perform.
-         @param commandID The identifier for the command.
-         @param result The details about the command. */
+         @param[in] commandID The identifier for the command.
+         @param[out] result The details about the command. */
         virtual void
         getCommandInfo(CommandID                commandID,
                        ApplicationCommandInfo & result);
@@ -206,8 +206,8 @@ namespace MPlusM_Manager
         getMenuBarNames(void);
 
         /*! @brief Return the popup menu to display for a given top-level menu.
-         @param menuIndex The index of the top-level menu to show.
-         @param menuName The name of the top-level menu item to show.
+         @param[in] menuIndex The index of the top-level menu to show.
+         @param[in] menuName The name of the top-level menu item to show.
          @returns The popup menu corresponding to the given index and name. */
         virtual PopupMenu
         getMenuForIndex(int            menuIndex,
@@ -219,20 +219,20 @@ namespace MPlusM_Manager
         getNextCommandTarget(void);
 
         /*! @brief Perform the selected menu item action.
-         @param menuItemID The item ID of the menu item that was selected.
-         @param topLevelMenuIndex The index of the top-level menu from which the item was
+         @param[in] menuItemID The item ID of the menu item that was selected.
+         @param[in] topLevelMenuIndex The index of the top-level menu from which the item was
          selected. */
         virtual void
         menuItemSelected(int menuItemID,
                          int topLevelMenuIndex);
 
         /*! @brief Draw the content of the component.
-         @param gg The graphics context in which to draw. */
+         @param[in,out] gg The graphics context in which to draw. */
         virtual void
         paint(Graphics & gg);
 
         /*! @brief Perform the specified command.
-         @param info The details for the command.
+         @param[in] info The details for the command.
          @returns @c true if the command was handled and @c false if it was not. */
         virtual bool
         perform(const InvocationInfo & info);
@@ -246,17 +246,17 @@ namespace MPlusM_Manager
         setEntityPositions(void);
 
         /*! @brief Prepare the main menu for use.
-         @param aMenu The popup menu to be configured. */
+         @param[in,out] aMenu The popup menu to be configured. */
         void
         setUpMainMenu(PopupMenu & aMenu);
 
         /*! @brief Refresh the displayed entities and connections, based on the scanned entities.
-         @param scanner The background scanning thread. */
+         @param[in] scanner The background scanning thread. */
         void
         updatePanels(ScannerThread & scanner);
 
         /*! @brief Called when the visible area changes.
-         @param newVisibleArea The new visible area. */
+         @param[in] newVisibleArea The new visible area. */
         virtual void
         visibleAreaChanged(const juce::Rectangle<int> & newVisibleArea);
 
@@ -308,9 +308,9 @@ namespace MPlusM_Manager
     }; // ContentPanel
 
     /*! @brief Create and display an information panel.
-     @param above The visible component that will be below the panel.
-     @param bodyText The text to display in the panel.
-     @param title The title of the panel. */
+     @param[in] above The visible component that will be below the panel.
+     @param[in] bodyText The text to display in the panel.
+     @param[in] title The title of the panel. */
     void DisplayInformationPanel(Component *    above,
                                  const String & bodyText,
                                  const String & title);

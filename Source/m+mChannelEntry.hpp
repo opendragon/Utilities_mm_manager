@@ -73,13 +73,13 @@ namespace MPlusM_Manager
     public :
 
         /*! @brief The constructor.
-         @param parent The GUI element containing this element.
-         @param portName The port name for the entry.
-         @param portNumber The port number for the entry.
-         @param portProtocol The protocol of the port.
-         @param protocolDescription The description of the protocol.
-         @param portKind What the port will be used for.
-         @param direction The primary direction of the port. */
+         @param[in] parent The GUI element containing this element.
+         @param[in] portName The port name for the entry.
+         @param[in] portNumber The port number for the entry.
+         @param[in] portProtocol The protocol of the port.
+         @param[in] protocolDescription The description of the protocol.
+         @param[in] portKind What the port will be used for.
+         @param[in] direction The primary direction of the port. */
         ChannelEntry(ChannelContainer *  parent,
                      const YarpString &  portName,
                      const YarpString &  portNumber,
@@ -93,9 +93,9 @@ namespace MPlusM_Manager
         ~ChannelEntry(void);
 
         /*! @brief Add an input connection to the port.
-         @param other The port that is to be connected.
-         @param mode The mode of the connection.
-         @param wasOverridden @c true if the protocol matching was overridden and @c false
+         @param[in] other The port that is to be connected.
+         @param[in] mode The mode of the connection.
+         @param[in] wasOverridden @c true if the protocol matching was overridden and @c false
          otherwise. */
         void
         addInputConnection(ChannelEntry *                    other,
@@ -103,9 +103,9 @@ namespace MPlusM_Manager
                            const bool                        wasOverridden);
 
         /*! @brief Add an output connection to the port.
-         @param other The port that is to be connected.
-         @param mode The mode of the connection.
-         @param wasOverridden @c true if the protocol matching was overridden and @c false
+         @param[in] other The port that is to be connected.
+         @param[in] mode The mode of the connection.
+         @param[in] wasOverridden @c true if the protocol matching was overridden and @c false
          otherwise. */
         void
         addOutputConnection(ChannelEntry *                    other,
@@ -113,11 +113,11 @@ namespace MPlusM_Manager
                             const bool                        wasOverridden);
 
         /*! @brief Determine the anchor point that is the minimum distance from a given point.
-         @param result The coordinates of the anchor point.
-         @param isSource @c true if the anchor is for an outgoing line and @c false otherwise.
-         @param disallowBottom @c true if the anchor cannot be bottom-centre.
-         @param xx The horizontal coordinate for the point of interest.
-         @param yy The vertical coordinate for the point of interest.
+         @param[in,out] result The coordinates of the anchor point.
+         @param[in] isSource @c true if the anchor is for an outgoing line and @c false otherwise.
+         @param[in] disallowBottom @c true if the anchor cannot be bottom-centre.
+         @param[in] xx The horizontal coordinate for the point of interest.
+         @param[in] yy The vertical coordinate for the point of interest.
          @returns The side to which the anchor is attached. */
         inline AnchorSide
         calculateClosestAnchor(Position &  result,
@@ -131,10 +131,10 @@ namespace MPlusM_Manager
         } // calculateClosestAnchor
 
         /*! @brief Determine the anchor point that is the minimum distance from a given point.
-         @param result The coordinates of the anchor point.
-         @param isSource @c true if the anchor is for an outgoing line and @c false otherwise.
-         @param disallowBottom @c true if the anchor cannot be bottom-centre.
-         @param pp The point of interest.
+         @param[in,out] result The coordinates of the anchor point.
+         @param[in] isSource @c true if the anchor is for an outgoing line and @c false otherwise.
+         @param[in] disallowBottom @c true if the anchor cannot be bottom-centre.
+         @param[in] pp The point of interest.
          @returns The side to which the anchor is attached. */
         AnchorSide
         calculateClosestAnchor(Position &       result,
@@ -156,17 +156,17 @@ namespace MPlusM_Manager
         displayChannelMetrics(void);
 
         /*! @brief Display information for a port.
-         @param isChannel @c true if the port is a channel and @c false otherwise.
-         @param moreDetails @c true if more details are to be shown and @c false otherwise. */
+         @param[in] isChannel @c true if the port is a channel and @c false otherwise.
+         @param[in] moreDetails @c true if more details are to be shown and @c false otherwise. */
         void
         displayInformation(const bool isChannel,
                            const bool moreDetails);
 
         /*! @brief Draw a drag line from an entry.
-         @param gg The graphics context in which to draw.
-         @param position The coordinates of the drag line endpoint.
-         @param isUDP @c true if the connection is UDP and @c false otherwise.
-         @param isForced @c true if the connection is forced and @c false otherwise. */
+         @param[in,out] gg The graphics context in which to draw.
+         @param[in] position The coordinates of the drag line endpoint.
+         @param[in] isUDP @c true if the connection is UDP and @c false otherwise.
+         @param[in] isForced @c true if the connection is forced and @c false otherwise. */
         void
         drawDragLine(Graphics &       gg,
                      const Position & position,
@@ -174,7 +174,7 @@ namespace MPlusM_Manager
                      const bool       isForced);
 
         /*! @brief Display the connections between containers.
-         @param gg The graphics context in which to draw. */
+         @param[in,out] gg The graphics context in which to draw. */
         void
         drawOutgoingConnections(Graphics & gg);
 
@@ -278,7 +278,7 @@ namespace MPlusM_Manager
         } // getUsage
 
         /*! @brief Returns @c true if there is an outgoing connection to the named port.
-         @param otherPort The name of the destination port.
+         @param[in] otherPort The name of the destination port.
          @returns @c true if there is an outgoing connection to the named port. */
         bool
         hasOutgoingConnectionTo(const YarpString & otherPort)
@@ -344,7 +344,7 @@ namespace MPlusM_Manager
         } // isService
 
         /*! @brief Remove an input connection from a port.
-         @param other The port that is to be disconnected. */
+         @param[in] other The port that is to be disconnected. */
         void
         removeInputConnection(ChannelEntry * other);
 
@@ -353,7 +353,7 @@ namespace MPlusM_Manager
         removeInvalidConnections(void);
 
         /*! @brief Remove an output connection from a port.
-         @param other The port that is to be disconnected. */
+         @param[in] other The port that is to be disconnected. */
         void
         removeOutputConnection(ChannelEntry * other);
 
@@ -388,8 +388,8 @@ namespace MPlusM_Manager
     private :
 
         /*! @brief Check if the connection is present.
-         @param otherEnd The connection information.
-         @param isOutgoing @c true if this is an outgoing connection and @c false otherwise.
+         @param[in,out] otherEnd The connection information.
+         @param[in] isOutgoing @c true if this is an outgoing connection and @c false otherwise.
          @returns @c true if the YARP connection exists and @c false otherwise. */
         bool
         checkConnection(ChannelInfo & otherEnd,
@@ -400,22 +400,22 @@ namespace MPlusM_Manager
         displayAndProcessPopupMenu(void);
 
         /*! @brief Called when a mouse button is pressed.
-         @param ee Details about the position and status of the mouse event. */
+         @param[in] ee Details about the position and status of the mouse event. */
         virtual void
         mouseDown(const MouseEvent & ee);
 
         /*! @brief Called when the mouse is moved while a button is held down.
-         @param ee Details about the position and status of the mouse event. */
+         @param[in] ee Details about the position and status of the mouse event. */
         virtual void
         mouseDrag(const MouseEvent & ee);
 
         /*! @brief Called when a mouse button is released.
-         @param ee Details about the position and status of the mouse event. */
+         @param[in] ee Details about the position and status of the mouse event. */
         virtual void
         mouseUp(const MouseEvent & ee);
 
         /*! @brief Draw the content of the component.
-         @param gg The graphics context in which to draw. */
+         @param[in,out] gg The graphics context in which to draw. */
         virtual void
         paint(Graphics & gg);
 

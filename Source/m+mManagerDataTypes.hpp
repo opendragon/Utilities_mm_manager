@@ -390,14 +390,15 @@ namespace MPlusM_Manager
 } // MPlusM_Manager
 
 /*! @brief Return @c true if exit is requested.
- @param stuff Dummy argument to satisfy caller.
+ @param[in] stuff Dummy argument to satisfy caller.
  @returns @c true if exit has been requested. */
 bool
 CheckForExit(void * stuff);
 
 /*! @brief Launch a process, checking periodically for completion.
- @param aProcess The process to execute.
- @param timeout The number of milliseconds allowed for the process to complete (<= 0 == forever).
+ @param[in] aProcess The process to execute.
+ @param[in] timeout The number of milliseconds allowed for the process to complete
+ (<= 0 == forever).
  @returns @c true if the process completed in the time provided. */
 bool
 LazyLaunchProcess(ChildProcess & aProcess,

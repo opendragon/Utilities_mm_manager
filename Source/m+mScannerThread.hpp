@@ -73,8 +73,8 @@ namespace MPlusM_Manager
     public :
 
         /*! @brief The constructor.
-         @param window The window to be updated.
-         @param delayFirstScan @c true if a short delay should occur before the first scan. */
+         @param[in,out] window The window to be updated.
+         @param[in] delayFirstScan @c true if a short delay should occur before the first scan. */
         ScannerThread(ManagerWindow & window,
                       const bool      delayFirstScan);
 
@@ -115,32 +115,32 @@ namespace MPlusM_Manager
     private :
 
         /*! @brief Add the detected entities and connections.
-         @param detectedPorts The ports found by YARP. */
+         @param[in] detectedPorts The ports found by YARP. */
         void
         addEntities(const MplusM::Utilities::PortVector & detectedPorts);
 
         /*! @brief Add connections between detected ports in the to-be-displayed list.
-         @param detectedPorts The set of detected YARP ports.
-         @param checker A function that provides for early exit from loops.
-         @param checkStuff The private data for the early exit function. */
+         @param[in] detectedPorts The set of detected YARP ports.
+         @param[in] checker A function that provides for early exit from loops.
+         @param[in] checkStuff The private data for the early exit function. */
         void
         addPortConnections(const MplusM::Utilities::PortVector & detectedPorts,
                            MplusM::Common::CheckFunction         checker = NULL,
                            void *                                checkStuff = NULL);
 
         /*! @brief Add regular YARP ports as distinct entities to the to-be-displayed list.
-         @param detectedPorts The set of detected YARP ports.
-         @param checker A function that provides for early exit from loops.
-         @param checkStuff The private data for the early exit function. */
+         @param[in] detectedPorts The set of detected YARP ports.
+         @param[in] checker A function that provides for early exit from loops.
+         @param[in] checkStuff The private data for the early exit function. */
         void
         addRegularPortEntities(const MplusM::Utilities::PortVector & detectedPorts,
                                MplusM::Common::CheckFunction         checker = NULL,
                                void *                                checkStuff = NULL);
 
         /*! @brief Add services as distinct entities to the list of entities.
-         @param services The set of detected services.
-         @param checker A function that provides for early exit from loops.
-         @param checkStuff The private data for the early exit function. */
+         @param[in] services The set of detected services.
+         @param[in] checker A function that provides for early exit from loops.
+         @param[in] checkStuff The private data for the early exit function. */
         void
         addServices(const YarpStringVector &      services,
                     MplusM::Common::CheckFunction checker = NULL,
@@ -157,10 +157,10 @@ namespace MPlusM_Manager
         conditionallyAcquireForWrite(void);
 
         /*! @brief Determine whether a port can be used for input and/or output.
-         @param oldEntry The previous record for the port, if it exists.
-         @param portName The name of the port to check.
-         @param checker A function that provides for early exit from loops.
-         @param checkStuff The private data for the early exit function.
+         @param[in] oldEntry The previous record for the port, if it exists.
+         @param[in] portName The name of the port to check.
+         @param[in] checker A function that provides for early exit from loops.
+         @param[in] checkStuff The private data for the early exit function.
          @returns The allowed directions for the port. */
         PortDirection
         determineDirection(ChannelEntry *                oldEntry,
@@ -169,9 +169,9 @@ namespace MPlusM_Manager
                            void *                        checkStuff = NULL);
 
         /*! @brief Identify the YARP network entities.
-         @param detectedPorts The ports found by YARP.
-         @param checker A function that provides for early exit from loops.
-         @param checkStuff The private data for the early exit function.
+         @param[in] detectedPorts The ports found by YARP.
+         @param[in] checker A function that provides for early exit from loops.
+         @param[in] checkStuff The private data for the early exit function.
          @returns @c true if the network entity information was gathered and @c false otherwise. */
         bool
         gatherEntities(MplusM::Utilities::PortVector & detectedPorts,
