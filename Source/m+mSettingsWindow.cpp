@@ -44,6 +44,7 @@
 #include "m+mTextValidator.hpp"
 #include "m+mValidatingTextEditor.hpp"
 
+#include <m+m/m+mBaseService.hpp>
 #include <m+m/m+mChannelArgumentDescriptor.hpp>
 #include <m+m/m+mEndpoint.hpp>
 #include <m+m/m+mPortArgumentDescriptor.hpp>
@@ -152,10 +153,10 @@ SettingsWindow::SettingsWindow(const String &          title,
     int             widthSoFar = 0;
 
     _argsToUse.clear();
-    _canSetEndpoint = appInfo._options.contains("e");
-    _canSetPort = appInfo._options.contains("p");
-    _canSetTag = appInfo._options.contains("t");
-    _canUseModifier = appInfo._options.contains("m");
+    _canSetEndpoint = appInfo._options.contains(ENDPOINT_OPTION_STRING_);
+    _canSetPort = appInfo._options.contains(PORT_OPTION_STRING_);
+    _canSetTag = appInfo._options.contains(TAG_OPTION_STRING_);
+    _canUseModifier = appInfo._options.contains(MOD_OPTION_STRING_);
     setUpStandardFields(widthSoFar, heightSoFar);
     int minW = jmax(widthSoFar, _cancelButton.getWidth() + _okButton.getWidth() +
                     (3 * FormField::kButtonGap));

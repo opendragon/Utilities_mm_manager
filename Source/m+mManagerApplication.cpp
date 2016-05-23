@@ -46,6 +46,7 @@
 #include "m+mSettingsWindow.hpp"
 #include "m+mYarpLaunchThread.hpp"
 
+#include <m+m/m+mBaseService.hpp>
 #include <m+m/m+mEndpoint.hpp>
 #include <m+m/m+mRequests.hpp>
 
@@ -488,7 +489,7 @@ ManagerApplication::doLaunchAService(const ApplicationInfo & appInfo)
                                                                       endpointToUse, tagToUse,
                                                                       portToUse, tagModifierCount,
                                                                       argsToUse,
-                                                                  appInfo._options.contains("g"));
+                                                      appInfo._options.contains(GO_OPTION_STRING_));
 
             if (aLauncher)
             {

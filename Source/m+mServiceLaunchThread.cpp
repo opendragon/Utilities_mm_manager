@@ -38,6 +38,8 @@
 
 #include "m+mServiceLaunchThread.hpp"
 
+#include <m+m/m+mBaseService.hpp>
+
 //#include <odl/ODEnableLogging.h>
 #include <odl/ODLogging.h>
 
@@ -105,7 +107,9 @@ ServiceLaunchThread::ServiceLaunchThread(const String &      pathToExecutable,
     ODL_B1("needsGo = ", needsGo); //####
 #if defined(OD_ENABLE_LOGGING_)
     String allArgs(arguments.joinIntoString(", "));
+#endif // defined(OD_ENABLE_LOGGING_)
 
+#if defined(OD_ENABLE_LOGGING_)
     ODL_S1s("allArgs <- ", allArgs.toStdString()); //####
 #endif // defined(OD_ENABLE_LOGGING_)
     ODL_EXIT_P(this); //####
@@ -147,31 +151,31 @@ ServiceLaunchThread::run(void)
         if (0 < _servicePort.length())
         {
             ODL_LOG("(0 < _servicePort.length())"); //####
-            nameAndArgs.add("--port");
+            nameAndArgs.add("-" PORT_OPTION_STRING_);
             nameAndArgs.add(_servicePort);
         }
         if (0 < _serviceTag.length())
         {
             ODL_LOG("(0 < _serviceTag())"); //####
-            nameAndArgs.add("--tag");
+            nameAndArgs.add("-" TAG_OPTION_STRING_);
             nameAndArgs.add(_serviceTag);
         }
         if (0 < _serviceEndpoint.length())
         {
             ODL_LOG("(0 < _serviceEndpoint())"); //####
-            nameAndArgs.add("--endpoint");
+            nameAndArgs.add("-" ENDPOINT_OPTION_STRING_);
             nameAndArgs.add(_serviceEndpoint);
         }
         if (0 < _tagModifierCount)
         {
             ODL_LOG("(0 < tagModifierCount)"); //####
-            nameAndArgs.add("--mod");
+            nameAndArgs.add("-" MOD_OPTION_STRING_);
             nameAndArgs.add(String(_tagModifierCount));
         }
         if (_needsGo)
         {
             ODL_LOG("(_needsGo)"); //####
-            nameAndArgs.add("--go");
+            nameAndArgs.add("-" GO_OPTION_STRING_);
         }
         if (0 < _arguments.size())
         {
