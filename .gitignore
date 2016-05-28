@@ -41,3 +41,4 @@ Builds/VisualStudio2013/Debug/CMResources.res
 Builds/VisualStudio2013/Release/CMResources.res
 m+mmResources.res
 !Builds/LinuxMakefile/Makefile
+xcschememanagement.plist
