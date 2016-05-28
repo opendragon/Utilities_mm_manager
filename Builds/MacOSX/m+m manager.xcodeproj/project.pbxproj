@@ -2231,7 +2231,7 @@
 					"-lOGDF",
 					"-headerpad_max_install_names",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.yourcompany.mpm-manager";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.opendragon.mpm-manager";
 				PRODUCT_NAME = "m+m manager";
 			};
 			name = Debug;
@@ -2326,7 +2326,7 @@
 					"-lOGDF",
 					"-headerpad_max_install_names",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.yourcompany.mpm-manager";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.opendragon.mpm-manager";
 				PRODUCT_NAME = "m+m manager";
 			};
 			name = Release;
