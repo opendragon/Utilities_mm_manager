@@ -2106,63 +2106,29 @@
       <Filter>Juce Library Code</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
-    <ClInclude Include="..\..\Source\m+mChannelContainer.h">
-      <Filter>m+m manager\Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\m+mChannelEntry.h">
-      <Filter>m+m manager\Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\m+mContentPanel.h">
-      <Filter>m+m manager\Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\m+mEntitiesData.h">
-      <Filter>m+m manager\Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\m+mEntitiesPanel.h">
-      <Filter>m+m manager\Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\m+mEntityData.h">
-      <Filter>m+m manager\Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\m+mManagerApplication.h">
-      <Filter>m+m manager\Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\m+mManagerDataTypes.h">
-      <Filter>m+m manager\Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\m+mManagerWindow.h">
-      <Filter>m+m manager\Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\m+mPeekInputHandler.h">
-      <Filter>m+m manager\Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\m+mPortData.h">
-      <Filter>m+m manager\Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\m+mRegistryLaunchThread.h">
-      <Filter>m+m manager\Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\m+mScannerThread.h">
-      <Filter>m+m manager\Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\m+mServiceLaunchThread.h">
-      <Filter>m+m manager\Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\m+mSettingsWindow.h">
-      <Filter>m+m manager\Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\m+mTextValidator.h">
-      <Filter>m+m manager\Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\m+mYarpLaunchThread.h">
-      <Filter>m+m manager\Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\m+mConfigurationWindow.h" />
-    <ClInclude Include="..\..\Source\m+mCaptionedTextField.h" />
-    <ClInclude Include="..\..\Source\m+mFormField.h" />
-    <ClInclude Include="..\..\Source\m+mFormFieldErrorResponder.h" />
-    <ClInclude Include="..\..\Source\m+mValidatingTextEditor.h" />
-    <ClInclude Include="..\..\Source\m+mCheckboxField.h" />
+    <ClInclude Include="..\..\Source\m+mCaptionedTextField.hpp" />
+    <ClInclude Include="..\..\Source\m+mChannelContainer.hpp" />
+    <ClInclude Include="..\..\Source\m+mChannelEntry.hpp" />
+    <ClInclude Include="..\..\Source\m+mCheckboxField.hpp" />
+    <ClInclude Include="..\..\Source\m+mConfigurationWindow.hpp" />
+    <ClInclude Include="..\..\Source\m+mContentPanel.hpp" />
+    <ClInclude Include="..\..\Source\m+mEntitiesData.hpp" />
+    <ClInclude Include="..\..\Source\m+mEntitiesPanel.hpp" />
+    <ClInclude Include="..\..\Source\m+mEntityData.hpp" />
+    <ClInclude Include="..\..\Source\m+mFormField.hpp" />
+    <ClInclude Include="..\..\Source\m+mFormFieldErrorResponder.hpp" />
+    <ClInclude Include="..\..\Source\m+mManagerApplication.hpp" />
+    <ClInclude Include="..\..\Source\m+mManagerDataTypes.hpp" />
+    <ClInclude Include="..\..\Source\m+mManagerWindow.hpp" />
+    <ClInclude Include="..\..\Source\m+mPeekInputHandler.hpp" />
+    <ClInclude Include="..\..\Source\m+mPortData.hpp" />
+    <ClInclude Include="..\..\Source\m+mRegistryLaunchThread.hpp" />
+    <ClInclude Include="..\..\Source\m+mScannerThread.hpp" />
+    <ClInclude Include="..\..\Source\m+mServiceLaunchThread.hpp" />
+    <ClInclude Include="..\..\Source\m+mSettingsWindow.hpp" />
+    <ClInclude Include="..\..\Source\m+mTextValidator.hpp" />
+    <ClInclude Include="..\..\Source\m+mValidatingTextEditor.hpp" />
+    <ClInclude Include="..\..\Source\m+mYarpLaunchThread.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\JuceLibraryCode\modules\juce_core\juce_module_info">

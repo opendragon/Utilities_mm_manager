@@ -1093,29 +1093,28 @@
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_gui_extra\juce_gui_extra.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Source\m+mCaptionedTextField.h" />
-    <ClInclude Include="..\..\Source\m+mChannelContainer.h" />
-    <ClInclude Include="..\..\Source\m+mChannelEntry.h" />
-    <ClInclude Include="..\..\Source\m+mCheckboxField.h" />
-    <ClInclude Include="..\..\Source\m+mConfigurationWindow.h" />
-    <ClInclude Include="..\..\Source\m+mContentPanel.h" />
-    <ClInclude Include="..\..\Source\m+mEntitiesData.h" />
-    <ClInclude Include="..\..\Source\m+mEntitiesPanel.h" />
-    <ClInclude Include="..\..\Source\m+mEntityData.h" />
-    <ClInclude Include="..\..\Source\m+mFormField.h" />
-    <ClInclude Include="..\..\Source\m+mFormFieldErrorResponder.h" />
-    <ClInclude Include="..\..\Source\m+mManagerApplication.h" />
-    <ClInclude Include="..\..\Source\m+mManagerDataTypes.h" />
-    <ClInclude Include="..\..\Source\m+mManagerWindow.h" />
-    <ClInclude Include="..\..\Source\m+mPeekInputHandler.h" />
-    <ClInclude Include="..\..\Source\m+mPortData.h" />
-    <ClInclude Include="..\..\Source\m+mRegistryLaunchThread.h" />
-    <ClInclude Include="..\..\Source\m+mScannerThread.h" />
-    <ClInclude Include="..\..\Source\m+mServiceLaunchThread.h" />
-    <ClInclude Include="..\..\Source\m+mSettingsWindow.h" />
-    <ClInclude Include="..\..\Source\m+mTextValidator.h" />
-    <ClInclude Include="..\..\Source\m+mValidatingTextEditor.h" />
-    <ClInclude Include="..\..\Source\m+mYarpLaunchThread.h" />
+    <ClInclude Include="..\..\Source\m+mCaptionedTextField.hpp" />
+    <ClInclude Include="..\..\Source\m+mChannelContainer.hpp" />
+    <ClInclude Include="..\..\Source\m+mChannelEntry.hpp" />
+    <ClInclude Include="..\..\Source\m+mCheckboxField.hpp" />
+    <ClInclude Include="..\..\Source\m+mConfigurationWindow.hpp" />
+    <ClInclude Include="..\..\Source\m+mContentPanel.hpp" />
+    <ClInclude Include="..\..\Source\m+mEntitiesData.hpp" />
+    <ClInclude Include="..\..\Source\m+mEntitiesPanel.hpp" />
+    <ClInclude Include="..\..\Source\m+mEntityData.hpp" />
+    <ClInclude Include="..\..\Source\m+mFormField.hpp" />
+    <ClInclude Include="..\..\Source\m+mFormFieldErrorResponder.hpp" />
+    <ClInclude Include="..\..\Source\m+mManagerApplication.hpp" />
+    <ClInclude Include="..\..\Source\m+mManagerDataTypes.hpp" />
+    <ClInclude Include="..\..\Source\m+mManagerWindow.hpp" />
+    <ClInclude Include="..\..\Source\m+mPeekInputHandler.hpp" />
+    <ClInclude Include="..\..\Source\m+mPortData.hpp" />
+    <ClInclude Include="..\..\Source\m+mRegistryLaunchThread.hpp" />
+    <ClInclude Include="..\..\Source\m+mScannerThread.hpp" />
+    <ClInclude Include="..\..\Source\m+mServiceLaunchThread.hpp" />
+    <ClInclude Include="..\..\Source\m+mSettingsWindow.hpp" />
+    <ClInclude Include="..\..\Source\m+mTextValidator.hpp" />
+    <ClInclude Include="..\..\Source\m+mValidatingTextEditor.hpp" />
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_core\text\juce_CharacterFunctions.h" />
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_core\text\juce_CharPointer_ASCII.h" />
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_core\text\juce_CharPointer_UTF8.h" />
@@ -1453,6 +1452,7 @@
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_gui_extra\juce_gui_extra.h" />
     <ClInclude Include="..\..\JuceLibraryCode\AppConfig.h" />
     <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h" />
+    <ClInclude Include="..\..\Source\m+mYarpLaunchThread.hpp" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

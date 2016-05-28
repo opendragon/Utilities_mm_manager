@@ -47,6 +47,7 @@
 #   pragma clang diagnostic ignored "-Wunused-parameter"
 #  else // ! MAC_OR_LINUX_
 #   pragma warning(push)
+#   pragma warning(disable: 4100)
 #   pragma warning(disable: 4512)
 #  endif // ! MAC_OR_LINUX_
 #  include <ogdf/basic/Graph.h>
