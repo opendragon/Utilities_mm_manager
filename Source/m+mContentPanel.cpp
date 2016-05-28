@@ -229,7 +229,7 @@ ContentPanel::getCommandInfo(CommandID                commandID,
 
         case ManagerWindow::kCommandWhiteBackground :
             result.setInfo("White", "Use a white background", "View", 0);
-            result.addDefaultKeypress('B', ModifierKeys::commandModifier);
+            result.addDefaultKeypress('W', ModifierKeys::commandModifier);
             result.setTicked(backgroundIsWhite());
             break;
 
