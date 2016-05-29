@@ -2232,7 +2232,6 @@
 					"-headerpad_max_install_names",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.opendragon.mpm-manager";
-				PRODUCT_NAME = "m+m manager";
 			};
 			name = Debug;
 		};
@@ -2240,15 +2239,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
-				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_WARN_ASSIGN_ENUM = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_TESTABILITY = YES;
-				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2327,7 +2323,6 @@
 					"-headerpad_max_install_names",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.opendragon.mpm-manager";
-				PRODUCT_NAME = "m+m manager";
 			};
 			name = Release;
 		};
@@ -2335,14 +2330,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
-				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_WARN_ASSIGN_ENUM = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_PREPROCESSOR_DEFINITIONS = (

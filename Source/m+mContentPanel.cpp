@@ -38,7 +38,6 @@
 //--------------------------------------------------------------------------------------------------
 
 #include "m+mContentPanel.hpp"
-
 #include "m+mChannelContainer.hpp"
 #include "m+mChannelEntry.hpp"
 #include "m+mEntitiesPanel.hpp"
@@ -172,7 +171,6 @@ ContentPanel::ContentPanel(ManagerWindow * containingWindow) :
     setScrollBarsShown(true, true);
     setScrollBarThickness(kDefaultScrollbarThickness);
     setSingleStepSizes(kDefaultSingleStepSize, kDefaultSingleStepSize);
-    _entitiesPanel->setVisible(true);
     setViewedComponent(_entitiesPanel);
     ODL_EXIT_P(this); //####
 } // ContentPanel::ContentPanel
