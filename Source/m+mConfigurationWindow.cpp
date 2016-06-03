@@ -37,7 +37,6 @@
 //--------------------------------------------------------------------------------------------------
 
 #include "m+mConfigurationWindow.hpp"
-
 #include "m+mCaptionedTextField.hpp"
 #include "m+mCheckboxField.hpp"
 #include "m+mManagerApplication.hpp"

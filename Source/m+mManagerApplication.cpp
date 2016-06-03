@@ -37,7 +37,6 @@
 //--------------------------------------------------------------------------------------------------
 
 #include "m+mManagerApplication.hpp"
-
 #include "m+mEntitiesPanel.hpp"
 #include "m+mPeekInputHandler.hpp"
 #include "m+mRegistryLaunchThread.hpp"

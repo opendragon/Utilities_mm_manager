@@ -37,7 +37,6 @@
 //--------------------------------------------------------------------------------------------------
 
 #include "m+mManagerWindow.hpp"
-
 #include "m+mContentPanel.hpp"
 
 //#include <odl/ODEnableLogging.h>

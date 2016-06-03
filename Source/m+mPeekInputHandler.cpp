@@ -38,7 +38,6 @@
 //--------------------------------------------------------------------------------------------------
 
 #include "m+mPeekInputHandler.hpp"
-
 #include "m+mManagerApplication.hpp"
 
 #include <m+m/m+mRequests.hpp>

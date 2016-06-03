@@ -37,7 +37,6 @@
 //--------------------------------------------------------------------------------------------------
 
 #include "m+mEntityData.hpp"
-
 #include "m+mPortData.hpp"
 
 //#include <odl/ODEnableLogging.h>

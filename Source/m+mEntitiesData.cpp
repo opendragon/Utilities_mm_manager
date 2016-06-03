@@ -37,7 +37,6 @@
 //--------------------------------------------------------------------------------------------------
 
 #include "m+mEntitiesData.hpp"
-
 #include "m+mEntityData.hpp"
 
 //#include <odl/ODEnableLogging.h>

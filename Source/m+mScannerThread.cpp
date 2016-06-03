@@ -37,7 +37,6 @@
 //--------------------------------------------------------------------------------------------------
 
 #include "m+mScannerThread.hpp"
-
 #include "m+mChannelEntry.hpp"
 #include "m+mEntitiesPanel.hpp"
 #include "m+mEntityData.hpp"

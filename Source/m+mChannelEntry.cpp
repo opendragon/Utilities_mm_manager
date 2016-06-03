@@ -37,7 +37,6 @@
 //--------------------------------------------------------------------------------------------------
 
 #include "m+mChannelEntry.hpp"
-
 #include "m+mChannelContainer.hpp"
 #include "m+mContentPanel.hpp"
 #include "m+mEntitiesPanel.hpp"

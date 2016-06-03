@@ -38,7 +38,6 @@
 //--------------------------------------------------------------------------------------------------
 
 #include "m+mSettingsWindow.hpp"
-
 #include "m+mCheckboxField.hpp"
 #include "m+mManagerApplication.hpp"
 #include "m+mTextValidator.hpp"
