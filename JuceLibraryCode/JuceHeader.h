@@ -31,7 +31,7 @@
 namespace ProjectInfo
 {
     const char* const  projectName    = "m+m manager";
-    const char* const  versionString  = "1.6.8";
+    const char* const  versionString  = "1.6.9";
     const int          versionNumber  = 0x10608;
 }
 #endif
