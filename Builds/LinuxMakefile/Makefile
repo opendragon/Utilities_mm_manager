@@ -3,6 +3,8 @@
 
 # (this disables dependency generation if multiple architectures are set)
 DEPFLAGS := $(if $(word 2, $(TARGET_ARCH)), , -MMD)
+JUCELIB := ../../JuceLibraryCode
+SRCDIR := ../../Source
 
 ifndef CONFIG
   CONFIG=Debug
@@ -18,10 +20,10 @@ ifeq ($(CONFIG),Debug)
     TARGET_ARCH := -march=native
   endif
 
-  CPPFLAGS := $(DEPFLAGS) -D "LINUX=1" -D "DEBUG=1" -D "_DEBUG=1" -D "JUCER_LINUX_MAKE_6D53C8B4=1" -D "JUCE_APP_VERSION=1.4.25" -D "JUCE_APP_VERSION_HEX=0x10419" -I /usr/include -I /usr/include/freetype2 -I ../../JuceLibraryCode -I ../../JuceLibraryCode/modules -I /opt/m+m/include
+  CPPFLAGS := $(DEPFLAGS) -D "LINUX=1" -D "DEBUG=1" -D "_DEBUG=1" -D "JUCER_LINUX_MAKE_6D53C8B4=1" -D "JUCE_APP_VERSION=1.4.25" -D "JUCE_APP_VERSION_HEX=0x10419" -I /usr/include -I /usr/include/freetype2 -I $(JUCELIB) -I $(JUCELIB)/modules -I /opt/m+m/include
   CFLAGS += $(CPPFLAGS) $(TARGET_ARCH) -g -ggdb -O0
   CXXFLAGS += $(CFLAGS) -std=c++11
-  LDFLAGS += $(TARGET_ARCH) -L$(BINDIR) -L$(LIBDIR) -L/usr/X11R6/lib/ -L/opt/m+m/lib -lX11 -lXext -lXinerama -ldl -lfreetype -lpthread -lrt -lYARP_OS -lYARP_init -lm+mCommon -lodLogging -lOGDF -lACE -ldns_sd 
+  LDFLAGS += $(TARGET_ARCH) -L$(BINDIR) -L$(LIBDIR) -L/usr/X11R6/lib -L/opt/m+m/lib -lX11 -lXext -lXinerama -ldl -lfreetype -lpthread -lrt -lYARP_OS -lYARP_init -lm+mCommon -lodLogging -lOGDF -lACE -ldns_sd 
 
   TARGET := m+m\ manager
   BLDCMD = $(CXX) -o $(OUTDIR)/$(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(TARGET_ARCH)
@@ -38,10 +40,10 @@ ifeq ($(CONFIG),Release)
     TARGET_ARCH := -march=native
   endif
 
-  CPPFLAGS := $(DEPFLAGS) -D "LINUX=1" -D "NDEBUG=1" -D "JUCER_LINUX_MAKE_6D53C8B4=1" -D "JUCE_APP_VERSION=1.4.25" -D "JUCE_APP_VERSION_HEX=0x10419" -I /usr/include -I /usr/include/freetype2 -I ../../JuceLibraryCode -I ../../JuceLibraryCode/modules -I /opt/m+m/include
+  CPPFLAGS := $(DEPFLAGS) -D "LINUX=1" -D "NDEBUG=1" -D "JUCER_LINUX_MAKE_6D53C8B4=1" -D "JUCE_APP_VERSION=1.4.25" -D "JUCE_APP_VERSION_HEX=0x10419" -I /usr/include -I /usr/include/freetype2 -I $(JUCELIB) -I $(JUCELIB)/modules -I /opt/m+m/include
   CFLAGS += $(CPPFLAGS) $(TARGET_ARCH) -O3
   CXXFLAGS += $(CFLAGS) -std=c++11
-  LDFLAGS += $(TARGET_ARCH) -L$(BINDIR) -L$(LIBDIR) -fvisibility=hidden -L/usr/X11R6/lib/ -L/opt/m+m/lib -lX11 -lXext -lXinerama -ldl -lfreetype -lpthread -lrt -lYARP_OS -lYARP_init -lm+mCommon -lodLogging -lOGDF -lACE -ldns_sd 
+  LDFLAGS += $(TARGET_ARCH) -L$(BINDIR) -L$(LIBDIR) -fvisibility=hidden -L/usr/X11R6/lib -L/opt/m+m/lib -lX11 -lXext -lXinerama -ldl -lfreetype -lpthread -lrt -lYARP_OS -lYARP_init -lm+mCommon -lodLogging -lOGDF -lACE -ldns_sd 
 
   TARGET := m+m\ manager
   BLDCMD = $(CXX) -o $(OUTDIR)/$(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(TARGET_ARCH)
@@ -97,152 +99,152 @@ strip:
 	@echo Stripping m+m manager
 	-@strip --strip-unneeded $(OUTDIR)/$(TARGET)
 
-$(OBJDIR)/m+mCaptionedTextField_6648b578.o: ../../Source/m+mCaptionedTextField.cpp
+$(OBJDIR)/m+mCaptionedTextField_6648b578.o: $(SRCDIR)/m+mCaptionedTextField.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling m+mCaptionedTextField.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/m+mChannelContainer_8919ffae.o: ../../Source/m+mChannelContainer.cpp
+$(OBJDIR)/m+mChannelContainer_8919ffae.o: $(SRCDIR)/m+mChannelContainer.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling m+mChannelContainer.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/m+mChannelEntry_3859971f.o: ../../Source/m+mChannelEntry.cpp
+$(OBJDIR)/m+mChannelEntry_3859971f.o: $(SRCDIR)/m+mChannelEntry.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling m+mChannelEntry.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/m+mCheckboxField_a8134ed1.o: ../../Source/m+mCheckboxField.cpp
+$(OBJDIR)/m+mCheckboxField_a8134ed1.o: $(SRCDIR)/m+mCheckboxField.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling m+mCheckboxField.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/m+mConfigurationWindow_f373d520.o: ../../Source/m+mConfigurationWindow.cpp
+$(OBJDIR)/m+mConfigurationWindow_f373d520.o: $(SRCDIR)/m+mConfigurationWindow.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling m+mConfigurationWindow.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/m+mContentPanel_19fbccfb.o: ../../Source/m+mContentPanel.cpp
+$(OBJDIR)/m+mContentPanel_19fbccfb.o: $(SRCDIR)/m+mContentPanel.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling m+mContentPanel.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/m+mEntitiesData_b39ee6fb.o: ../../Source/m+mEntitiesData.cpp
+$(OBJDIR)/m+mEntitiesData_b39ee6fb.o: $(SRCDIR)/m+mEntitiesData.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling m+mEntitiesData.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/m+mEntitiesPanel_8032949d.o: ../../Source/m+mEntitiesPanel.cpp
+$(OBJDIR)/m+mEntitiesPanel_8032949d.o: $(SRCDIR)/m+mEntitiesPanel.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling m+mEntitiesPanel.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/m+mEntityData_bbfb3dd.o: ../../Source/m+mEntityData.cpp
+$(OBJDIR)/m+mEntityData_bbfb3dd.o: $(SRCDIR)/m+mEntityData.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling m+mEntityData.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/m+mFormField_b1a30970.o: ../../Source/m+mFormField.cpp
+$(OBJDIR)/m+mFormField_b1a30970.o: $(SRCDIR)/m+mFormField.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling m+mFormField.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/m+mFormFieldErrorResponder_7b38382a.o: ../../Source/m+mFormFieldErrorResponder.cpp
+$(OBJDIR)/m+mFormFieldErrorResponder_7b38382a.o: $(SRCDIR)/m+mFormFieldErrorResponder.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling m+mFormFieldErrorResponder.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/m+mManagerApplication_abb6df13.o: ../../Source/m+mManagerApplication.cpp
+$(OBJDIR)/m+mManagerApplication_abb6df13.o: $(SRCDIR)/m+mManagerApplication.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling m+mManagerApplication.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/m+mManagerMain_f38808a0.o: ../../Source/m+mManagerMain.cpp
+$(OBJDIR)/m+mManagerMain_f38808a0.o: $(SRCDIR)/m+mManagerMain.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling m+mManagerMain.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/m+mManagerWindow_c4f886d7.o: ../../Source/m+mManagerWindow.cpp
+$(OBJDIR)/m+mManagerWindow_c4f886d7.o: $(SRCDIR)/m+mManagerWindow.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling m+mManagerWindow.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/m+mPeekInputHandler_b0a65b8b.o: ../../Source/m+mPeekInputHandler.cpp
+$(OBJDIR)/m+mPeekInputHandler_b0a65b8b.o: $(SRCDIR)/m+mPeekInputHandler.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling m+mPeekInputHandler.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/m+mPortData_76190d3b.o: ../../Source/m+mPortData.cpp
+$(OBJDIR)/m+mPortData_76190d3b.o: $(SRCDIR)/m+mPortData.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling m+mPortData.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/m+mRegistryLaunchThread_377125ea.o: ../../Source/m+mRegistryLaunchThread.cpp
+$(OBJDIR)/m+mRegistryLaunchThread_377125ea.o: $(SRCDIR)/m+mRegistryLaunchThread.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling m+mRegistryLaunchThread.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/m+mScannerThread_24261102.o: ../../Source/m+mScannerThread.cpp
+$(OBJDIR)/m+mScannerThread_24261102.o: $(SRCDIR)/m+mScannerThread.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling m+mScannerThread.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/m+mServiceLaunchThread_6460918c.o: ../../Source/m+mServiceLaunchThread.cpp
+$(OBJDIR)/m+mServiceLaunchThread_6460918c.o: $(SRCDIR)/m+mServiceLaunchThread.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling m+mServiceLaunchThread.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/m+mSettingsWindow_74442b23.o: ../../Source/m+mSettingsWindow.cpp
+$(OBJDIR)/m+mSettingsWindow_74442b23.o: $(SRCDIR)/m+mSettingsWindow.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling m+mSettingsWindow.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/m+mTextValidator_a298b97f.o: ../../Source/m+mTextValidator.cpp
+$(OBJDIR)/m+mTextValidator_a298b97f.o: $(SRCDIR)/m+mTextValidator.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling m+mTextValidator.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/m+mValidatingTextEditor_5e2c0d9d.o: ../../Source/m+mValidatingTextEditor.cpp
+$(OBJDIR)/m+mValidatingTextEditor_5e2c0d9d.o: $(SRCDIR)/m+mValidatingTextEditor.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling m+mValidatingTextEditor.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/m+mYarpLaunchThread_92995473.o: ../../Source/m+mYarpLaunchThread.cpp
+$(OBJDIR)/m+mYarpLaunchThread_92995473.o: $(SRCDIR)/m+mYarpLaunchThread.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling m+mYarpLaunchThread.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/BinaryData_ce4232d4.o: ../../JuceLibraryCode/BinaryData.cpp
+$(OBJDIR)/BinaryData_ce4232d4.o: $(JUCELIB)/BinaryData.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling BinaryData.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/juce_core_aff681cc.o: ../../JuceLibraryCode/modules/juce_core/juce_core.cpp
+$(OBJDIR)/juce_core_aff681cc.o: $(JUCELIB)/modules/juce_core/juce_core.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling juce_core.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/juce_data_structures_bdd6d488.o: ../../JuceLibraryCode/modules/juce_data_structures/juce_data_structures.cpp
+$(OBJDIR)/juce_data_structures_bdd6d488.o: $(JUCELIB)/modules/juce_data_structures/juce_data_structures.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling juce_data_structures.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/juce_events_79b2840.o: ../../JuceLibraryCode/modules/juce_events/juce_events.cpp
+$(OBJDIR)/juce_events_79b2840.o: $(JUCELIB)/modules/juce_events/juce_events.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling juce_events.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/juce_graphics_c8f1e7a4.o: ../../JuceLibraryCode/modules/juce_graphics/juce_graphics.cpp
+$(OBJDIR)/juce_graphics_c8f1e7a4.o: $(JUCELIB)/modules/juce_graphics/juce_graphics.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling juce_graphics.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/juce_gui_basics_a630dd20.o: ../../JuceLibraryCode/modules/juce_gui_basics/juce_gui_basics.cpp
+$(OBJDIR)/juce_gui_basics_a630dd20.o: $(JUCELIB)/modules/juce_gui_basics/juce_gui_basics.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling juce_gui_basics.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/juce_gui_extra_7767d6a8.o: ../../JuceLibraryCode/modules/juce_gui_extra/juce_gui_extra.cpp
+$(OBJDIR)/juce_gui_extra_7767d6a8.o: $(JUCELIB)/modules/juce_gui_extra/juce_gui_extra.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling juce_gui_extra.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
