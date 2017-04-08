@@ -35,7 +35,6 @@
 		D955E9BBD7DF44ED871C3B3C /* m+mChannelContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F8A50B61D95A448FCB3E1B60 /* m+mChannelContainer.cpp */; };
 		DEEF248165B3103CD7681805 /* juce_gui_extra.mm in Sources */ = {isa = PBXBuildFile; fileRef = 01BE58DF625AAE46E21A507C /* juce_gui_extra.mm */; };
 		DF0ADB381A1A76C70096548B /* libm+mCommon.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0ADB341A1A76C70096548B /* libm+mCommon.dylib */; };
-		DF0ADB391A1A76C70096548B /* libodLogging.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0ADB351A1A76C70096548B /* libodLogging.dylib */; };
 		DF0B256719FAE7C2001AEB0C /* libACE.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0B256119FAE7C2001AEB0C /* libACE.dylib */; };
 		DF0B256A19FAE7C2001AEB0C /* libOGDF.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0B256419FAE7C2001AEB0C /* libOGDF.a */; };
 		DF0E540E1B287C3A00A74A49 /* m+mSettingsWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF0E540C1B287C3A00A74A49 /* m+mSettingsWindow.cpp */; };
@@ -58,6 +57,7 @@
 		E2FED85FB76A3966795E8416 /* juce_core.mm in Sources */ = {isa = PBXBuildFile; fileRef = ADC373CE4DEDF850BDE3A738 /* juce_core.mm */; };
 		E423C86693E599625A6112CC /* m+mPortData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93AD4B4E9FBADD52BACEF145 /* m+mPortData.cpp */; };
 		F33B431E9BA660F6B5034872 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA72840EFF14AF9F39FB65E /* Carbon.framework */; };
+		F6BF68691E994B34003DE16C /* libodlC.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F6BF68681E994B34003DE16C /* libodlC.dylib */; };
 		FFD5D4B5504E586A42099C7B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 657CE153E5F14918F42F08F0 /* AudioToolbox.framework */; };
 /* End PBXBuildFile section */
 
@@ -750,6 +750,7 @@
 		F5527A160F6C15091B8E42CD /* juce_FileChooserDialogBox.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_FileChooserDialogBox.cpp; path = ../../JuceLibraryCode/modules/juce_gui_basics/filebrowser/juce_FileChooserDialogBox.cpp; sourceTree = SOURCE_ROOT; };
 		F599A46ADB0DCF19D72CCE13 /* juce_Range.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_Range.h; path = ../../JuceLibraryCode/modules/juce_core/maths/juce_Range.h; sourceTree = SOURCE_ROOT; };
 		F6468F9D5E354679B5C24AE5 /* juce_linux_FileChooser.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_linux_FileChooser.cpp; path = ../../JuceLibraryCode/modules/juce_gui_basics/native/juce_linux_FileChooser.cpp; sourceTree = SOURCE_ROOT; };
+		F6BF68681E994B34003DE16C /* libodlC.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libodlC.dylib; path = ../../../../../../opt/odl/lib/libodlC.dylib; sourceTree = "<group>"; };
 		F6EBDB9D3464012E87CCB8FB /* juce_win32_Network.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_win32_Network.cpp; path = ../../JuceLibraryCode/modules/juce_core/native/juce_win32_Network.cpp; sourceTree = SOURCE_ROOT; };
 		F7C8A0BF0AA24FB4E5A9084F /* juce_TopLevelWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_TopLevelWindow.h; path = ../../JuceLibraryCode/modules/juce_gui_basics/windows/juce_TopLevelWindow.h; sourceTree = SOURCE_ROOT; };
 		F8632AA63AD12F2D194A2129 /* juce_android_JNIHelpers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_android_JNIHelpers.h; path = ../../JuceLibraryCode/modules/juce_core/native/juce_android_JNIHelpers.h; sourceTree = SOURCE_ROOT; };
@@ -793,12 +794,12 @@
 				799E9E4D4FCEC15EF772888C /* DiscRecording.framework in Frameworks */,
 				56550CBDD43FD1CF751304FE /* IOKit.framework in Frameworks */,
 				DF2934441B4714AA0067FBB0 /* libYARP_init.1.dylib in Frameworks */,
-				DF0ADB391A1A76C70096548B /* libodLogging.dylib in Frameworks */,
 				8C60B5DE1234394A1166E6D8 /* OpenGL.framework in Frameworks */,
 				1D91CF6FA1BDD5E3BC596806 /* QTKit.framework in Frameworks */,
 				03F3FFBB1BE66A71A22A9A5D /* QuartzCore.framework in Frameworks */,
 				DF2934471B4714AA0067FBB0 /* libYARP_sig.1.dylib in Frameworks */,
 				DF0ADB381A1A76C70096548B /* libm+mCommon.dylib in Frameworks */,
+				F6BF68691E994B34003DE16C /* libodlC.dylib in Frameworks */,
 				427446365ACD6B5CB41E7527 /* WebKit.framework in Frameworks */,
 				DF2934451B4714AA0067FBB0 /* libYARP_name.1.dylib in Frameworks */,
 			);
@@ -1087,6 +1088,7 @@
 		42D582D969583F8E9D16F645 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F6BF68681E994B34003DE16C /* libodlC.dylib */,
 				DF55EC3B1A3668890096DF54 /* libYARP_init.dylib */,
 				DF55EC3C1A3668890096DF54 /* libYARP_OS.dylib */,
 				DF0B256119FAE7C2001AEB0C /* libACE.dylib */,
@@ -2113,7 +2115,7 @@
 		A14AE462CB1A56EE6EDB70AB /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0710;
+				LastUpgradeCheck = 0820;
 			};
 			buildConfigurationList = E5E6C3EB8F2E58F5F28BDE5E /* Build configuration list for PBXProject "m+m manager" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -2155,7 +2157,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "install_name_tool -change libACE.dylib \"@rpath/libACE.dylib\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\"\ninstall_name_tool -change libYARP_OS.1.dylib \"@rpath/libYARP_OS.1.dylib\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\"\ninstall_name_tool -change libYARP_init.1.dylib \"@rpath/libYARP_init.1.dylib\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\"\ninstall_name_tool -change libYARP_sig.1.dylib \"@rpath/libYARP_sig.1.dylib\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\"\ninstall_name_tool -change libYARP_dev.1.dylib \"@rpath/libYARP_dev.1.dylib\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\"\ninstall_name_tool -change libYARP_name.1.dylib \"@rpath/libYARP_name.1.dylib\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\"\ninstall_name_tool -change libm+mCommon.dylib \"@rpath/libm+mCommon.dylib\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\"\ninstall_name_tool -change libodLogging.dylib \"@rpath/libodLogging.dylib\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\"";
+			shellScript = "install_name_tool -change libACE.dylib \"@rpath/libACE.dylib\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\"\ninstall_name_tool -change libYARP_OS.1.dylib \"@rpath/libYARP_OS.1.dylib\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\"\ninstall_name_tool -change libYARP_init.1.dylib \"@rpath/libYARP_init.1.dylib\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\"\ninstall_name_tool -change libYARP_sig.1.dylib \"@rpath/libYARP_sig.1.dylib\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\"\ninstall_name_tool -change libYARP_dev.1.dylib \"@rpath/libYARP_dev.1.dylib\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\"\ninstall_name_tool -change libYARP_name.1.dylib \"@rpath/libYARP_name.1.dylib\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\"\ninstall_name_tool -change libm+mCommon.dylib \"@rpath/libm+mCommon.dylib\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\"\ninstall_name_tool -change libodlC.dylib \"@rpath/libodlC.dylib\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\"\ninstall_name_tool -change libodLogging.dylib \"@rpath/libodLogging.dylib\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -2219,15 +2221,11 @@
 				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"/opt/m+m/lib",
-				);
 				OTHER_LDFLAGS = (
 					"-lYARP_OS",
 					"-lYARP_init",
 					"-lm+mCommon",
-					"-lodLogging",
+					"-lodlC",
 					"-lOGDF",
 					"-headerpad_max_install_names",
 				);
@@ -2241,12 +2239,17 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_WARN_ASSIGN_ENUM = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
 				GCC_MODEL_TUNING = G5;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					OGDF_USE_SSE2,
 					OGDF_MEMORY_MALLOC_TS,
@@ -2263,6 +2266,7 @@
 				GCC_WARN_SHADOW = YES;
 				GCC_WARN_SIGN_COMPARE = YES;
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNKNOWN_PRAGMAS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
@@ -2273,9 +2277,13 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"/opt/m+m/include",
+					/opt/odl/include,
 				);
-				LD_RUNPATH_SEARCH_PATHS = "/opt/m+m/lib";
-				LIBRARY_SEARCH_PATHS = "/opt/m+m/lib";
+				LD_RUNPATH_SEARCH_PATHS = "/opt/m+m/lib /opt/odl/lib";
+				LIBRARY_SEARCH_PATHS = (
+					"/opt/m+m/lib",
+					/opt/odl/lib,
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = (
@@ -2310,15 +2318,11 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"/opt/m+m/lib",
-				);
 				OTHER_LDFLAGS = (
 					"-lYARP_OS",
 					"-lYARP_init",
 					"-lm+mCommon",
-					"-lodLogging",
+					"-lodlC",
 					"-lOGDF",
 					"-headerpad_max_install_names",
 				);
@@ -2332,11 +2336,16 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_WARN_ASSIGN_ENUM = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
 				GCC_MODEL_TUNING = G5;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					OGDF_USE_SSE2,
 					OGDF_MEMORY_MALLOC_TS,
@@ -2353,6 +2362,7 @@
 				GCC_WARN_SHADOW = YES;
 				GCC_WARN_SIGN_COMPARE = YES;
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNKNOWN_PRAGMAS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
@@ -2363,9 +2373,13 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"/opt/m+m/include",
+					/opt/odl/include,
 				);
-				LD_RUNPATH_SEARCH_PATHS = "/opt/m+m/lib";
-				LIBRARY_SEARCH_PATHS = "/opt/m+m/lib";
+				LD_RUNPATH_SEARCH_PATHS = "/opt/m+m/lib /opt/odl/lib";
+				LIBRARY_SEARCH_PATHS = (
+					"/opt/m+m/lib",
+					/opt/odl/lib,
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = (

@@ -39,8 +39,8 @@
 #include "m+mEntitiesData.hpp"
 #include "m+mEntityData.hpp"
 
-//#include <odl/ODEnableLogging.h>
-#include <odl/ODLogging.h>
+//#include <odlEnable.h>
+#include <odlInclude.h>
 
 #if defined(__APPLE__)
 # pragma clang diagnostic push

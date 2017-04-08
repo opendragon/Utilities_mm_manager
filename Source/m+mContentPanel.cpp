@@ -46,8 +46,8 @@
 #include "m+mPortData.hpp"
 #include "m+mScannerThread.hpp"
 
-//#include <odl/ODEnableLogging.h>
-#include <odl/ODLogging.h>
+//#include <odlEnable.h>
+#include <odlInclude.h>
 
 #if defined(USE_OGDF_POSITIONING_)
 # if MAC_OR_LINUX_

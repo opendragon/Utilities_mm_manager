@@ -53,8 +53,8 @@
 # include <io.h>
 #endif // ! MAC_OR_LINUX_
 
-//#include <odl/ODEnableLogging.h>
-#include <odl/ODLogging.h>
+//#include <odlEnable.h>
+#include <odlInclude.h>
 
 #if defined(__APPLE__)
 # pragma clang diagnostic push
