@@ -610,11 +610,11 @@ const
 void
 EntitiesPanel::mouseDown(const MouseEvent & ee)
 {
-#if (! defined(OD_ENABLE_LOGGING_))
+#if (! defined(ODL_ENABLE_LOGGING_))
 # if MAC_OR_LINUX_
 #  pragma unused(ee)
 # endif // MAC_OR_LINUX_
-#endif // ! defined(OD_ENABLE_LOGGING_)
+#endif // ! defined(ODL_ENABLE_LOGGING_)
     ODL_OBJENTER(); //####
     ODL_P1("ee = ", &ee); //####
     _container->setChannelOfInterest(NULL);
@@ -635,11 +635,11 @@ EntitiesPanel::mouseDown(const MouseEvent & ee)
 void
 EntitiesPanel::mouseUp(const MouseEvent & ee)
 {
-#if (! defined(OD_ENABLE_LOGGING_))
+#if (! defined(ODL_ENABLE_LOGGING_))
 # if MAC_OR_LINUX_
 #  pragma unused(ee)
 # endif // MAC_OR_LINUX_
-#endif // ! defined(OD_ENABLE_LOGGING_)
+#endif // ! defined(ODL_ENABLE_LOGGING_)
     ODL_OBJENTER(); //####
     ODL_P1("ee = ", &ee); //####
     rememberConnectionStartPoint();

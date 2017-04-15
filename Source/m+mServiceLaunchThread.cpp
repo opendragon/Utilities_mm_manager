@@ -105,13 +105,13 @@ ServiceLaunchThread::ServiceLaunchThread(const String &      pathToExecutable,
             portNumber.toStdString()); //####
     ODL_P1("arguments = ", &arguments); //####
     ODL_B1("needsGo = ", needsGo); //####
-#if defined(OD_ENABLE_LOGGING_)
+#if defined(ODL_ENABLE_LOGGING_)
     String allArgs(arguments.joinIntoString(", "));
-#endif // defined(OD_ENABLE_LOGGING_)
+#endif // defined(ODL_ENABLE_LOGGING_)
 
-#if defined(OD_ENABLE_LOGGING_)
+#if defined(ODL_ENABLE_LOGGING_)
     ODL_S1s("allArgs <- ", allArgs.toStdString()); //####
-#endif // defined(OD_ENABLE_LOGGING_)
+#endif // defined(ODL_ENABLE_LOGGING_)
     ODL_EXIT_P(this); //####
 } // ServiceLaunchThread::ServiceLaunchThread
 

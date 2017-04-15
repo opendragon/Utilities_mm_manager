@@ -233,11 +233,11 @@ ManagerApplication::~ManagerApplication(void)
 void
 ManagerApplication::anotherInstanceStarted(const String & commandLine)
 {
-#if (! defined(OD_ENABLE_LOGGING_))
+#if (! defined(ODL_ENABLE_LOGGING_))
 # if MAC_OR_LINUX_
 #  pragma unused(commandLine)
 # endif // MAC_OR_LINUX_
-#endif // ! defined(OD_ENABLE_LOGGING_)
+#endif // ! defined(ODL_ENABLE_LOGGING_)
     ODL_OBJENTER(); //####
     ODL_S1s("commandLine = ", commandLine.toStdString()); //####
     // When another instance of the app is launched while this one is running, this method is
@@ -1150,11 +1150,11 @@ ManagerApplication::getUserName(void)
 void
 ManagerApplication::initialise(const String & commandLine)
 {
-#if (! defined(OD_ENABLE_LOGGING_))
+#if (! defined(ODL_ENABLE_LOGGING_))
 # if MAC_OR_LINUX_
 #  pragma unused(commandLine)
 # endif // MAC_OR_LINUX_
-#endif // ! defined(OD_ENABLE_LOGGING_)
+#endif // ! defined(ODL_ENABLE_LOGGING_)
     ODL_OBJENTER(); //####
     ODL_S1s("commandLine = ", commandLine.toStdString()); //####
     bool launchedRegistry = false;
@@ -1534,11 +1534,11 @@ MPlusM_Manager::CalculateTextArea(Point<int> &   dimensions,
 bool
 CheckForExit(void * stuff)
 {
-#if (! defined(OD_ENABLE_LOGGING_))
+#if (! defined(ODL_ENABLE_LOGGING_))
 # if MAC_OR_LINUX_
 #  pragma unused(stuff)
 # endif // MAC_OR_LINUX_
-#endif // ! defined(OD_ENABLE_LOGGING_)
+#endif // ! defined(ODL_ENABLE_LOGGING_)
     ODL_ENTER(); //####
     ODL_P1("stuff = ", stuff); //####
     ODL_EXIT_B(lExitRequested); //####
