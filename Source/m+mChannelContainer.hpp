@@ -42,20 +42,20 @@
 # include "m+mManagerDataTypes.hpp"
 
 # if defined(USE_OGDF_POSITIONING_)
-#  if MAC_OR_LINUX_
+#  if defined(MAC_OR_LINUX_)
 #   pragma clang diagnostic push
 #   pragma clang diagnostic ignored "-Wunused-parameter"
-#  else // ! MAC_OR_LINUX_
+#  else // ! defined(MAC_OR_LINUX_)
 #   pragma warning(push)
 #   pragma warning(disable: 4100)
 #   pragma warning(disable: 4512)
-#  endif // ! MAC_OR_LINUX_
+#  endif // ! defined(MAC_OR_LINUX_)
 #  include <ogdf/basic/Graph.h>
-#  if MAC_OR_LINUX_
+#  if defined(MAC_OR_LINUX_)
 #   pragma clang diagnostic pop
-#  else // ! MAC_OR_LINUX_
+#  else // ! defined(MAC_OR_LINUX_)
 #   pragma warning(pop)
-#  endif // ! MAC_OR_LINUX_
+#  endif // ! defined(MAC_OR_LINUX_)
 # endif // defined(USE_OGDF_POSITIONING_)
 
 # if defined(__APPLE__)

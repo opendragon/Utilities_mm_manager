@@ -44,15 +44,15 @@
 # include <m+m/m+mUtilities.hpp>
 
 # if (! defined(DOXYGEN))
-#  if (! MAC_OR_LINUX_)
+#  if (! defined(MAC_OR_LINUX_))
 #   pragma warning(push)
 #   pragma warning(disable: 4458)
 #   pragma warning(disable: 4459)
-#  endif // ! MAC_OR_LINUX_
+#  endif // ! defined(MAC_OR_LINUX_)
 #  include "../JuceLibraryCode/JuceHeader.h"
-#  if (! MAC_OR_LINUX_)
+#  if (! defined(MAC_OR_LINUX_))
 #   pragma warning(pop)
-#  endif // ! MAC_OR_LINUX_
+#  endif // ! defined(MAC_OR_LINUX_)
 # endif // ! defined(DOXYGEN)
 
 # include <list>

@@ -49,9 +49,9 @@
 # pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
 #endif // defined(__APPLE__)
 
-#if (! MAC_OR_LINUX_)
+#if (! defined(MAC_OR_LINUX_))
 # include <Windows.h>
-#endif //! MAC_OR_LINUX_
+#endif //! defined(MAC_OR_LINUX_)
 
 /*! @file
 
