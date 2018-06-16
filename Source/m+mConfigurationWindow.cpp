@@ -357,39 +357,39 @@ ConfigurationWindow::fieldsAreValid(void)
     return (0 == badCount);
 } // ConfigurationWindow::fieldsAreValid
 
-#if (! defined(MAC_OR_LINUX_))
+#if (! MAC_OR_LINUX_)
 # pragma warning(push)
 # pragma warning(disable: 4100)
-#endif // ! defined(MAC_OR_LINUX_)
+#endif // ! MAC_OR_LINUX_
 void
 ConfigurationWindow::focusGained(FocusChangeType cause)
 {
-#if defined(MAC_OR_LINUX_)
+#if MAC_OR_LINUX_
 # pragma unused(cause)
-#endif // defined(MAC_OR_LINUX_)
+#endif // MAC_OR_LINUX_
     ODL_OBJENTER(); //####
     ODL_OBJEXIT(); //####
 } // ConfigurationWindow::focusGained
-#if (! defined(MAC_OR_LINUX_))
+#if (! MAC_OR_LINUX_)
 # pragma warning(pop)
-#endif // ! defined(MAC_OR_LINUX_)
+#endif // ! MAC_OR_LINUX_
 
-#if (! defined(MAC_OR_LINUX_))
+#if (! MAC_OR_LINUX_)
 # pragma warning(push)
 # pragma warning(disable: 4100)
-#endif // ! defined(MAC_OR_LINUX_)
+#endif // ! MAC_OR_LINUX_
 void
 ConfigurationWindow::focusLost(FocusChangeType cause)
 {
-#if defined(MAC_OR_LINUX_)
+#if MAC_OR_LINUX_
 # pragma unused(cause)
-#endif // defined(MAC_OR_LINUX_)
+#endif // MAC_OR_LINUX_
     ODL_OBJENTER(); //####
     ODL_OBJEXIT(); //####
 } // ConfigurationWindow::focusLost
-#if (! defined(MAC_OR_LINUX_))
+#if (! MAC_OR_LINUX_)
 # pragma warning(pop)
-#endif // ! defined(MAC_OR_LINUX_)
+#endif // ! MAC_OR_LINUX_
 
 void
 ConfigurationWindow::handleAsyncUpdate(void)

@@ -50,20 +50,20 @@
 #include <odlInclude.h>
 
 #if defined(USE_OGDF_POSITIONING_)
-# if defined(MAC_OR_LINUX_)
+# if MAC_OR_LINUX_
 #  pragma clang diagnostic push
 #  pragma clang diagnostic ignored "-Wunused-parameter"
-# else // ! defined(MAC_OR_LINUX_)
+# else // ! MAC_OR_LINUX_
 #  pragma warning(push)
 #  pragma warning(disable: 4100)
-# endif // ! defined(MAC_OR_LINUX_)
+# endif // ! MAC_OR_LINUX_
 # include <ogdf/basic/GraphAttributes.h>
 # include <ogdf/energybased/FMMMLayout.h>
-# if defined(MAC_OR_LINUX_)
+# if MAC_OR_LINUX_
 #  pragma clang diagnostic pop
-# else // ! defined(MAC_OR_LINUX_)
+# else // ! MAC_OR_LINUX_
 #  pragma warning(pop)
-# endif // ! defined(MAC_OR_LINUX_)
+# endif // ! MAC_OR_LINUX_
 #endif // defined(USE_OGDF_POSITIONING_)
 
 #if defined(__APPLE__)
@@ -79,9 +79,9 @@
 # pragma clang diagnostic pop
 #endif // defined(__APPLE__)
 
-#if (! defined(MAC_OR_LINUX_))
+#if (! MAC_OR_LINUX_)
 # include <Windows.h>
-#endif //! defined(MAC_OR_LINUX_)
+#endif //! MAC_OR_LINUX_
 
 #if defined(__APPLE__)
 # pragma mark Namespace references
@@ -272,18 +272,18 @@ ContentPanel::getMenuBarNames(void)
     return StringArray(names);
 } // ContentPanel::getMenuBarNames
 
-#if (! defined(MAC_OR_LINUX_))
+#if (! MAC_OR_LINUX_)
 # pragma warning(push)
 # pragma warning(disable: 4100)
-#endif // ! defined(MAC_OR_LINUX_)
+#endif // ! MAC_OR_LINUX_
 PopupMenu
 ContentPanel::getMenuForIndex(int            menuIndex,
                               const String & menuName)
 {
 #if (! defined(ODL_ENABLE_LOGGING_))
-# if defined(MAC_OR_LINUX_)
+# if MAC_OR_LINUX_
 #  pragma unused(menuName)
-# endif // defined(MAC_OR_LINUX_)
+# endif // MAC_OR_LINUX_
 #endif // ! defined(ODL_ENABLE_LOGGING_)
     ODL_OBJENTER(); //####
     ODL_LL1("menuIndex = ", menuIndex); //####
@@ -326,9 +326,9 @@ ContentPanel::getMenuForIndex(int            menuIndex,
     }
     return menu;
 } // ContentPanel::getMenuForIndex
-#if (! defined(MAC_OR_LINUX_))
+#if (! MAC_OR_LINUX_)
 # pragma warning(pop)
-#endif // ! defined(MAC_OR_LINUX_)
+#endif // ! MAC_OR_LINUX_
 
 ApplicationCommandTarget *
 ContentPanel::getNextCommandTarget(void)
@@ -340,18 +340,18 @@ ContentPanel::getNextCommandTarget(void)
     return nextOne;
 } // ContentPanel::getNextCommandTarget
 
-#if (! defined(MAC_OR_LINUX_))
+#if (! MAC_OR_LINUX_)
 # pragma warning(push)
 # pragma warning(disable: 4100)
-#endif // ! defined(MAC_OR_LINUX_)
+#endif // ! MAC_OR_LINUX_
 void
 ContentPanel::menuItemSelected(int menuItemID,
                                int topLevelMenuIndex)
 {
 #if (! defined(ODL_ENABLE_LOGGING_))
-# if defined(MAC_OR_LINUX_)
+# if MAC_OR_LINUX_
 #  pragma unused(topLevelMenuIndex)
-# endif // defined(MAC_OR_LINUX_)
+# endif // MAC_OR_LINUX_
 #endif // ! defined(ODL_ENABLE_LOGGING_)
     ODL_OBJENTER(); //####
     ODL_LL2("menuItemID = ", menuItemID, "topLevelMenuIndex = ", topLevelMenuIndex); //####
@@ -426,9 +426,9 @@ ContentPanel::menuItemSelected(int menuItemID,
     }
     ODL_OBJEXIT(); //####
 } // ContentPanel::menuItemSelected
-#if (! defined(MAC_OR_LINUX_))
+#if (! MAC_OR_LINUX_)
 # pragma warning(pop)
-#endif // ! defined(MAC_OR_LINUX_)
+#endif // ! MAC_OR_LINUX_
 
 void
 ContentPanel::paint(Graphics & gg)
@@ -1277,17 +1277,17 @@ ContentPanel::updatePanels(ScannerThread & scanner)
     ODL_OBJEXIT(); //####
 } // ContentPanel::updatePanels
 
-#if (! defined(MAC_OR_LINUX_))
+#if (! MAC_OR_LINUX_)
 # pragma warning(push)
 # pragma warning(disable: 4100)
-#endif // ! defined(MAC_OR_LINUX_)
+#endif // ! MAC_OR_LINUX_
 void
 ContentPanel::visibleAreaChanged(const juce::Rectangle<int> & newVisibleArea)
 {
 #if (! defined(ODL_ENABLE_LOGGING_))
-# if defined(MAC_OR_LINUX_)
+# if MAC_OR_LINUX_
 #  pragma unused(newVisibleArea)
-# endif // defined(MAC_OR_LINUX_)
+# endif // MAC_OR_LINUX_
 #endif // ! defined(ODL_ENABLE_LOGGING_)
     ODL_OBJENTER(); //####
     ODL_LL4("nVA.x = ", newVisibleArea.getX(), "nVA.y = ", newVisibleArea.getY(), //####
@@ -1295,9 +1295,9 @@ ContentPanel::visibleAreaChanged(const juce::Rectangle<int> & newVisibleArea)
             newVisibleArea.getHeight()); //####
     ODL_OBJEXIT(); //####
 } // ContentPanel::visibleAreaChanged
-#if (! defined(MAC_OR_LINUX_))
+#if (! MAC_OR_LINUX_)
 # pragma warning(pop)
-#endif // ! defined(MAC_OR_LINUX_)
+#endif // ! MAC_OR_LINUX_
 
 #if defined(__APPLE__)
 # pragma mark Global functions

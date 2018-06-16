@@ -49,9 +49,9 @@
 # pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
 #endif // defined(__APPLE__)
 
-#if (! defined(MAC_OR_LINUX_))
+#if (! MAC_OR_LINUX_)
 # include <Windows.h>
-#endif //! defined(MAC_OR_LINUX_)
+#endif //! MAC_OR_LINUX_
 
 /*! @file
 
@@ -139,33 +139,33 @@ ValidatingTextEditor::addPopupMenuItems(PopupMenu &        menuToAddTo,
     ODL_OBJEXIT(); //####
 } // ValidatingTextEditor::addPopupMenuItems
 
-#if (! defined(MAC_OR_LINUX_))
+#if (! MAC_OR_LINUX_)
 # pragma warning(push)
 # pragma warning(disable: 4100)
-#endif // ! defined(MAC_OR_LINUX_)
+#endif // ! MAC_OR_LINUX_
 void
 ValidatingTextEditor::focusGained(FocusChangeType cause)
 {
-#if defined(MAC_OR_LINUX_)
+#if MAC_OR_LINUX_
 # pragma unused(cause)
-#endif // defined(MAC_OR_LINUX_)
+#endif // MAC_OR_LINUX_
     ODL_OBJENTER(); //####
     ODL_OBJEXIT(); //####
 } // ValidatingTextEditor::focusGained
-#if (! defined(MAC_OR_LINUX_))
+#if (! MAC_OR_LINUX_)
 # pragma warning(pop)
-#endif // ! defined(MAC_OR_LINUX_)
+#endif // ! MAC_OR_LINUX_
 
-#if (! defined(MAC_OR_LINUX_))
+#if (! MAC_OR_LINUX_)
 # pragma warning(push)
 # pragma warning(disable: 4100)
-#endif // ! defined(MAC_OR_LINUX_)
+#endif // ! MAC_OR_LINUX_
 void
 ValidatingTextEditor::focusLost(FocusChangeType cause)
 {
-#if defined(MAC_OR_LINUX_)
+#if MAC_OR_LINUX_
 # pragma unused(cause)
-#endif // defined(MAC_OR_LINUX_)
+#endif // MAC_OR_LINUX_
     ODL_OBJENTER(); //####
     if (_ignoreNextFocusLoss)
     {
@@ -177,9 +177,9 @@ ValidatingTextEditor::focusLost(FocusChangeType cause)
     }
     ODL_OBJEXIT(); //####
 } // ValidatingTextEditor::focusLost
-#if (! defined(MAC_OR_LINUX_))
+#if (! MAC_OR_LINUX_)
 # pragma warning(pop)
-#endif // ! defined(MAC_OR_LINUX_)
+#endif // ! MAC_OR_LINUX_
 
 void
 ValidatingTextEditor::ignoreNextFocusLoss(void)

@@ -49,9 +49,9 @@
 #include <m+m/m+mEndpoint.hpp>
 #include <m+m/m+mRequests.hpp>
 
-#if (! defined(MAC_OR_LINUX_))
+#if (! MAC_OR_LINUX_)
 # include <io.h>
-#endif // ! defined(MAC_OR_LINUX_)
+#endif // ! MAC_OR_LINUX_
 
 //#include <odlEnable.h>
 #include <odlInclude.h>
@@ -72,19 +72,19 @@
 # pragma clang diagnostic ignored "-Wunused-parameter"
 # pragma clang diagnostic ignored "-Wweak-vtables"
 #endif // defined(__APPLE__)
-#if (! defined(MAC_OR_LINUX_))
+#if (! MAC_OR_LINUX_)
 # pragma warning(push)
 # pragma warning(disable: 4996)
 # pragma warning(disable: 4458)
-#endif // ! defined(MAC_OR_LINUX_)
+#endif // ! MAC_OR_LINUX_
 #if YARP_SYSTEM_INFO_MOVED_
 # include <yarp/os/SystemInfo.h>
 #else // ! YARP_SYSTEM_INFO_MOVED_
 # include <yarp/os/impl/SystemInfo.h>
 #endif // ! YARP_SYSTEM_INFO_MOVED_
-#if (! defined(MAC_OR_LINUX_))
+#if (! MAC_OR_LINUX_)
 # pragma warning(pop)
-#endif // ! defined(MAC_OR_LINUX_)
+#endif // ! MAC_OR_LINUX_
 #if defined(__APPLE__)
 # pragma clang diagnostic pop
 #endif // defined(__APPLE__)
@@ -226,17 +226,17 @@ ManagerApplication::~ManagerApplication(void)
 # pragma mark Actions and Accessors
 #endif // defined(__APPLE__)
 
-#if (! defined(MAC_OR_LINUX_))
+#if (! MAC_OR_LINUX_)
 # pragma warning(push)
 # pragma warning(disable: 4100)
-#endif // ! defined(MAC_OR_LINUX_)
+#endif // ! MAC_OR_LINUX_
 void
 ManagerApplication::anotherInstanceStarted(const String & commandLine)
 {
 #if (! defined(ODL_ENABLE_LOGGING_))
-# if defined(MAC_OR_LINUX_)
+# if MAC_OR_LINUX_
 #  pragma unused(commandLine)
-# endif // defined(MAC_OR_LINUX_)
+# endif // MAC_OR_LINUX_
 #endif // ! defined(ODL_ENABLE_LOGGING_)
     ODL_OBJENTER(); //####
     ODL_S1s("commandLine = ", commandLine.toStdString()); //####
@@ -245,9 +245,9 @@ ManagerApplication::anotherInstanceStarted(const String & commandLine)
     // arguments were.
     ODL_OBJEXIT(); //####
 } // ManagerApplication::anotherInstanceStarted
-#if (! defined(MAC_OR_LINUX_))
+#if (! MAC_OR_LINUX_)
 # pragma warning(pop)
-#endif // ! defined(MAC_OR_LINUX_)
+#endif // ! MAC_OR_LINUX_
 
 bool
 ManagerApplication::checkForRegistryServiceAndLaunchIfDesired(void)
@@ -469,9 +469,9 @@ ManagerApplication::doLaunchAService(const ApplicationInfo & appInfo)
     }
     if (okSoFar)
     {
-#if defined(MAC_OR_LINUX_)
+#if MAC_OR_LINUX_
         MpM_WARNING_((appInfo._description + " being launched.").toStdString().c_str());
-#endif // defined(MAC_OR_LINUX_)
+#endif // MAC_OR_LINUX_
         int                           tagModifierCount;
         String                        endpointToUse;
         String                        portToUse;
@@ -602,7 +602,7 @@ ManagerApplication::findPathToExecutable(const String & execName)
         {
             doCheck = true;
         }
-#if (! defined(MAC_OR_LINUX_))
+#if (! MAC_OR_LINUX_)
         else
         {
             String temp(aFile.getFullPathName() + ".exe");
@@ -613,17 +613,17 @@ ManagerApplication::findPathToExecutable(const String & execName)
                 doCheck = true;
             }
         }
-#endif // ! defined(MAC_OR_LINUX_)
+#endif // ! MAC_OR_LINUX_
         if (doCheck)
         {
             String temp(aFile.getFullPathName());
 
-#if defined(MAC_OR_LINUX_)
+#if MAC_OR_LINUX_
             if (! access(temp.toStdString().c_str(), X_OK))
-#else // ! defined(MAC_OR_LINUX_)
+#else // ! MAC_OR_LINUX_
             if (! _access(temp.toStdString().c_str(), 0))
                 // Note that there's no explicit check for execute permission in Windows.
-#endif // ! defined(MAC_OR_LINUX_)
+#endif // ! MAC_OR_LINUX_
             {
                 // We've found an executable that we can use!
                 result = temp;
@@ -641,11 +641,11 @@ ManagerApplication::findPathToExecutable(const String & execName)
                 bool       doCheck = false;
                 juce::File aFile;
                 String     pathToCheck;
-#if defined(MAC_OR_LINUX_)
+#if MAC_OR_LINUX_
                 int        indx = pathVar.indexOfChar(':');
-#else // ! defined(MAC_OR_LINUX_)
+#else // ! MAC_OR_LINUX_
                 int        indx = pathVar.indexOfChar(';');
-#endif // ! defined(MAC_OR_LINUX_)
+#endif // ! MAC_OR_LINUX_
 
                 if (-1 == indx)
                 {
@@ -663,7 +663,7 @@ ManagerApplication::findPathToExecutable(const String & execName)
                 {
                     doCheck = true;
                 }
-#if (! defined(MAC_OR_LINUX_))
+#if (! MAC_OR_LINUX_)
                 else
                 {
                     String temp(aFile.getFullPathName() + ".exe");
@@ -674,17 +674,17 @@ ManagerApplication::findPathToExecutable(const String & execName)
                         doCheck = true;
                     }
                 }
-#endif // ! defined(MAC_OR_LINUX_)
+#endif // ! MAC_OR_LINUX_
                 if (doCheck)
                 {
                     String temp(aFile.getFullPathName());
 
-#if defined(MAC_OR_LINUX_)
+#if MAC_OR_LINUX_
                     if (! access(temp.toStdString().c_str(), X_OK))
-#else // ! defined(MAC_OR_LINUX_)
+#else // ! MAC_OR_LINUX_
                     if (! _access(temp.toStdString().c_str(), 0))
                         // Note that there's no explicit check for execute permission in Windows.
-#endif // ! defined(MAC_OR_LINUX_)
+#endif // ! MAC_OR_LINUX_
                     {
                         // We've found an executable that we can use!
                         result = temp;
@@ -1143,25 +1143,25 @@ ManagerApplication::getUserName(void)
     return result;
 } // ManagerApplication::getUserName
 
-#if (! defined(MAC_OR_LINUX_))
+#if (! MAC_OR_LINUX_)
 # pragma warning(push)
 # pragma warning(disable: 4100)
-#endif // ! defined(MAC_OR_LINUX_)
+#endif // ! MAC_OR_LINUX_
 void
 ManagerApplication::initialise(const String & commandLine)
 {
 #if (! defined(ODL_ENABLE_LOGGING_))
-# if defined(MAC_OR_LINUX_)
+# if MAC_OR_LINUX_
 #  pragma unused(commandLine)
-# endif // defined(MAC_OR_LINUX_)
+# endif // MAC_OR_LINUX_
 #endif // ! defined(ODL_ENABLE_LOGGING_)
     ODL_OBJENTER(); //####
     ODL_S1s("commandLine = ", commandLine.toStdString()); //####
     bool launchedRegistry = false;
 
-#if defined(MAC_OR_LINUX_)
+#if MAC_OR_LINUX_
     Common::SetUpLogger(ProjectInfo::projectName);
-#endif // defined(MAC_OR_LINUX_)
+#endif // MAC_OR_LINUX_
     Common::Initialize(ProjectInfo::projectName);
     Utilities::SetUpGlobalStatusReporter();
 #if defined(MpM_ReportOnConnections)
@@ -1215,9 +1215,9 @@ ManagerApplication::initialise(const String & commandLine)
     }
     ODL_OBJEXIT(); //####
 } // ManagerApplication::initialise
-#if (! defined(MAC_OR_LINUX_))
+#if (! MAC_OR_LINUX_)
 # pragma warning(pop)
-#endif // ! defined(MAC_OR_LINUX_)
+#endif // ! MAC_OR_LINUX_
 
 void
 ManagerApplication::loadApplicationLists(void)
@@ -1527,26 +1527,26 @@ MPlusM_Manager::CalculateTextArea(Point<int> &   dimensions,
     ODL_EXIT(); //####
 } // MPlusM_Manager::CalculateTextArea
 
-#if (! defined(MAC_OR_LINUX_))
+#if (! MAC_OR_LINUX_)
 # pragma warning(push)
 # pragma warning(disable: 4100)
-#endif // ! defined(MAC_OR_LINUX_)
+#endif // ! MAC_OR_LINUX_
 bool
 CheckForExit(void * stuff)
 {
 #if (! defined(ODL_ENABLE_LOGGING_))
-# if defined(MAC_OR_LINUX_)
+# if MAC_OR_LINUX_
 #  pragma unused(stuff)
-# endif // defined(MAC_OR_LINUX_)
+# endif // MAC_OR_LINUX_
 #endif // ! defined(ODL_ENABLE_LOGGING_)
     ODL_ENTER(); //####
     ODL_P1("stuff = ", stuff); //####
     ODL_EXIT_B(lExitRequested); //####
     return lExitRequested;
 } // CheckForExit
-#if (! defined(MAC_OR_LINUX_))
+#if (! MAC_OR_LINUX_)
 # pragma warning(pop)
-#endif // ! defined(MAC_OR_LINUX_)
+#endif // ! MAC_OR_LINUX_
 
 bool
 LazyLaunchProcess(ChildProcess & aProcess,
