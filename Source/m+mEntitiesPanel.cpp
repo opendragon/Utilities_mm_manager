@@ -190,7 +190,7 @@ EntitiesPanel::adjustSize(const bool andRepaint)
         int  maxY = -1;
         bool haveValues = false;
 
-        ODL_LL4("outerL = ", outerL, "outerT = ", outerT, "outerW = ", outerW, //####
+        ODL_I4("outerL = ", outerL, "outerT = ", outerT, "outerW = ", outerW, //####
                 "outerH = ", outerH); //####
         for (ContainerList::const_iterator it(_knownEntities.begin());
              _knownEntities.end() != it; ++it)
@@ -205,7 +205,7 @@ EntitiesPanel::adjustSize(const bool andRepaint)
                 int                  entityRight = entityLeft + entityBounds.getWidth();
                 int                  entityBottom = entityTop + entityBounds.getHeight();
 
-                ODL_LL4("eB.x = ", entityBounds.getX(), "eB.y = ", entityBounds.getY(), //####
+                ODL_I4("eB.x = ", entityBounds.getX(), "eB.y = ", entityBounds.getY(), //####
                         "eB.w = ", entityBounds.getWidth(), "eB.h = ", //####
                         entityBounds.getHeight()); //####
                 if (haveValues)
@@ -228,7 +228,7 @@ EntitiesPanel::adjustSize(const bool andRepaint)
         if (haveValues)
         {
             ODL_LOG("(haveValues)"); //####
-            ODL_LL4("minX = ", minX, "maxX = ", maxX, "minY = ", minY, "maxY = ", maxY); //####
+            ODL_I4("minX = ", minX, "maxX = ", maxX, "minY = ", minY, "maxY = ", maxY); //####
             juce::Rectangle<int> oldBounds(getBounds());
             int                  minLeft = jmin(0, minX);
             int                  maxRight = jmax(jmax(0, maxX + kGutter), minLeft + outerW);
@@ -236,7 +236,7 @@ EntitiesPanel::adjustSize(const bool andRepaint)
             int                  maxBottom = jmax(jmax(0, maxY + kGutter), minTop + outerH);
             juce::Rectangle<int> newBounds(minLeft, minTop, maxRight - minLeft, maxBottom - minTop);
 
-            ODL_LL4("minLeft = ", minLeft, "minTop = ", minTop, "maxRight = ", maxRight, //####
+            ODL_I4("minLeft = ", minLeft, "minTop = ", minTop, "maxRight = ", maxRight, //####
                     "maxBottom = ", maxBottom); //####
             if (oldBounds != newBounds)
             {
@@ -251,11 +251,11 @@ EntitiesPanel::adjustSize(const bool andRepaint)
             int                  currW = currBounds.getWidth();
             int                  currH = currBounds.getHeight();
 
-            ODL_LL4("currX = ", currX, "currY = ", currY, "currW = ", currW, "currH = ", //####
+            ODL_I4("currX = ", currX, "currY = ", currY, "currW = ", currW, "currH = ", //####
                     currH); //####
             if (vertBar)
             {
-                ODL_LL2("CR.y = ", outerT, "CR.h = ", outerH); //####
+                ODL_I2("CR.y = ", outerT, "CR.h = ", outerH); //####
                 Range<double> currLimits(vertBar->getRangeLimit());
                 Range<double> currRange(vertBar->getCurrentRange());
                 Range<double> newLimits(currY, currY + currH);
@@ -272,7 +272,7 @@ EntitiesPanel::adjustSize(const bool andRepaint)
             }
             if (horizBar)
             {
-                ODL_LL2("CR.x = ", outerL, "CR.w = ", outerW); //####
+                ODL_I2("CR.x = ", outerL, "CR.w = ", outerW); //####
                 Range<double> currLimits(horizBar->getRangeLimit());
                 Range<double> currRange(horizBar->getCurrentRange());
                 Range<double> newLimits(currX, currX + currW);
@@ -520,7 +520,7 @@ EntitiesPanel::getEntity(const size_t index)
 const
 {
     ODL_OBJENTER(); //####
-    ODL_LL1("index = ", index); //####
+    ODL_I1("index = ", index); //####
     ChannelContainer * result;
 
     if (_knownEntities.size() > index)
@@ -542,7 +542,7 @@ const
     ODL_OBJENTER(); //####
     size_t result = _knownEntities.size();
 
-    ODL_OBJEXIT_LL(result); //####
+    ODL_OBJEXIT_I(result); //####
     return result;
 } // EntitiesPanel::getNumberOfEntities
 
@@ -562,7 +562,7 @@ const
             ++count;
         }
     }
-    ODL_OBJEXIT_LL(count); //####
+    ODL_OBJEXIT_I(count); //####
     return count;
 } // EntitiesPanel::getNumberOfHiddenEntities
 

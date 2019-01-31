@@ -157,7 +157,7 @@ EntityData::getArgumentDescriptor(const size_t idx)
 const
 {
     ODL_ENTER(); //####
-    ODL_LL1(idx, idx); //####
+    ODL_I1(idx, idx); //####
     MplusM::Utilities::BaseArgumentDescriptor * result;
 
     if (_argumentList.size() > idx)
@@ -179,7 +179,7 @@ const
     ODL_OBJENTER(); //####
     int result = static_cast<int>(_ports.size());
 
-    ODL_OBJEXIT_L(result); //####
+    ODL_OBJEXIT_I(result); //####
     return result;
 } // EntityData::getNumPorts
 

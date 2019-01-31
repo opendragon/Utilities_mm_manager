@@ -587,7 +587,7 @@ ScannerThread::determineDirection(ChannelEntry *        oldEntry,
     {
         result = kPortDirectionUnknown;
     }
-    ODL_OBJEXIT_LL(static_cast<long>(result)); //####
+    ODL_OBJEXIT_I(static_cast<long>(result)); //####
     return result;
 } // ScannerThread::determineDirection
 

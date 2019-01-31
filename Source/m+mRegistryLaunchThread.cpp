@@ -93,7 +93,7 @@ RegistryLaunchThread::RegistryLaunchThread(const String & pathToExecutable,
 {
     ODL_ENTER(); //####
     ODL_S1s("pathToExecutable = ", pathToExecutable.toStdString()); //####
-    ODL_LL1("portNumber = ", portNumber); //####
+    ODL_I1("portNumber = ", portNumber); //####
     ODL_EXIT_P(this); //####
 } // RegistryLaunchThread::RegistryLaunchThread
 

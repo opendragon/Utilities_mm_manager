@@ -94,7 +94,7 @@ YarpLaunchThread::YarpLaunchThread(const String & pathToExecutable,
 {
     ODL_ENTER(); //####
     ODL_S2s("pathToExecutable = ", pathToExecutable, "ipAddress = ", ipAddress); //####
-    ODL_LL1("portNumber = ", portNumber); //####
+    ODL_I1("portNumber = ", portNumber); //####
     ODL_EXIT_P(this); //####
 } // YarpLaunchThread::YarpLaunchThread
 

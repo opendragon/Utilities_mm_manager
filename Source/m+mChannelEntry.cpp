@@ -219,7 +219,7 @@ calculateAnchorForPoint(Position &       newCentre,
         anchor = kAnchorTopCentre;
         newCentre = targetPoint + Position(0, boxSize);
     }
-    ODL_EXIT_L(static_cast<int>(anchor)); //####
+    ODL_EXIT_I(static_cast<int>(anchor)); //####
     return anchor;
 } // calculateAnchorForPoint
 
@@ -236,7 +236,7 @@ drawSourceAnchor(Graphics &       gg,
 {
     ODL_ENTER(); //####
     ODL_P2("gg = ", &gg, "anchorPos = ", &anchorPos); //####
-    ODL_LL1("anchor = ", static_cast<int>(anchor)); //####
+    ODL_I1("anchor = ", static_cast<int>(anchor)); //####
     ODL_D1("thickness = ", thickness); //####
     Position first;
     Position second;
@@ -291,7 +291,7 @@ drawTargetAnchor(Graphics &       gg,
 {
     ODL_ENTER(); //####
     ODL_P2("gg = ", &gg, "anchorPos = ", &anchorPos); //####
-    ODL_LL1("anchor = ", static_cast<int>(anchor)); //####
+    ODL_I1("anchor = ", static_cast<int>(anchor)); //####
     ODL_D1("thickness = ", thickness); //####
     Position first;
     Position second;
@@ -401,7 +401,7 @@ drawConnection(Graphics &                gg,
 {
     ODL_ENTER(); //####
     ODL_P3("gg = ", &gg, "source = ", source, "destination = ", destination); //####
-    ODL_LL1("mode = ", static_cast<int>(mode)); //####
+    ODL_I1("mode = ", static_cast<int>(mode)); //####
     ODL_B1("forced = ", forced); //####
     if (source && destination)
     {
@@ -545,7 +545,7 @@ ChannelEntry::ChannelEntry(ChannelContainer *  parent,
     ODL_P1("parent = ", parent); //####
     ODL_S4s("portName = ", portName, "portNumber = ", portNumber, "portProtocol = ", //####
             portProtocol, "protocolDescription = ", protocolDescription); //####
-    ODL_LL2("portKind = ", portKind, "direction = ", direction); //####
+    ODL_I2("portKind = ", portKind, "direction = ", direction); //####
     Font &             textFont = getOwningPanel().getNormalFont();
     YarpString prefix;
 
@@ -728,7 +728,7 @@ const
         }
     }
     ODL_D2("result.x = ", result.getX(), "result.y = ", result.getY()); //####
-    ODL_OBJEXIT_L(static_cast<int>(anchor)); //####
+    ODL_OBJEXIT_I(static_cast<int>(anchor)); //####
     return anchor;
 } // ChannelEntry::calculateClosestAnchor
 

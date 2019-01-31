@@ -784,7 +784,7 @@ ManagerApplication::getButtonHeight(void)
     {
         result = 32; // Arbitrary, should never reach here!
     }
-    ODL_EXIT_LL(result);
+    ODL_EXIT_I(result);
     return result;
 } // ManagerApplication::getButtonHeight
 
@@ -1004,7 +1004,7 @@ ManagerApplication::getPrimaryChannelForService(const ApplicationInfo & appInfo,
            &channelName); //####
     ODL_S3s("endpointName = ", endpointName.toStdString(), "tag = ", tag.toStdString(), //####
             "portNumber = ", portNumber.toStdString()); //####
-    ODL_LL1("tagModifierCount = ", tagModifierCount); //####
+    ODL_I1("tagModifierCount = ", tagModifierCount); //####
     bool         okSoFar = false;
     ChildProcess runApplication;
     StringArray  nameAndArgs(appInfo._applicationPath);
@@ -1554,7 +1554,7 @@ LazyLaunchProcess(ChildProcess & aProcess,
 {
     ODL_ENTER(); //####
     ODL_P1("aProcess = ", &aProcess); //####
-    ODL_LL1("timeout = ", timeout); //####
+    ODL_I1("timeout = ", timeout); //####
     bool result = false;
 
     if (0 < timeout)

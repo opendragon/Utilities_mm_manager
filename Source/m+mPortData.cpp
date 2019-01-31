@@ -91,7 +91,7 @@ PortData::PortData(const YarpString &  portName,
     ODL_ENTER(); //####
     ODL_S3s("portName = ", portName, "portProtocol = ", portProtocol, //####
             "protocolDescription = ", protocolDescription); //####
-    ODL_LL2("portKind = ", portKind, "direction = ", direction); //####
+    ODL_I2("portKind = ", portKind, "direction = ", direction); //####
     ODL_EXIT_P(this); //####
 } // PortData::PortData
 

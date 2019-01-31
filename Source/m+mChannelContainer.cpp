@@ -126,7 +126,7 @@ ChannelContainer::ChannelContainer(const ContainerKind kind,
     _titleHeight = static_cast<int>(headerFont.getHeight());
     setSize(static_cast<int>(headerFont.getStringWidthFloat(getName() + " ") + getTextInset()),
             _titleHeight);
-    ODL_LL2("width = ", getWidth(), "height = ", getHeight()); //####
+    ODL_I2("width = ", getWidth(), "height = ", getHeight()); //####
     setOpaque(true);
     setVisible(true);
     ODL_EXIT_P(this); //####
@@ -186,7 +186,7 @@ ChannelContainer::addPort(const YarpString &  portName,
     float          newWidth = static_cast<float>(jmax(aPort->getWidth(), getWidth()));
     float          newHeight = aPort->getHeight() + getHeight() + kEntryGap;
 
-    ODL_LL2("newWidth = ", newWidth, "newHeight = ", newHeight); //####
+    ODL_I2("newWidth = ", newWidth, "newHeight = ", newHeight); //####
     aPort->setTopLeftPosition(0, static_cast<int>(getHeight() + kEntryGap));
     setSize(static_cast<int>(newWidth), static_cast<int>(newHeight));
     addAndMakeVisible(aPort);
@@ -586,7 +586,7 @@ ChannelContainer::getArgumentDescriptor(const size_t idx)
 const
 {
     ODL_ENTER(); //####
-    ODL_LL1(idx, idx); //####
+    ODL_I1(idx, idx); //####
     MplusM::Utilities::BaseArgumentDescriptor * result;
 
     if (_argumentList.size() > idx)
@@ -670,7 +670,7 @@ ChannelContainer::getPort(const int num)
 const
 {
     ODL_OBJENTER(); //####
-    ODL_LL1("num = ", num); //####
+    ODL_I1("num = ", num); //####
     ChannelEntry * result;
 
     if ((0 <= num) && (getNumPorts() > num))
