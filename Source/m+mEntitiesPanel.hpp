@@ -127,13 +127,13 @@ namespace MPlusM_Manager
 
         /*! @brief Find an entity in the currently-displayed list by name.
          @param[in] name The name of the entity.
-         @returns @c NULL if the entity cannot be found and non-@c NULL if it is found. */
+         @return @c NULL if the entity cannot be found and non-@c NULL if it is found. */
         ChannelContainer *
         findKnownEntity(const YarpString & name);
 
         /*! @brief Find a port in the to-be-displayed list by name.
          @param[in] name The name of the port.
-         @returns @c NULL if the port cannot be found and non-@c NULL if it is found. */
+         @return @c NULL if the port cannot be found and non-@c NULL if it is found. */
         ChannelEntry *
         findKnownPort(const YarpString & name);
 
@@ -143,7 +143,7 @@ namespace MPlusM_Manager
         forgetPort(ChannelEntry * aPort);
 
         /*! @brief Return the font to be used for bold text.
-         @returns The font to be used for bold text. */
+         @return The font to be used for bold text. */
         inline Font &
         getBoldFont(void)
         {
@@ -151,7 +151,7 @@ namespace MPlusM_Manager
         } // getBoldFont
 
         /*! @brief Return the container in which the panel is embedded.
-         @returns The container in which the panel is embedded. */
+         @return The container in which the panel is embedded. */
         inline ContentPanel *
         getContent(void)
         const
@@ -161,13 +161,13 @@ namespace MPlusM_Manager
 
         /*! @brief Return an entity by index.
          @param[in] index The zero-origin index of the entity.
-         @returns The entity if the index is within range and @c NULL otherwise. */
+         @return The entity if the index is within range and @c NULL otherwise. */
         ChannelContainer *
         getEntity(const size_t index)
         const;
 
         /*! @brief Return the starting point for a connection being added.
-         @returns The starting point for a connection being added. */
+         @return The starting point for a connection being added. */
         inline ChannelEntry *
         getFirstAddPoint(void)
         const
@@ -176,7 +176,7 @@ namespace MPlusM_Manager
         } // getFirstAddPoint
 
         /*! @brief Return the starting point for a connection being removed.
-         @returns The starting point for a connection being removed. */
+         @return The starting point for a connection being removed. */
         inline ChannelEntry *
         getFirstRemovePoint(void)
         const
@@ -185,7 +185,7 @@ namespace MPlusM_Manager
         } // getFirstRemovePoint
 
         /*! @brief Return the font to be used for normal text.
-         @returns The font to be used for normal text. */
+         @return The font to be used for normal text. */
         inline Font &
         getNormalFont(void)
         {
@@ -193,13 +193,13 @@ namespace MPlusM_Manager
         } // getNormalFont
 
         /*! @brief Return the number of entities.
-         @returns The number of entities. */
+         @return The number of entities. */
         size_t
         getNumberOfEntities(void)
         const;
 
         /*! @brief Returns the number of hidden entities.
-         @returns The number of hidden entities. */
+         @return The number of hidden entities. */
         size_t
         getNumberOfHiddenEntities(void)
         const;
@@ -209,7 +209,7 @@ namespace MPlusM_Manager
         invalidateAllConnections(void);
 
         /*! @brief Return @c true if dragging a connection and @c false otherwise.
-         @returns @c true if dragging a connection and @c false otherwise. */
+         @return @c true if dragging a connection and @c false otherwise. */
         inline bool
         isDragActive(void)
         const
@@ -219,7 +219,7 @@ namespace MPlusM_Manager
 
         /*! @brief Returns an entry at the given location, if it exists.
          @param[in] location The coordinates to check.
-         @returns A pointer to the entry at the given location, or @c NULL if there is none. */
+         @return A pointer to the entry at the given location, or @c NULL if there is none. */
         ChannelEntry *
         locateEntry(const Position & location)
         const;
@@ -250,7 +250,7 @@ namespace MPlusM_Manager
         removeInvalidConnections(void);
 
         /*! @brief Remove any entities that were not visited.
-         @returns @c true if an entity was removed and @c false otherwise. */
+         @return @c true if an entity was removed and @c false otherwise. */
         bool
         removeUnvisitedEntities(void);
 

@@ -125,7 +125,7 @@ namespace MPlusM_Manager
          @param[in] protocolDescription The description of the protocol.
          @param[in] portKind What the port will be used for.
          @param[in] direction The primary direction of the port.
-         @returns The newly-created port. */
+         @return The newly-created port. */
         ChannelEntry *
         addPort(const YarpString &  portName,
                 const YarpString &  portNumber,
@@ -135,7 +135,7 @@ namespace MPlusM_Manager
                 const PortDirection direction = kPortDirectionInputOutput);
 
         /*! @brief Returns @c true if the container has configurable values and @c false otherwise.
-         @returns @c true if the container has configurable values and @c false otherwise. */
+         @return @c true if the container has configurable values and @c false otherwise. */
         bool
         canBeConfigured(void);
 
@@ -175,19 +175,19 @@ namespace MPlusM_Manager
 
         /*! @brief Convert a tab-delimited line of metric data into a more readable form.
          @param[in] aRow A line of metric data.
-         @returns The metric data reformatted. */
+         @return The metric data reformatted. */
         String
         formatMetricRow(const String & aRow);
 
         /*! @brief Return a particular argument descriptor.
          @param[in] idx The index of the argument of interest.
-         @returns The argument descriptor at the specified index. */
+         @return The argument descriptor at the specified index. */
         MplusM::Utilities::BaseArgumentDescriptor *
         getArgumentDescriptor(const size_t idx)
         const;
 
         /*! @brief Return the behavioural model for the entity.
-         @returns The behavioural model for the entity. */
+         @return The behavioural model for the entity. */
         inline const YarpString &
         getBehaviour(void)
         const
@@ -196,7 +196,7 @@ namespace MPlusM_Manager
         } // getBehaviour
 
         /*! @brief Return the description of the entity.
-         @returns The description of the entity. */
+         @return The description of the entity. */
         inline const YarpString &
         getDescription(void)
         const
@@ -205,7 +205,7 @@ namespace MPlusM_Manager
         } // getDescription
 
         /*! @brief Return the extra information for the entity.
-         @returns The extra information for the entity. */
+         @return The extra information for the entity. */
         inline const YarpString &
         getExtraInformation(void)
         const
@@ -214,7 +214,7 @@ namespace MPlusM_Manager
         } // getExtraInformation
 
         /*! @brief Return the IP address of the container.
-         @returns The IP address of the container. */
+         @return The IP address of the container. */
         inline const YarpString &
         getIPAddress(void)
         const
@@ -223,7 +223,7 @@ namespace MPlusM_Manager
         } // getIPAddress
 
         /*! @brief Return the kind of container.
-         @returns The kind of container. */
+         @return The kind of container. */
         inline ContainerKind
         getKind(void)
         const
@@ -232,26 +232,26 @@ namespace MPlusM_Manager
         } // getKind
 
         /*! @brief Return the metrics for the container, if it is a service.
-         @returns The metrics for the container, if it is a service or an empty string. */
+         @return The metrics for the container, if it is a service or an empty string. */
         StringArray
         getMetrics(void);
 
         /*! @brief Return the state of measurment collection for the container, if it is a service.
-         @returns @c true if the service is collecting measurements and @c false if it is not a
+         @return @c true if the service is collecting measurements and @c false if it is not a
          service or if it is a service that is not collecting measurements. */
         bool
         getMetricsState(void);
 
 # if defined(USE_OGDF_POSITIONING_)
         /*! @brief Return the node corresponding to the entity.
-         @returns The node corresponding to the entity. */
+         @return The node corresponding to the entity. */
         ogdf::node
         getNode(void)
         const;
 # endif // defined(USE_OGDF_POSITIONING_)
 
         /*! @brief Returns the number of argument descriptions in this container.
-         @returns The number of argument descriptions in this container. */
+         @return The number of argument descriptions in this container. */
         inline size_t
         getNumArgumentDescriptors(void)
         const
@@ -260,7 +260,7 @@ namespace MPlusM_Manager
         } // getNumArgumentDescriptors
 
         /*! @brief Returns the number of ports in this container.
-         @returns The number of ports in this container. */
+         @return The number of ports in this container. */
         inline int
         getNumPorts(void)
         const
@@ -277,19 +277,19 @@ namespace MPlusM_Manager
 
         /*! @brief Returns a port by index.
          @param[in] num The zero-origin index of the port.
-         @returns A port or @c NULL if the index is out of range. */
+         @return A port or @c NULL if the index is out of range. */
         ChannelEntry *
         getPort(const int num)
         const;
 
         /*! @brief Return the position of the entity within it's containing panel.
-         @returns The position of the entity within it's containing panel. */
+         @return The position of the entity within it's containing panel. */
         Position
         getPositionInPanel(void)
         const;
 
         /*! @brief Return the requests supported by the entity.
-         @returns The requests supported by the entity. */
+         @return The requests supported by the entity. */
         inline const YarpString &
         getRequests(void)
         const
@@ -298,14 +298,14 @@ namespace MPlusM_Manager
         } // getRequests
 
         /*! @brief Return the amount of space to the left of the text being displayed.
-         @returns The amount of space to the left of the text being displayed. */
+         @return The amount of space to the left of the text being displayed. */
         float
         getTextInset(void)
         const;
 
         /*! @brief Check if a port is part of the entity.
          @param[in] aPort The port to be checked for.
-         @returns @c true if the port is contained within the entity and @c false otherwise. */
+         @return @c true if the port is contained within the entity and @c false otherwise. */
         bool
         hasPort(const ChannelEntry * aPort);
 
@@ -318,13 +318,13 @@ namespace MPlusM_Manager
         invalidateConnections(void);
 
         /*! @brief Returns @c true if one of the port entries is marked and @c false otherwise.
-         @returns @c true if one of the port entries is marked and @c false otherwise. */
+         @return @c true if one of the port entries is marked and @c false otherwise. */
         bool
         isMarked(void)
         const;
 
         /*! @brief Return @c true is the entity is newly created.
-         @returns @c true if the entity is newly created and @c false otherwise. */
+         @return @c true if the entity is newly created and @c false otherwise. */
         inline bool
         isNew(void)
         const
@@ -333,7 +333,7 @@ namespace MPlusM_Manager
         } // isNew
 
         /*! @brief Return @c true is the entity is selected.
-         @returns @c true if the entity is selected and @c false otherwise. */
+         @return @c true if the entity is selected and @c false otherwise. */
         inline bool
         isSelected(void)
         const
@@ -343,7 +343,7 @@ namespace MPlusM_Manager
 
         /*! @brief Returns an entry at the given location, if it exists.
          @param[in] location The coordinates to check.
-         @returns A pointer to the entry at the given location, or @c NULL if there is none. */
+         @return A pointer to the entry at the given location, or @c NULL if there is none. */
         ChannelEntry *
         locateEntry(const Position & location)
         const;
@@ -403,7 +403,7 @@ namespace MPlusM_Manager
         stopTheService(void);
 
         /*! @brief Returns the state of the hidden flag.
-         @returns The state of the hidden flag. */
+         @return The state of the hidden flag. */
         inline bool
         wasHidden(void)
         const
@@ -412,7 +412,7 @@ namespace MPlusM_Manager
         } // wasHidden
 
         /*! @brief Returns the state of the visited flag.
-         @returns The state of the visited flag. */
+         @return The state of the visited flag. */
         inline bool
         wasVisited(void)
         const

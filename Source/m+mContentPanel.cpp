@@ -134,7 +134,7 @@ static const int kExtraDisplayWidth = 32;
 #endif // defined(__APPLE__)
 
 /*! @brief Returns the absolute path to the settings file.
- @returns The absolute path to the settings file. */
+ @return The absolute path to the settings file. */
 static String
 getPathToSettingsFile(void)
 {

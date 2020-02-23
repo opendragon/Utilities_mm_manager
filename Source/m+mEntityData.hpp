@@ -95,7 +95,7 @@ namespace MPlusM_Manager
          @param[in] protocolDescription The description of the protocol.
          @param[in] portKind What the port will be used for.
          @param[in] direction The primary direction of the port.
-         @returns The newly-created port. */
+         @return The newly-created port. */
         PortData *
         addPort(const YarpString &  portName,
                 const YarpString &  portProtocol = "",
@@ -105,13 +105,13 @@ namespace MPlusM_Manager
 
         /*! @brief Return a particular argument descriptor.
          @param[in] idx The index of the argument of interest.
-         @returns The argument descriptor at the specified index. */
+         @return The argument descriptor at the specified index. */
         MplusM::Utilities::BaseArgumentDescriptor *
         getArgumentDescriptor(const size_t idx)
         const;
 
         /*! @brief Return the behavioural model for the entity.
-         @returns The behavioural model for the entity. */
+         @return The behavioural model for the entity. */
         inline const YarpString &
         getBehaviour(void)
         const
@@ -120,7 +120,7 @@ namespace MPlusM_Manager
         } // getBehaviour
 
         /*! @brief Return the description of the entity.
-         @returns The description of the entity. */
+         @return The description of the entity. */
         inline const YarpString &
         getDescription(void)
         const
@@ -129,7 +129,7 @@ namespace MPlusM_Manager
         } // getDescription
 
         /*! @brief Return the extra information for the entity.
-         @returns The extra information for the entity. */
+         @return The extra information for the entity. */
         inline const YarpString &
         getExtraInformation(void)
         const
@@ -138,7 +138,7 @@ namespace MPlusM_Manager
         } // getExtraInformation
 
         /*! @brief Return the kind of container.
-         @returns The kind of container. */
+         @return The kind of container. */
         inline ContainerKind
         getKind(void)
         const
@@ -147,7 +147,7 @@ namespace MPlusM_Manager
         } // getKind
 
         /*! @brief Return the IP address of the entity.
-         @returns The IP address of the entity. */
+         @return The IP address of the entity. */
         inline const YarpString &
         getIPAddress(void)
         const
@@ -156,7 +156,7 @@ namespace MPlusM_Manager
         } // getIPAddress
 
         /*! @brief Return the description of the entity.
-         @returns The description of the entity. */
+         @return The description of the entity. */
         inline const YarpString &
         getName(void)
         const
@@ -165,7 +165,7 @@ namespace MPlusM_Manager
         } // getName
 
         /*! @brief Returns the number of argument descriptions in this container.
-         @returns The number of argument descriptions in this container. */
+         @return The number of argument descriptions in this container. */
         inline size_t
         getNumArgumentDescriptors(void)
         const
@@ -174,20 +174,20 @@ namespace MPlusM_Manager
         } // getNumArgumentDescriptors
 
         /*! @brief Returns the number of ports in this panel.
-         @returns The number of ports in this panel. */
+         @return The number of ports in this panel. */
         int
         getNumPorts(void)
         const;
 
         /*! @brief Returns a port by index.
          @param[in] num The zero-origin index of the port.
-         @returns A port or @c NULL if the index is out of range. */
+         @return A port or @c NULL if the index is out of range. */
         PortData *
         getPort(const int num)
         const;
 
         /*! @brief Return the requests supported by the entity.
-         @returns The requests supported by the entity. */
+         @return The requests supported by the entity. */
         inline const YarpString &
         getRequests(void)
         const
@@ -213,7 +213,7 @@ namespace MPlusM_Manager
 
         /*! @brief The assignment operator.
          @param[in] other The object to be copied.
-         @returns The updated object. */
+         @return The updated object. */
         EntityData &
         operator =(const EntityData & other);
 

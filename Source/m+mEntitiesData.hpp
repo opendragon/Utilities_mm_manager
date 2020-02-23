@@ -96,7 +96,7 @@ namespace MPlusM_Manager
         clearOutData(void);
 
         /*! @brief Return the list of detected connections.
-         @returns The list of detected connections. */
+         @return The list of detected connections. */
         inline const ConnectionList &
         getConnections(void)
         const
@@ -106,13 +106,13 @@ namespace MPlusM_Manager
 
         /*! @brief Return an entity by index.
          @param[in] index The zero-origin index of the entity.
-         @returns The entity if the index is within range and @c NULL otherwise. */
+         @return The entity if the index is within range and @c NULL otherwise. */
         EntityData *
         getEntity(const size_t index)
         const;
 
         /*! @brief Return the number of entities.
-         @returns The number of entities. */
+         @return The number of entities. */
         size_t
         getNumberOfEntities(void)
         const;
@@ -127,7 +127,7 @@ namespace MPlusM_Manager
 
         /*! @brief The assignment operator.
          @param[in] other The object to be copied.
-         @returns The updated object. */
+         @return The updated object. */
         EntitiesData &
         operator =(const EntitiesData & other);
 

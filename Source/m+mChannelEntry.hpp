@@ -118,7 +118,7 @@ namespace MPlusM_Manager
          @param[in] disallowBottom @c true if the anchor cannot be bottom-centre.
          @param[in] xx The horizontal coordinate for the point of interest.
          @param[in] yy The vertical coordinate for the point of interest.
-         @returns The side to which the anchor is attached. */
+         @return The side to which the anchor is attached. */
         inline AnchorSide
         calculateClosestAnchor(Position &  result,
                                const bool  isSource,
@@ -135,7 +135,7 @@ namespace MPlusM_Manager
          @param[in] isSource @c true if the anchor is for an outgoing line and @c false otherwise.
          @param[in] disallowBottom @c true if the anchor cannot be bottom-centre.
          @param[in] pp The point of interest.
-         @returns The side to which the anchor is attached. */
+         @return The side to which the anchor is attached. */
         AnchorSide
         calculateClosestAnchor(Position &       result,
                                const bool       isSource,
@@ -179,13 +179,13 @@ namespace MPlusM_Manager
         drawOutgoingConnections(Graphics & gg);
 
         /*! @brief Return the location of the centre of the port entry.
-         @returns The location of the centre of the port entry. */
+         @return The location of the centre of the port entry. */
         Position
         getCentre(void)
         const;
 
         /*! @brief Return the direction of the port entry.
-         @returns The direction of the port entry. */
+         @return The direction of the port entry. */
         inline PortDirection
         getDirection(void)
         const
@@ -194,7 +194,7 @@ namespace MPlusM_Manager
         } // getDirection
 
         /*! @brief Return the set of input connections to the port.
-         @returns The set of input connections to the port. */
+         @return The set of input connections to the port. */
         inline const ChannelConnections &
         getInputConnections(void)
         const
@@ -203,7 +203,7 @@ namespace MPlusM_Manager
         } // getInputConnections
 
         /*! @brief Return the set of output connections to the port.
-         @returns The set of output connections to the port. */
+         @return The set of output connections to the port. */
         inline const ChannelConnections &
         getOutputConnections(void)
         const
@@ -212,13 +212,13 @@ namespace MPlusM_Manager
         } // getOutputConnections
 
         /*! @brief Return the panel which contains the entry.
-         @returns The panel which contains the entry. */
+         @return The panel which contains the entry. */
         EntitiesPanel &
         getOwningPanel(void)
         const;
 
         /*! @brief Return the container holding this entry.
-         @returns The container holding this entry. */
+         @return The container holding this entry. */
         inline ChannelContainer *
         getParent(void)
         const
@@ -227,7 +227,7 @@ namespace MPlusM_Manager
         } // getParent
 
         /*! @brief Return the name of the associated port.
-         @returns The name of the associated port. */
+         @return The name of the associated port. */
         inline const YarpString &
         getPortName(void)
         const
@@ -236,7 +236,7 @@ namespace MPlusM_Manager
         } // getPortName
 
         /*! @brief Return the port number of the associated port.
-         @returns The port number of the associated port. */
+         @return The port number of the associated port. */
         inline const YarpString &
         getPortNumber(void)
         const
@@ -245,13 +245,13 @@ namespace MPlusM_Manager
         } // getPortNumber
 
         /*! @brief Return the position of the entity within it's containing panel.
-         @returns The position of the entity within it's containing panel. */
+         @return The position of the entity within it's containing panel. */
         Position
         getPositionInPanel(void)
         const;
 
         /*! @brief Return the protocol of the associated port.
-         @returns The protocol of the associated port. */
+         @return The protocol of the associated port. */
         inline const YarpString &
         getProtocol(void)
         const
@@ -260,7 +260,7 @@ namespace MPlusM_Manager
         } // getProtocol
 
         /*! @brief Return the description of the protocol for the associated port.
-         @returns The description of the protocol for the associated port. */
+         @return The description of the protocol for the associated port. */
         inline const YarpString &
         getProtocolDescription(void)
         const
@@ -269,7 +269,7 @@ namespace MPlusM_Manager
         } // getProtocolDescription
 
         /*! @brief Return the usage of the port entry.
-         @returns The usage of the port entry. */
+         @return The usage of the port entry. */
         inline PortUsage
         getUsage(void)
         const
@@ -279,7 +279,7 @@ namespace MPlusM_Manager
 
         /*! @brief Returns @c true if there is an outgoing connection to the named port.
          @param[in] otherPort The name of the destination port.
-         @returns @c true if there is an outgoing connection to the named port. */
+         @return @c true if there is an outgoing connection to the named port. */
         bool
         hasOutgoingConnectionTo(const YarpString & otherPort)
         const;
@@ -289,7 +289,7 @@ namespace MPlusM_Manager
         invalidateConnections(void);
 
         /*! @brief Returns @c true if the channel is being monitored and @c false otherwise.
-         @returns @c true if the channel is being monitored and @c false otherwise. */
+         @return @c true if the channel is being monitored and @c false otherwise. */
         inline bool
         isBeingMonitored(void)
         const
@@ -298,14 +298,14 @@ namespace MPlusM_Manager
         } // isBeingMonitored
 
         /*! @brief Returns @c true if the port is a channel and @c false if it is a standard port.
-         @returns @c true if the port is a channel and @c false otherwise. */
+         @return @c true if the port is a channel and @c false otherwise. */
         bool
         isChannel(void)
         const;
 
         /*! @brief Returns @c true if the port entry is a secondary port of a service and @c false
          otherwise.
-         @returns @c true if the port is a secondary port of a service and @c false otherwise. */
+         @return @c true if the port is a secondary port of a service and @c false otherwise. */
         inline bool
         isInputOutput(void)
         const
@@ -315,7 +315,7 @@ namespace MPlusM_Manager
 
         /*! @brief Returns @c true if the port entry is the bottom-most (last) port entry in a
          panel and @c false otherwise.
-         @returns @c true if the port is the last port entry in a panel and @c false
+         @return @c true if the port is the last port entry in a panel and @c false
          otherwise. */
         inline bool
         isLastPort(void)
@@ -325,7 +325,7 @@ namespace MPlusM_Manager
         } // isLastPort
 
         /*! @brief Returns @c true if the port entry is marked and @c false otherwise.
-         @returns @c true if the port entry is marked and @c false otherwise. */
+         @return @c true if the port entry is marked and @c false otherwise. */
         inline bool
         isMarked(void)
         const
@@ -335,7 +335,7 @@ namespace MPlusM_Manager
 
         /*! @brief Returns @c true if the port entry is part of a service and @c false
          otherwise.
-         @returns @c true if the port is part of a service and @c false otherwise. */
+         @return @c true if the port is part of a service and @c false otherwise. */
         inline bool
         isService(void)
         const
@@ -375,7 +375,7 @@ namespace MPlusM_Manager
 
         /*! @brief Return @c true if the current connection request was UDP and @c false
          otherwise.
-         @returns @c true if the current connection request was UDP and @c false otherwise. */
+         @return @c true if the current connection request was UDP and @c false otherwise. */
         inline bool
         wasUdpConnectionRequest(void)
         const
@@ -390,7 +390,7 @@ namespace MPlusM_Manager
         /*! @brief Check if the connection is present.
          @param[in,out] otherEnd The connection information.
          @param[in] isOutgoing @c true if this is an outgoing connection and @c false otherwise.
-         @returns @c true if the YARP connection exists and @c false otherwise. */
+         @return @c true if the YARP connection exists and @c false otherwise. */
         bool
         checkConnection(ChannelInfo & otherEnd,
                         const bool    isOutgoing);

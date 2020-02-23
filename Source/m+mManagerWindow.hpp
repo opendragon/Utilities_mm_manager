@@ -116,18 +116,18 @@ namespace MPlusM_Manager
         ~ManagerWindow(void);
 
         /*! @brief Returns the command manager object used to dispatch command events.
-         @returns The command manager object used to dispatch command events. */
+         @return The command manager object used to dispatch command events. */
         static ApplicationCommandManager &
         getApplicationCommandManager(void);
 
         /*! @brief Returns the entities panel.
-         @returns The entities panel. */
+         @return The entities panel. */
         EntitiesPanel &
         getEntitiesPanel(void)
         const;
 
         /*! @brief Return the reference to the background scanning thread.
-         @returns The reference to the background scanning thread. */
+         @return The reference to the background scanning thread. */
         inline ScannerThread *
         getScannerThread(void)
         const

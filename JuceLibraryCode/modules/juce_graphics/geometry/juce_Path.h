@@ -647,7 +647,7 @@ public:
         @param justificationType    if the proportions are preseved, the resultant path may be smaller
                                     than the available rectangle, so this describes how it should be
                                     positioned within the space.
-        @returns                    an appropriate transformation
+        @return                    an appropriate transformation
 
         @see applyTransform, scaleToFit
 
@@ -665,7 +665,7 @@ public:
         @param justificationType    if the proportions are preseved, the resultant path may be smaller
                                     than the available rectangle, so this describes how it should be
                                     positioned within the space.
-        @returns                    an appropriate transformation
+        @return                    an appropriate transformation
 
         @see applyTransform, scaleToFit
 

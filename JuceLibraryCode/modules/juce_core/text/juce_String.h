@@ -332,25 +332,25 @@ public:
     bool equalsIgnoreCase (const char* other) const noexcept;
 
     /** Case-sensitive comparison with another string.
-        @returns     0 if the two strings are identical; negative if this string comes before
+        @return     0 if the two strings are identical; negative if this string comes before
                      the other one alphabetically, or positive if it comes after it.
     */
     int compare (const String& other) const noexcept;
 
     /** Case-sensitive comparison with another string.
-        @returns     0 if the two strings are identical; negative if this string comes before
+        @return     0 if the two strings are identical; negative if this string comes before
                      the other one alphabetically, or positive if it comes after it.
     */
     int compare (const char* other) const noexcept;
 
     /** Case-sensitive comparison with another string.
-        @returns     0 if the two strings are identical; negative if this string comes before
+        @return     0 if the two strings are identical; negative if this string comes before
                      the other one alphabetically, or positive if it comes after it.
     */
     int compare (const wchar_t* other) const noexcept;
 
     /** Case-insensitive comparison with another string.
-        @returns     0 if the two strings are identical; negative if this string comes before
+        @return     0 if the two strings are identical; negative if this string comes before
                      the other one alphabetically, or positive if it comes after it.
     */
     int compareIgnoreCase (const String& other) const noexcept;
@@ -360,7 +360,7 @@ public:
         This comparison is case-insensitive and can detect words and embedded numbers in the
         strings, making it good for sorting human-readable lists of things like filenames.
 
-        @returns     0 if the two strings are identical; negative if this string comes before
+        @return     0 if the two strings are identical; negative if this string comes before
                      the other one alphabetically, or positive if it comes after it.
     */
     int compareNatural (StringRef other) const noexcept;
@@ -419,7 +419,7 @@ public:
 
     /** Tests whether the string contains another substring as a distinct word.
 
-        @returns    true if the string contains this word, surrounded by
+        @return    true if the string contains this word, surrounded by
                     non-alphanumeric characters
         @see indexOfWholeWord, containsWholeWordIgnoreCase
     */
@@ -427,7 +427,7 @@ public:
 
     /** Tests whether the string contains another substring as a distinct word.
 
-        @returns    true if the string contains this word, surrounded by
+        @return    true if the string contains this word, surrounded by
                     non-alphanumeric characters
         @see indexOfWholeWordIgnoreCase, containsWholeWord
     */
@@ -435,7 +435,7 @@ public:
 
     /** Finds an instance of another substring if it exists as a distinct word.
 
-        @returns    if the string contains this word, surrounded by non-alphanumeric characters,
+        @return    if the string contains this word, surrounded by non-alphanumeric characters,
                     then this will return the index of the start of the substring. If it isn't
                     found, then it will return -1
         @see indexOfWholeWordIgnoreCase, containsWholeWord
@@ -444,7 +444,7 @@ public:
 
     /** Finds an instance of another substring if it exists as a distinct word.
 
-        @returns    if the string contains this word, surrounded by non-alphanumeric characters,
+        @return    if the string contains this word, surrounded by non-alphanumeric characters,
                     then this will return the index of the start of the substring. If it isn't
                     found, then it will return -1
         @see indexOfWholeWord, containsWholeWordIgnoreCase
@@ -454,7 +454,7 @@ public:
     /** Looks for any of a set of characters in the string.
         Uses a case-sensitive comparison.
 
-        @returns    true if the string contains any of the characters from
+        @return    true if the string contains any of the characters from
                     the string that is passed in.
     */
     bool containsAnyOf (StringRef charactersItMightContain) const noexcept;
@@ -462,7 +462,7 @@ public:
     /** Looks for a set of characters in the string.
         Uses a case-sensitive comparison.
 
-        @returns    Returns false if any of the characters in this string do not occur in
+        @return    Returns false if any of the characters in this string do not occur in
                     the parameter string. If this string is empty, the return value will
                     always be true.
     */
@@ -491,7 +491,7 @@ public:
 
     /** Searches for a character inside this string.
         Uses a case-sensitive comparison.
-        @returns    the index of the first occurrence of the character in this
+        @return    the index of the first occurrence of the character in this
                     string, or -1 if it's not found.
     */
     int indexOfChar (juce_wchar characterToLookFor) const noexcept;
@@ -500,7 +500,7 @@ public:
         Uses a case-sensitive comparison.
         @param startIndex           the index from which the search should proceed
         @param characterToLookFor   the character to look for
-        @returns            the index of the first occurrence of the character in this
+        @return            the index of the first occurrence of the character in this
                             string, or -1 if it's not found.
     */
     int indexOfChar (int startIndex, juce_wchar characterToLookFor) const noexcept;
@@ -523,7 +523,7 @@ public:
 
     /** Searches for a substring within this string.
         Uses a case-sensitive comparison.
-        @returns    the index of the first occurrence of this substring, or -1 if it's not found.
+        @return    the index of the first occurrence of this substring, or -1 if it's not found.
                     If textToLookFor is an empty string, this will always return 0.
     */
     int indexOf (StringRef textToLookFor) const noexcept;
@@ -532,14 +532,14 @@ public:
         Uses a case-sensitive comparison.
         @param startIndex       the index from which the search should proceed
         @param textToLookFor    the string to search for
-        @returns                the index of the first occurrence of this substring, or -1 if it's not found.
+        @return                the index of the first occurrence of this substring, or -1 if it's not found.
                                 If textToLookFor is an empty string, this will always return -1.
     */
     int indexOf (int startIndex, StringRef textToLookFor) const noexcept;
 
     /** Searches for a substring within this string.
         Uses a case-insensitive comparison.
-        @returns    the index of the first occurrence of this substring, or -1 if it's not found.
+        @return    the index of the first occurrence of this substring, or -1 if it's not found.
                     If textToLookFor is an empty string, this will always return 0.
     */
     int indexOfIgnoreCase (StringRef textToLookFor) const noexcept;
@@ -548,27 +548,27 @@ public:
         Uses a case-insensitive comparison.
         @param startIndex       the index from which the search should proceed
         @param textToLookFor    the string to search for
-        @returns                the index of the first occurrence of this substring, or -1 if it's not found.
+        @return                the index of the first occurrence of this substring, or -1 if it's not found.
                                 If textToLookFor is an empty string, this will always return -1.
     */
     int indexOfIgnoreCase (int startIndex, StringRef textToLookFor) const noexcept;
 
     /** Searches for a character inside this string (working backwards from the end of the string).
         Uses a case-sensitive comparison.
-        @returns    the index of the last occurrence of the character in this string, or -1 if it's not found.
+        @return    the index of the last occurrence of the character in this string, or -1 if it's not found.
     */
     int lastIndexOfChar (juce_wchar character) const noexcept;
 
     /** Searches for a substring inside this string (working backwards from the end of the string).
         Uses a case-sensitive comparison.
-        @returns    the index of the start of the last occurrence of the substring within this string,
+        @return    the index of the start of the last occurrence of the substring within this string,
                     or -1 if it's not found. If textToLookFor is an empty string, this will always return -1.
     */
     int lastIndexOf (StringRef textToLookFor) const noexcept;
 
     /** Searches for a substring inside this string (working backwards from the end of the string).
         Uses a case-insensitive comparison.
-        @returns    the index of the start of the last occurrence of the substring within this string, or -1
+        @return    the index of the start of the last occurrence of the substring within this string, or -1
                     if it's not found. If textToLookFor is an empty string, this will always return -1.
     */
     int lastIndexOfIgnoreCase (StringRef textToLookFor) const noexcept;
@@ -628,7 +628,7 @@ public:
         @param startIndex   the first character to include. If this is beyond the end
                             of the string, an empty string is returned. If it is zero or
                             less, the whole string is returned.
-        @returns            the substring from startIndex up to the end of the string
+        @return            the substring from startIndex up to the end of the string
         @see dropLastCharacters, getLastCharacters, fromFirstOccurrenceOf, upToFirstOccurrenceOf, fromLastOccurrenceOf
     */
     String substring (int startIndex) const;
@@ -834,7 +834,7 @@ public:
     //==============================================================================
     /** Checks whether the string might be in quotation marks.
 
-        @returns    true if the string begins with a quote character (either a double or single quote).
+        @return    true if the string begins with a quote character (either a double or single quote).
                     It is also true if there is whitespace before the quote, but it doesn't check the end of the string.
         @see unquoted, quoted
     */
@@ -983,13 +983,13 @@ public:
 
     /** Reads the value of the string as a decimal number (up to 32 bits in size).
 
-        @returns the value of the string as a 32 bit signed base-10 integer.
+        @return the value of the string as a 32 bit signed base-10 integer.
         @see getTrailingIntValue, getHexValue32, getHexValue64
     */
     int getIntValue() const noexcept;
 
     /** Reads the value of the string as a decimal number (up to 64 bits in size).
-        @returns the value of the string as a 64 bit signed base-10 integer.
+        @return the value of the string as a 64 bit signed base-10 integer.
     */
     int64 getLargeIntValue() const noexcept;
 
@@ -1006,14 +1006,14 @@ public:
 
     /** Parses this string as a floating point number.
 
-        @returns    the value of the string as a 32-bit floating point value.
+        @return    the value of the string as a 32-bit floating point value.
         @see getDoubleValue
     */
     float getFloatValue() const noexcept;
 
     /** Parses this string as a floating point number.
 
-        @returns    the value of the string as a 64-bit floating point value.
+        @return    the value of the string as a 64-bit floating point value.
         @see getFloatValue
     */
     double getDoubleValue() const noexcept;
@@ -1025,7 +1025,7 @@ public:
         If the string contains too many characters, then the lowest significant
         digits are returned, e.g. "ffff12345678" would produce 0x12345678.
 
-        @returns    a 32-bit number which is the value of the string in hex.
+        @return    a 32-bit number which is the value of the string in hex.
     */
     int getHexValue32() const noexcept;
 
@@ -1036,7 +1036,7 @@ public:
         If the string contains too many characters, then the lowest significant
         digits are returned, e.g. "ffff1234567812345678" would produce 0x1234567812345678.
 
-        @returns    a 64-bit number which is the value of the string in hex.
+        @return    a 64-bit number which is the value of the string in hex.
     */
     int64 getHexValue64() const noexcept;
 

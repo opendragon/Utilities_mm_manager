@@ -130,7 +130,7 @@ static const float kTargetBoxScale = 0.25;
  @param[in] refPoint The point to measure distance from.
  @param[in] testPoint The point being checked.
  @param[in,out] bestSoFar On input, the current closest point and output, the new closest point.
- @returns @c true if the new point is closer than the previous closest point. */
+ @return @c true if the new point is closer than the previous closest point. */
 static bool
 calculateMinDistance(float &          distanceSoFar,
                      const Position & refPoint,
@@ -164,7 +164,7 @@ calculateMinDistance(float &          distanceSoFar,
  @param[in] testX The horizontal coordinate for the point being checked.
  @param[in] testY The vertical coordinate for the point being checked.
  @param[in,out] bestSoFar On input, the current closest point and output, the new closest point.
- @returns @c true if the new point is closer than the previous closest point. */
+ @return @c true if the new point is closer than the previous closest point. */
 inline static bool
 calculateMinDistance(float &          distanceSoFar,
                      const Position & refPoint,
@@ -180,7 +180,7 @@ calculateMinDistance(float &          distanceSoFar,
  @param[in] disallowBottom @c true if the anchor cannot be bottom-centre.
  @param[in] targetPoint The target point.
  @param[in] refCentre The reference point.
- @returns The side to which the anchor is attached. */
+ @return The side to which the anchor is attached. */
 static AnchorSide
 calculateAnchorForPoint(Position &       newCentre,
                         const bool       disallowBottom,
@@ -492,7 +492,7 @@ drawConnection(Graphics &                gg,
  @param[in] sourceProtocol The protocol of the source port.
  @param[in] destinationProtocol The protocol of the destination port.
  @param[in] ignoreConstraints @c true if the protocols don't have to match.
- @returns @c true if the protocols permit a connection to be made and @c false
+ @return @c true if the protocols permit a connection to be made and @c false
  otherwise. */
 static bool
 protocolsMatch(const YarpString & sourceProtocol,

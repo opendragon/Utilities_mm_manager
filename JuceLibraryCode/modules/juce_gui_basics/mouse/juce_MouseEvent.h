@@ -215,7 +215,7 @@ public:
         objects that can either be clicked on or dragged, as you can use it in the mouseDrag()
         callback to ignore any small movements they might make while clicking.
 
-        @returns    true if the mouse wasn't dragged by more than a few pixels between
+        @return    true if the mouse wasn't dragged by more than a few pixels between
                     the last time the button was pressed and released.
     */
     bool mouseWasClicked() const noexcept;

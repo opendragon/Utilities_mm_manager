@@ -108,7 +108,7 @@ public:
 
     /** Returns the time as a number of milliseconds.
 
-        @returns    the number of milliseconds this Time object represents, since
+        @return    the number of milliseconds this Time object represents, since
                     midnight jan 1st 1970.
         @see getMilliseconds
     */
@@ -263,7 +263,7 @@ public:
     //==============================================================================
     /** Tries to set the computer's clock.
 
-        @returns    true if this succeeds, although depending on the system, the
+        @return    true if this succeeds, although depending on the system, the
                     application might not have sufficient privileges to do this.
     */
     bool setSystemTimeToThisTime() const;

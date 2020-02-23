@@ -98,7 +98,7 @@ namespace MPlusM_Manager
                             MplusM::Common::ChannelMode mode);
 
         /*! @brief Return the direction of the port entry.
-         @returns The direction of the port entry. */
+         @return The direction of the port entry. */
         inline PortDirection
         getDirection(void)
         const
@@ -107,7 +107,7 @@ namespace MPlusM_Manager
         } // getDirection
 
         /*! @brief Return the set of input connections to the port.
-         @returns The set of input connections to the port. */
+         @return The set of input connections to the port. */
         inline const PortConnections &
         getInputConnections(void)
         const
@@ -116,7 +116,7 @@ namespace MPlusM_Manager
         } // getInputConnections
 
         /*! @brief Return the set of output connections to the port.
-         @returns The set of output connections to the port. */
+         @return The set of output connections to the port. */
         inline const PortConnections &
         getOutputConnections(void)
         const
@@ -125,7 +125,7 @@ namespace MPlusM_Manager
         } // getOutputConnections
 
         /*! @brief Return the name of the associated port.
-         @returns The name of the associated port. */
+         @return The name of the associated port. */
         inline const YarpString &
         getPortName(void)
         const
@@ -134,7 +134,7 @@ namespace MPlusM_Manager
         } // getPortName
 
         /*! @brief Return the port number of the associated port.
-         @returns The port number of the associated port. */
+         @return The port number of the associated port. */
         inline const YarpString &
         getPortNumber(void)
         const
@@ -143,7 +143,7 @@ namespace MPlusM_Manager
         } // getPortNumber
 
         /*! @brief Return the protocol of the associated port.
-         @returns The protocol of the associated port. */
+         @return The protocol of the associated port. */
         inline const YarpString &
         getProtocol(void)
         const
@@ -152,7 +152,7 @@ namespace MPlusM_Manager
         } // getProtocol
 
         /*! @brief Return the description of the protocol for the associated port.
-         @returns The description of the protocol for the associated port. */
+         @return The description of the protocol for the associated port. */
         inline const YarpString &
         getProtocolDescription(void)
         const
@@ -161,7 +161,7 @@ namespace MPlusM_Manager
         } // getProtocolDescription
 
         /*! @brief Return the usage of the port entry.
-         @returns The usage of the port entry. */
+         @return The usage of the port entry. */
         inline PortUsage
         getUsage(void)
         const
@@ -171,7 +171,7 @@ namespace MPlusM_Manager
 
         /*! @brief Returns @c true if there is an outgoing connection to the named port.
          @param[in] otherPort The name of the destination port.
-         @returns @c true if there is an outgoing connection to the named port. */
+         @return @c true if there is an outgoing connection to the named port. */
         bool
         hasOutgoingConnectionTo(const YarpString & otherPort)
         const;
@@ -182,7 +182,7 @@ namespace MPlusM_Manager
 
         /*! @brief Returns @c true if the port entry is a secondary port of a service and @c false
          otherwise.
-         @returns @c true if the port is a secondary port of a service and @c false otherwise. */
+         @return @c true if the port is a secondary port of a service and @c false otherwise. */
         inline bool
         isInputOutput(void)
         const
@@ -192,7 +192,7 @@ namespace MPlusM_Manager
 
         /*! @brief Returns @c true if the port entry is part of a service and @c false
          otherwise.
-         @returns @c true if the port is part of a service and @c false otherwise. */
+         @return @c true if the port is part of a service and @c false otherwise. */
         inline bool
         isService(void)
         const
@@ -232,7 +232,7 @@ namespace MPlusM_Manager
 
         /*! @brief The assignment operator.
          @param[in] other The object to be copied.
-         @returns The updated object. */
+         @return The updated object. */
         PortData &
         operator =(const PortData & other);
 

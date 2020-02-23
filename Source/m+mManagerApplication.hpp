@@ -111,7 +111,7 @@ namespace MPlusM_Manager
 
         /*! @brief Returns @c true if there is a Registry Service executable available but no
          running Registry Service was detected.
-         @returns @c true if the Registry Service can be launched and @c false otherwise. */
+         @return @c true if the Registry Service can be launched and @c false otherwise. */
         inline bool
         canTheRegistryServiceBeLaunched(void)
         const
@@ -134,7 +134,7 @@ namespace MPlusM_Manager
 
         /*! @brief Ask the user for information required to launch the Registry Service and launch
          it if the user requests.
-         @returns @c true if the Registry Service was launched and @c false otherwise. */
+         @return @c true if the Registry Service was launched and @c false otherwise. */
         bool
         doLaunchRegistry(void);
 
@@ -144,23 +144,23 @@ namespace MPlusM_Manager
 
         /*! @brief Determine the path to an executable, using the system PATH environment variable.
          @param[in] execName The short name of the executable.
-         @returns The full path to the first executable found in the system PATH environment
+         @return The full path to the first executable found in the system PATH environment
          variable. */
         static String
         findPathToExecutable(const String & execName);
 
         /*! @brief Return the application object.
-         @returns The application object. */
+         @return The application object. */
         static
         ManagerApplication * getApp(void);
 
         /*! @brief Return the button height to use.
-         @returns The button height to use. */
+         @return The button height to use. */
         static int
         getButtonHeight(void);
 
         /*! @brief Return the number of launchable applications.
-         @returns The number of launchable applications. */
+         @return The number of launchable applications. */
         inline size_t
         getCountOfApplications(void)
         const
@@ -170,7 +170,7 @@ namespace MPlusM_Manager
 
         /*! @brief Return the value of a system environment variable.
          @param[in] varName The name of the system environment variable.
-         @returns The value of the system environment variable, or an empty value. */
+         @return The value of the system environment variable, or an empty value. */
         static String
         getEnvironmentVar(const char * varName);
 
@@ -186,12 +186,12 @@ namespace MPlusM_Manager
                            YarpStringVector & values);
 
         /*! @brief Return the home directory of the current user.
-         @returns The home directory of the current user. */
+         @return The home directory of the current user. */
         String
         getHomeDir(void);
 
         /*! @brief Return the main window of the application.
-         @returns The main window of the application. */
+         @return The main window of the application. */
         static ManagerWindow *
         getMainWindow(void);
 
@@ -203,7 +203,7 @@ namespace MPlusM_Manager
          @param[in] arguments The current set of arguments to be applied.
          @param[in] tagModifierCount The number of bytes of the IP address to use as a tag modifier.
          @param[out] channelName The channel that the service will be using.
-         @returns @c true if the channel was retrieved and @c false otherwise. */
+         @return @c true if the channel was retrieved and @c false otherwise. */
         bool
         getPrimaryChannelForService(const ApplicationInfo & appInfo,
                                     const String &          endpointName,
@@ -214,12 +214,12 @@ namespace MPlusM_Manager
                                     String &                channelName);
 
         /*! @brief Return the real name of the current user.
-         @returns The real name of the current user. */
+         @return The real name of the current user. */
         String
         getRealName(void);
 
         /*! @brief Return the name of the current user.
-         @returns The set of name of the current user. */
+         @return The set of name of the current user. */
         String
         getUserName(void);
 
@@ -238,13 +238,13 @@ namespace MPlusM_Manager
 
         /*! @brief If the Registry Service is not currently running, give the user the option to
          launch it.
-         @returns @c true if the Registry Service was launched and @c false otherwise. */
+         @return @c true if the Registry Service was launched and @c false otherwise. */
         bool
         checkForRegistryServiceAndLaunchIfDesired(void);
 
         /*! @brief If YARP is not currently running, give the user the option to launch a private
          copy.
-         @returns A pointer to the %Network object used for YARP access. */
+         @return A pointer to the %Network object used for YARP access. */
         yarp::os::Network *
         checkForYarpAndLaunchIfDesired(void);
 
@@ -255,25 +255,25 @@ namespace MPlusM_Manager
         doLaunchAService(const ApplicationInfo & appInfo);
 
         /*! @brief Return the application name.
-         @returns The application's name. */
+         @return The application's name. */
         virtual const String
         getApplicationName(void);
 
         /*! @brief Return the application version number.
-         @returns The application's version number. */
+         @return The application's version number. */
         virtual const String
         getApplicationVersion(void);
 
         /*! @brief Get the operational arguments for an application.
          @param[out] theInfo The retrieved parameters.
-         @returns @c true if the operational arguments were retrieved and @c false otherwise. */
+         @return @c true if the operational arguments were retrieved and @c false otherwise. */
         bool
         getArgumentsForApplication(ApplicationInfo & theInfo);
 
         /*! @brief Get the operational parameters for an application.
          @param[in] execName The name of the executable to be analyzed.
          @param[out] theInfo The retrieved parameters.
-         @returns @c true if the operational parameters were retrieved and @c false otherwise. */
+         @return @c true if the operational parameters were retrieved and @c false otherwise. */
         bool
         getParametersForApplication(const String &    execName,
                                     ApplicationInfo & theInfo);
@@ -290,14 +290,14 @@ namespace MPlusM_Manager
 
         /*! @brief Return @c true if multiple instances of the application are allowed and @c false
          otherwise.
-         @returns @c true if multiple instanaces of the application are allowed and @c false
+         @return @c true if multiple instanaces of the application are allowed and @c false
          otherwise. */
         virtual bool
         moreThanOneInstanceAllowed(void);
 
         /*! @brief The assignment operator.
          @param[in] other The object to be copied.
-         @returns The updated object. */
+         @return The updated object. */
         ManagerApplication &
         operator =(const ManagerApplication & other);
 
@@ -315,14 +315,14 @@ namespace MPlusM_Manager
         systemRequestedQuit(void);
 
         /*! @brief Check if the Registry Service can be launched and if the user wishes it to be.
-         @returns @c true if the user requests that the Registry Service be started and @ c false
+         @return @c true if the user requests that the Registry Service be started and @ c false
          if the YARP executable is invalid or the user does not want to launch the Registry
          Service. */
         bool
         validateRegistryService(void);
 
         /*! @brief Check if YARP can be launched and if the user wishes it to be.
-         @returns @c true if the user requests that a private YARP network be set up and @ c false
+         @return @c true if the user requests that a private YARP network be set up and @ c false
          if the YARP executable is invalid or the user does not want a private YARP network. */
         bool
         validateYarp(void);

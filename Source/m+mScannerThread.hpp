@@ -86,7 +86,7 @@ namespace MPlusM_Manager
 
          Note that what is returned is the value prior to the call; the flag is cleared so that the
          next call will return @c false.
-         @returns @c true if the scan data is available and @c false otherwise. */
+         @return @c true if the scan data is available and @c false otherwise. */
         bool
         checkAndClearIfScanIsComplete(void);
 
@@ -99,7 +99,7 @@ namespace MPlusM_Manager
         doScanSoon(void);
 
         /*! @brief Return the collected entities data.
-         @returns The collected entities data. */
+         @return The collected entities data. */
         inline EntitiesData &
         getEntitiesData(void)
         {
@@ -147,12 +147,12 @@ namespace MPlusM_Manager
                     void *                        checkStuff = NULL);
 
         /*! @brief Request access for reading from shared resources.
-         @returns @c true if the read lock has been acquired and @c false otherwise. */
+         @return @c true if the read lock has been acquired and @c false otherwise. */
         bool
         conditionallyAcquireForRead(void);
 
         /*! @brief Request access for writing to shared resources.
-         @returns @c true if the write lock has been acquired and @c false otherwise. */
+         @return @c true if the write lock has been acquired and @c false otherwise. */
         bool
         conditionallyAcquireForWrite(void);
 
@@ -161,7 +161,7 @@ namespace MPlusM_Manager
          @param[in] portName The name of the port to check.
          @param[in] checker A function that provides for early exit from loops.
          @param[in] checkStuff The private data for the early exit function.
-         @returns The allowed directions for the port. */
+         @return The allowed directions for the port. */
         PortDirection
         determineDirection(ChannelEntry *                oldEntry,
                            const YarpString &            portName,
@@ -172,7 +172,7 @@ namespace MPlusM_Manager
          @param[in] detectedPorts The ports found by YARP.
          @param[in] checker A function that provides for early exit from loops.
          @param[in] checkStuff The private data for the early exit function.
-         @returns @c true if the network entity information was gathered and @c false otherwise. */
+         @return @c true if the network entity information was gathered and @c false otherwise. */
         bool
         gatherEntities(MplusM::Utilities::PortVector & detectedPorts,
                        MplusM::Common::CheckFunction   checker = NULL,
